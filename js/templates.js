@@ -753,7 +753,7 @@
       if (this.options.formOptions) {
         $o.push("    <div class='tab-pane' id='formOptions'>\n      <label>Form description</label>\n      <textarea class='textarea-full' data-rv-value='formOptions.form_description'></textarea>\n      <label>Form confirmation message</label>\n      <textarea class='textarea-full' data-rv-value='formOptions.form_confirmation_message'></textarea>\n      <span class='help-block'>No confirmation message?</span>\n      <label>Submit Button Text</label>\n      <input type='text' data-rv-value='formOptions.submit_button_text'>\n      <span class='help-block'>If left blank, the default is \"Submit\"</span>\n      <div class='response-identifier-wrapper'></div>\n    </div>");
       }
-      $o.push("  </div>\n</div>\n<div class='fb-right'>\n  <div id='no-response-fields'>No response fields</div>\n  <div id='response-fields'></div>\n</div>\n<div class='clearfix'></div>");
+      $o.push("  </div>\n</div>\n<div class='fb-right'>\n  <div class='fb-no-response-fields'>No response fields</div>\n  <div class='fb-response-fields'></div>\n</div>\n<div class='clearfix'></div>");
       return $o.join("\n").replace(/\s(?:id|class)=(['"])(\1)/mg, "");
     }).call(context);
   };
@@ -855,7 +855,7 @@
       $o.push("  " + $c(FormBuilder.JST['view/pieces/label'](this)));
       $o.push("  <div class='subtemplate-wrapper-inner'></div>\n  <div class='clearfix'></div>");
       $o.push("  " + $c(FormBuilder.JST['view/pieces/description'](this)));
-      $o.push("</div>\n<div class='actions-wrapper'>\n  <a class='btn btn-mini btn-success' data-backbone-click='duplicate' title='Duplicate Field'>\n    <span class='icon-plus-sign'></span>\n  </a>\n  <a class='btn btn-danger btn-mini' data-backbone-click='clear' title='Remove Field'>\n    <span class='icon-minus-sign'></span>\n  </a>\n</div>");
+      $o.push("</div>\n<div class='actions-wrapper'>\n  <a data-backbone-click='duplicate' title='Duplicate Field'>+</a>\n  <a data-backbone-click='clear' title='Remove Field'>-</a>\n</div>");
       return $o.join("\n").replace(/\s(\w+)='true'/mg, ' $1').replace(/\s(\w+)='false'/mg, '').replace(/\s(?:id|class)=(['"])(\1)/mg, "");
     }).call(context);
   };

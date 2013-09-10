@@ -245,7 +245,7 @@ FormBuilder.formBuilder = Backbone.View.extend
       if @formSaved then undefined else 'You have unsaved changes. If you leave this page, you will lose those changes!'
 
   reset: ->
-    $("#response-fields").html('')
+    @$responseFields.html('')
     @addAll()
 
   render: ->
@@ -253,6 +253,7 @@ FormBuilder.formBuilder = Backbone.View.extend
       options: @options
 
     @$fbLeft = @$el.find('.fb-left')
+    @$responseFields = @$el.find('.fb-response-fields')
 
     # rivets.bind @$el,
     #   formOptions: @response_fieldable
@@ -262,7 +263,7 @@ FormBuilder.formBuilder = Backbone.View.extend
     $(window).on 'scroll', =>
       return if @$fbLeft.data('locked') == true
       newMargin = Math.max(0, $(window).scrollTop())
-      maxMargin = $("#response-fields").height()
+      maxMargin = @$responseFields.height()
 
       @$fbLeft.css
         'margin-top': Math.min(maxMargin, newMargin)
@@ -293,21 +294,21 @@ FormBuilder.formBuilder = Backbone.View.extend
     if options.$replaceEl?
       options.$replaceEl.replaceWith(view.render().el)
     else if !options.position? || options.position == -1
-      $("#response-fields").append view.render().el
+      @$responseFields.append view.render().el
     else if options.position == 0
-      $("#response-fields").prepend view.render().el
+      @$responseFields.prepend view.render().el
     else
-      $replacePosition = $("#response-fields .response-field-wrapper").eq(options.position)
+      $replacePosition = @$responseFields.find(".response-field-wrapper").eq(options.position)
       if $replacePosition.length > 0
         $replacePosition.before view.render().el
       else
-        $("#response-fields").append view.render().el
+        @$responseFields.append view.render().el
 
     @resetSortable() unless @addingAll
 
   resetSortable: ->
-    @$el.find("#response-fields").sortable('destroy') if $(@).find("#response-fields").hasClass('ui-sortable')
-    @$el.find("#response-fields").sortable
+    @$responseFields.sortable('destroy') if @$responseFields.hasClass('ui-sortable')
+    @$responseFields.sortable
       forcePlaceholderSize: true
       placeholder: 'sortable-placeholder'
       stop: (e, ui) =>
@@ -329,11 +330,11 @@ FormBuilder.formBuilder = Backbone.View.extend
     $addFieldButtons = @$el.find("[data-backbone-click=addField], [data-backbone-click=addExistingField]")
     # $addFieldButtons.draggable('destroy') if $addFieldButtons.hasClass('ui-draggable')
     $addFieldButtons.draggable
-      connectToSortable: '#response-fields'
-      helper: ->
+      connectToSortable: @$responseFields
+      helper: =>
         $helper = $("<div class='response-field-draggable-helper' />")
         $helper.css
-          width: $('#response-fields').width() # hacky, won't get set without inline style
+          width: @$responseFields.width() # hacky, won't get set without inline style
           height: '80px'
 
         $helper
@@ -345,7 +346,7 @@ FormBuilder.formBuilder = Backbone.View.extend
     @resetSortable()
 
   toggleNoResponseFields: ->
-    @$el.find("#no-response-fields")[if @collection.length > 0 then 'hide' else 'show']()
+    @$el.find(".fb-no-response-fields")[if @collection.length > 0 then 'hide' else 'show']()
 
   defaultAttrs: (field_type) ->
     attrs =
@@ -411,7 +412,7 @@ FormBuilder.formBuilder = Backbone.View.extend
 
   scrollLeftWrapper: ($responseFieldEl) ->
     @unlockLeftWrapper()
-    $.scrollWindowTo ($responseFieldEl.offset().top - $("#response-fields").offset().top), 200, =>
+    $.scrollWindowTo ($responseFieldEl.offset().top - @$responseFields.offset().top), 200, =>
       @lockLeftWrapper()
 
   lockLeftWrapper: ->
@@ -426,6 +427,7 @@ FormBuilder.formBuilder = Backbone.View.extend
     @saveFormButton.button('reset')
 
   saveForm: (e) ->
+    return # @placeholder
     return if @formSaved is true
     @formSaved = true
     @saveFormButton.button 'loading'

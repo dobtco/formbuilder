@@ -33,3 +33,37 @@
   background-color: #cccccc;
   margin-bottom: 6px;
   padding: 4px; }
+
+.fb-response-fields .response-field-wrapper {
+  cursor: pointer;
+  position: relative;
+  /* remove/duplicate buttons */ }
+  .fb-response-fields .response-field-wrapper:hover .actions-wrapper, .fb-response-fields .response-field-wrapper.editing .actions-wrapper {
+    display: block; }
+  .fb-response-fields .response-field-wrapper:hover .subtemplate-wrapper {
+    border-color: #dddddd; }
+  .fb-response-fields .response-field-wrapper.editing {
+    background-color: #dfefff; }
+    .fb-response-fields .response-field-wrapper.editing .subtemplate-wrapper {
+      border-color: #c2d7ef;
+      border-style: solid; }
+  .fb-response-fields .response-field-wrapper .actions-wrapper {
+    display: none;
+    position: absolute;
+    bottom: -7px;
+    right: 5px;
+    z-index: 3; }
+    .fb-response-fields .response-field-wrapper .actions-wrapper a {
+      display: inline-block;
+      background-color: #cccccc;
+      padding: 2px 8px; }
+.fb-response-fields .subtemplate-wrapper {
+  border: 1px dashed transparent;
+  margin-bottom: 10px;
+  padding: 10px;
+  position: relative; }
+  .fb-response-fields .subtemplate-wrapper .cover {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 2; }

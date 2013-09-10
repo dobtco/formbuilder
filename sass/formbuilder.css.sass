@@ -41,3 +41,48 @@ $inputLineLeftMargin: 6px
     background-color: #ccc
     margin-bottom: 6px
     padding: 4px
+
+.fb-response-fields
+  .response-field-wrapper
+    cursor: pointer
+    position: relative
+
+    &:hover, &.editing
+      .actions-wrapper
+        display: block
+
+    &:hover
+      .subtemplate-wrapper
+        border-color: #ddd
+
+    &.editing
+      background-color: #dfefff
+
+      .subtemplate-wrapper
+        border-color: #c2d7ef
+        border-style: solid
+
+    /* remove/duplicate buttons */
+    .actions-wrapper
+      display: none
+      position: absolute
+      bottom: -7px
+      right: 5px
+      z-index: 3
+
+      a
+        display: inline-block
+        background-color: #ccc
+        padding: 2px 8px
+
+  .subtemplate-wrapper
+    border: 1px dashed transparent
+    margin-bottom: $bottomFieldMargin
+    padding: 10px
+    position: relative
+
+    .cover
+      position: absolute
+      height: 100%
+      width: 100%
+      z-index: 2

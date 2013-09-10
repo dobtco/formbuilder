@@ -6,7 +6,5 @@
   != FormBuilder.JST['view/pieces/description'](@)
 
 .actions-wrapper
-  %a.btn.btn-mini.btn-success{"data-backbone-click" => "duplicate", "title" => "Duplicate Field"}
-    %span.icon-plus-sign
-  %a.btn.btn-mini.btn-danger{"data-backbone-click" => "clear", "title" => "Remove Field"}
-    %span.icon-minus-sign
+  %a{"data-backbone-click" => "duplicate", "title" => "Duplicate Field"} +
+  %a{"data-backbone-click" => "clear", "title" => "Remove Field"} -

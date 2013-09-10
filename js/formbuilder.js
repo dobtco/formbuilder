@@ -276,7 +276,7 @@
       });
     },
     reset: function() {
-      $("#response-fields").html('');
+      this.$responseFields.html('');
       return this.addAll();
     },
     render: function() {
@@ -285,13 +285,14 @@
         options: this.options
       }));
       this.$fbLeft = this.$el.find('.fb-left');
+      this.$responseFields = this.$el.find('.fb-response-fields');
       $(window).on('scroll', function() {
         var maxMargin, newMargin;
         if (_this.$fbLeft.data('locked') === true) {
           return;
         }
         newMargin = Math.max(0, $(window).scrollTop());
-        maxMargin = $("#response-fields").height();
+        maxMargin = _this.$responseFields.height();
         return _this.$fbLeft.css({
           'margin-top': Math.min(maxMargin, newMargin)
         });
@@ -325,15 +326,15 @@
       if (options.$replaceEl != null) {
         options.$replaceEl.replaceWith(view.render().el);
       } else if ((options.position == null) || options.position === -1) {
-        $("#response-fields").append(view.render().el);
+        this.$responseFields.append(view.render().el);
       } else if (options.position === 0) {
-        $("#response-fields").prepend(view.render().el);
+        this.$responseFields.prepend(view.render().el);
       } else {
-        $replacePosition = $("#response-fields .response-field-wrapper").eq(options.position);
+        $replacePosition = this.$responseFields.find(".response-field-wrapper").eq(options.position);
         if ($replacePosition.length > 0) {
           $replacePosition.before(view.render().el);
         } else {
-          $("#response-fields").append(view.render().el);
+          this.$responseFields.append(view.render().el);
         }
       }
       if (!this.addingAll) {
@@ -342,10 +343,10 @@
     },
     resetSortable: function() {
       var _this = this;
-      if ($(this).find("#response-fields").hasClass('ui-sortable')) {
-        this.$el.find("#response-fields").sortable('destroy');
+      if (this.$responseFields.hasClass('ui-sortable')) {
+        this.$responseFields.sortable('destroy');
       }
-      this.$el.find("#response-fields").sortable({
+      this.$responseFields.sortable({
         forcePlaceholderSize: true,
         placeholder: 'sortable-placeholder',
         stop: function(e, ui) {
@@ -369,15 +370,16 @@
       return this.setDraggable();
     },
     setDraggable: function() {
-      var $addFieldButtons;
+      var $addFieldButtons,
+        _this = this;
       $addFieldButtons = this.$el.find("[data-backbone-click=addField], [data-backbone-click=addExistingField]");
       return $addFieldButtons.draggable({
-        connectToSortable: '#response-fields',
+        connectToSortable: this.$responseFields,
         helper: function() {
           var $helper;
           $helper = $("<div class='response-field-draggable-helper' />");
           $helper.css({
-            width: $('#response-fields').width(),
+            width: _this.$responseFields.width(),
             height: '80px'
           });
           return $helper;
@@ -391,7 +393,7 @@
       return this.resetSortable();
     },
     toggleNoResponseFields: function() {
-      return this.$el.find("#no-response-fields")[this.collection.length > 0 ? 'hide' : 'show']();
+      return this.$el.find(".fb-no-response-fields")[this.collection.length > 0 ? 'hide' : 'show']();
     },
     defaultAttrs: function(field_type) {
       var attrs;
@@ -469,7 +471,7 @@
     scrollLeftWrapper: function($responseFieldEl) {
       var _this = this;
       this.unlockLeftWrapper();
-      return $.scrollWindowTo($responseFieldEl.offset().top - $("#response-fields").offset().top, 200, function() {
+      return $.scrollWindowTo($responseFieldEl.offset().top - this.$responseFields.offset().top, 200, function() {
         return _this.lockLeftWrapper();
       });
     },
@@ -489,6 +491,7 @@
     saveForm: function(e) {
       var _ref,
         _this = this;
+      return;
       if (this.formSaved === true) {
         return;
       }
