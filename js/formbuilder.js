@@ -1,81 +1,44 @@
 (function() {
-  var ADD_FIELD_VIEW, EDIT_FIELD_VIEW, RESPONSE_FIELD_LIST, RESPONSE_FIELD_MODEL, RESPONSE_IDENTIFIER_VIEW, VIEW_FIELD_VIEW;
-
-  _.extend(Backbone.View.prototype, {
-    onClick: function(e) {
-      if ($(e.currentTarget).hasClass('disabled')) {
-        return;
-      }
-      return this.callMethodIfExists($(e.currentTarget).data('backbone-click'), e);
-    },
-    onSubmit: function(e) {
-      e.preventDefault();
-      return this.callMethodIfExists($(e.currentTarget).data('backbone-submit'), e);
-    },
-    onFocus: function(e) {
-      return this.callMethodIfExists($(e.currentTarget).data('backbone-focus'), e);
-    },
-    onInput: function(e) {
-      return this.callMethodIfExists($(e.currentTarget).data('backbone-input'), e);
-    },
-    callMethodIfExists: function(methodName, e) {
-      return typeof this[methodName] === "function" ? this[methodName](e, $(e.currentTarget), $(e.currentTarget).data('backbone-params')) : void 0;
-    },
-    delegateEvents: function(events) {
-      var delegateEventSplitter, eventName, key, match, method, selector, _results;
-      delegateEventSplitter = /^(\S+)\s*(.*)$/;
-      events || (events = _.result(this, "events") || {});
-      _.extend(events, {
-        "click [data-backbone-click]": "onClick",
-        "submit [data-backbone-submit]": "onSubmit",
-        "focus [data-backbone-focus]": "onFocus",
-        "input [data-backbone-input]": "onInput"
-      });
-      this.undelegateEvents();
-      _results = [];
-      for (key in events) {
-        method = events[key];
-        if (!_.isFunction(method)) {
-          method = this[events[key]];
-        }
-        if (!method) {
-          throw new Error("Method \"" + events[key] + "\" does not exist");
-        }
-        match = key.match(delegateEventSplitter);
-        eventName = match[1];
-        selector = match[2];
-        method = _.bind(method, this);
-        eventName += ".delegateEvents" + this.cid;
-        if (selector === "") {
-          _results.push(this.$el.on(eventName, method));
-        } else {
-          _results.push(this.$el.on(eventName, selector, method));
-        }
-      }
-      return _results;
-    }
+  window.FormBuilder || (window.FormBuilder = {
+    all_fields: {},
+    input_fields: {},
+    non_input_fields: {},
+    helpers: {},
+    models: {},
+    views: {},
+    collections: {}
   });
 
-  window.FormBuilder || (window.FormBuilder = {});
-
-  FormBuilder.views = {
+  FormBuilder.templates = {
     view: {
-      base: _.template("<div class='subtemplate-wrapper' data-backbone-click='focusEditView'>\n  <div class='cover'></div>\n  <%= FormBuilder.views.view.label({rf: rf}) %>\n\n  <%= FormBuilder.all_fields[rf.get('field_type')].view({rf: rf}) %>\n\n  <%= FormBuilder.views.view.description({rf: rf}) %>\n  <%= FormBuilder.views.view.duplicate_remove({rf: rf}) %>\n</div>"),
-      label: _.template("<label>\n  <span><%= FormBuilder.simple_format(rf.get('label')) %>\n  <% if (rf.get('field_options.required')) { %>\n  <abbr title='required'></abbr>\n  <% } %>\n</label>"),
-      description: _.template("<span class='help-block'><%= FormBuilder.simple_format(rf.get('field_options.description')) %></span>"),
-      duplicate_remove: _.template("<div class='actions-wrapper'>\n  <a data-backbone-click=\"duplicate\" title=\"Duplicate Field\"></a>\n  <a data-backbone-click=\"clear\" title=\"Remove Field\"></a>\n</div>")
+      base: _.template("<div class='subtemplate-wrapper' data-backbone-click='focusEditView'>\n  <div class='cover'></div>\n  <%= FormBuilder.templates.view.label({rf: rf}) %>\n\n  <%= FormBuilder.all_fields[rf.get('field_type')].view({rf: rf}) %>\n\n  <%= FormBuilder.templates.view.description({rf: rf}) %>\n  <%= FormBuilder.templates.view.duplicate_remove({rf: rf}) %>\n</div>"),
+      label: _.template("<label>\n  <span><%= FormBuilder.helpers.simple_format(rf.get('label')) %>\n  <% if (rf.get('field_options.required')) { %>\n    <abbr title='required'>*</abbr>\n  <% } %>\n</label>"),
+      description: _.template("<span class='help-block'><%= FormBuilder.helpers.simple_format(rf.get('field_options.description')) %></span>"),
+      duplicate_remove: _.template("<div class='actions-wrapper'>\n  <a data-backbone-click=\"duplicate\" title=\"Duplicate Field\"><i class='icon-plus-sign'></i></a>\n  <a data-backbone-click=\"clear\" title=\"Remove Field\"><i class='icon-minus-sign'></i></a>\n</div>")
+    },
+    edit: {
+      base: _.template("<div class='fb-field-label'>\n  <span data-rv-text=\"model.label\"></span>\n  <code class='field-type' data-rv-text='model.field_type'></code>\n  <span class='icon-arrow-right pull-right'></span>\n</div>\n<%= FormBuilder.templates.edit.common %>\n\n<%= FormBuilder.all_fields[rf.get('field_type')].edit({rf: rf}) %>"),
+      common: "<div class='db-edit-section-header'>Label</div>\n\n<div class='grid'>\n  <div class='grid-item two_thirds'>\n    <input type='text' data-rv-value='model.label' />\n    <textarea data-rv-value='model.field_options.description' placeholder='Add a longer description to this field'></textarea>\n  </div>\n  <div class='grid-item one_third'>\n    <label>\n      Required\n      <input type='checkbox' data-rv-checked='model.field_options.required' />\n    </label>\n    <label>\n      Blind\n      <input type='checkbox' data-rv-checked='model.field_options.blind' />\n    </label>\n    <label>\n      Admin only\n      <input type='checkbox' data-rv-checked='model.field_options.admin_only' />\n    </label>\n  </div>\n</div>",
+      size: "<div class='fb-edit-section-header'>Size</div>\n<select data-rv-value=model.field_options.size\">\n  <option value=\"small\">Small</option>\n  <option value=\"medium\">Medium</option>\n  <option value=\"large\">Large</option>\n</select>",
+      min_max_length: "<div class='fb-edit-section-header'>Length Limit</div>\n\nMin\n<input type=\"text\" data-rv-value=\"model.field_options.minlength\" style=\"width: 30px\" />\n\n&nbsp;&nbsp;\n\nMax\n<input type=\"text\" data-rv-value=\"model.field_options.maxlength\" style=\"width: 30px\" />\n\n&nbsp;&nbsp;\n\n<select data-rv-value=\"model.field_options.min_max_length_units\" style=\"width: auto;\">\n  <option value=\"characters\">characters</option>\n  <option value=\"words\">words</option>\n</select>"
     }
   };
 
-  FormBuilder.simple_format = function(x) {
-    return x != null ? x.replace(/\n/g, '<br />') : void 0;
+  FormBuilder.helpers.defaultFieldAttrs = function(field_type) {
+    var attrs, _base;
+    attrs = {
+      label: "Untitled",
+      field_type: field_type,
+      field_options: {
+        required: true
+      }
+    };
+    return (typeof (_base = FormBuilder.all_fields[field_type]).defaultAttributes === "function" ? _base.defaultAttributes(attrs) : void 0) || attrs;
   };
 
-  FormBuilder.all_fields = {};
-
-  FormBuilder.input_fields = {};
-
-  FormBuilder.non_input_fields = {};
+  FormBuilder.helpers.simple_format = function(x) {
+    return x != null ? x.replace(/\n/g, '<br />') : void 0;
+  };
 
   FormBuilder.registerField = function(name, opts) {
     var x, _i, _len, _ref;
@@ -85,39 +48,14 @@
       opts[x] = _.template(opts[x]);
     }
     FormBuilder.all_fields[name] = opts;
-    if (opts.type === 'input') {
-      return FormBuilder.input_fields[name] = opts;
-    } else {
+    if (opts.type === 'non_input') {
       return FormBuilder.non_input_fields[name] = opts;
+    } else {
+      return FormBuilder.input_fields[name] = opts;
     }
   };
 
-  ADD_FIELD_VIEW = Backbone.View.extend({
-    el: "#addField",
-    render: function() {
-      this.$el.html(FormBuilder.JST['add_field']());
-      return this.options.parentView.setDraggable();
-    }
-  });
-
-  RESPONSE_IDENTIFIER_VIEW = Backbone.View.extend({
-    el: ".response-identifier-wrapper",
-    initialize: function() {
-      this.listenTo(this.options.parentView.collection, 'remove', this.render);
-      this.listenTo(this.options.parentView.collection, 'batchUpdate', this.render);
-      return this.listenTo(this.options.parentView.collection, 'sync', this.render);
-    },
-    render: function() {
-      this.$el.html(FormBuilder.JST['response_identifier']({
-        response_fields: this.options.parentView.collection
-      }));
-      return rivets.bind(this.$el, {
-        formOptions: this.options.parentView.response_fieldable
-      });
-    }
-  });
-
-  VIEW_FIELD_VIEW = Backbone.View.extend({
+  FormBuilder.views.view_field = Backbone.View.extend({
     className: "response-field-wrapper",
     initialize: function() {
       this.parentView = this.options.parentView;
@@ -125,11 +63,9 @@
       return this.listenTo(this.model, "destroy", this.remove);
     },
     render: function() {
-      this.$el.addClass('response-field-' + this.model.get('field_type'));
-      this.$el.html(FormBuilder.views.view["base" + (!this.model.is_input() ? '_non_input' : '')]({
+      this.$el.addClass('response-field-' + this.model.get('field_type')).data('cid', this.model.cid).html(FormBuilder.templates.view["base" + (!this.model.is_input() ? '_non_input' : '')]({
         rf: this.model
       }));
-      this.$el.data('cid', this.model.cid);
       return this;
     },
     focusEditView: function() {
@@ -150,36 +86,25 @@
     }
   });
 
-  EDIT_FIELD_VIEW = Backbone.View.extend({
+  FormBuilder.views.edit_field = Backbone.View.extend({
     className: "edit-response-field",
     initialize: function() {
       this.listenTo(this.model, "destroy", this.remove);
-      this.listenTo(this.model, "change:field_options.review_this_field", this.auditReviewThisFieldChanged);
-      return this.parentView = this.options.parentView;
+      return this.listenTo(this.model, "change:field_options.review_this_field", this.auditReviewThisFieldChanged);
     },
     render: function() {
+      this.$el.html(FormBuilder.templates.edit["base" + (!this.model.is_input() ? '_non_input' : '')]({
+        rf: this.model
+      }));
+      rivets.bind(this.$el, {
+        model: this.model
+      });
       return this;
     },
     remove: function() {
-      this.parentView.editView = void 0;
-      this.parentView.$el.find("[href=\"#addField\"]").click();
+      this.options.parentView.editView = void 0;
+      this.options.parentView.$el.find("[href=\"#addField\"]").click();
       return Backbone.View.prototype.remove.call(this);
-    },
-    auditReviewThisFieldChanged: function() {
-      if (!this.model.get('field_options.review_this_field')) {
-        this.model.attributes.field_options.review_this_field = true;
-        if (confirm('Are you sure you want to remove the review field? You will lose all reviews.')) {
-          this.model.attributes.field_options.review_this_field = false;
-        } else {
-          this.model.set('field_options.review_this_field', true);
-        }
-      }
-      if (this.model.get('field_options.review_this_field_type') == null) {
-        this.model.set('field_options.review_this_field_type', 'stars');
-      }
-      if (this.model.get('field_options.review_this_field_max') == null) {
-        return this.model.set('field_options.review_this_field_max', 10);
-      }
     },
     addOption: function(e, $el) {
       var i, newOption, options;
@@ -207,14 +132,11 @@
       if (this.model.get('field_type') !== 'checkboxes') {
         this.$el.find("[data-backbone-click=defaultUpdated]").not($el).attr('checked', false).trigger('change');
       }
-      return this.forceRender();
-    },
-    forceRender: function() {
       return this.model.trigger('change');
     }
   });
 
-  RESPONSE_FIELD_MODEL = Backbone.DeepModel.extend({
+  FormBuilder.models.response_field = Backbone.DeepModel.extend({
     sync: function() {},
     indexInDOM: function() {
       var $wrapper,
@@ -229,36 +151,34 @@
     }
   });
 
-  RESPONSE_FIELD_LIST = Backbone.Collection.extend({
-    model: RESPONSE_FIELD_MODEL,
+  FormBuilder.collections.response_fields = Backbone.Collection.extend({
+    model: FormBuilder.models.response_field,
     comparator: function(model) {
       return model.indexInDOM();
+    },
+    addCidsToModels: function() {
+      return this.each(function(model) {
+        return model.attributes.cid = model.cid;
+      });
     }
   });
 
-  FormBuilder.formBuilder = Backbone.View.extend({
+  FormBuilder.main = Backbone.View.extend({
     el: "#formBuilder",
-    SUBVIEWS: [ADD_FIELD_VIEW, RESPONSE_IDENTIFIER_VIEW],
+    SUBVIEWS: [],
     initialize: function() {
-      var subview, _i, _len, _ref,
-        _this = this;
-      this.collection = new RESPONSE_FIELD_LIST;
+      this.collection = new FormBuilder.collections.response_fields;
       this.collection.bind('add', this.addOne, this);
       this.collection.bind('reset', this.reset, this);
       this.collection.bind('change', this.handleFormUpdate, this);
-      this.collection.bind('destroy add reset', this.toggleNoResponseFields, this);
+      this.collection.bind('destroy add reset', this.hideShowNoResponseFields, this);
       this.collection.bind('destroy', this.ensureEditViewScrolled, this);
-      this.editView = void 0;
-      this.addingAll = void 0;
       this.render();
       this.collection.reset(this.options.bootstrapData);
-      _ref = this.SUBVIEWS;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        subview = _ref[_i];
-        new subview({
-          parentView: this
-        }).render();
-      }
+      return this.initAutosave();
+    },
+    initAutosave: function() {
+      var _this = this;
       this.formSaved = true;
       this.saveFormButton = this.$el.find("[data-backbone-click=saveForm]");
       this.saveFormButton.button('loading');
@@ -278,13 +198,26 @@
       return this.addAll();
     },
     render: function() {
-      var _this = this;
+      var subview, _i, _len, _ref;
       this.$el.html(FormBuilder.JST['page']({
         options: this.options
       }));
       this.$fbLeft = this.$el.find('.fb-left');
       this.$responseFields = this.$el.find('.fb-response-fields');
-      $(window).on('scroll', function() {
+      this.bindWindowScrollEvent();
+      this.hideShowNoResponseFields();
+      _ref = this.SUBVIEWS;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        subview = _ref[_i];
+        new subview({
+          parentView: this
+        }).render();
+      }
+      return this;
+    },
+    bindWindowScrollEvent: function() {
+      var _this = this;
+      return $(window).on('scroll', function() {
         var maxMargin, newMargin;
         if (_this.$fbLeft.data('locked') === true) {
           return;
@@ -295,51 +228,37 @@
           'margin-top': Math.min(maxMargin, newMargin)
         });
       });
-      this.toggleNoResponseFields();
-      return this;
     },
     showTab: function(_, $el, target) {
-      var first_model,
-        _this = this;
+      var first_model;
       $el.closest('li').addClass('active').siblings('li').removeClass('active');
       $(target).addClass('active').siblings('.fb-tab-pane').removeClass('active');
       if (target !== '#editField') {
         this.unlockLeftWrapper();
       }
       if (target === '#editField' && !this.editView && (first_model = this.collection.models[0])) {
-        this.createAndShowEditView(first_model);
-      }
-      if (target === '#formOptions') {
-        return $.scrollWindowTo(0, 200, function() {
-          return _this.lockLeftWrapper();
-        });
+        return this.createAndShowEditView(first_model);
       }
     },
     addOne: function(responseField, _, options) {
       var $replacePosition, view;
-      view = new VIEW_FIELD_VIEW({
+      view = new FormBuilder.views.view_field({
         model: responseField,
         parentView: this
       });
       if (options.$replaceEl != null) {
-        options.$replaceEl.replaceWith(view.render().el);
+        return options.$replaceEl.replaceWith(view.render().el);
       } else if ((options.position == null) || options.position === -1) {
-        this.$responseFields.append(view.render().el);
+        return this.$responseFields.append(view.render().el);
       } else if (options.position === 0) {
-        this.$responseFields.prepend(view.render().el);
+        return this.$responseFields.prepend(view.render().el);
+      } else if (($replacePosition = this.$responseFields.find(".response-field-wrapper").eq(options.position))[0]) {
+        return $replacePosition.before(view.render().el);
       } else {
-        $replacePosition = this.$responseFields.find(".response-field-wrapper").eq(options.position);
-        if ($replacePosition.length > 0) {
-          $replacePosition.before(view.render().el);
-        } else {
-          this.$responseFields.append(view.render().el);
-        }
-      }
-      if (!this.addingAll) {
-        return this.resetSortable();
+        return this.$responseFields.append(view.render().el);
       }
     },
-    resetSortable: function() {
+    setSortable: function() {
       var _this = this;
       if (this.$responseFields.hasClass('ui-sortable')) {
         this.$responseFields.sortable('destroy');
@@ -352,7 +271,7 @@
           if (ui.item.is('a')) {
             field_type = ui.item.data('backbone-params');
             pos = $(".response-field-wrapper").index(ui.item.next(".response-field-wrapper"));
-            rf = _this.collection.create(_this.defaultAttrs(field_type), {
+            rf = _this.collection.create(FormBuilder.helpers.defaultFieldAttrs(field_type), {
               $replaceEl: ui.item
             });
             _this.createAndShowEditView(rf);
@@ -388,48 +307,14 @@
       });
     },
     addAll: function() {
-      this.addingAll = true;
       this.collection.each(this.addOne, this);
-      this.addingAll = false;
-      return this.resetSortable();
+      return this.setSortable();
     },
-    toggleNoResponseFields: function() {
+    hideShowNoResponseFields: function() {
       return this.$el.find(".fb-no-response-fields")[this.collection.length > 0 ? 'hide' : 'show']();
     },
-    defaultAttrs: function(field_type) {
-      var attrs;
-      attrs = {
-        label: "Untitled",
-        field_type: field_type,
-        field_options: {
-          required: true
-        }
-      };
-      switch (attrs.field_type) {
-        case "checkboxes":
-        case "dropdown":
-        case "radio":
-          attrs.field_options.options = [
-            {
-              label: "",
-              checked: false
-            }, {
-              label: "",
-              checked: false
-            }
-          ];
-          break;
-        case "dropdown":
-          attrs.field_options.include_blank_option = false;
-          break;
-        case "text":
-        case "paragraph":
-          attrs.field_options.size = "small";
-      }
-      return attrs;
-    },
     addField: function(_, __, field_type) {
-      return this.createField(this.defaultAttrs(field_type));
+      return this.createField(FormBuilder.helpers.defaultFieldAttrs(field_type));
     },
     createField: function(attrs, options) {
       var rf;
@@ -442,8 +327,7 @@
       $responseFieldEl = this.$el.find(".response-field-wrapper").filter(function() {
         return $(this).data('cid') === model.cid;
       });
-      this.$el.find(".response-field-wrapper").removeClass('editing');
-      $responseFieldEl.addClass('editing');
+      $responseFieldEl.addClass('editing').siblings('.response-field-wrapper').removeClass('editing');
       if (this.editView) {
         if (this.editView.model.cid === model.cid) {
           this.$el.find(".fb-tabs a[data-backbone-params=\"#editField\"]").click();
@@ -453,7 +337,7 @@
         oldPadding = this.$fbLeft.css('padding-top');
         this.editView.remove();
       }
-      this.editView = new EDIT_FIELD_VIEW({
+      this.editView = new FormBuilder.views.edit_field({
         model: model,
         parentView: this
       });
@@ -498,9 +382,7 @@
       this.formSaved = true;
       this.saveFormButton.button('loading');
       this.collection.sort();
-      this.collection.each((function(model) {
-        return model.attributes.cid = model.cid;
-      }));
+      this.collection.addCidsToModels();
       this.collection.trigger('batchUpdate');
       return $.ajax({
         url: "/response_fields/batch?" + this.collection.urlParams,
@@ -511,7 +393,7 @@
           form_options: (_ref = this.response_fieldable) != null ? _ref.toJSON() : void 0
         }),
         success: function(data) {
-          var datum, newReviewFieldId, _i, _len, _ref1, _ref2;
+          var datum, _i, _len, _ref1;
           _this.updatingBatch = true;
           for (_i = 0, _len = data.length; _i < _len; _i++) {
             datum = data[_i];
@@ -519,11 +401,6 @@
               _ref1.set({
                 id: datum.id
               });
-            }
-            if ((newReviewFieldId = datum.field_options.review_this_field_id)) {
-              if ((_ref2 = _this.collection.get(datum.cid)) != null) {
-                _ref2.set('field_options.review_this_field_id', newReviewFieldId);
-              }
             }
             _this.collection.trigger('sync');
           }

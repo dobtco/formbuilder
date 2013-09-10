@@ -9,55 +9,6 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['add_field'] = function(context) {
-    return (function() {
-      var $c, $e, $o, k, v, _ref, _ref1;
-      $e = function(text, escape) {
-        return ("" + text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/'/g, '&#39;').replace(/\//g, '&#47;').replace(/"/g, '&quot;');
-      };
-      $c = function(text) {
-        switch (text) {
-          case null:
-          case void 0:
-            return '';
-          case true:
-          case false:
-            return '' + text;
-          default:
-            return text;
-        }
-      };
-      $o = [];
-      $o.push("<div class='fb-add-field-types'>\n  <div class='section'>");
-      _ref = FormBuilder.input_fields;
-      for (k in _ref) {
-        v = _ref[k];
-        $o.push("    <a data-backbone-click='addField' data-backbone-params='" + ($e($c(k))) + "'>" + ($c(v.addButton)) + "</a>");
-      }
-      $o.push("  </div>\n  <div class='section'>\n    <div class='section-header'>Non-input fields</div>");
-      _ref1 = FormBuilder.non_input_fields;
-      for (k in _ref1) {
-        v = _ref1[k];
-        $o.push("    <a data-backbone-click='addField' data-backbone-params='" + ($e($c(k))) + "'>" + ($c(v.addButton)) + "</a>");
-      }
-      $o.push("  </div>\n</div>");
-      return $o.join("\n").replace(/\s(\w+)='true'/mg, ' $1').replace(/\s(\w+)='false'/mg, '').replace(/\s(?:id|class)=(['"])(\1)/mg, "");
-    }).call(context);
-  };
-
-}).call(this);
-
-(function() {
-  var _base;
-
-  if (window.FormBuilder == null) {
-    window.FormBuilder = {};
-  }
-
-  if ((_base = window.FormBuilder).JST == null) {
-    _base.JST = {};
-  }
-
   window.FormBuilder.JST['edita/address'] = function(context) {
     return (function() {
       var $o;
@@ -485,28 +436,6 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edita/pieces/review_this_field'] = function(context) {
-    return (function() {
-      var $o;
-      $o = [];
-      $o.push("<div class='fb-edit-section-header'>Rate this field</div>\n<div class='controls'>\n  <label class='checkbox'>\n    <input type='checkbox' data-rv-checked='model.field_options.review_this_field'>\n    Ask reviewers to rate this field\n  </label>\n</div>\n<div class='review-this-field-options' data-rv-show='model.field_options.review_this_field'>\n  <div class='controls rate-by'>\n    <label>Rate by</label>\n    <select data-rv-value='model.field_options.review_this_field_type'>\n      <option value='stars'>Stars</option>\n      <option value='ryg'>Red/Yellow/Green</option>\n      <option value='number'>Number Range</option>\n      <option value='free_response'>Free Response</option>\n    </select>\n  </div>\n  <div class='controls' data-rv-show='model.field_options.review_this_field_type | eq \"number\"'>\n    <label>Max Rating</label>\n    <input type='number' data-rv-value='model.field_options.review_this_field_max' min='1' max='100'>\n  </div>\n  <div class='controls field-description'>\n    <label>Field description</label>\n    <textarea data-rv-value='model.field_options.review_this_field_description' placeholder='e.g. \"Pay careful attention to their grammar in this response.\"'></textarea>\n  </div>\n</div>");
-      return $o.join("\n").replace(/\s(?:id|class)=(['"])(\1)/mg, "");
-    }).call(context);
-  };
-
-}).call(this);
-
-(function() {
-  var _base;
-
-  if (window.FormBuilder == null) {
-    window.FormBuilder = {};
-  }
-
-  if ((_base = window.FormBuilder).JST == null) {
-    _base.JST = {};
-  }
-
   window.FormBuilder.JST['edita/pieces/size'] = function(context) {
     return (function() {
       var $o;
@@ -723,37 +652,7 @@
 
   window.FormBuilder.JST['page'] = function(context) {
     return (function() {
-      var $o;
-      $o = [];
-      $o.push("<div class='response-field-save-wrapper'>\n  <button class='btn pull-right' data-backbone-click='saveForm' data-loading-text='All changes saved'>Save form</button>\n  <div class='fb-clear'></div>\n</div>\n<div class='fb-left'>\n  <ul class='fb-tabs'>\n    <li class='active'>\n      <a data-backbone-click='showTab' data-backbone-params='#addField'>Add new field</a>\n    </li>\n    <li>\n      <a data-backbone-click='showTab' data-backbone-params='#editField'>Edit field</a>\n    </li>");
-      if (this.options.formOptions) {
-        $o.push("    <li>\n      <a>Form options</a>\n    </li>");
-      }
-      $o.push("  </ul>\n  <div class='fb-tab-content'>\n    <div class='active fb-tab-pane' id='addField'></div>\n    <div class='fb-tab-pane' id='editField'>\n      <div id='edit-response-field-wrapper'></div>\n    </div>");
-      if (this.options.formOptions) {
-        $o.push("    <div class='tab-pane' id='formOptions'>\n      <label>Form description</label>\n      <textarea class='textarea-full' data-rv-value='formOptions.form_description'></textarea>\n      <label>Form confirmation message</label>\n      <textarea class='textarea-full' data-rv-value='formOptions.form_confirmation_message'></textarea>\n      <span class='help-block'>No confirmation message?</span>\n      <label>Submit Button Text</label>\n      <input type='text' data-rv-value='formOptions.submit_button_text'>\n      <span class='help-block'>If left blank, the default is \"Submit\"</span>\n      <div class='response-identifier-wrapper'></div>\n    </div>");
-      }
-      $o.push("  </div>\n</div>\n<div class='fb-right'>\n  <div class='fb-no-response-fields'>No response fields</div>\n  <div class='fb-response-fields'></div>\n</div>\n<div class='fb-clear'></div>");
-      return $o.join("\n").replace(/\s(?:id|class)=(['"])(\1)/mg, "");
-    }).call(context);
-  };
-
-}).call(this);
-
-(function() {
-  var _base;
-
-  if (window.FormBuilder == null) {
-    window.FormBuilder = {};
-  }
-
-  if ((_base = window.FormBuilder).JST == null) {
-    _base.JST = {};
-  }
-
-  window.FormBuilder.JST['response_identifier'] = function(context) {
-    return (function() {
-      var $c, $e, $o;
+      var $c, $e, $o, k, v, _ref, _ref1;
       $e = function(text, escape) {
         return ("" + text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/'/g, '&#39;').replace(/\//g, '&#47;').replace(/"/g, '&quot;');
       };
@@ -770,12 +669,27 @@
         }
       };
       $o = [];
-      $o.push("<label>Response Identifier</label>\n<select data-rv-value='formOptions.response_identifier'>\n  <option></option>");
-      this.response_fields.each(function(rf) {
-        $o.push("  <option value='" + ($e($c(rf.get('id')))) + "'>" + ($e($c(rf.get('label')))) + "</option>");
-        return '';
-      });
-      $o.push("</select>\n<div class='help-block'>If the responder doesn't have a Screendoor account, this field will be used to identify their response.</div>");
+      $o.push("<div class='response-field-save-wrapper'>\n  <button class='btn pull-right' data-backbone-click='saveForm' data-loading-text='All changes saved'>Save form</button>\n  <div class='fb-clear'></div>\n</div>\n<div class='fb-left'>\n  <ul class='fb-tabs'>\n    <li class='active'>\n      <a data-backbone-click='showTab' data-backbone-params='#addField'>Add new field</a>\n    </li>\n    <li>\n      <a data-backbone-click='showTab' data-backbone-params='#editField'>Edit field</a>\n    </li>");
+      if (this.options.formOptions) {
+        $o.push("    <li>\n      <a>Form options</a>\n    </li>");
+      }
+      $o.push("  </ul>\n  <div class='fb-tab-content'>\n    <div class='active fb-tab-pane' id='addField'>\n      <div class='fb-add-field-types'>\n        <div class='section'>");
+      _ref = FormBuilder.input_fields;
+      for (k in _ref) {
+        v = _ref[k];
+        $o.push("          <a data-backbone-click='addField' data-backbone-params='" + ($e($c(k))) + "'>" + ($c(v.addButton)) + "</a>");
+      }
+      $o.push("        </div>\n        <div class='section'>\n          <div class='section-header'>Non-input fields</div>");
+      _ref1 = FormBuilder.non_input_fields;
+      for (k in _ref1) {
+        v = _ref1[k];
+        $o.push("          <a data-backbone-click='addField' data-backbone-params='" + ($e($c(k))) + "'>" + ($c(v.addButton)) + "</a>");
+      }
+      $o.push("        </div>\n      </div>\n    </div>\n    <div class='fb-tab-pane' id='editField'>\n      <div id='edit-response-field-wrapper'></div>\n    </div>");
+      if (this.options.formOptions) {
+        $o.push("    <div class='tab-pane' id='formOptions'>\n      <label>Form description</label>\n      <textarea class='textarea-full' data-rv-value='formOptions.form_description'></textarea>\n      <label>Form confirmation message</label>\n      <textarea class='textarea-full' data-rv-value='formOptions.form_confirmation_message'></textarea>\n      <span class='help-block'>No confirmation message?</span>\n      <label>Submit Button Text</label>\n      <input type='text' data-rv-value='formOptions.submit_button_text'>\n      <span class='help-block'>If left blank, the default is \"Submit\"</span>\n      <div class='response-identifier-wrapper'></div>\n    </div>");
+      }
+      $o.push("  </div>\n</div>\n<div class='fb-right'>\n  <div class='fb-no-response-fields'>No response fields</div>\n  <div class='fb-response-fields'></div>\n</div>\n<div class='fb-clear'></div>");
       return $o.join("\n").replace(/\s(\w+)='true'/mg, ' $1').replace(/\s(\w+)='false'/mg, '').replace(/\s(?:id|class)=(['"])(\1)/mg, "");
     }).call(context);
   };
