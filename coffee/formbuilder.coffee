@@ -106,6 +106,31 @@ FormBuilder.templates =
       </select>
     """
 
+    min_max: """
+      <div class='fb-edit-section-header'>Minimum / Maximum</div>
+
+      Above
+      <input type="text" data-rv-value="model.field_options.min" style="width: 30px" />
+
+      &nbsp;&nbsp;
+
+      Below
+      <input type="text" data-rv-value="model.field_options.max" style="width: 30px" />
+    """
+
+    units: """
+      <div class='fb-edit-section-header'>Units</div>
+      <input type="text" data-rv-value="model.field_options.units" />
+    """
+
+    integer_only: """
+      <div class='fb-edit-section-header'>Integer only</div>
+      <label>
+        <input type='checkbox' data-rv-checked='model.field_options.integer_only' />
+        Only accept integers
+      </label>
+    """
+
     options: (opts) ->
       str = """ <div class='fb-edit-section-header'>Options</div> """
 

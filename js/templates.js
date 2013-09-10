@@ -1248,7 +1248,7 @@
     return (function() {
       var $o;
       $o = [];
-      $o.push("<div class='input-line'>\n  <span class='hours'>\n    <input type='text'>\n    <label>HH</label>\n  </span>\n  <span class='above-line'>:</span>\n  <span class='minutes'>\n    <input type='text'>\n    <label>MM</label>\n  </span>\n  <span class='above-line'>:</span>\n  <span class='seconds'>\n    <input type='text'>\n    <label>SS</label>\n  </span>\n  <span class='am_pm'>\n    <select>\n      <option>AM</option>\n      <option>PM</option>\n    </select>\n  </span>\n</div>");
+      $o.push("<div class='input-line'></div>");
       return $o.join("\n").replace(/\s(?:id|class)=(['"])(\1)/mg, "");
     }).call(context);
   };
