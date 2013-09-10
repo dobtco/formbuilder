@@ -252,6 +252,8 @@ FormBuilder.formBuilder = Backbone.View.extend
     @$el.html FormBuilder.JST['page']
       options: @options
 
+    @$fbLeft = @$el.find('.fb-left')
+
     # rivets.bind @$el,
     #   formOptions: @response_fieldable
 
@@ -267,11 +269,11 @@ FormBuilder.formBuilder = Backbone.View.extend
 
 
     $(window).on 'scroll', =>
-      return if $('#response-field-left-wrapper').data('locked') == true
+      return if @$fbLeft.data('locked') == true
       newMargin = Math.max(0, $(window).scrollTop())
       maxMargin = $("#response-fields").height()
 
-      $('#response-field-left-wrapper').css
+      @$fbLeft.css
         'margin-top': Math.min(maxMargin, newMargin)
 
     @toggleNoResponseFields()
@@ -384,7 +386,7 @@ FormBuilder.formBuilder = Backbone.View.extend
         @scrollLeftWrapper $responseFieldEl, (oldPadding? && oldPadding)
         return
 
-      oldPadding = @$el.find("#response-field-left-wrapper").css('padding-top')
+      oldPadding = @$fbLeft.css('padding-top')
       @editView.remove()
 
     @editView = new EDIT_FIELD_VIEW
@@ -408,10 +410,10 @@ FormBuilder.formBuilder = Backbone.View.extend
       @lockLeftWrapper()
 
   lockLeftWrapper: ->
-    $("#response-field-left-wrapper").data('locked', true)
+    @$fbLeft.data('locked', true)
 
   unlockLeftWrapper: ->
-    $("#response-field-left-wrapper").data('locked', false)
+    @$fbLeft.data('locked', false)
 
   handleFormUpdate: ->
     return if @updatingBatch

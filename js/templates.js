@@ -745,7 +745,7 @@
     return (function() {
       var $o;
       $o = [];
-      $o.push("<div class='response-field-save-wrapper'>\n  <button class='btn pull-right' data-backbone-click='saveForm' data-loading-text='All changes saved'>Save form</button>\n  <div class='clearfix'></div>\n</div>\n<div id='response-field-left-wrapper'>\n  <ul class='nav nav-tabs' id='response-field-tabs'>\n    <li class='active'>\n      <a href='#addField' data-toggle='tab'>Add new field</a>\n    </li>\n    <li>\n      <a href='#editField' data-toggle='tab'>Edit field</a>\n    </li>");
+      $o.push("<div class='response-field-save-wrapper'>\n  <button class='btn pull-right' data-backbone-click='saveForm' data-loading-text='All changes saved'>Save form</button>\n  <div class='clearfix'></div>\n</div>\n<div class='fb-left'>\n  <ul class='nav nav-tabs' id='response-field-tabs'>\n    <li class='active'>\n      <a href='#addField' data-toggle='tab'>Add new field</a>\n    </li>\n    <li>\n      <a href='#editField' data-toggle='tab'>Edit field</a>\n    </li>");
       if (this.options.formOptions) {
         $o.push("    <li>\n      <a href='#formOptions' data-toggle='tab'>Form options</a>\n    </li>");
       }

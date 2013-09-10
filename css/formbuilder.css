@@ -1,0 +1,12 @@
+.fb-main {
+  max-width: 1000px;
+  margin: 0 auto; }
+
+.fb-left {
+  width: 320px;
+  float: left;
+  background-color: #eeeeee;
+  padding: 20px; }
+
+.fb-right {
+  margin-left: 400px; }

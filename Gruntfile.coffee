@@ -1,4 +1,4 @@
-ALL_TASKS = ['coffee', 'haml']
+ALL_TASKS = ['coffee', 'haml', 'sass']
 
 module.exports = (grunt) ->
 
@@ -7,6 +7,7 @@ module.exports = (grunt) ->
 
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-haml')
+  grunt.loadNpmTasks('grunt-contrib-sass')
   grunt.loadNpmTasks('grunt-contrib-watch')
 
   grunt.initConfig
@@ -34,9 +35,19 @@ module.exports = (grunt) ->
         files:
           'js/templates.js': ['templates/**/*.haml']
 
+    sass:
+      all:
+        files: [{
+          expand: true
+          cwd: 'sass'
+          src: ['*.sass', '*.scss']
+          dest: 'css'
+          ext: '.css'
+        }]
+
     watch:
       app:
-        files: ['./coffee/*.coffee', 'templates/**/*.haml']
+        files: ['./coffee/*.coffee', 'templates/**/*.haml', './sass/*.sass']
         tasks: ALL_TASKS
 
   grunt.registerTask 'default', ALL_TASKS

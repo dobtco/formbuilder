@@ -4,6 +4,7 @@
     "grunt": "*",
     "grunt-contrib-coffee": "*",
     "grunt-haml": "*",
+    "grunt-contrib-sass": "*",
     "grunt-contrib-watch": "*"
   }
 }

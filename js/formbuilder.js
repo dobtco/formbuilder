@@ -284,6 +284,7 @@
       this.$el.html(FormBuilder.JST['page']({
         options: this.options
       }));
+      this.$fbLeft = this.$el.find('.fb-left');
       this.$el.find("#response-field-tabs a[href=\"#editField\"]").on('show', function() {
         var first_model;
         if (!_this.editView && (first_model = _this.collection.models[0])) {
@@ -302,12 +303,12 @@
       });
       $(window).on('scroll', function() {
         var maxMargin, newMargin;
-        if ($('#response-field-left-wrapper').data('locked') === true) {
+        if (_this.$fbLeft.data('locked') === true) {
           return;
         }
         newMargin = Math.max(0, $(window).scrollTop());
         maxMargin = $("#response-fields").height();
-        return $('#response-field-left-wrapper').css({
+        return _this.$fbLeft.css({
           'margin-top': Math.min(maxMargin, newMargin)
         });
       });
@@ -445,7 +446,7 @@
           this.scrollLeftWrapper($responseFieldEl, (typeof oldPadding !== "undefined" && oldPadding !== null) && oldPadding);
           return;
         }
-        oldPadding = this.$el.find("#response-field-left-wrapper").css('padding-top');
+        oldPadding = this.$fbLeft.css('padding-top');
         this.editView.remove();
       }
       this.editView = new EDIT_FIELD_VIEW({
@@ -472,10 +473,10 @@
       });
     },
     lockLeftWrapper: function() {
-      return $("#response-field-left-wrapper").data('locked', true);
+      return this.$fbLeft.data('locked', true);
     },
     unlockLeftWrapper: function() {
-      return $("#response-field-left-wrapper").data('locked', false);
+      return this.$fbLeft.data('locked', false);
     },
     handleFormUpdate: function() {
       if (this.updatingBatch) {
