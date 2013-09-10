@@ -28,7 +28,7 @@ module.exports = (grunt) ->
           language: 'coffee'
           placement: 'global'
           target: 'js'
-          namespace: 'window.JST'
+          namespace: 'window.FormBuilder.JST'
           includePath: true
           pathRelativeTo: './templates'
         files:

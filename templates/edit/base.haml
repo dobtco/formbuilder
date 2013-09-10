@@ -1,0 +1,13 @@
+%h4
+  <span data-rv-text="model.label"></span>
+  %code.field-type{"data-rv-text" => "model.field_type"}
+  %span.icon-arrow-right.pull-right
+
+- if @response_field.get('field_options.vendor_profile')
+  .alert.alert-info
+    This field will be pre-filled from the vendor's profile, using the
+    <code>#{@response_field.get('key')}</code> key.
+
+!= JST['admin_response_field/edit/groups/common']()
+.edit-subtemplate-wrapper
+!= JST['admin_response_field/edit/pieces/review_this_field']()

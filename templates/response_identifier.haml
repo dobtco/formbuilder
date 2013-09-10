@@ -1,0 +1,6 @@
+%label Response Identifier
+%select{"data-rv-value" => "formOptions.response_identifier"}
+  %option
+  - @response_fields.each (rf) ->
+    %option{"value" => rf.get('id')}= rf.get('label')
+.help-block If the responder doesn't have a Screendoor account, this field will be used to identify their response.

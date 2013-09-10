@@ -1,0 +1,18 @@
+%label.header= I18n.t('g.response_field.label')
+
+.row-fluid
+  .span8
+    %input{"type" => "text", "data-rv-value" => "model.label"}
+    %textarea{"data-rv-value" => "model.field_options.description", "placeholder" => "Add a longer description to this field"}
+
+  .span4
+    %label.checkbox
+      = I18n.t('g.response_field.required')
+      %input{"type" => "checkbox", "data-rv-checked" => "model.field_options.required"}
+    %label.checkbox
+      Blind
+      %input{"type" => "checkbox", "data-rv-checked" => "model.blind"}
+    %label.checkbox
+      Admin only
+      %input{"type" => "checkbox", "data-rv-checked" => "model.admin_only"}
+

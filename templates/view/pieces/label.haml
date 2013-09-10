@@ -1,0 +1,4 @@
+%label
+  %span!= @response_field.get('label')?.simple_format()
+  - if @response_field.get('field_options.required')
+    %abbr{"title" => "required"} *

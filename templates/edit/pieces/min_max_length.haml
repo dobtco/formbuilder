@@ -1,0 +1,15 @@
+%label.header Length Limit
+
+Min
+%input{"type" => "text", "data-rv-value" => "model.field_options.minlength", "style" => "width: 30px"}
+
+&nbsp;&nbsp;
+
+Max
+%input{"type" => "text", "data-rv-value" => "model.field_options.maxlength", "style" => "width: 30px"}
+
+&nbsp;&nbsp;
+
+%select{"data-rv-value" => "model.field_options.min_max_length_units", "style" => "width: auto;"}
+  %option{"value" => "characters"} characters
+  %option{"value" => "words"} words

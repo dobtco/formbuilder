@@ -1,0 +1,12 @@
+.subtemplate-wrapper{"data-backbone-click" => "focusEditView"}
+  .cover
+  != JST['admin_response_field/view/pieces/label'](@)
+  .subtemplate-wrapper-inner
+  .clearfix
+  != JST['admin_response_field/view/pieces/description'](@)
+
+.actions-wrapper
+  %a.btn.btn-mini.btn-success{"data-backbone-click" => "duplicate", "title" => "Duplicate Field"}
+    %span.icon-plus-sign
+  %a.btn.btn-mini.btn-danger{"data-backbone-click" => "clear", "title" => "Remove Field"}
+    %span.icon-minus-sign

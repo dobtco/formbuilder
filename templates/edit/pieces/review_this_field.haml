@@ -1,0 +1,22 @@
+%label.header Rate this field
+.controls
+  %label.checkbox
+    %input{"type" => "checkbox", "data-rv-checked" => "model.field_options.review_this_field"}
+    Ask reviewers to rate this field
+
+.review-this-field-options{'data-rv-show' => 'model.field_options.review_this_field'}
+  .controls.rate-by
+    %label Rate by
+    %select{"data-rv-value" => "model.field_options.review_this_field_type"}
+      %option{'value' => 'stars'} Stars
+      %option{'value' => 'ryg'} Red/Yellow/Green
+      %option{'value' => 'number'} Number Range
+      %option{'value' => 'free_response'} Free Response
+
+  .controls{'data-rv-show' => 'model.field_options.review_this_field_type | eq "number"'}
+    %label Max Rating
+    %input{"type" => "number", "data-rv-value" => "model.field_options.review_this_field_max", 'min' => '1', 'max' => '100'}
+
+  .controls.field-description
+    %label Field description
+    %textarea{"data-rv-value" => "model.field_options.review_this_field_description", 'placeholder' => "e.g. \"Pay careful attention to their grammar in this response.\""}

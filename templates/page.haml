@@ -1,0 +1,42 @@
+.response-field-save-wrapper
+  %button.btn.pull-right{"data-backbone-click" => "saveForm", "data-loading-text" => I18n.t('g.all_changes_saved')}
+    = I18n.t('g.save_form')
+  .clearfix
+
+#response-field-left-wrapper
+  %ul.nav.nav-tabs#response-field-tabs
+    %li.active
+      %a{"href" => "#addField", "data-toggle" => "tab"}= I18n.t('g.response_field.add_new_field')
+    %li
+      %a{"href" => "#editField", "data-toggle" => "tab"}= I18n.t('g.response_field.edit_field')
+
+    - if @options.formOptions
+      %li
+        %a{"href" => "#formOptions", "data-toggle" => "tab"}= I18n.t('g.response_field.form_options')
+
+  .tab-content
+    .tab-pane.active#addField
+
+    .tab-pane#editField
+      #edit-response-field-wrapper
+
+    - if @options.formOptions
+      .tab-pane#formOptions
+        %label= I18n.t('g.response_field.form_description')
+        %textarea.textarea-full{"data-rv-value" => "formOptions.form_description"}
+
+        %label= I18n.t('g.response_field.form_confirmation_message')
+        %textarea.textarea-full{"data-rv-value" => "formOptions.form_confirmation_message"}
+        %span.help-block= I18n.t('g.response_field.no_confirmation_message')
+
+        %label Submit Button Text
+        %input{"type" => "text", "data-rv-value" => "formOptions.submit_button_text"}
+        %span.help-block If left blank, the default is "Submit"
+
+        .response-identifier-wrapper
+
+#response-field-right-wrapper
+  #no-response-fields= I18n.t('g.response_field.none')
+  #response-fields
+
+.clearfix

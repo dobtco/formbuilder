@@ -1,0 +1,5 @@
+%select
+  - if @response_field.get('field_options.include_blank_option')
+    %option{"value" => ""}
+  - for option in @response_field.get('field_options.options') || []
+    %option{"selected" => option.checked}= option.label
