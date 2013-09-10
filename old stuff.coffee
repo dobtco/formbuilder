@@ -20,8 +20,6 @@
 # attrs
 
 # FormBuilder.RESPONSE_FIELD_TYPES =
-#   text: "<span class='symbol'><span class='icon-font'></span></span> Text"
-#   paragraph: '<span class="symbol">&#182;</span> Paragraph'
 #   checkboxes: '<span class="symbol"><span class="icon-check-empty"></span></span> Checkboxes'
 #   radio: '<span class="symbol"><span class="icon-circle-blank"></span></span> Multiple Choice'
 #   dropdown: '<span class="symbol"><span class="icon-caret-down"></span></span> Dropdown'

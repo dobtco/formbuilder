@@ -106,6 +106,40 @@ FormBuilder.templates =
       </select>
     """
 
+    options: (opts) ->
+      str = """ <div class='fb-edit-section-header'>Options</div> """
+
+      if opts.includeBlank
+        str += """
+          <label>
+            <input type='checkbox' data-rv-checked='model.field_options.include_blank_option' />
+            Include blank
+          </label>
+        """
+
+      str += """
+        <div class='option' data-rv-each-option='model.field_options.options'>
+          <input type="checkbox" data-rv-checked="option:checked" data-backbone-click="defaultUpdated" />
+          <input type="text" data-rv-value="option:label" data-backbone-input="forceRender" />
+          <a data-backbone-click="addOption" title="Add Option"><i class='icon-plus-sign'></i></a>
+          <a data-backbone-click="removeOption" title="Remove Option"><i class='icon-minus-sign'></i></a>
+        </div>
+      """
+
+      if opts.includeOther
+        str += """
+          <label>
+            <input type='checkbox' data-rv-checked='model.field_options.include_other_option' />
+            Include "other"
+          </label>
+        """
+
+      str += """
+        <a data-backbone-click="addOption">Add option</a>
+      """
+
+      str
+
 FormBuilder.helpers.defaultFieldAttrs = (field_type) ->
   attrs =
     label: "Untitled"
@@ -197,7 +231,10 @@ FormBuilder.views.edit_field = Backbone.View.extend
     unless @model.get('field_type') == 'checkboxes' # checkboxes can have multiple options selected
       @$el.find("[data-backbone-click=defaultUpdated]").not($el).attr('checked', false).trigger('change')
 
-    @model.trigger('change') # forces render
+    @forceRender()
+
+  forceRender: ->
+    @model.trigger('change')
 
 FormBuilder.models.response_field = Backbone.DeepModel.extend
   sync: -> # noop

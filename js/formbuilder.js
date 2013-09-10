@@ -20,7 +20,20 @@
       base: _.template("<div class='fb-field-label'>\n  <span data-rv-text=\"model.label\"></span>\n  <code class='field-type' data-rv-text='model.field_type'></code>\n  <span class='icon-arrow-right pull-right'></span>\n</div>\n<%= FormBuilder.templates.edit.common %>\n\n<%= FormBuilder.all_fields[rf.get('field_type')].edit({rf: rf}) %>"),
       common: "<div class='db-edit-section-header'>Label</div>\n\n<div class='grid'>\n  <div class='grid-item two_thirds'>\n    <input type='text' data-rv-value='model.label' />\n    <textarea data-rv-value='model.field_options.description' placeholder='Add a longer description to this field'></textarea>\n  </div>\n  <div class='grid-item one_third'>\n    <label>\n      Required\n      <input type='checkbox' data-rv-checked='model.field_options.required' />\n    </label>\n    <label>\n      Blind\n      <input type='checkbox' data-rv-checked='model.field_options.blind' />\n    </label>\n    <label>\n      Admin only\n      <input type='checkbox' data-rv-checked='model.field_options.admin_only' />\n    </label>\n  </div>\n</div>",
       size: "<div class='fb-edit-section-header'>Size</div>\n<select data-rv-value=model.field_options.size\">\n  <option value=\"small\">Small</option>\n  <option value=\"medium\">Medium</option>\n  <option value=\"large\">Large</option>\n</select>",
-      min_max_length: "<div class='fb-edit-section-header'>Length Limit</div>\n\nMin\n<input type=\"text\" data-rv-value=\"model.field_options.minlength\" style=\"width: 30px\" />\n\n&nbsp;&nbsp;\n\nMax\n<input type=\"text\" data-rv-value=\"model.field_options.maxlength\" style=\"width: 30px\" />\n\n&nbsp;&nbsp;\n\n<select data-rv-value=\"model.field_options.min_max_length_units\" style=\"width: auto;\">\n  <option value=\"characters\">characters</option>\n  <option value=\"words\">words</option>\n</select>"
+      min_max_length: "<div class='fb-edit-section-header'>Length Limit</div>\n\nMin\n<input type=\"text\" data-rv-value=\"model.field_options.minlength\" style=\"width: 30px\" />\n\n&nbsp;&nbsp;\n\nMax\n<input type=\"text\" data-rv-value=\"model.field_options.maxlength\" style=\"width: 30px\" />\n\n&nbsp;&nbsp;\n\n<select data-rv-value=\"model.field_options.min_max_length_units\" style=\"width: auto;\">\n  <option value=\"characters\">characters</option>\n  <option value=\"words\">words</option>\n</select>",
+      options: function(opts) {
+        var str;
+        str = " <div class='fb-edit-section-header'>Options</div> ";
+        if (opts.includeBlank) {
+          str += "<label>\n  <input type='checkbox' data-rv-checked='model.field_options.include_blank_option' />\n  Include blank\n</label>";
+        }
+        str += "<div class='option' data-rv-each-option='model.field_options.options'>\n  <input type=\"checkbox\" data-rv-checked=\"option:checked\" data-backbone-click=\"defaultUpdated\" />\n  <input type=\"text\" data-rv-value=\"option:label\" data-backbone-input=\"forceRender\" />\n  <a data-backbone-click=\"addOption\" title=\"Add Option\"><i class='icon-plus-sign'></i></a>\n  <a data-backbone-click=\"removeOption\" title=\"Remove Option\"><i class='icon-minus-sign'></i></a>\n</div>";
+        if (opts.includeOther) {
+          str += "<label>\n  <input type='checkbox' data-rv-checked='model.field_options.include_other_option' />\n  Include \"other\"\n</label>";
+        }
+        str += "<a data-backbone-click=\"addOption\">Add option</a>";
+        return str;
+      }
     }
   };
 
@@ -132,6 +145,9 @@
       if (this.model.get('field_type') !== 'checkboxes') {
         this.$el.find("[data-backbone-click=defaultUpdated]").not($el).attr('checked', false).trigger('change');
       }
+      return this.forceRender();
+    },
+    forceRender: function() {
       return this.model.trigger('change');
     }
   });
