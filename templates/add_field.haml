@@ -1,9 +1,9 @@
 .fb-add-field-types
   .section
-    - for k, v of FormBuilder.RESPONSE_FIELD_TYPES
-      %a{"data-backbone-click" => "addField", "data-backbone-params" => k}!= v
+    - for k, v of FormBuilder.input_fields
+      %a{"data-backbone-click" => "addField", "data-backbone-params" => k}!= v.addButton
 
   .section
     .section-header Non-input fields
-    - for k, v of FormBuilder.RESPONSE_FIELD_NON_INPUT_TYPES
-      %a{"data-backbone-click" => "addField", "data-backbone-params" => k}!= v
+    - for k, v of FormBuilder.non_input_fields
+      %a{"data-backbone-click" => "addField", "data-backbone-params" => k}!= v.addButton

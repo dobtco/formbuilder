@@ -1,7 +1,3 @@
-`String.prototype.simple_format = function() {
-  return this.replace(/\n/g, '<br />');
-}`
-
 _.extend Backbone.View.prototype,
   onClick: (e) ->
     return if $(e.currentTarget).hasClass 'disabled'
@@ -49,23 +45,77 @@ _.extend Backbone.View.prototype,
 
 window.FormBuilder ||= {}
 
-FormBuilder.RESPONSE_FIELD_TYPES =
-  text: "<span class='symbol'><span class='icon-font'></span></span> Text"
-  paragraph: '<span class="symbol">&#182;</span> Paragraph'
-  checkboxes: '<span class="symbol"><span class="icon-check-empty"></span></span> Checkboxes'
-  radio: '<span class="symbol"><span class="icon-circle-blank"></span></span> Multiple Choice'
-  dropdown: '<span class="symbol"><span class="icon-caret-down"></span></span> Dropdown'
-  price: '<span class="symbol"><span class="icon-dollar"></span></span> Price'
-  number: '<span class="symbol"><span class="icon-number">123</span></span> Number'
-  date: '<span class="symbol"><span class="icon-calendar"></span></span> Date'
-  time: '<span class="symbol"><span class="icon-time"></span></span> Time'
-  website: '<span class="symbol"><span class="icon-link"></span></span> Website'
-  file: '<span class="symbol"><span class="icon-cloud-upload"></span></span> File'
-  email: '<span class="symbol"><span class="icon-envelope-alt"></span></span> Email'
-  address: '<span class="symbol"><span class="icon-home"></span></span> Address'
+FormBuilder.views =
+  view:
+    base: _.template """
+      <div class='subtemplate-wrapper' data-backbone-click='focusEditView'>
+        <div class='cover'></div>
+        <%= FormBuilder.views.view.label({rf: rf}) %>
 
-FormBuilder.RESPONSE_FIELD_NON_INPUT_TYPES =
-  section_break: "<span class='symbol'><span class='icon-minus'></span></span> Section Break"
+        <%= FormBuilder.all_fields[rf.get('field_type')].view({rf: rf}) %>
+
+        <%= FormBuilder.views.view.description({rf: rf}) %>
+        <%= FormBuilder.views.view.duplicate_remove({rf: rf}) %>
+      </div>
+    """
+
+    label: _.template """
+      <label>
+        <span><%= FormBuilder.simple_format(rf.get('label')) %>
+        <% if (rf.get('field_options.required')) { %>
+        <abbr title='required'></abbr>
+        <% } %>
+      </label>
+    """
+
+    description: _.template """
+      <span class='help-block'><%= FormBuilder.simple_format(rf.get('field_options.description')) %></span>
+    """
+
+    duplicate_remove: _.template """
+      <div class='actions-wrapper'>
+        <a data-backbone-click="duplicate" title="Duplicate Field"></a>
+        <a data-backbone-click="clear" title="Remove Field"></a>
+      </div>
+    """
+
+FormBuilder.simple_format = (x) ->
+  x?.replace(/\n/g, '<br />')
+
+# FormBuilder.RESPONSE_FIELD_TYPES =
+#   text: "<span class='symbol'><span class='icon-font'></span></span> Text"
+#   paragraph: '<span class="symbol">&#182;</span> Paragraph'
+#   checkboxes: '<span class="symbol"><span class="icon-check-empty"></span></span> Checkboxes'
+#   radio: '<span class="symbol"><span class="icon-circle-blank"></span></span> Multiple Choice'
+#   dropdown: '<span class="symbol"><span class="icon-caret-down"></span></span> Dropdown'
+#   price: '<span class="symbol"><span class="icon-dollar"></span></span> Price'
+#   number: '<span class="symbol"><span class="icon-number">123</span></span> Number'
+#   date: '<span class="symbol"><span class="icon-calendar"></span></span> Date'
+#   time: '<span class="symbol"><span class="icon-time"></span></span> Time'
+#   website: '<span class="symbol"><span class="icon-link"></span></span> Website'
+#   file: '<span class="symbol"><span class="icon-cloud-upload"></span></span> File'
+#   email: '<span class="symbol"><span class="icon-envelope-alt"></span></span> Email'
+#   address: '<span class="symbol"><span class="icon-home"></span></span> Address'
+
+# FormBuilder.RESPONSE_FIELD_NON_INPUT_TYPES =
+#   section_break: "<span class='symbol'><span class='icon-minus'></span></span> Section Break"
+
+FormBuilder.all_fields = {}
+
+FormBuilder.input_fields = {}
+
+FormBuilder.non_input_fields = {}
+
+FormBuilder.registerField = (name, opts) ->
+  for x in ['view', 'edit']
+    opts[x] = _.template(opts[x])
+
+  FormBuilder.all_fields[name] = opts
+
+  if opts.type == 'input'
+    FormBuilder.input_fields[name] = opts
+  else
+    FormBuilder.non_input_fields[name] = opts
 
 ADD_FIELD_VIEW = Backbone.View.extend
   el: "#addField"
@@ -100,11 +150,7 @@ VIEW_FIELD_VIEW = Backbone.View.extend
   render: ->
     @$el.addClass('response-field-'+@model.get('field_type'))
 
-    @$el.html FormBuilder.JST["view/base#{if !@model.is_input() then '_non_input' else ''}"]
-      response_field: @model
-
-    @$el.find(".subtemplate-wrapper-inner").html FormBuilder.JST["view/#{@model.get('field_type')}"]
-      response_field: @model
+    @$el.html FormBuilder.views.view["base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model})
 
     @$el.data('cid', @model.cid)
 
@@ -132,15 +178,15 @@ EDIT_FIELD_VIEW = Backbone.View.extend
     @parentView = @options.parentView
 
   render: ->
-    @$el.html FormBuilder.JST["edit/base#{if !@model.is_input() then '_non_input' else ''}"]
-      response_field: @model
-      parentView: @parentView
+    # @$el.html FormBuilder.JST["edit/base#{if !@model.is_input() then '_non_input' else ''}"]
+    #   response_field: @model
+    #   parentView: @parentView
 
-    @$el.find(".edit-subtemplate-wrapper").html FormBuilder.JST["edit/#{@model.get('field_type')}"]
-      model: @model
+    # @$el.find(".edit-subtemplate-wrapper").html FormBuilder.JST["edit/#{@model.get('field_type')}"]
+    #   model: @model
 
-    rivets.bind @$el,
-      model: @model
+    # rivets.bind @$el,
+    #   model: @model
 
     return @
 
@@ -195,11 +241,13 @@ EDIT_FIELD_VIEW = Backbone.View.extend
 
 RESPONSE_FIELD_MODEL = Backbone.DeepModel.extend
   sync: -> # noop
+
   indexInDOM: ->
     $wrapper = $(".response-field-wrapper").filter ( (_, el) => $(el).data('cid') == @cid  )
     $(".response-field-wrapper").index $wrapper
+
   is_input: ->
-    FormBuilder.RESPONSE_FIELD_TYPES[@get('field_type')]
+    FormBuilder.all_fields[@get('field_type')]
 
 RESPONSE_FIELD_LIST = Backbone.Collection.extend
   model: RESPONSE_FIELD_MODEL
@@ -328,8 +376,7 @@ FormBuilder.formBuilder = Backbone.View.extend
 
   setDraggable: ->
     $addFieldButtons = @$el.find("[data-backbone-click=addField], [data-backbone-click=addExistingField]")
-    # $addFieldButtons.draggable('destroy') if $addFieldButtons.hasClass('ui-draggable')
-    console.log 'dragg'
+    $addFieldButtons.draggable('destroy') if $addFieldButtons.hasClass('ui-draggable')
 
     $addFieldButtons.draggable
       connectToSortable: @$responseFields
@@ -429,7 +476,6 @@ FormBuilder.formBuilder = Backbone.View.extend
     @saveFormButton.button('reset')
 
   saveForm: (e) ->
-    return # @placeholder
     return if @formSaved is true
     @formSaved = true
     @saveFormButton.button 'loading'

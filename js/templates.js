@@ -29,16 +29,16 @@
       };
       $o = [];
       $o.push("<div class='fb-add-field-types'>\n  <div class='section'>");
-      _ref = FormBuilder.RESPONSE_FIELD_TYPES;
+      _ref = FormBuilder.input_fields;
       for (k in _ref) {
         v = _ref[k];
-        $o.push("    <a data-backbone-click='addField' data-backbone-params='" + ($e($c(k))) + "'>" + ($c(v)) + "</a>");
+        $o.push("    <a data-backbone-click='addField' data-backbone-params='" + ($e($c(k))) + "'>" + ($c(v.addButton)) + "</a>");
       }
       $o.push("  </div>\n  <div class='section'>\n    <div class='section-header'>Non-input fields</div>");
-      _ref1 = FormBuilder.RESPONSE_FIELD_NON_INPUT_TYPES;
+      _ref1 = FormBuilder.non_input_fields;
       for (k in _ref1) {
         v = _ref1[k];
-        $o.push("    <a data-backbone-click='addField' data-backbone-params='" + ($e($c(k))) + "'>" + ($c(v)) + "</a>");
+        $o.push("    <a data-backbone-click='addField' data-backbone-params='" + ($e($c(k))) + "'>" + ($c(v.addButton)) + "</a>");
       }
       $o.push("  </div>\n</div>");
       return $o.join("\n").replace(/\s(\w+)='true'/mg, ' $1').replace(/\s(\w+)='false'/mg, '').replace(/\s(?:id|class)=(['"])(\1)/mg, "");
@@ -58,7 +58,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/address'] = function(context) {
+  window.FormBuilder.JST['edita/address'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -79,7 +79,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/base'] = function(context) {
+  window.FormBuilder.JST['edita/base'] = function(context) {
     return (function() {
       var $c, $o;
       $c = function(text) {
@@ -116,7 +116,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/base_non_input'] = function(context) {
+  window.FormBuilder.JST['edita/base_non_input'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -138,7 +138,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/checkboxes'] = function(context) {
+  window.FormBuilder.JST['edita/checkboxes'] = function(context) {
     return (function() {
       var $c, $o;
       $c = function(text) {
@@ -174,7 +174,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/date'] = function(context) {
+  window.FormBuilder.JST['edita/date'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -195,7 +195,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/dropdown'] = function(context) {
+  window.FormBuilder.JST['edita/dropdown'] = function(context) {
     return (function() {
       var $c, $o;
       $c = function(text) {
@@ -232,7 +232,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/email'] = function(context) {
+  window.FormBuilder.JST['edita/email'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -253,7 +253,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/file'] = function(context) {
+  window.FormBuilder.JST['edita/file'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -274,7 +274,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/groups/common'] = function(context) {
+  window.FormBuilder.JST['edita/groups/common'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -296,7 +296,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/number'] = function(context) {
+  window.FormBuilder.JST['edita/number'] = function(context) {
     return (function() {
       var $c, $o;
       $c = function(text) {
@@ -332,7 +332,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/paragraph'] = function(context) {
+  window.FormBuilder.JST['edita/paragraph'] = function(context) {
     return (function() {
       var $c, $o;
       $c = function(text) {
@@ -367,7 +367,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/pieces/create_labels'] = function(context) {
+  window.FormBuilder.JST['edita/pieces/create_labels'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -389,7 +389,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/pieces/integer_only'] = function(context) {
+  window.FormBuilder.JST['edita/pieces/integer_only'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -411,7 +411,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/pieces/min_max'] = function(context) {
+  window.FormBuilder.JST['edita/pieces/min_max'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -433,7 +433,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/pieces/min_max_length'] = function(context) {
+  window.FormBuilder.JST['edita/pieces/min_max_length'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -455,7 +455,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/pieces/options'] = function(context) {
+  window.FormBuilder.JST['edita/pieces/options'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -485,7 +485,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/pieces/review_this_field'] = function(context) {
+  window.FormBuilder.JST['edita/pieces/review_this_field'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -507,7 +507,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/pieces/size'] = function(context) {
+  window.FormBuilder.JST['edita/pieces/size'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -529,7 +529,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/pieces/units'] = function(context) {
+  window.FormBuilder.JST['edita/pieces/units'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -551,7 +551,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/price'] = function(context) {
+  window.FormBuilder.JST['edita/price'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -572,7 +572,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/radio'] = function(context) {
+  window.FormBuilder.JST['edita/radio'] = function(context) {
     return (function() {
       var $c, $o;
       $c = function(text) {
@@ -609,7 +609,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/section_break'] = function(context) {
+  window.FormBuilder.JST['edita/section_break'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -631,7 +631,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/text'] = function(context) {
+  window.FormBuilder.JST['edita/text'] = function(context) {
     return (function() {
       var $c, $o;
       $c = function(text) {
@@ -666,7 +666,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/time'] = function(context) {
+  window.FormBuilder.JST['edita/time'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -687,7 +687,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['edit/website'] = function(context) {
+  window.FormBuilder.JST['edita/website'] = function(context) {
     return (function() {
       var $c, $o;
       $c = function(text) {
@@ -725,7 +725,7 @@
     return (function() {
       var $o;
       $o = [];
-      $o.push("<div class='response-field-save-wrapper'>\n  <button class='btn pull-right' data-backbone-click='saveForm' data-loading-text='All changes saved'>Save form</button>\n  <div class='clearfix'></div>\n</div>\n<div class='fb-left'>\n  <ul class='fb-tabs'>\n    <li class='active'>\n      <a data-backbone-click='showTab' data-backbone-params='#addField'>Add new field</a>\n    </li>\n    <li>\n      <a data-backbone-click='showTab' data-backbone-params='#editField'>Edit field</a>\n    </li>");
+      $o.push("<div class='response-field-save-wrapper'>\n  <button class='btn pull-right' data-backbone-click='saveForm' data-loading-text='All changes saved'>Save form</button>\n  <div class='fb-clear'></div>\n</div>\n<div class='fb-left'>\n  <ul class='fb-tabs'>\n    <li class='active'>\n      <a data-backbone-click='showTab' data-backbone-params='#addField'>Add new field</a>\n    </li>\n    <li>\n      <a data-backbone-click='showTab' data-backbone-params='#editField'>Edit field</a>\n    </li>");
       if (this.options.formOptions) {
         $o.push("    <li>\n      <a>Form options</a>\n    </li>");
       }
@@ -733,7 +733,7 @@
       if (this.options.formOptions) {
         $o.push("    <div class='tab-pane' id='formOptions'>\n      <label>Form description</label>\n      <textarea class='textarea-full' data-rv-value='formOptions.form_description'></textarea>\n      <label>Form confirmation message</label>\n      <textarea class='textarea-full' data-rv-value='formOptions.form_confirmation_message'></textarea>\n      <span class='help-block'>No confirmation message?</span>\n      <label>Submit Button Text</label>\n      <input type='text' data-rv-value='formOptions.submit_button_text'>\n      <span class='help-block'>If left blank, the default is \"Submit\"</span>\n      <div class='response-identifier-wrapper'></div>\n    </div>");
       }
-      $o.push("  </div>\n</div>\n<div class='fb-right'>\n  <div class='fb-no-response-fields'>No response fields</div>\n  <div class='fb-response-fields'></div>\n</div>\n<div class='clearfix'></div>");
+      $o.push("  </div>\n</div>\n<div class='fb-right'>\n  <div class='fb-no-response-fields'>No response fields</div>\n  <div class='fb-response-fields'></div>\n</div>\n<div class='fb-clear'></div>");
       return $o.join("\n").replace(/\s(?:id|class)=(['"])(\1)/mg, "");
     }).call(context);
   };
@@ -793,7 +793,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['view/address'] = function(context) {
+  window.FormBuilder.JST['viewa/address'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -815,7 +815,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['view/base'] = function(context) {
+  window.FormBuilder.JST['viewa/base'] = function(context) {
     return (function() {
       var $c, $o;
       $c = function(text) {
@@ -854,7 +854,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['view/base_non_input'] = function(context) {
+  window.FormBuilder.JST['viewa/base_non_input'] = function(context) {
     return (function() {
       var $c, $o;
       $c = function(text) {
@@ -889,7 +889,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['view/checkboxes'] = function(context) {
+  window.FormBuilder.JST['viewa/checkboxes'] = function(context) {
     return (function() {
       var $c, $e, $o, option, _i, _len, _ref;
       $e = function(text, escape) {
@@ -935,7 +935,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['view/date'] = function(context) {
+  window.FormBuilder.JST['viewa/date'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -957,7 +957,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['view/dropdown'] = function(context) {
+  window.FormBuilder.JST['viewa/dropdown'] = function(context) {
     return (function() {
       var $c, $e, $o, option, _i, _len, _ref;
       $e = function(text, escape) {
@@ -1003,7 +1003,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['view/email'] = function(context) {
+  window.FormBuilder.JST['viewa/email'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -1025,7 +1025,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['view/file'] = function(context) {
+  window.FormBuilder.JST['viewa/file'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -1047,7 +1047,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['view/number'] = function(context) {
+  window.FormBuilder.JST['viewa/number'] = function(context) {
     return (function() {
       var $c, $e, $o;
       $e = function(text, escape) {
@@ -1088,7 +1088,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['view/paragraph'] = function(context) {
+  window.FormBuilder.JST['viewa/paragraph'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -1110,9 +1110,9 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['view/pieces/description'] = function(context) {
+  window.FormBuilder.JST['viewa/pieces/description'] = function(context) {
     return (function() {
-      var $c, $o, _ref;
+      var $c, $o;
       $c = function(text) {
         switch (text) {
           case null:
@@ -1126,7 +1126,7 @@
         }
       };
       $o = [];
-      $o.push("<span class='help-block'>" + ($c((_ref = this.response_field.get('field_options.description')) != null ? _ref.simple_format() : void 0)) + "</span>");
+      $o.push("<span class='help-block'>" + ($c(FormBuilder.simple_format(this.response_field.get('field_options.description')))) + "</span>");
       return $o.join("\n").replace(/\s(\w+)='true'/mg, ' $1').replace(/\s(\w+)='false'/mg, '').replace(/\s(?:id|class)=(['"])(\1)/mg, "");
     }).call(context);
   };
@@ -1144,7 +1144,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['view/pieces/duplicate_remove'] = function(context) {
+  window.FormBuilder.JST['viewa/pieces/duplicate_remove'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -1166,9 +1166,9 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['view/pieces/label'] = function(context) {
+  window.FormBuilder.JST['viewa/pieces/label'] = function(context) {
     return (function() {
-      var $c, $o, _ref;
+      var $c, $o;
       $c = function(text) {
         switch (text) {
           case null:
@@ -1182,7 +1182,7 @@
         }
       };
       $o = [];
-      $o.push("<label>\n  <span>" + ($c((_ref = this.response_field.get('label')) != null ? _ref.simple_format() : void 0)) + "</span>");
+      $o.push("<label>\n  <span>" + ($c(FormBuilder.simple_format(this.response_field.get('label')))) + "</span>");
       if (this.response_field.get('field_options.required')) {
         $o.push("  <abbr title='required'>*</abbr>");
       }
@@ -1204,7 +1204,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['view/price'] = function(context) {
+  window.FormBuilder.JST['viewa/price'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -1226,7 +1226,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['view/radio'] = function(context) {
+  window.FormBuilder.JST['viewa/radio'] = function(context) {
     return (function() {
       var $c, $e, $o, option, _i, _len, _ref;
       $e = function(text, escape) {
@@ -1272,7 +1272,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['view/section_break'] = function(context) {
+  window.FormBuilder.JST['viewa/section_break'] = function(context) {
     return (function() {
       var $c, $e, $o;
       $e = function(text, escape) {
@@ -1309,7 +1309,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['view/text'] = function(context) {
+  window.FormBuilder.JST['viewa/text'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -1331,7 +1331,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['view/time'] = function(context) {
+  window.FormBuilder.JST['viewa/time'] = function(context) {
     return (function() {
       var $o;
       $o = [];
@@ -1353,7 +1353,7 @@
     _base.JST = {};
   }
 
-  window.FormBuilder.JST['view/website'] = function(context) {
+  window.FormBuilder.JST['viewa/website'] = function(context) {
     return (function() {
       var $o;
       $o = [];

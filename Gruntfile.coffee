@@ -15,11 +15,11 @@ module.exports = (grunt) ->
     pkg: '<json:package.json>'
 
     coffee:
-      all:
+      main:
         expand: true
-        flatten: true
+        flatten: false
         cwd: 'coffee'
-        src: ['*.coffee']
+        src: ['**/*.coffee']
         dest: 'js/'
         ext: '.js'
 
@@ -47,7 +47,7 @@ module.exports = (grunt) ->
 
     watch:
       app:
-        files: ['./coffee/*.coffee', 'templates/**/*.haml', './sass/*.sass']
+        files: ['./coffee/**/*.coffee', 'templates/**/*.haml', './sass/**/*.sass']
         tasks: ALL_TASKS
 
   grunt.registerTask 'default', ALL_TASKS

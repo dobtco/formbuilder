@@ -1,7 +1,4 @@
 (function() {
-  String.prototype.simple_format = function() {
-  return this.replace(/\n/g, '<br />');
-};
   var ADD_FIELD_VIEW, EDIT_FIELD_VIEW, RESPONSE_FIELD_LIST, RESPONSE_FIELD_MODEL, RESPONSE_IDENTIFIER_VIEW, VIEW_FIELD_VIEW;
 
   _.extend(Backbone.View.prototype, {
@@ -61,24 +58,38 @@
 
   window.FormBuilder || (window.FormBuilder = {});
 
-  FormBuilder.RESPONSE_FIELD_TYPES = {
-    text: "<span class='symbol'><span class='icon-font'></span></span> Text",
-    paragraph: '<span class="symbol">&#182;</span> Paragraph',
-    checkboxes: '<span class="symbol"><span class="icon-check-empty"></span></span> Checkboxes',
-    radio: '<span class="symbol"><span class="icon-circle-blank"></span></span> Multiple Choice',
-    dropdown: '<span class="symbol"><span class="icon-caret-down"></span></span> Dropdown',
-    price: '<span class="symbol"><span class="icon-dollar"></span></span> Price',
-    number: '<span class="symbol"><span class="icon-number">123</span></span> Number',
-    date: '<span class="symbol"><span class="icon-calendar"></span></span> Date',
-    time: '<span class="symbol"><span class="icon-time"></span></span> Time',
-    website: '<span class="symbol"><span class="icon-link"></span></span> Website',
-    file: '<span class="symbol"><span class="icon-cloud-upload"></span></span> File',
-    email: '<span class="symbol"><span class="icon-envelope-alt"></span></span> Email',
-    address: '<span class="symbol"><span class="icon-home"></span></span> Address'
+  FormBuilder.views = {
+    view: {
+      base: _.template("<div class='subtemplate-wrapper' data-backbone-click='focusEditView'>\n  <div class='cover'></div>\n  <%= FormBuilder.views.view.label({rf: rf}) %>\n\n  <%= FormBuilder.all_fields[rf.get('field_type')].view({rf: rf}) %>\n\n  <%= FormBuilder.views.view.description({rf: rf}) %>\n  <%= FormBuilder.views.view.duplicate_remove({rf: rf}) %>\n</div>"),
+      label: _.template("<label>\n  <span><%= FormBuilder.simple_format(rf.get('label')) %>\n  <% if (rf.get('field_options.required')) { %>\n  <abbr title='required'></abbr>\n  <% } %>\n</label>"),
+      description: _.template("<span class='help-block'><%= FormBuilder.simple_format(rf.get('field_options.description')) %></span>"),
+      duplicate_remove: _.template("<div class='actions-wrapper'>\n  <a data-backbone-click=\"duplicate\" title=\"Duplicate Field\"></a>\n  <a data-backbone-click=\"clear\" title=\"Remove Field\"></a>\n</div>")
+    }
   };
 
-  FormBuilder.RESPONSE_FIELD_NON_INPUT_TYPES = {
-    section_break: "<span class='symbol'><span class='icon-minus'></span></span> Section Break"
+  FormBuilder.simple_format = function(x) {
+    return x != null ? x.replace(/\n/g, '<br />') : void 0;
+  };
+
+  FormBuilder.all_fields = {};
+
+  FormBuilder.input_fields = {};
+
+  FormBuilder.non_input_fields = {};
+
+  FormBuilder.registerField = function(name, opts) {
+    var x, _i, _len, _ref;
+    _ref = ['view', 'edit'];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      x = _ref[_i];
+      opts[x] = _.template(opts[x]);
+    }
+    FormBuilder.all_fields[name] = opts;
+    if (opts.type === 'input') {
+      return FormBuilder.input_fields[name] = opts;
+    } else {
+      return FormBuilder.non_input_fields[name] = opts;
+    }
   };
 
   ADD_FIELD_VIEW = Backbone.View.extend({
@@ -115,11 +126,8 @@
     },
     render: function() {
       this.$el.addClass('response-field-' + this.model.get('field_type'));
-      this.$el.html(FormBuilder.JST["view/base" + (!this.model.is_input() ? '_non_input' : '')]({
-        response_field: this.model
-      }));
-      this.$el.find(".subtemplate-wrapper-inner").html(FormBuilder.JST["view/" + (this.model.get('field_type'))]({
-        response_field: this.model
+      this.$el.html(FormBuilder.views.view["base" + (!this.model.is_input() ? '_non_input' : '')]({
+        rf: this.model
       }));
       this.$el.data('cid', this.model.cid);
       return this;
@@ -150,16 +158,6 @@
       return this.parentView = this.options.parentView;
     },
     render: function() {
-      this.$el.html(FormBuilder.JST["edit/base" + (!this.model.is_input() ? '_non_input' : '')]({
-        response_field: this.model,
-        parentView: this.parentView
-      }));
-      this.$el.find(".edit-subtemplate-wrapper").html(FormBuilder.JST["edit/" + (this.model.get('field_type'))]({
-        model: this.model
-      }));
-      rivets.bind(this.$el, {
-        model: this.model
-      });
       return this;
     },
     remove: function() {
@@ -227,7 +225,7 @@
       return $(".response-field-wrapper").index($wrapper);
     },
     is_input: function() {
-      return FormBuilder.RESPONSE_FIELD_TYPES[this.get('field_type')];
+      return FormBuilder.all_fields[this.get('field_type')];
     }
   });
 
@@ -373,7 +371,9 @@
       var $addFieldButtons,
         _this = this;
       $addFieldButtons = this.$el.find("[data-backbone-click=addField], [data-backbone-click=addExistingField]");
-      console.log('dragg');
+      if ($addFieldButtons.hasClass('ui-draggable')) {
+        $addFieldButtons.draggable('destroy');
+      }
       return $addFieldButtons.draggable({
         connectToSortable: this.$responseFields,
         helper: function() {
@@ -492,7 +492,6 @@
     saveForm: function(e) {
       var _ref,
         _this = this;
-      return;
       if (this.formSaved === true) {
         return;
       }
