@@ -95,10 +95,7 @@
         }
       };
       $o = [];
-      $o.push("<h4>\n  <span data-rv-text=\"model.label\"></span>\n  <code class='field-type' data-rv-text='model.field_type'></code>\n  <span class='icon-arrow-right pull-right'></span>\n</h4>");
-      if (this.response_field.get('field_options.vendor_profile')) {
-        $o.push("<div class='alert alert-info'>\n  This field will be pre-filled from the vendor's profile, using the\n  <code>" + (this.response_field.get('key')) + "</code> key.\n</div>");
-      }
+      $o.push("<div class='fb-field-label'>\n  <span data-rv-text=\"model.label\"></span>\n  <code class='field-type' data-rv-text='model.field_type'></code>\n  <span class='icon-arrow-right pull-right'></span>\n</div>");
       $o.push("" + $c(FormBuilder.JST['edit/groups/common']()));
       $o.push("<div class='edit-subtemplate-wrapper'></div>");
       $o.push("" + $c(FormBuilder.JST['edit/pieces/review_this_field']()));
@@ -123,7 +120,7 @@
     return (function() {
       var $o;
       $o = [];
-      $o.push("<h4>\n  <span data-rv-text=\"model.label\"></span>\n  <code class='field-type' data-rv-text='model.field_type'></code>\n  <span class='icon-arrow-right pull-right'></span>\n</h4>\n<div class='edit-subtemplate-wrapper'></div>");
+      $o.push("<div class='fb-edit-section-header'>\n  <span data-rv-text=\"model.label\"></span>\n  <code class='field-type' data-rv-text='model.field_type'></code>\n  <span class='icon-arrow-right pull-right'></span>\n</div>\n<div class='edit-subtemplate-wrapper'></div>");
       return $o.join("\n").replace(/\s(?:id|class)=(['"])(\1)/mg, "");
     }).call(context);
   };
@@ -157,11 +154,10 @@
         }
       };
       $o = [];
-      $o.push("<label class='header'>Options</label>");
       $o.push("" + $c(FormBuilder.JST['edit/pieces/options']({
         includeOther: true
       })));
-      return $o.join("\n").replace(/\s(\w+)='true'/mg, ' $1').replace(/\s(\w+)='false'/mg, '').replace(/\s(?:id|class)=(['"])(\1)/mg, "");
+      return $o.join("\n").replace(/\s(\w+)='true'/mg, ' $1').replace(/\s(\w+)='false'/mg, '');
     }).call(context);
   };
 
@@ -215,12 +211,11 @@
         }
       };
       $o = [];
-      $o.push("<label class='header'>Options</label>");
       $o.push("" + $c(FormBuilder.JST['edit/pieces/options']({
         includeBlank: true
       })));
       $o.push("" + $c(FormBuilder.JST['edit/pieces/create_labels']()));
-      return $o.join("\n").replace(/\s(\w+)='true'/mg, ' $1').replace(/\s(\w+)='false'/mg, '').replace(/\s(?:id|class)=(['"])(\1)/mg, "");
+      return $o.join("\n").replace(/\s(\w+)='true'/mg, ' $1').replace(/\s(\w+)='false'/mg, '');
     }).call(context);
   };
 
@@ -283,7 +278,7 @@
     return (function() {
       var $o;
       $o = [];
-      $o.push("<label class='header'>Label</label>\n<div class='row-fluid'>\n  <div class='span8'>\n    <input type='text' data-rv-value='model.label'>\n    <textarea data-rv-value='model.field_options.description' placeholder='Add a longer description to this field'></textarea>\n  </div>\n  <div class='span4'>\n    <label class='checkbox'>\n      Required\n      <input type='checkbox' data-rv-checked='model.field_options.required'>\n    </label>\n    <label class='checkbox'>\n      Blind\n      <input type='checkbox' data-rv-checked='model.blind'>\n    </label>\n    <label class='checkbox'>\n      Admin only\n      <input type='checkbox' data-rv-checked='model.admin_only'>\n    </label>\n  </div>\n</div>");
+      $o.push("<div class='fb-edit-section-header'>Label</div>\n<div class='grid'>\n  <div class='grid-item two_thirds'>\n    <input type='text' data-rv-value='model.label'>\n    <textarea data-rv-value='model.field_options.description' placeholder='Add a longer description to this field'></textarea>\n  </div>\n  <div class='grid-item one_third'>\n    <label class='checkbox'>\n      Required\n      <input type='checkbox' data-rv-checked='model.field_options.required'>\n    </label>\n    <label class='checkbox'>\n      Blind\n      <input type='checkbox' data-rv-checked='model.blind'>\n    </label>\n    <label class='checkbox'>\n      Admin only\n      <input type='checkbox' data-rv-checked='model.admin_only'>\n    </label>\n  </div>\n</div>");
       return $o.join("\n").replace(/\s(?:id|class)=(['"])(\1)/mg, "");
     }).call(context);
   };
@@ -376,7 +371,7 @@
     return (function() {
       var $o;
       $o = [];
-      $o.push("<label class='header'>Create Labels</label>\n<label class='checkbox'>\n  <input type='checkbox' data-rv-checked='model.field_options.create_labels'>\n  Automatically create labels in the bid review interface based on the response to this field\n</label>");
+      $o.push("<div class='fb-edit-section-header'>Create Labels</div>\n<label class='checkbox'>\n  <input type='checkbox' data-rv-checked='model.field_options.create_labels'>\n  Automatically create labels in the bid review interface based on the response to this field\n</label>");
       return $o.join("\n").replace(/\s(?:id|class)=(['"])(\1)/mg, "");
     }).call(context);
   };
@@ -398,7 +393,7 @@
     return (function() {
       var $o;
       $o = [];
-      $o.push("<label class='header'>Integer only</label>\n<label class='checkbox'>\n  <input type='checkbox' data-rv-checked='model.field_options.integer_only'>\n  Only accept integers\n</label>");
+      $o.push("<div class='fb-edit-section-header'>Integer only</div>\n<label class='checkbox'>\n  <input type='checkbox' data-rv-checked='model.field_options.integer_only'>\n  Only accept integers\n</label>");
       return $o.join("\n").replace(/\s(?:id|class)=(['"])(\1)/mg, "");
     }).call(context);
   };
@@ -420,7 +415,7 @@
     return (function() {
       var $o;
       $o = [];
-      $o.push("<label class='header'>Minimum / Maximum</label>\nAbove\n<input type='text' data-rv-value='model.field_options.min' style='width: 30px'>\n&nbsp;&nbsp;\nBelow\n<input type='text' data-rv-value='model.field_options.max' style='width: 30px'>");
+      $o.push("<div class='fb-edit-section-header'>Minimum / Maximum</div>\nAbove\n<input type='text' data-rv-value='model.field_options.min' style='width: 30px'>\n&nbsp;&nbsp;\nBelow\n<input type='text' data-rv-value='model.field_options.max' style='width: 30px'>");
       return $o.join("\n").replace(/\s(?:id|class)=(['"])(\1)/mg, "");
     }).call(context);
   };
@@ -442,7 +437,7 @@
     return (function() {
       var $o;
       $o = [];
-      $o.push("<label class='header'>Length Limit</label>\nMin\n<input type='text' data-rv-value='model.field_options.minlength' style='width: 30px'>\n&nbsp;&nbsp;\nMax\n<input type='text' data-rv-value='model.field_options.maxlength' style='width: 30px'>\n&nbsp;&nbsp;\n<select data-rv-value='model.field_options.min_max_length_units' style='width: auto;'>\n  <option value='characters'>characters</option>\n  <option value='words'>words</option>\n</select>");
+      $o.push("<div class='fb-edit-section-header'>Length Limit</div>\nMin\n<input type='text' data-rv-value='model.field_options.minlength' style='width: 30px'>\n&nbsp;&nbsp;\nMax\n<input type='text' data-rv-value='model.field_options.maxlength' style='width: 30px'>\n&nbsp;&nbsp;\n<select data-rv-value='model.field_options.min_max_length_units' style='width: auto;'>\n  <option value='characters'>characters</option>\n  <option value='words'>words</option>\n</select>");
       return $o.join("\n").replace(/\s(?:id|class)=(['"])(\1)/mg, "");
     }).call(context);
   };
@@ -464,6 +459,7 @@
     return (function() {
       var $o;
       $o = [];
+      $o.push("<div class='fb-edit-section-header'>Options</div>");
       if (this.includeBlank) {
         $o.push("<label class='checkbox'>\n  <input type='checkbox' data-rv-checked='model.field_options.include_blank_option'>\n  Include blank\n</label>");
       }
@@ -493,7 +489,7 @@
     return (function() {
       var $o;
       $o = [];
-      $o.push("<label class='header'>Rate this field</label>\n<div class='controls'>\n  <label class='checkbox'>\n    <input type='checkbox' data-rv-checked='model.field_options.review_this_field'>\n    Ask reviewers to rate this field\n  </label>\n</div>\n<div class='review-this-field-options' data-rv-show='model.field_options.review_this_field'>\n  <div class='controls rate-by'>\n    <label>Rate by</label>\n    <select data-rv-value='model.field_options.review_this_field_type'>\n      <option value='stars'>Stars</option>\n      <option value='ryg'>Red/Yellow/Green</option>\n      <option value='number'>Number Range</option>\n      <option value='free_response'>Free Response</option>\n    </select>\n  </div>\n  <div class='controls' data-rv-show='model.field_options.review_this_field_type | eq \"number\"'>\n    <label>Max Rating</label>\n    <input type='number' data-rv-value='model.field_options.review_this_field_max' min='1' max='100'>\n  </div>\n  <div class='controls field-description'>\n    <label>Field description</label>\n    <textarea data-rv-value='model.field_options.review_this_field_description' placeholder='e.g. \"Pay careful attention to their grammar in this response.\"'></textarea>\n  </div>\n</div>");
+      $o.push("<div class='fb-edit-section-header'>Rate this field</div>\n<div class='controls'>\n  <label class='checkbox'>\n    <input type='checkbox' data-rv-checked='model.field_options.review_this_field'>\n    Ask reviewers to rate this field\n  </label>\n</div>\n<div class='review-this-field-options' data-rv-show='model.field_options.review_this_field'>\n  <div class='controls rate-by'>\n    <label>Rate by</label>\n    <select data-rv-value='model.field_options.review_this_field_type'>\n      <option value='stars'>Stars</option>\n      <option value='ryg'>Red/Yellow/Green</option>\n      <option value='number'>Number Range</option>\n      <option value='free_response'>Free Response</option>\n    </select>\n  </div>\n  <div class='controls' data-rv-show='model.field_options.review_this_field_type | eq \"number\"'>\n    <label>Max Rating</label>\n    <input type='number' data-rv-value='model.field_options.review_this_field_max' min='1' max='100'>\n  </div>\n  <div class='controls field-description'>\n    <label>Field description</label>\n    <textarea data-rv-value='model.field_options.review_this_field_description' placeholder='e.g. \"Pay careful attention to their grammar in this response.\"'></textarea>\n  </div>\n</div>");
       return $o.join("\n").replace(/\s(?:id|class)=(['"])(\1)/mg, "");
     }).call(context);
   };
@@ -515,7 +511,7 @@
     return (function() {
       var $o;
       $o = [];
-      $o.push("<label class='header'>Size</label>\n<select data-rv-value='model.field_options.size'>\n  <option value='small'>Small</option>\n  <option value='medium'>Medium</option>\n  <option value='large'>Large</option>\n</select>");
+      $o.push("<div class='fb-edit-section-header'>Size</div>\n<select data-rv-value='model.field_options.size'>\n  <option value='small'>Small</option>\n  <option value='medium'>Medium</option>\n  <option value='large'>Large</option>\n</select>");
       return $o.join("\n").replace(/\s(?:id|class)=(['"])(\1)/mg, "");
     }).call(context);
   };
@@ -537,7 +533,7 @@
     return (function() {
       var $o;
       $o = [];
-      $o.push("<label class='header'>Units</label>\n<input type='text' data-rv-value='model.field_options.units'>");
+      $o.push("<div class='fb-edit-section-header'>Units</div>\n<input type='text' data-rv-value='model.field_options.units'>");
       return $o.join("\n").replace(/\s(?:id|class)=(['"])(\1)/mg, "");
     }).call(context);
   };
@@ -592,12 +588,11 @@
         }
       };
       $o = [];
-      $o.push("<label class='header'>Options</label>");
       $o.push("" + $c(FormBuilder.JST['edit/pieces/options']({
         includeOther: true
       })));
       $o.push("" + $c(FormBuilder.JST['edit/pieces/create_labels']()));
-      return $o.join("\n").replace(/\s(\w+)='true'/mg, ' $1').replace(/\s(\w+)='false'/mg, '').replace(/\s(?:id|class)=(['"])(\1)/mg, "");
+      return $o.join("\n").replace(/\s(\w+)='true'/mg, ' $1').replace(/\s(\w+)='false'/mg, '');
     }).call(context);
   };
 
@@ -616,25 +611,10 @@
 
   window.FormBuilder.JST['edit/section_break'] = function(context) {
     return (function() {
-      var $c, $e, $o;
-      $e = function(text, escape) {
-        return ("" + text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/'/g, '&#39;').replace(/\//g, '&#47;').replace(/"/g, '&quot;');
-      };
-      $c = function(text) {
-        switch (text) {
-          case null:
-          case void 0:
-            return '';
-          case true:
-          case false:
-            return '' + text;
-          default:
-            return text;
-        }
-      };
+      var $o;
       $o = [];
-      $o.push("<label class='header'>" + ($e($c(I18n.t('g.response_field.label')))) + "</label>\n<div class='row-fluid'>\n  <input type='text' data-rv-value='model.label'>\n  <textarea data-rv-value='model.field_options.description' placeholder='Add a longer description to this field'></textarea>\n</div>");
-      return $o.join("\n").replace(/\s(\w+)='true'/mg, ' $1').replace(/\s(\w+)='false'/mg, '').replace(/\s(?:id|class)=(['"])(\1)/mg, "");
+      $o.push("<div class='fb-edit-section-header'>Label</div>\n<div class='row-fluid'>\n  <input type='text' data-rv-value='model.label'>\n  <textarea data-rv-value='model.field_options.description' placeholder='Add a longer description to this field'></textarea>\n</div>");
+      return $o.join("\n").replace(/\s(?:id|class)=(['"])(\1)/mg, "");
     }).call(context);
   };
 
@@ -855,7 +835,8 @@
       $o.push("  " + $c(FormBuilder.JST['view/pieces/label'](this)));
       $o.push("  <div class='subtemplate-wrapper-inner'></div>\n  <div class='clearfix'></div>");
       $o.push("  " + $c(FormBuilder.JST['view/pieces/description'](this)));
-      $o.push("</div>\n<div class='actions-wrapper'>\n  <a data-backbone-click='duplicate' title='Duplicate Field'>+</a>\n  <a data-backbone-click='clear' title='Remove Field'>-</a>\n</div>");
+      $o.push("</div>");
+      $o.push("" + $c(FormBuilder.JST['view/pieces/duplicate_remove'](this)));
       return $o.join("\n").replace(/\s(\w+)='true'/mg, ' $1').replace(/\s(\w+)='false'/mg, '').replace(/\s(?:id|class)=(['"])(\1)/mg, "");
     }).call(context);
   };
@@ -875,10 +856,23 @@
 
   window.FormBuilder.JST['view/base_non_input'] = function(context) {
     return (function() {
-      var $o;
+      var $c, $o;
+      $c = function(text) {
+        switch (text) {
+          case null:
+          case void 0:
+            return '';
+          case true:
+          case false:
+            return '' + text;
+          default:
+            return text;
+        }
+      };
       $o = [];
-      $o.push("<div class='subtemplate-wrapper' data-backbone-click='focusEditView'>\n  <div class='cover'></div>\n  <div class='subtemplate-wrapper-inner'></div>\n  <div class='clearfix'></div>\n</div>\n<div class='actions-wrapper'>\n  <a class='btn btn-mini btn-success' data-backbone-click='duplicate' title='Duplicate Field'>\n    <span class='icon-plus-sign'></span>\n  </a>\n  <a class='btn btn-danger btn-mini' data-backbone-click='clear' title='Remove Field'>\n    <span class='icon-minus-sign'></span>\n  </a>\n</div>");
-      return $o.join("\n").replace(/\s(?:id|class)=(['"])(\1)/mg, "");
+      $o.push("<div class='subtemplate-wrapper' data-backbone-click='focusEditView'>\n  <div class='cover'></div>\n  <div class='subtemplate-wrapper-inner'></div>\n  <div class='clearfix'></div>\n</div>");
+      $o.push("" + $c(FormBuilder.JST['view/pieces/duplicate_remove'](this)));
+      return $o.join("\n").replace(/\s(\w+)='true'/mg, ' $1').replace(/\s(\w+)='false'/mg, '').replace(/\s(?:id|class)=(['"])(\1)/mg, "");
     }).call(context);
   };
 
@@ -1134,6 +1128,28 @@
       $o = [];
       $o.push("<span class='help-block'>" + ($c((_ref = this.response_field.get('field_options.description')) != null ? _ref.simple_format() : void 0)) + "</span>");
       return $o.join("\n").replace(/\s(\w+)='true'/mg, ' $1').replace(/\s(\w+)='false'/mg, '').replace(/\s(?:id|class)=(['"])(\1)/mg, "");
+    }).call(context);
+  };
+
+}).call(this);
+
+(function() {
+  var _base;
+
+  if (window.FormBuilder == null) {
+    window.FormBuilder = {};
+  }
+
+  if ((_base = window.FormBuilder).JST == null) {
+    _base.JST = {};
+  }
+
+  window.FormBuilder.JST['view/pieces/duplicate_remove'] = function(context) {
+    return (function() {
+      var $o;
+      $o = [];
+      $o.push("<div class='actions-wrapper'>\n  <a data-backbone-click='duplicate' title='Duplicate Field'>+</a>\n  <a data-backbone-click='clear' title='Remove Field'>-</a>\n</div>");
+      return $o.join("\n").replace(/\s(?:id|class)=(['"])(\1)/mg, "");
     }).call(context);
   };
 

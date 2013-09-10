@@ -329,6 +329,8 @@ FormBuilder.formBuilder = Backbone.View.extend
   setDraggable: ->
     $addFieldButtons = @$el.find("[data-backbone-click=addField], [data-backbone-click=addExistingField]")
     # $addFieldButtons.draggable('destroy') if $addFieldButtons.hasClass('ui-draggable')
+    console.log 'dragg'
+
     $addFieldButtons.draggable
       connectToSortable: @$responseFields
       helper: =>

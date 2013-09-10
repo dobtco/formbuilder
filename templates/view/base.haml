@@ -5,6 +5,4 @@
   .clearfix
   != FormBuilder.JST['view/pieces/description'](@)
 
-.actions-wrapper
-  %a{"data-backbone-click" => "duplicate", "title" => "Duplicate Field"} +
-  %a{"data-backbone-click" => "clear", "title" => "Remove Field"} -
+!= FormBuilder.JST['view/pieces/duplicate_remove'](@)

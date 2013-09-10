@@ -3,8 +3,4 @@
   .subtemplate-wrapper-inner
   .clearfix
 
-.actions-wrapper
-  %a.btn.btn-mini.btn-success{"data-backbone-click" => "duplicate", "title" => "Duplicate Field"}
-    %span.icon-plus-sign
-  %a.btn.btn-mini.btn-danger{"data-backbone-click" => "clear", "title" => "Remove Field"}
-    %span.icon-minus-sign
+!= FormBuilder.JST['view/pieces/duplicate_remove'](@)

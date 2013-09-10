@@ -25,7 +25,7 @@ $inputLineLeftMargin: 6px
 
   li
     display: inline-block
-    margin: 5px 10px
+    margin: 5px 10px 20px 0
 
 .fb-tab-content
   .fb-tab-pane
@@ -43,9 +43,19 @@ $inputLineLeftMargin: 6px
     padding: 4px
 
 .fb-response-fields
+  padding-bottom: 450px
+
+  a.sortable-placeholder
+    display: block
+    border: 1px dashed #ddd
+    min-height: 80px
+    height: 80px
+    width: 100%
+
   .response-field-wrapper
     cursor: pointer
     position: relative
+    margin-bottom: 20px
 
     &:hover, &.editing
       .actions-wrapper
@@ -86,3 +96,17 @@ $inputLineLeftMargin: 6px
       height: 100%
       width: 100%
       z-index: 2
+
+#edit-response-field-wrapper
+  .fb-field-label
+    font-weight: bold
+    font-size: 16px
+
+  .fb-edit-section-header
+    font-weight: bold
+    border-bottom: 1px solid #ccc
+    margin-top: 15px
+
+.response-field-draggable-helper
+  border: 1px dashed #ddd
+  background: #eee

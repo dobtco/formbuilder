@@ -1,11 +1,11 @@
-%label.header Label
+.fb-edit-section-header Label
 
-.row-fluid
-  .span8
+.grid
+  .grid-item.two_thirds
     %input{"type" => "text", "data-rv-value" => "model.label"}
     %textarea{"data-rv-value" => "model.field_options.description", "placeholder" => "Add a longer description to this field"}
 
-  .span4
+  .grid-item.one_third
     %label.checkbox
       Required
       %input{"type" => "checkbox", "data-rv-checked" => "model.field_options.required"}

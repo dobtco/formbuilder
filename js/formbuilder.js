@@ -373,6 +373,7 @@
       var $addFieldButtons,
         _this = this;
       $addFieldButtons = this.$el.find("[data-backbone-click=addField], [data-backbone-click=addExistingField]");
+      console.log('dragg');
       return $addFieldButtons.draggable({
         connectToSortable: this.$responseFields,
         helper: function() {
