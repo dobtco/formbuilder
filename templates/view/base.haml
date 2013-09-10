@@ -1,9 +1,9 @@
 .subtemplate-wrapper{"data-backbone-click" => "focusEditView"}
   .cover
-  != JST['admin_response_field/view/pieces/label'](@)
+  != FormBuilder.JST['view/pieces/label'](@)
   .subtemplate-wrapper-inner
   .clearfix
-  != JST['admin_response_field/view/pieces/description'](@)
+  != FormBuilder.JST['view/pieces/description'](@)
 
 .actions-wrapper
   %a.btn.btn-mini.btn-success{"data-backbone-click" => "duplicate", "title" => "Duplicate Field"}

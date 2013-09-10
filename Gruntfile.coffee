@@ -36,7 +36,7 @@ module.exports = (grunt) ->
 
     watch:
       app:
-        files: ['./coffee/*.coffee']
+        files: ['./coffee/*.coffee', 'templates/**/*.haml']
         tasks: ALL_TASKS
 
   grunt.registerTask 'default', ALL_TASKS

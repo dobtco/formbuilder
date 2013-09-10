@@ -1,0 +1,45 @@
+<!doctype html>
+<head>
+  <title>Form Builder</title>
+  <meta name="description" content="">
+  <style type='text/css'>
+    #formBuilder {
+      width: 1000px;
+      margin: 0 auto;
+      min-height: 600px;
+      background-color: #efefef;
+    }
+
+    #response-field-left-wrapper {
+      width: 300px;
+      float: left;
+    }
+
+    #response-field-right-wrapper {
+      margin-left: 320px;
+    }
+  </style>
+</head>
+<body>
+  <div id='formBuilder'></div>
+
+  <script src="deps/jquery.js"></script>
+  <script src="deps/jquery.ui.js"></script>
+  <script src="deps/jquery.scrollWindowTo.js"></script>
+  <script src="deps/underscore.js"></script>
+  <script src="deps/underscore.mixin.deepExtend.js"></script>
+  <script src="deps/bootstrap.js"></script>
+  <script src="deps/backbone.js"></script>
+  <script src="deps/backbone-deep-model.js"></script>
+  <script src="deps/rivets.js"></script>
+
+  <script src="../js/formbuilder.js"></script>
+  <script src="../js/templates.js"></script>
+
+  <script>
+    $(function(){
+      new FormBuilder.formBuilder()
+    });
+  </script>
+</body>
+</html>

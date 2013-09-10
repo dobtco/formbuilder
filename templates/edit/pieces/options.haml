@@ -1,7 +1,7 @@
 - if @includeBlank
   %label.checkbox
     %input{"type" => "checkbox", "data-rv-checked" => "model.field_options.include_blank_option"}
-    = I18n.t('g.response_field.include_blank')
+    Include blank
 
 %div.option{"data-rv-each-option" => "model.field_options.options"}
   %input{"type" => "checkbox", "data-rv-checked" => "option:checked", "data-backbone-click" => "defaultUpdated"}
@@ -16,5 +16,5 @@
     %input{"type" => "checkbox", "data-rv-checked" => "model.field_options.include_other_option"}
     Include "other"
 
-%a.btn.btn-small.btn-primary{"data-backbone-click" => "addOption"}= I18n.t('g.response_field.add_option')
+%a.btn.btn-small.btn-primary{"data-backbone-click" => "addOption"} Add option
 

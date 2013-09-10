@@ -1,18 +1,17 @@
 .response-field-save-wrapper
-  %button.btn.pull-right{"data-backbone-click" => "saveForm", "data-loading-text" => I18n.t('g.all_changes_saved')}
-    = I18n.t('g.save_form')
+  %button.btn.pull-right{"data-backbone-click" => "saveForm", "data-loading-text" => 'All changes saved'} Save form
   .clearfix
 
 #response-field-left-wrapper
   %ul.nav.nav-tabs#response-field-tabs
     %li.active
-      %a{"href" => "#addField", "data-toggle" => "tab"}= I18n.t('g.response_field.add_new_field')
+      %a{"href" => "#addField", "data-toggle" => "tab"} Add new field
     %li
-      %a{"href" => "#editField", "data-toggle" => "tab"}= I18n.t('g.response_field.edit_field')
+      %a{"href" => "#editField", "data-toggle" => "tab"} Edit field
 
     - if @options.formOptions
       %li
-        %a{"href" => "#formOptions", "data-toggle" => "tab"}= I18n.t('g.response_field.form_options')
+        %a{"href" => "#formOptions", "data-toggle" => "tab"} Form options
 
   .tab-content
     .tab-pane.active#addField
@@ -22,12 +21,12 @@
 
     - if @options.formOptions
       .tab-pane#formOptions
-        %label= I18n.t('g.response_field.form_description')
+        %label Form description
         %textarea.textarea-full{"data-rv-value" => "formOptions.form_description"}
 
-        %label= I18n.t('g.response_field.form_confirmation_message')
+        %label Form confirmation message
         %textarea.textarea-full{"data-rv-value" => "formOptions.form_confirmation_message"}
-        %span.help-block= I18n.t('g.response_field.no_confirmation_message')
+        %span.help-block No confirmation message?
 
         %label Submit Button Text
         %input{"type" => "text", "data-rv-value" => "formOptions.submit_button_text"}
@@ -36,7 +35,7 @@
         .response-identifier-wrapper
 
 #response-field-right-wrapper
-  #no-response-fields= I18n.t('g.response_field.none')
+  #no-response-fields None
   #response-fields
 
 .clearfix

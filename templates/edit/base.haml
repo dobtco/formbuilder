@@ -8,6 +8,6 @@
     This field will be pre-filled from the vendor's profile, using the
     <code>#{@response_field.get('key')}</code> key.
 
-!= JST['admin_response_field/edit/groups/common']()
+!= FormBuilder.JST['edit/groups/common']()
 .edit-subtemplate-wrapper
-!= JST['admin_response_field/edit/pieces/review_this_field']()
+!= FormBuilder.JST['edit/pieces/review_this_field']()
