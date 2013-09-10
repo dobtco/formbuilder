@@ -257,15 +257,6 @@ FormBuilder.formBuilder = Backbone.View.extend
     # rivets.bind @$el,
     #   formOptions: @response_fieldable
 
-    @$el.find("#response-field-tabs a[href=\"#editField\"]").on 'show', =>
-      if !@editView && (first_model = @collection.models[0])
-        @createAndShowEditView(first_model)
-
-    @$el.find("#response-field-tabs a").on 'show', (e) =>
-      @unlockLeftWrapper() unless $(e.currentTarget).attr('href') == '#editField'
-      if $(e.currentTarget).attr('href') == '#formOptions'
-        $.scrollWindowTo 0, 200, =>
-          @lockLeftWrapper()
 
 
     $(window).on 'scroll', =>
@@ -279,6 +270,20 @@ FormBuilder.formBuilder = Backbone.View.extend
     @toggleNoResponseFields()
 
     return @
+
+  showTab: (_, $el, target) ->
+    $el.closest('li').addClass('active').siblings('li').removeClass('active')
+    $(target).addClass('active').siblings('.fb-tab-pane').removeClass('active')
+
+    @unlockLeftWrapper() unless target == '#editField'
+
+    if target == '#editField' && !@editView && (first_model = @collection.models[0])
+      @createAndShowEditView(first_model)
+
+    if target == '#formOptions'
+      $.scrollWindowTo 0, 200, =>
+        @lockLeftWrapper() # dupe?
+
 
   addOne: (responseField, _, options) ->
     view = new VIEW_FIELD_VIEW
@@ -382,7 +387,7 @@ FormBuilder.formBuilder = Backbone.View.extend
 
     if @editView
       if @editView.model.cid is model.cid
-        @$el.find("#response-field-tabs a[href=\"#editField\"]").click()
+        @$el.find(".fb-tabs a[data-backbone-params=\"#editField\"]").click()
         @scrollLeftWrapper $responseFieldEl, (oldPadding? && oldPadding)
         return
 
@@ -395,7 +400,7 @@ FormBuilder.formBuilder = Backbone.View.extend
 
     $newEditEl = @editView.render().$el
     @$el.find("#edit-response-field-wrapper").html $newEditEl
-    @$el.find("#response-field-tabs a[href=\"#editField\"]").click()
+    @$el.find(".fb-tabs a[data-backbone-params=\"#editField\"]").click()
 
     @scrollLeftWrapper($responseFieldEl)
     @

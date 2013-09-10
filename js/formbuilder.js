@@ -285,22 +285,6 @@
         options: this.options
       }));
       this.$fbLeft = this.$el.find('.fb-left');
-      this.$el.find("#response-field-tabs a[href=\"#editField\"]").on('show', function() {
-        var first_model;
-        if (!_this.editView && (first_model = _this.collection.models[0])) {
-          return _this.createAndShowEditView(first_model);
-        }
-      });
-      this.$el.find("#response-field-tabs a").on('show', function(e) {
-        if ($(e.currentTarget).attr('href') !== '#editField') {
-          _this.unlockLeftWrapper();
-        }
-        if ($(e.currentTarget).attr('href') === '#formOptions') {
-          return $.scrollWindowTo(0, 200, function() {
-            return _this.lockLeftWrapper();
-          });
-        }
-      });
       $(window).on('scroll', function() {
         var maxMargin, newMargin;
         if (_this.$fbLeft.data('locked') === true) {
@@ -314,6 +298,23 @@
       });
       this.toggleNoResponseFields();
       return this;
+    },
+    showTab: function(_, $el, target) {
+      var first_model,
+        _this = this;
+      $el.closest('li').addClass('active').siblings('li').removeClass('active');
+      $(target).addClass('active').siblings('.fb-tab-pane').removeClass('active');
+      if (target !== '#editField') {
+        this.unlockLeftWrapper();
+      }
+      if (target === '#editField' && !this.editView && (first_model = this.collection.models[0])) {
+        this.createAndShowEditView(first_model);
+      }
+      if (target === '#formOptions') {
+        return $.scrollWindowTo(0, 200, function() {
+          return _this.lockLeftWrapper();
+        });
+      }
     },
     addOne: function(responseField, _, options) {
       var $replacePosition, view;
@@ -442,7 +443,7 @@
       $responseFieldEl.addClass('editing');
       if (this.editView) {
         if (this.editView.model.cid === model.cid) {
-          this.$el.find("#response-field-tabs a[href=\"#editField\"]").click();
+          this.$el.find(".fb-tabs a[data-backbone-params=\"#editField\"]").click();
           this.scrollLeftWrapper($responseFieldEl, (typeof oldPadding !== "undefined" && oldPadding !== null) && oldPadding);
           return;
         }
@@ -455,7 +456,7 @@
       });
       $newEditEl = this.editView.render().$el;
       this.$el.find("#edit-response-field-wrapper").html($newEditEl);
-      this.$el.find("#response-field-tabs a[href=\"#editField\"]").click();
+      this.$el.find(".fb-tabs a[data-backbone-params=\"#editField\"]").click();
       this.scrollLeftWrapper($responseFieldEl);
       return this;
     },

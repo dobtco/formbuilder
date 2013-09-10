@@ -5,9 +5,9 @@
 .fb-left
   %ul.fb-tabs
     %li.active
-      %a Add new field
+      %a{'data-backbone-click' => 'showTab', 'data-backbone-params' => '#addField'} Add new field
     %li
-      %a Edit field
+      %a{'data-backbone-click' => 'showTab', 'data-backbone-params' => '#editField'} Edit field
 
     - if @options.formOptions
       %li
