@@ -3,20 +3,20 @@
   .clearfix
 
 .fb-left
-  %ul.nav.nav-tabs#response-field-tabs
+  %ul.fb-tabs
     %li.active
-      %a{"href" => "#addField", "data-toggle" => "tab"} Add new field
+      %a Add new field
     %li
-      %a{"href" => "#editField", "data-toggle" => "tab"} Edit field
+      %a Edit field
 
     - if @options.formOptions
       %li
-        %a{"href" => "#formOptions", "data-toggle" => "tab"} Form options
+        %a Form options
 
-  .tab-content
-    .tab-pane.active#addField
+  .fb-tab-content
+    .fb-tab-pane.active#addField
 
-    .tab-pane#editField
+    .fb-tab-pane#editField
       #edit-response-field-wrapper
 
     - if @options.formOptions
@@ -34,8 +34,8 @@
 
         .response-identifier-wrapper
 
-#response-field-right-wrapper
-  #no-response-fields None
+.fb-right
+  #no-response-fields No response fields
   #response-fields
 
 .clearfix

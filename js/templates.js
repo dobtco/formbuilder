@@ -28,17 +28,17 @@
         }
       };
       $o = [];
-      $o.push("<div class='add-field-types'>\n  <div class='section'>");
+      $o.push("<div class='fb-add-field-types'>\n  <div class='section'>");
       _ref = FormBuilder.RESPONSE_FIELD_TYPES;
       for (k in _ref) {
         v = _ref[k];
-        $o.push("    <a class='btn btn-small' data-backbone-click='addField' data-backbone-params='" + ($e($c(k))) + "'>" + ($c(v)) + "</a>");
+        $o.push("    <a data-backbone-click='addField' data-backbone-params='" + ($e($c(k))) + "'>" + ($c(v)) + "</a>");
       }
       $o.push("  </div>\n  <div class='section'>\n    <div class='section-header'>Non-input fields</div>");
       _ref1 = FormBuilder.RESPONSE_FIELD_NON_INPUT_TYPES;
       for (k in _ref1) {
         v = _ref1[k];
-        $o.push("    <a class='btn btn-small' data-backbone-click='addField' data-backbone-params='" + ($e($c(k))) + "'>" + ($c(v)) + "</a>");
+        $o.push("    <a data-backbone-click='addField' data-backbone-params='" + ($e($c(k))) + "'>" + ($c(v)) + "</a>");
       }
       $o.push("  </div>\n</div>");
       return $o.join("\n").replace(/\s(\w+)='true'/mg, ' $1').replace(/\s(\w+)='false'/mg, '').replace(/\s(?:id|class)=(['"])(\1)/mg, "");
@@ -745,15 +745,15 @@
     return (function() {
       var $o;
       $o = [];
-      $o.push("<div class='response-field-save-wrapper'>\n  <button class='btn pull-right' data-backbone-click='saveForm' data-loading-text='All changes saved'>Save form</button>\n  <div class='clearfix'></div>\n</div>\n<div class='fb-left'>\n  <ul class='nav nav-tabs' id='response-field-tabs'>\n    <li class='active'>\n      <a href='#addField' data-toggle='tab'>Add new field</a>\n    </li>\n    <li>\n      <a href='#editField' data-toggle='tab'>Edit field</a>\n    </li>");
+      $o.push("<div class='response-field-save-wrapper'>\n  <button class='btn pull-right' data-backbone-click='saveForm' data-loading-text='All changes saved'>Save form</button>\n  <div class='clearfix'></div>\n</div>\n<div class='fb-left'>\n  <ul class='fb-tabs'>\n    <li class='active'>\n      <a>Add new field</a>\n    </li>\n    <li>\n      <a>Edit field</a>\n    </li>");
       if (this.options.formOptions) {
-        $o.push("    <li>\n      <a href='#formOptions' data-toggle='tab'>Form options</a>\n    </li>");
+        $o.push("    <li>\n      <a>Form options</a>\n    </li>");
       }
-      $o.push("  </ul>\n  <div class='tab-content'>\n    <div class='active tab-pane' id='addField'></div>\n    <div class='tab-pane' id='editField'>\n      <div id='edit-response-field-wrapper'></div>\n    </div>");
+      $o.push("  </ul>\n  <div class='fb-tab-content'>\n    <div class='active fb-tab-pane' id='addField'></div>\n    <div class='fb-tab-pane' id='editField'>\n      <div id='edit-response-field-wrapper'></div>\n    </div>");
       if (this.options.formOptions) {
         $o.push("    <div class='tab-pane' id='formOptions'>\n      <label>Form description</label>\n      <textarea class='textarea-full' data-rv-value='formOptions.form_description'></textarea>\n      <label>Form confirmation message</label>\n      <textarea class='textarea-full' data-rv-value='formOptions.form_confirmation_message'></textarea>\n      <span class='help-block'>No confirmation message?</span>\n      <label>Submit Button Text</label>\n      <input type='text' data-rv-value='formOptions.submit_button_text'>\n      <span class='help-block'>If left blank, the default is \"Submit\"</span>\n      <div class='response-identifier-wrapper'></div>\n    </div>");
       }
-      $o.push("  </div>\n</div>\n<div id='response-field-right-wrapper'>\n  <div id='no-response-fields'>None</div>\n  <div id='response-fields'></div>\n</div>\n<div class='clearfix'></div>");
+      $o.push("  </div>\n</div>\n<div class='fb-right'>\n  <div id='no-response-fields'>No response fields</div>\n  <div id='response-fields'></div>\n</div>\n<div class='clearfix'></div>");
       return $o.join("\n").replace(/\s(?:id|class)=(['"])(\1)/mg, "");
     }).call(context);
   };

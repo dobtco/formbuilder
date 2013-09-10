@@ -1,3 +1,6 @@
+.fb-clear {
+  clear: both; }
+
 .fb-main {
   max-width: 1000px;
   margin: 0 auto; }
@@ -10,3 +13,23 @@
 
 .fb-right {
   margin-left: 400px; }
+
+.fb-tabs {
+  list-style: none;
+  margin: 0;
+  padding: 0; }
+  .fb-tabs li {
+    display: inline-block;
+    margin: 5px 10px; }
+
+.fb-tab-content .fb-tab-pane {
+  display: none; }
+  .fb-tab-content .fb-tab-pane.active {
+    display: block; }
+
+.fb-add-field-types a {
+  display: inline-block;
+  width: 33%;
+  background-color: #cccccc;
+  margin-bottom: 6px;
+  padding: 4px; }
