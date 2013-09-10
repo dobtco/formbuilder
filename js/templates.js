@@ -520,7 +520,6 @@
       $o.push("" + $c(FormBuilder.JST['edit/pieces/options']({
         includeOther: true
       })));
-      $o.push("" + $c(FormBuilder.JST['edit/pieces/create_labels']()));
       return $o.join("\n").replace(/\s(\w+)='true'/mg, ' $1').replace(/\s(\w+)='false'/mg, '');
     }).call(context);
   };
