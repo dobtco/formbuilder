@@ -21,6 +21,14 @@ FormBuilder.templates =
       </div>
     """
 
+    base_non_input: _.template """
+      <div class='subtemplate-wrapper' data-backbone-click='focusEditView'>
+        <div class='cover'></div>
+        <%= FormBuilder.all_fields[rf.get('field_type')].view({rf: rf}) %>
+        <%= FormBuilder.templates.view.duplicate_remove({rf: rf}) %>
+      </div>
+    """
+
     label: _.template """
       <label>
         <span><%= FormBuilder.helpers.simple_format(rf.get('label')) %>
@@ -49,6 +57,16 @@ FormBuilder.templates =
         <span class='icon-arrow-right pull-right'></span>
       </div>
       <%= FormBuilder.templates.edit.common %>
+
+      <%= FormBuilder.all_fields[rf.get('field_type')].edit({rf: rf}) %>
+    """
+
+    base_non_input: _.template """
+      <div class='fb-field-label'>
+        <span data-rv-text="model.label"></span>
+        <code class='field-type' data-rv-text='model.field_type'></code>
+        <span class='icon-arrow-right pull-right'></span>
+      </div>
 
       <%= FormBuilder.all_fields[rf.get('field_type')].edit({rf: rf}) %>
     """
@@ -269,7 +287,7 @@ FormBuilder.models.response_field = Backbone.DeepModel.extend
     $(".response-field-wrapper").index $wrapper
 
   is_input: ->
-    FormBuilder.all_fields[@get('field_type')]
+    FormBuilder.input_fields[@get('field_type')]?
 
 FormBuilder.collections.response_fields = Backbone.Collection.extend
   model: FormBuilder.models.response_field

@@ -12,12 +12,14 @@
   FormBuilder.templates = {
     view: {
       base: _.template("<div class='subtemplate-wrapper' data-backbone-click='focusEditView'>\n  <div class='cover'></div>\n  <%= FormBuilder.templates.view.label({rf: rf}) %>\n\n  <%= FormBuilder.all_fields[rf.get('field_type')].view({rf: rf}) %>\n\n  <%= FormBuilder.templates.view.description({rf: rf}) %>\n  <%= FormBuilder.templates.view.duplicate_remove({rf: rf}) %>\n</div>"),
+      base_non_input: _.template("<div class='subtemplate-wrapper' data-backbone-click='focusEditView'>\n  <div class='cover'></div>\n  <%= FormBuilder.all_fields[rf.get('field_type')].view({rf: rf}) %>\n  <%= FormBuilder.templates.view.duplicate_remove({rf: rf}) %>\n</div>"),
       label: _.template("<label>\n  <span><%= FormBuilder.helpers.simple_format(rf.get('label')) %>\n  <% if (rf.get('field_options.required')) { %>\n    <abbr title='required'>*</abbr>\n  <% } %>\n</label>"),
       description: _.template("<span class='help-block'><%= FormBuilder.helpers.simple_format(rf.get('field_options.description')) %></span>"),
       duplicate_remove: _.template("<div class='actions-wrapper'>\n  <a data-backbone-click=\"duplicate\" title=\"Duplicate Field\"><i class='icon-plus-sign'></i></a>\n  <a data-backbone-click=\"clear\" title=\"Remove Field\"><i class='icon-minus-sign'></i></a>\n</div>")
     },
     edit: {
       base: _.template("<div class='fb-field-label'>\n  <span data-rv-text=\"model.label\"></span>\n  <code class='field-type' data-rv-text='model.field_type'></code>\n  <span class='icon-arrow-right pull-right'></span>\n</div>\n<%= FormBuilder.templates.edit.common %>\n\n<%= FormBuilder.all_fields[rf.get('field_type')].edit({rf: rf}) %>"),
+      base_non_input: _.template("<div class='fb-field-label'>\n  <span data-rv-text=\"model.label\"></span>\n  <code class='field-type' data-rv-text='model.field_type'></code>\n  <span class='icon-arrow-right pull-right'></span>\n</div>\n\n<%= FormBuilder.all_fields[rf.get('field_type')].edit({rf: rf}) %>"),
       common: "<div class='db-edit-section-header'>Label</div>\n\n<div class='grid'>\n  <div class='grid-item two_thirds'>\n    <input type='text' data-rv-value='model.label' />\n    <textarea data-rv-value='model.field_options.description' placeholder='Add a longer description to this field'></textarea>\n  </div>\n  <div class='grid-item one_third'>\n    <label>\n      Required\n      <input type='checkbox' data-rv-checked='model.field_options.required' />\n    </label>\n    <label>\n      Blind\n      <input type='checkbox' data-rv-checked='model.field_options.blind' />\n    </label>\n    <label>\n      Admin only\n      <input type='checkbox' data-rv-checked='model.field_options.admin_only' />\n    </label>\n  </div>\n</div>",
       size: "<div class='fb-edit-section-header'>Size</div>\n<select data-rv-value=model.field_options.size\">\n  <option value=\"small\">Small</option>\n  <option value=\"medium\">Medium</option>\n  <option value=\"large\">Large</option>\n</select>",
       min_max_length: "<div class='fb-edit-section-header'>Length Limit</div>\n\nMin\n<input type=\"text\" data-rv-value=\"model.field_options.minlength\" style=\"width: 30px\" />\n\n&nbsp;&nbsp;\n\nMax\n<input type=\"text\" data-rv-value=\"model.field_options.maxlength\" style=\"width: 30px\" />\n\n&nbsp;&nbsp;\n\n<select data-rv-value=\"model.field_options.min_max_length_units\" style=\"width: auto;\">\n  <option value=\"characters\">characters</option>\n  <option value=\"words\">words</option>\n</select>",
@@ -166,7 +168,7 @@
       return $(".response-field-wrapper").index($wrapper);
     },
     is_input: function() {
-      return FormBuilder.all_fields[this.get('field_type')];
+      return FormBuilder.input_fields[this.get('field_type')] != null;
     }
   });
 
