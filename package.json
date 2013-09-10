@@ -1,0 +1,8 @@
+{
+  "main": "Gruntfile.coffee",
+  "dependencies": {
+    "grunt": "*",
+    "grunt-contrib-coffee": "*",
+    "grunt-contrib-watch": "*"
+  }
+}
