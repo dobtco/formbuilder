@@ -33,12 +33,12 @@ module.exports = (grunt) ->
     concat:
       all:
         src: ['js/compiled.js', 'templates/compiled.js']
-        dest: 'formbuilder.js'
+        dest: 'form-builder.js'
 
     sass:
       all:
         files:
-          'formbuilder.css': 'sass/formbuilder.sass'
+          'form-builder.css': 'sass/formbuilder.sass'
 
     watch:
       all:
