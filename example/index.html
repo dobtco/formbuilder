@@ -2,45 +2,26 @@
 <head>
   <title>Form Builder</title>
   <meta name="description" content="">
-  <link rel="stylesheet" href="deps/font-awesome.css" />
-  <link rel="stylesheet" href="../css/formbuilder.css" />
+  <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.css" />
+  <link rel="stylesheet" href="../formbuilder.css" />
 </head>
 <body>
   <div id='formBuilder' class='fb-main'></div>
 
-  <script src="deps/jquery.js"></script>
-  <script src="deps/jquery.ui.js"></script>
-  <script src="deps/jquery.scrollWindowTo.js"></script>
-  <script src="deps/underscore.js"></script>
-  <script src="deps/underscore.mixin.deepExtend.js"></script>
-  <script src="deps/bootstrap.js"></script>
-  <script src="deps/backbone.js"></script>
-  <script src="deps/backbone-deep-model.js"></script>
-  <script src="deps/backboneDelegateEvents.js"></script>
-  <script src="deps/rivets.js"></script>
+  <script src="../bower_components/jquery/index.js"></script>
+  <script src="../bower_components/underscore/underscore-min.js"></script>
+  <script src="../bower_components/rivets/dist/rivets.js"></script>
+  <script src="../bower_components/backbone/backbone.js"></script>
+  <script src="../bower_components/backbone-deep-model/src/deep-model.js"></script>
+  <script src="../bower_components/html5sortable/jquery.sortable.js"></script>
 
-  <script src="../js/formbuilder.js"></script>
-
-  <script src="../js/fields/text.js"></script>
-  <script src="../js/fields/paragraph.js"></script>
-  <script src="../js/fields/checkboxes.js"></script>
-  <script src="../js/fields/radio.js"></script>
-  <script src="../js/fields/dropdown.js"></script>
-  <script src="../js/fields/price.js"></script>
-  <script src="../js/fields/number.js"></script>
-  <script src="../js/fields/date.js"></script>
-  <script src="../js/fields/time.js"></script>
-  <script src="../js/fields/website.js"></script>
-  <script src="../js/fields/file.js"></script>
-  <script src="../js/fields/address.js"></script>
-  <script src="../js/fields/section_break.js"></script>
-
-  <script src="../js/templates.js"></script>
+  <script src="../formbuilder.js"></script>
 
   <script>
     $(function(){
       new FormBuilder.main()
     });
   </script>
+
 </body>
 </html>

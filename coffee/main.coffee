@@ -145,7 +145,7 @@ FormBuilder.main = Backbone.View.extend
   initAutosave: ->
     @formSaved = true
     @saveFormButton = @$el.find("[data-backbone-click=saveForm]")
-    @saveFormButton.button 'loading'
+    # @saveFormButton.button 'loading'
 
     setInterval =>
       @saveForm.call(@)
@@ -239,6 +239,7 @@ FormBuilder.main = Backbone.View.extend
     @setDraggable()
 
   setDraggable: ->
+    return
     $addFieldButtons = @$el.find("[data-backbone-click=addField], [data-backbone-click=addExistingField]")
     $addFieldButtons.draggable('destroy') if $addFieldButtons.hasClass('ui-draggable')
 
@@ -308,12 +309,12 @@ FormBuilder.main = Backbone.View.extend
   handleFormUpdate: ->
     return if @updatingBatch
     @formSaved = false
-    @saveFormButton.button('reset')
+    # @saveFormButton.button('reset')
 
   saveForm: (e) ->
     return if @formSaved is true
     @formSaved = true
-    @saveFormButton.button 'loading'
+    # @saveFormButton.button 'loading'
 
     @collection.sort()
 

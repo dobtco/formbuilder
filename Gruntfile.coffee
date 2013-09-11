@@ -1,4 +1,4 @@
-ALL_TASKS = ['coffee', 'jst', 'sass']
+ALL_TASKS = ['jst', 'coffee', 'concat', 'sass']
 
 module.exports = (grunt) ->
 
@@ -6,6 +6,7 @@ module.exports = (grunt) ->
   exec = require('child_process').exec
 
   grunt.loadNpmTasks('grunt-contrib-coffee')
+  grunt.loadNpmTasks('grunt-contrib-concat')
   grunt.loadNpmTasks('grunt-contrib-jst')
   grunt.loadNpmTasks('grunt-contrib-sass')
   grunt.loadNpmTasks('grunt-contrib-watch')
@@ -13,15 +14,6 @@ module.exports = (grunt) ->
   grunt.initConfig
 
     pkg: '<json:package.json>'
-
-    coffee:
-      all:
-        expand: true
-        flatten: false
-        cwd: 'coffee'
-        src: ['**/*.coffee']
-        dest: 'js/'
-        ext: '.js'
 
     jst:
       all:
@@ -31,17 +23,22 @@ module.exports = (grunt) ->
             filename.replace('./templates/', '').replace('.html', '')
 
         files:
-          'js/templates.js': ['./templates/**/*.html']
+          'templates/compiled.js': ['./templates/**/*.html']
+
+    coffee:
+      all:
+        files:
+          'js/compiled.js': ['coffee/main.coffee', 'coffee/fields/*.coffee']
+
+    concat:
+      all:
+        src: ['js/compiled.js', 'templates/compiled.js']
+        dest: 'formbuilder.js'
 
     sass:
       all:
-        files: [{
-          expand: true
-          cwd: 'sass'
-          src: ['*.sass', '*.scss']
-          dest: 'css'
-          ext: '.css'
-        }]
+        files:
+          'formbuilder.css': 'sass/formbuilder.sass'
 
     watch:
       all:

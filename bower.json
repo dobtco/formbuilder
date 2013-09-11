@@ -14,5 +14,15 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "jQuery": "http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js",
+    "underscore": "*",
+    "underscore.deepExtend": "*",
+    "backbone": "*",
+    "backbone-deep-model": "*",
+    "rivets": "*",
+    "font-awesome": "*",
+    "html5sortable": "*"
+  }
 }

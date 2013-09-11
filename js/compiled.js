@@ -175,7 +175,6 @@
       var _this = this;
       this.formSaved = true;
       this.saveFormButton = this.$el.find("[data-backbone-click=saveForm]");
-      this.saveFormButton.button('loading');
       setInterval(function() {
         return _this.saveForm.call(_this);
       }, 5000);
@@ -281,6 +280,7 @@
     setDraggable: function() {
       var $addFieldButtons,
         _this = this;
+      return;
       $addFieldButtons = this.$el.find("[data-backbone-click=addField], [data-backbone-click=addExistingField]");
       if ($addFieldButtons.hasClass('ui-draggable')) {
         $addFieldButtons.draggable('destroy');
@@ -362,8 +362,7 @@
       if (this.updatingBatch) {
         return;
       }
-      this.formSaved = false;
-      return this.saveFormButton.button('reset');
+      return this.formSaved = false;
     },
     saveForm: function(e) {
       var _ref,
@@ -372,7 +371,6 @@
         return;
       }
       this.formSaved = true;
-      this.saveFormButton.button('loading');
       this.collection.sort();
       this.collection.addCidsToModels();
       this.collection.trigger('batchUpdate');
@@ -400,6 +398,170 @@
         }
       });
     }
+  });
+
+}).call(this);
+
+(function() {
+  FormBuilder.registerField('address', {
+    view: "<div class='input-line'>\n  <span class='street'>\n    <input type='text' />\n    <label>Address</label>\n  </span>\n</div>\n\n<div class='input-line'>\n  <span class='city'>\n    <input type='text' />\n    <label>City</label>\n  </span>\n\n  <span class='state'>\n    <input type='text' />\n    <label>State / Province / Region</label>\n  </span>\n</div>\n\n<div class='input-line'>\n  <span class='zip'>\n    <input type='text' />\n    <label>Zipcode</label>\n  </span>\n\n  <span class='country'>\n    <select></select>\n    <label>Country</label>\n  </span>\n</div>",
+    edit: "",
+    addButton: "<span class=\"symbol\"><span class=\"icon-home\"></span></span> Address"
+  });
+
+}).call(this);
+
+(function() {
+  FormBuilder.registerField('checkboxes', {
+    view: "<% for (i in (rf.get('field_options.options') || [])) { %>\n  <div>\n    <label>\n      <input type='checkbox' <%= rf.get('field_options.options')[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get('field_options.options')[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get('field_options.include_other_option')) { %>\n  <div class='other-option'>\n    <label>\n      <input type='checkbox' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
+    edit: "<%= FormBuilder.templates['edit/options']({ includeOther: true }) %>",
+    addButton: "<span class=\"symbol\"><span class=\"icon-check-empty\"></span></span> Checkboxes",
+    defaultAttributes: function(attrs) {
+      attrs.field_options.options = [
+        {
+          label: "",
+          checked: false
+        }, {
+          label: "",
+          checked: false
+        }
+      ];
+      return attrs;
+    }
+  });
+
+}).call(this);
+
+(function() {
+  FormBuilder.registerField('date', {
+    view: "<div class='input-line'>\n  <span class='month'>\n    <input type=\"text\" />\n    <label>MM</label>\n  </span>\n\n  <span class='above-line'>/</span>\n\n  <span class='day'>\n    <input type=\"text\" />\n    <label>DD</label>\n  </span>\n\n  <span class='above-line'>/</span>\n\n  <span class='year'>\n    <input type=\"text\" />\n    <label>YYYY</label>\n  </span>\n</div>",
+    edit: "",
+    addButton: "<span class=\"symbol\"><span class=\"icon-calendar\"></span></span> Date"
+  });
+
+}).call(this);
+
+(function() {
+  FormBuilder.registerField('dropdown', {
+    view: "<select>\n  <% if (rf.get('field_options.include_blank_option')) { %>\n    <option value=''></option>\n  <% } %>\n\n  <% for (i in (rf.get('field_options.options') || [])) { %>\n    <option <%= rf.get('field_options.options')[i].checked && 'selected' %>>\n      <%= rf.get('field_options.options')[i].label %>\n    </option>\n  <% } %>\n</select>",
+    edit: "<%= FormBuilder.templates['edit/options']({ includeBlank: true }) %>",
+    addButton: "<span class=\"symbol\"><span class=\"icon-caret-down\"></span></span> Dropdown",
+    defaultAttributes: function(attrs) {
+      attrs.field_options.options = [
+        {
+          label: "",
+          checked: false
+        }, {
+          label: "",
+          checked: false
+        }
+      ];
+      attrs.field_options.include_blank_option = false;
+      return attrs;
+    }
+  });
+
+}).call(this);
+
+(function() {
+  FormBuilder.registerField('email', {
+    view: "<input type='text' class='rf-size-<%= rf.get('field_options.size') %>' />",
+    edit: "",
+    addButton: "<span class=\"symbol\"><span class=\"icon-envelope-alt\"></span></span> Email"
+  });
+
+}).call(this);
+
+(function() {
+  FormBuilder.registerField('file', {
+    view: "<input type='file' />",
+    edit: "",
+    addButton: "<span class=\"symbol\"><span class=\"icon-cloud-upload\"></span></span> File"
+  });
+
+}).call(this);
+
+(function() {
+  FormBuilder.registerField('number', {
+    view: "<input type='text' />\n<% if (units = rf.get('field_options.units')) { %>\n  <%= units %>\n<% } %>",
+    edit: "<%= FormBuilder.templates['edit/min_max']() %>\n<%= FormBuilder.templates['edit/units']() %>\n<%= FormBuilder.templates['edit/integer_only']() %>",
+    addButton: "<span class=\"symbol\"><span class=\"icon-number\">123</span></span> Number"
+  });
+
+}).call(this);
+
+(function() {
+  FormBuilder.registerField('paragraph', {
+    view: "<textarea class='rf-size-<%= rf.get('field_options.size') %>'></textarea>",
+    edit: "<%= FormBuilder.templates['edit/size']() %>\n<%= FormBuilder.templates['edit/min_max_length']() %>",
+    addButton: "<span class=\"symbol\">&#182;</span> Paragraph"
+  });
+
+}).call(this);
+
+(function() {
+  FormBuilder.registerField('price', {
+    view: "<div class='input-line'>\n  <span class='above-line'>$</span>\n  <span class='dolars'>\n    <input type='text' />\n    <label>Dollars</label>\n  </span>\n  <span class='above-line'>.</span>\n  <span class='cents'>\n    <input type='text' />\n    <label>Cents</label>\n  </span>\n</div>",
+    edit: "",
+    addButton: "<span class=\"symbol\"><span class=\"icon-dollar\"></span></span> Price"
+  });
+
+}).call(this);
+
+(function() {
+  FormBuilder.registerField('radio', {
+    view: "<% for (i in (rf.get('field_options.options') || [])) { %>\n  <div>\n    <label>\n      <input type='radio' <%= rf.get('field_options.options')[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get('field_options.options')[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get('field_options.include_other_option')) { %>\n  <div class='other-option'>\n    <label>\n      <input type='radio' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
+    edit: "<%= FormBuilder.templates['edit/options']({ includeOther: true }) %>",
+    addButton: "<span class=\"symbol\"><span class=\"icon-circle-blank\"></span></span> Multiple Choice",
+    defaultAttributes: function(attrs) {
+      attrs.field_options.options = [
+        {
+          label: "",
+          checked: false
+        }, {
+          label: "",
+          checked: false
+        }
+      ];
+      return attrs;
+    }
+  });
+
+}).call(this);
+
+(function() {
+  FormBuilder.registerField('section_break', {
+    type: 'non_input',
+    view: "<label class='section-name'><%= rf.get('label') %></label>\n<p><%= rf.get('field_options.description') %></p>",
+    edit: "<div class='fb-edit-section-header'>Label</div>\n<input type='text' data-rv-value='model.label' />\n<textarea data-rv-value='model.field_options.description' placeholder='Add a longer description to this field'></textarea>",
+    addButton: "<span class='symbol'><span class='icon-minus'></span></span> Section Break"
+  });
+
+}).call(this);
+
+(function() {
+  FormBuilder.registerField('text', {
+    view: "<input type='text' class='rf-size-<%= rf.get('field_options.size') %>' />",
+    edit: "<%= FormBuilder.templates['edit/size']() %>\n<%= FormBuilder.templates['edit/min_max_length']() %>",
+    addButton: "<span class='symbol'><span class='icon-font'></span></span> Text"
+  });
+
+}).call(this);
+
+(function() {
+  FormBuilder.registerField('time', {
+    view: "<div class='input-line'>\n  <span class='hours'>\n    <input type=\"text\" />\n    <label>HH</label>\n  </span>\n\n  <span class='above-line'>:</span>\n\n  <span class='minutes'>\n    <input type=\"text\" />\n    <label>MM</label>\n  </span>\n\n  <span class='above-line'>:</span>\n\n  <span class='seconds'>\n    <input type=\"text\" />\n    <label>SS</label>\n  </span>\n\n  <span class='am_pm'>\n    <select>\n      <option>AM</option>\n      <option>PM</option>\n    </select>\n  </span>\n</div>",
+    edit: "",
+    addButton: "<span class=\"symbol\"><span class=\"icon-time\"></span></span> Time"
+  });
+
+}).call(this);
+
+(function() {
+  FormBuilder.registerField('website', {
+    view: "<input type='text' class='rf-size-<%= rf.get('field_options.size') %>' placeholder='http://' />",
+    edit: "<%= FormBuilder.templates['edit/size']() %>",
+    addButton: "<span class=\"symbol\"><span class=\"icon-link\"></span></span> Website"
   });
 
 }).call(this);
