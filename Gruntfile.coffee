@@ -1,4 +1,4 @@
-ALL_TASKS = ['coffee', 'haml', 'sass']
+ALL_TASKS = ['coffee', 'jst', 'sass']
 
 module.exports = (grunt) ->
 
@@ -6,7 +6,7 @@ module.exports = (grunt) ->
   exec = require('child_process').exec
 
   grunt.loadNpmTasks('grunt-contrib-coffee')
-  grunt.loadNpmTasks('grunt-haml')
+  grunt.loadNpmTasks('grunt-contrib-jst')
   grunt.loadNpmTasks('grunt-contrib-sass')
   grunt.loadNpmTasks('grunt-contrib-watch')
 
@@ -15,7 +15,7 @@ module.exports = (grunt) ->
     pkg: '<json:package.json>'
 
     coffee:
-      main:
+      all:
         expand: true
         flatten: false
         cwd: 'coffee'
@@ -23,17 +23,15 @@ module.exports = (grunt) ->
         dest: 'js/'
         ext: '.js'
 
-    haml:
+    jst:
       all:
         options:
-          language: 'coffee'
-          placement: 'global'
-          target: 'js'
-          namespace: 'window.FormBuilder.JST'
-          includePath: true
-          pathRelativeTo: './templates'
+          namespace: 'FormBuilder.templates'
+          processName: (filename) ->
+            filename.replace('./templates/', '').replace('.html', '')
+
         files:
-          'js/templates.js': ['templates/**/*.haml']
+          'js/templates.js': ['./templates/**/*.html']
 
     sass:
       all:
@@ -46,8 +44,8 @@ module.exports = (grunt) ->
         }]
 
     watch:
-      app:
-        files: ['./coffee/**/*.coffee', 'templates/**/*.haml', './sass/**/*.sass']
+      all:
+        files: ['./coffee/**/*.coffee', 'templates/**/*.html', './sass/**/*.sass']
         tasks: ALL_TASKS
 
   grunt.registerTask 'default', ALL_TASKS

@@ -5,8 +5,8 @@ FormBuilder.registerField 'paragraph',
   """
 
   edit: """
-    <%= FormBuilder.templates.edit.size %>
-    <%= FormBuilder.templates.edit.min_max_length %>
+    <%= FormBuilder.templates['edit/size']() %>
+    <%= FormBuilder.templates['edit/min_max_length']() %>
   """
 
   addButton: """

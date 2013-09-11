@@ -3,7 +3,7 @@
   "dependencies": {
     "grunt": "*",
     "grunt-contrib-coffee": "*",
-    "grunt-haml": "*",
+    "grunt-contrib-jst": "*",
     "grunt-contrib-sass": "*",
     "grunt-contrib-watch": "*"
   }

@@ -1,46 +1,19 @@
 (function() {
-  window.FormBuilder || (window.FormBuilder = {
-    all_fields: {},
-    input_fields: {},
-    non_input_fields: {},
-    helpers: {},
-    models: {},
-    views: {},
-    collections: {}
-  });
+  window.FormBuilder || (window.FormBuilder = {});
 
-  FormBuilder.templates = {
-    view: {
-      base: _.template("<div class='subtemplate-wrapper' data-backbone-click='focusEditView'>\n  <div class='cover'></div>\n  <%= FormBuilder.templates.view.label({rf: rf}) %>\n\n  <%= FormBuilder.all_fields[rf.get('field_type')].view({rf: rf}) %>\n\n  <%= FormBuilder.templates.view.description({rf: rf}) %>\n  <%= FormBuilder.templates.view.duplicate_remove({rf: rf}) %>\n</div>"),
-      base_non_input: _.template("<div class='subtemplate-wrapper' data-backbone-click='focusEditView'>\n  <div class='cover'></div>\n  <%= FormBuilder.all_fields[rf.get('field_type')].view({rf: rf}) %>\n  <%= FormBuilder.templates.view.duplicate_remove({rf: rf}) %>\n</div>"),
-      label: _.template("<label>\n  <span><%= FormBuilder.helpers.simple_format(rf.get('label')) %>\n  <% if (rf.get('field_options.required')) { %>\n    <abbr title='required'>*</abbr>\n  <% } %>\n</label>"),
-      description: _.template("<span class='help-block'><%= FormBuilder.helpers.simple_format(rf.get('field_options.description')) %></span>"),
-      duplicate_remove: _.template("<div class='actions-wrapper'>\n  <a data-backbone-click=\"duplicate\" title=\"Duplicate Field\"><i class='icon-plus-sign'></i></a>\n  <a data-backbone-click=\"clear\" title=\"Remove Field\"><i class='icon-minus-sign'></i></a>\n</div>")
-    },
-    edit: {
-      base: _.template("<div class='fb-field-label'>\n  <span data-rv-text=\"model.label\"></span>\n  <code class='field-type' data-rv-text='model.field_type'></code>\n  <span class='icon-arrow-right pull-right'></span>\n</div>\n<%= FormBuilder.templates.edit.common %>\n\n<%= FormBuilder.all_fields[rf.get('field_type')].edit({rf: rf}) %>"),
-      base_non_input: _.template("<div class='fb-field-label'>\n  <span data-rv-text=\"model.label\"></span>\n  <code class='field-type' data-rv-text='model.field_type'></code>\n  <span class='icon-arrow-right pull-right'></span>\n</div>\n\n<%= FormBuilder.all_fields[rf.get('field_type')].edit({rf: rf}) %>"),
-      common: "<div class='db-edit-section-header'>Label</div>\n\n<div class='grid'>\n  <div class='grid-item two_thirds'>\n    <input type='text' data-rv-value='model.label' />\n    <textarea data-rv-value='model.field_options.description' placeholder='Add a longer description to this field'></textarea>\n  </div>\n  <div class='grid-item one_third'>\n    <label>\n      Required\n      <input type='checkbox' data-rv-checked='model.field_options.required' />\n    </label>\n    <label>\n      Blind\n      <input type='checkbox' data-rv-checked='model.field_options.blind' />\n    </label>\n    <label>\n      Admin only\n      <input type='checkbox' data-rv-checked='model.field_options.admin_only' />\n    </label>\n  </div>\n</div>",
-      size: "<div class='fb-edit-section-header'>Size</div>\n<select data-rv-value=model.field_options.size\">\n  <option value=\"small\">Small</option>\n  <option value=\"medium\">Medium</option>\n  <option value=\"large\">Large</option>\n</select>",
-      min_max_length: "<div class='fb-edit-section-header'>Length Limit</div>\n\nMin\n<input type=\"text\" data-rv-value=\"model.field_options.minlength\" style=\"width: 30px\" />\n\n&nbsp;&nbsp;\n\nMax\n<input type=\"text\" data-rv-value=\"model.field_options.maxlength\" style=\"width: 30px\" />\n\n&nbsp;&nbsp;\n\n<select data-rv-value=\"model.field_options.min_max_length_units\" style=\"width: auto;\">\n  <option value=\"characters\">characters</option>\n  <option value=\"words\">words</option>\n</select>",
-      min_max: "<div class='fb-edit-section-header'>Minimum / Maximum</div>\n\nAbove\n<input type=\"text\" data-rv-value=\"model.field_options.min\" style=\"width: 30px\" />\n\n&nbsp;&nbsp;\n\nBelow\n<input type=\"text\" data-rv-value=\"model.field_options.max\" style=\"width: 30px\" />",
-      units: "<div class='fb-edit-section-header'>Units</div>\n<input type=\"text\" data-rv-value=\"model.field_options.units\" />",
-      integer_only: "<div class='fb-edit-section-header'>Integer only</div>\n<label>\n  <input type='checkbox' data-rv-checked='model.field_options.integer_only' />\n  Only accept integers\n</label>",
-      options: function(opts) {
-        var str;
-        str = " <div class='fb-edit-section-header'>Options</div> ";
-        if (opts.includeBlank) {
-          str += "<label>\n  <input type='checkbox' data-rv-checked='model.field_options.include_blank_option' />\n  Include blank\n</label>";
-        }
-        str += "<div class='option' data-rv-each-option='model.field_options.options'>\n  <input type=\"checkbox\" data-rv-checked=\"option:checked\" data-backbone-click=\"defaultUpdated\" />\n  <input type=\"text\" data-rv-value=\"option:label\" data-backbone-input=\"forceRender\" />\n  <a data-backbone-click=\"addOption\" title=\"Add Option\"><i class='icon-plus-sign'></i></a>\n  <a data-backbone-click=\"removeOption\" title=\"Remove Option\"><i class='icon-minus-sign'></i></a>\n</div>";
-        if (opts.includeOther) {
-          str += "<label>\n  <input type='checkbox' data-rv-checked='model.field_options.include_other_option' />\n  Include \"other\"\n</label>";
-        }
-        str += "<a data-backbone-click=\"addOption\">Add option</a>";
-        return str;
-      }
-    }
-  };
+  FormBuilder.all_fields = {};
+
+  FormBuilder.input_fields = {};
+
+  FormBuilder.non_input_fields = {};
+
+  FormBuilder.helpers = {};
+
+  FormBuilder.models = {};
+
+  FormBuilder.views = {};
+
+  FormBuilder.collections = {};
 
   FormBuilder.helpers.defaultFieldAttrs = function(field_type) {
     var attrs, _base;
@@ -81,7 +54,7 @@
       return this.listenTo(this.model, "destroy", this.remove);
     },
     render: function() {
-      this.$el.addClass('response-field-' + this.model.get('field_type')).data('cid', this.model.cid).html(FormBuilder.templates.view["base" + (!this.model.is_input() ? '_non_input' : '')]({
+      this.$el.addClass('response-field-' + this.model.get('field_type')).data('cid', this.model.cid).html(FormBuilder.templates["view/base" + (!this.model.is_input() ? '_non_input' : '')]({
         rf: this.model
       }));
       return this;
@@ -111,7 +84,7 @@
       return this.listenTo(this.model, "change:field_options.review_this_field", this.auditReviewThisFieldChanged);
     },
     render: function() {
-      this.$el.html(FormBuilder.templates.edit["base" + (!this.model.is_input() ? '_non_input' : '')]({
+      this.$el.html(FormBuilder.templates["edit/base" + (!this.model.is_input() ? '_non_input' : '')]({
         rf: this.model
       }));
       rivets.bind(this.$el, {
@@ -220,9 +193,7 @@
     },
     render: function() {
       var subview, _i, _len, _ref;
-      this.$el.html(FormBuilder.JST['page']({
-        options: this.options
-      }));
+      this.$el.html(FormBuilder.templates['page']());
       this.$fbLeft = this.$el.find('.fb-left');
       this.$responseFields = this.$el.find('.fb-response-fields');
       this.bindWindowScrollEvent();

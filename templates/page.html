@@ -1,0 +1,44 @@
+<div class='response-field-save-wrapper'>
+  <button data-backbone-click='saveForm' data-loading-text='All changes saved'>Save form</button>
+</div>
+
+<div class='fb-left'>
+  <ul class='fb-tabs'>
+    <li class='active'><a data-backbone-click='showTab' data-backbone-params='#addField'>Add new field</a></li>
+    <li><a data-backbone-click='showTab' data-backbone-params='#editField'>Edit field</a></li>
+  </ul>
+
+  <div class='fb-tab-content'>
+    <div class='fb-tab-pane active' id='addField'>
+      <div class='fb-add-field-types'>
+        <div class='section'>
+          <% for (i in FormBuilder.input_fields) { %>
+            <a data-backbone-click="addField" data-backbone-params="<%= i %>">
+              <%= FormBuilder.input_fields[i].addButton %>
+            </a>
+          <% } %>
+        </div>
+
+        <div class='section'>
+          <% for (i in FormBuilder.non_input_fields) { %>
+            <a data-backbone-click="addField" data-backbone-params="<%= i %>">
+              <%= FormBuilder.non_input_fields[i].addButton %>
+            </a>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+
+    <div class='fb-tab-pane' id='editField'>
+      <div id='edit-response-field-wrapper'></div>
+    </div>
+  </div>
+</div>
+
+<div class='fb-right'>
+  <div class='fb-no-response-fields'>No response fields</div>
+  <div class='fb-response-fields'></div>
+</div>
+
+<div class='fb-clear'></div>

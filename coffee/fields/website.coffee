@@ -5,7 +5,7 @@ FormBuilder.registerField 'website',
   """
 
   edit: """
-    <%= FormBuilder.templates.edit.size %>
+    <%= FormBuilder.templates['edit/size']() %>
   """
 
   addButton: """

@@ -1,187 +1,12 @@
-window.FormBuilder ||=
-  all_fields: {}
-  input_fields: {}
-  non_input_fields: {}
-  helpers: {}
-  models: {}
-  views: {}
-  collections: {}
+window.FormBuilder ||= {}
 
-FormBuilder.templates =
-  view:
-    base: _.template """
-      <div class='subtemplate-wrapper' data-backbone-click='focusEditView'>
-        <div class='cover'></div>
-        <%= FormBuilder.templates.view.label({rf: rf}) %>
-
-        <%= FormBuilder.all_fields[rf.get('field_type')].view({rf: rf}) %>
-
-        <%= FormBuilder.templates.view.description({rf: rf}) %>
-        <%= FormBuilder.templates.view.duplicate_remove({rf: rf}) %>
-      </div>
-    """
-
-    base_non_input: _.template """
-      <div class='subtemplate-wrapper' data-backbone-click='focusEditView'>
-        <div class='cover'></div>
-        <%= FormBuilder.all_fields[rf.get('field_type')].view({rf: rf}) %>
-        <%= FormBuilder.templates.view.duplicate_remove({rf: rf}) %>
-      </div>
-    """
-
-    label: _.template """
-      <label>
-        <span><%= FormBuilder.helpers.simple_format(rf.get('label')) %>
-        <% if (rf.get('field_options.required')) { %>
-          <abbr title='required'>*</abbr>
-        <% } %>
-      </label>
-    """
-
-    description: _.template """
-      <span class='help-block'><%= FormBuilder.helpers.simple_format(rf.get('field_options.description')) %></span>
-    """
-
-    duplicate_remove: _.template """
-      <div class='actions-wrapper'>
-        <a data-backbone-click="duplicate" title="Duplicate Field"><i class='icon-plus-sign'></i></a>
-        <a data-backbone-click="clear" title="Remove Field"><i class='icon-minus-sign'></i></a>
-      </div>
-    """
-
-  edit:
-    base: _.template """
-      <div class='fb-field-label'>
-        <span data-rv-text="model.label"></span>
-        <code class='field-type' data-rv-text='model.field_type'></code>
-        <span class='icon-arrow-right pull-right'></span>
-      </div>
-      <%= FormBuilder.templates.edit.common %>
-
-      <%= FormBuilder.all_fields[rf.get('field_type')].edit({rf: rf}) %>
-    """
-
-    base_non_input: _.template """
-      <div class='fb-field-label'>
-        <span data-rv-text="model.label"></span>
-        <code class='field-type' data-rv-text='model.field_type'></code>
-        <span class='icon-arrow-right pull-right'></span>
-      </div>
-
-      <%= FormBuilder.all_fields[rf.get('field_type')].edit({rf: rf}) %>
-    """
-
-    common: """
-      <div class='db-edit-section-header'>Label</div>
-
-      <div class='grid'>
-        <div class='grid-item two_thirds'>
-          <input type='text' data-rv-value='model.label' />
-          <textarea data-rv-value='model.field_options.description' placeholder='Add a longer description to this field'></textarea>
-        </div>
-        <div class='grid-item one_third'>
-          <label>
-            Required
-            <input type='checkbox' data-rv-checked='model.field_options.required' />
-          </label>
-          <label>
-            Blind
-            <input type='checkbox' data-rv-checked='model.field_options.blind' />
-          </label>
-          <label>
-            Admin only
-            <input type='checkbox' data-rv-checked='model.field_options.admin_only' />
-          </label>
-        </div>
-      </div>
-    """
-
-    size: """
-      <div class='fb-edit-section-header'>Size</div>
-      <select data-rv-value=model.field_options.size">
-        <option value="small">Small</option>
-        <option value="medium">Medium</option>
-        <option value="large">Large</option>
-      </select>
-    """
-
-    min_max_length: """
-      <div class='fb-edit-section-header'>Length Limit</div>
-
-      Min
-      <input type="text" data-rv-value="model.field_options.minlength" style="width: 30px" />
-
-      &nbsp;&nbsp;
-
-      Max
-      <input type="text" data-rv-value="model.field_options.maxlength" style="width: 30px" />
-
-      &nbsp;&nbsp;
-
-      <select data-rv-value="model.field_options.min_max_length_units" style="width: auto;">
-        <option value="characters">characters</option>
-        <option value="words">words</option>
-      </select>
-    """
-
-    min_max: """
-      <div class='fb-edit-section-header'>Minimum / Maximum</div>
-
-      Above
-      <input type="text" data-rv-value="model.field_options.min" style="width: 30px" />
-
-      &nbsp;&nbsp;
-
-      Below
-      <input type="text" data-rv-value="model.field_options.max" style="width: 30px" />
-    """
-
-    units: """
-      <div class='fb-edit-section-header'>Units</div>
-      <input type="text" data-rv-value="model.field_options.units" />
-    """
-
-    integer_only: """
-      <div class='fb-edit-section-header'>Integer only</div>
-      <label>
-        <input type='checkbox' data-rv-checked='model.field_options.integer_only' />
-        Only accept integers
-      </label>
-    """
-
-    options: (opts) ->
-      str = """ <div class='fb-edit-section-header'>Options</div> """
-
-      if opts.includeBlank
-        str += """
-          <label>
-            <input type='checkbox' data-rv-checked='model.field_options.include_blank_option' />
-            Include blank
-          </label>
-        """
-
-      str += """
-        <div class='option' data-rv-each-option='model.field_options.options'>
-          <input type="checkbox" data-rv-checked="option:checked" data-backbone-click="defaultUpdated" />
-          <input type="text" data-rv-value="option:label" data-backbone-input="forceRender" />
-          <a data-backbone-click="addOption" title="Add Option"><i class='icon-plus-sign'></i></a>
-          <a data-backbone-click="removeOption" title="Remove Option"><i class='icon-minus-sign'></i></a>
-        </div>
-      """
-
-      if opts.includeOther
-        str += """
-          <label>
-            <input type='checkbox' data-rv-checked='model.field_options.include_other_option' />
-            Include "other"
-          </label>
-        """
-
-      str += """
-        <a data-backbone-click="addOption">Add option</a>
-      """
-
-      str
+FormBuilder.all_fields = {}
+FormBuilder.input_fields = {}
+FormBuilder.non_input_fields = {}
+FormBuilder.helpers = {}
+FormBuilder.models = {}
+FormBuilder.views = {}
+FormBuilder.collections = {}
 
 FormBuilder.helpers.defaultFieldAttrs = (field_type) ->
   attrs =
@@ -217,7 +42,7 @@ FormBuilder.views.view_field = Backbone.View.extend
   render: ->
     @$el.addClass('response-field-'+@model.get('field_type'))
         .data('cid', @model.cid)
-        .html(FormBuilder.templates.view["base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
+        .html(FormBuilder.templates["view/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
 
     return @
 
@@ -242,7 +67,7 @@ FormBuilder.views.edit_field = Backbone.View.extend
     @listenTo @model, "change:field_options.review_this_field", @auditReviewThisFieldChanged
 
   render: ->
-    @$el.html(FormBuilder.templates.edit["base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
+    @$el.html(FormBuilder.templates["edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
     rivets.bind @$el, { model: @model }
     return @
 
@@ -334,7 +159,7 @@ FormBuilder.main = Backbone.View.extend
     @addAll()
 
   render: ->
-    @$el.html FormBuilder.JST['page']({ options: @options })
+    @$el.html FormBuilder.templates['page']()
 
     # Save jQuery objects for easy use
     @$fbLeft = @$el.find('.fb-left')
