@@ -23,7 +23,6 @@
     "backbone": "*",
     "backbone-deep-model": "*",
     "rivets": "*",
-    "rivets-backbone-adapter": "https://gist.github.com/adamjacobbecker/6519565/raw/1abaa0991abbfb1d96ec5cd1346f9435690417e9/rivets-backbone-adapter.js",
     "font-awesome": "*",
     "html5sortable": "*"
   }

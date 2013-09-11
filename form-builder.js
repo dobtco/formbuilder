@@ -1,8 +1,4 @@
 (function() {
-  rivets.configure({
-    prefix: 'rv'
-  });
-
   rivets.binders.input = {
     publishes: true,
     routine: rivets.binders.value.routine,
@@ -13,6 +9,34 @@
       return el.removeEventListener('input', this.publish);
     }
   };
+
+  rivets.configure({
+    prefix: "rv",
+    adapter: {
+      subscribe: function(obj, keypath, callback) {
+        callback.wrapped = function(m, v) {
+          return callback(v);
+        };
+        return obj.on('change:' + keypath, callback.wrapped);
+      },
+      unsubscribe: function(obj, keypath, callback) {
+        return obj.off('change:' + keypath, callback.wrapped);
+      },
+      read: function(obj, keypath) {
+        if (keypath === "cid") {
+          return obj.cid;
+        }
+        return obj.get(keypath);
+      },
+      publish: function(obj, keypath, value) {
+        if (obj.cid) {
+          return obj.set(keypath, value);
+        } else {
+          return obj[keypath] = value;
+        }
+      }
+    }
+  });
 
 }).call(this);
 
