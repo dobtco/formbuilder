@@ -154,7 +154,7 @@ __p +=
 ((__t = ( FormBuilder.templates['partials/left_side']() )) == null ? '' : __t) +
 '\n' +
 ((__t = ( FormBuilder.templates['partials/right_side']() )) == null ? '' : __t) +
-'\n\n<div class=\'fb-clear\'></div>';
+'\n<div class=\'fb-clear\'></div>';
 
 }
 return __p

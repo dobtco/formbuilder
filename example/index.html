@@ -27,7 +27,11 @@
 
   <script>
     $(function(){
-      new FormBuilder('.fb-main')
+      fb = new FormBuilder('.fb-main');
+
+      fb.on('save', function(payload){
+        alert(payload);
+      })
     });
   </script>
 

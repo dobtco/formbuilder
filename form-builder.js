@@ -62,7 +62,9 @@
     };
 
     FormBuilder.options = {
-      BUTTON_CLASS: ''
+      BUTTON_CLASS: '',
+      HTTP_ENDPOINT: '',
+      HTTP_METHOD: 'POST'
     };
 
     FormBuilder.fields = {};
@@ -87,14 +89,15 @@
     });
 
     FormBuilder.collection = Backbone.Collection.extend({
+      initialize: function() {
+        return this.on('add', this.copyCidToModel);
+      },
       model: FormBuilder.model,
       comparator: function(model) {
         return model.indexInDOM();
       },
-      addCidsToModels: function() {
-        return this.each(function(model) {
-          return model.attributes.cid = model.cid;
-        });
+      copyCidToModel: function(model) {
+        return model.attributes.cid = model.cid;
       }
     });
 
@@ -224,6 +227,7 @@
         },
         initialize: function() {
           this.$el = $(this.options.selector);
+          this.formBuilder = this.options.formBuilder;
           this.collection = new FormBuilder.collection;
           this.collection.bind('add', this.addOne, this);
           this.collection.bind('reset', this.reset, this);
@@ -427,30 +431,33 @@
           return this.formSaved = false;
         },
         saveForm: function(e) {
-          var _ref,
-            _this = this;
-          if (this.formSaved === true) {
+          var payload;
+          if (this.formSaved) {
             return;
           }
           this.formSaved = true;
           this.collection.sort();
-          this.collection.addCidsToModels();
-          this.collection.trigger('batchUpdate');
+          payload = JSON.stringify({
+            fields: this.collection.toJSON()
+          });
+          if (FormBuilder.options.HTTP_ENDPOINT) {
+            this.doAjaxSave(payload);
+          }
+          return this.formBuilder.trigger('save', payload);
+        },
+        doAjaxSave: function(payload) {
+          var _this = this;
           return $.ajax({
-            url: "/response_fields/batch?" + this.collection.urlParams,
-            type: "PUT",
-            contentType: "application/json",
-            data: JSON.stringify({
-              response_fields: this.collection.toJSON(),
-              form_options: (_ref = this.response_fieldable) != null ? _ref.toJSON() : void 0
-            }),
+            url: FormBuilder.options.HTTP_ENDPOINT,
+            type: FormBuilder.options.HTTP_METHOD,
+            data: payload,
             success: function(data) {
-              var datum, _i, _len, _ref1;
+              var datum, _i, _len, _ref;
               _this.updatingBatch = true;
               for (_i = 0, _len = data.length; _i < _len; _i++) {
                 datum = data[_i];
-                if ((_ref1 = _this.collection.get(datum.cid)) != null) {
-                  _ref1.set({
+                if ((_ref = _this.collection.get(datum.cid)) != null) {
+                  _ref.set({
                     id: datum.id
                   });
                 }
@@ -464,8 +471,10 @@
     };
 
     function FormBuilder(selector) {
-      new FormBuilder.views.main({
-        selector: selector
+      _.extend(this, Backbone.Events);
+      this.mainView = new FormBuilder.views.main({
+        selector: selector,
+        formBuilder: this
       });
     }
 
@@ -803,7 +812,7 @@ __p +=
 ((__t = ( FormBuilder.templates['partials/left_side']() )) == null ? '' : __t) +
 '\n' +
 ((__t = ( FormBuilder.templates['partials/right_side']() )) == null ? '' : __t) +
-'\n\n<div class=\'fb-clear\'></div>';
+'\n<div class=\'fb-clear\'></div>';
 
 }
 return __p

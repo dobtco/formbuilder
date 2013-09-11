@@ -14,6 +14,8 @@ class FormBuilder
 
   @options:
     BUTTON_CLASS: ''
+    HTTP_ENDPOINT: ''
+    HTTP_METHOD: 'POST'
 
   @fields: {}
   @inputFields: {}
@@ -28,12 +30,16 @@ class FormBuilder
       FormBuilder.inputFields[@get('field_type')]?
 
   @collection: Backbone.Collection.extend
+    initialize: ->
+      @on 'add', @copyCidToModel
+
     model: FormBuilder.model
+
     comparator: (model) ->
       model.indexInDOM()
-    addCidsToModels: ->
-      @each (model) ->
-        model.attributes.cid = model.cid
+
+    copyCidToModel: (model) ->
+      model.attributes.cid = model.cid
 
   @registerField: (name, opts) ->
     for x in ['view', 'edit']
@@ -147,6 +153,7 @@ class FormBuilder
 
       initialize: ->
         @$el = $(@options.selector)
+        @formBuilder = @options.formBuilder
 
         # Create the collection, and bind the appropriate events
         @collection = new FormBuilder.collection
@@ -330,23 +337,20 @@ class FormBuilder
         # @saveFormButton.button('reset')
 
       saveForm: (e) ->
-        return if @formSaved is true
+        return if @formSaved
         @formSaved = true
         # @saveFormButton.button 'loading'
-
         @collection.sort()
+        payload = JSON.stringify fields: @collection.toJSON()
 
-        # we need to send the cids to the server
-        @collection.addCidsToModels()
+        if FormBuilder.options.HTTP_ENDPOINT then @doAjaxSave(payload)
+        @formBuilder.trigger 'save', payload
 
-        # trigger an event that we're syncing up to the server
-        @collection.trigger 'batchUpdate'
-
+      doAjaxSave: (payload) ->
         $.ajax
-          url: "/response_fields/batch?#{@collection.urlParams}"
-          type: "PUT"
-          contentType: "application/json"
-          data: JSON.stringify({response_fields: @collection.toJSON(), form_options: @response_fieldable?.toJSON()})
+          url: FormBuilder.options.HTTP_ENDPOINT
+          type: FormBuilder.options.HTTP_METHOD
+          data: payload
           success: (data) =>
             @updatingBatch = true
 
@@ -358,7 +362,8 @@ class FormBuilder
             @updatingBatch = undefined
 
   constructor: (selector) ->
-    new FormBuilder.views.main({ selector: selector })
+    _.extend @, Backbone.Events
+    @mainView = new FormBuilder.views.main({ selector: selector, formBuilder: @ })
 
 window.FormBuilder = FormBuilder
 
