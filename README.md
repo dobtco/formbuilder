@@ -31,7 +31,7 @@ Formbuilder consists of a few different components that all live in the `Formbui
 
 - `Formbuilder.views`
 
-Because of its modular nature, Formbuilder is easy to customize. Most of the configuration lives in class variables, which means you can simply override a template or method. If you have questions, feel free to open an issue. We've tried to bridge the gap between convention and configuration, but there's no guarantee that we were successful :P
+Because of its modular nature, Formbuilder is easy to customize. Most of the configuration lives in class variables, which means you can simply override a template or method. If you have questions, feel free to open an issue -- we've tried to bridge the gap between convention and configuration, but there's no guarantee that we were successful.
 
 ## Events
 More coming soon...
