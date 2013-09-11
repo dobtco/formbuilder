@@ -67,7 +67,8 @@
       HTTP_METHOD: 'POST',
       dict: {
         ALL_CHANGES_SAVED: 'All changes saved',
-        SAVE_FORM: 'Save form'
+        SAVE_FORM: 'Save form',
+        UNSAVED_CHANGES: 'You have unsaved changes. If you leave this page, you will lose those changes!'
       }
     };
 
@@ -254,7 +255,7 @@
             if (_this.formSaved) {
               return void 0;
             } else {
-              return 'You have unsaved changes. If you leave this page, you will lose those changes!';
+              return FormBuilder.options.dict.UNSAVED_CHANGES;
             }
           });
         },

@@ -20,6 +20,7 @@ class FormBuilder
     dict:
       ALL_CHANGES_SAVED: 'All changes saved'
       SAVE_FORM: 'Save form'
+      UNSAVED_CHANGES: 'You have unsaved changes. If you leave this page, you will lose those changes!'
 
   @fields: {}
   @inputFields: {}
@@ -181,7 +182,7 @@ class FormBuilder
         , 5000
 
         $(window).bind 'beforeunload', =>
-          if @formSaved then undefined else 'You have unsaved changes. If you leave this page, you will lose those changes!'
+          if @formSaved then undefined else FormBuilder.options.dict.UNSAVED_CHANGES
 
       reset: ->
         @$responseFields.html('')
