@@ -164,14 +164,19 @@
       } else {
         options.push(newOption);
       }
-      return this.model.set("field_options.options", options);
+      this.model.set("field_options.options", options);
+      this.model.trigger("change:field_options.options");
+      return this.forceRender();
     },
-    removeOption: function(e, $el) {
-      var index, options;
+    removeOption: function(e) {
+      var $el, index, options;
+      $el = $(e.currentTarget);
       index = this.$el.find(".js-remove-option").index($el);
       options = this.model.get("field_options.options");
       options.splice(index, 1);
-      return this.model.set("field_options.options", options);
+      this.model.set("field_options.options", options);
+      this.model.trigger("change:field_options.options");
+      return this.forceRender();
     },
     defaultUpdated: function(e) {
       var $el;

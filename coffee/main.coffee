@@ -100,12 +100,17 @@ FormBuilder.views.edit_field = Backbone.View.extend
       options.push newOption
 
     @model.set "field_options.options", options
+    @model.trigger "change:field_options.options"
+    @forceRender()
 
-  removeOption: (e, $el) ->
+  removeOption: (e) ->
+    $el = $(e.currentTarget)
     index = @$el.find(".js-remove-option").index($el)
     options = @model.get "field_options.options"
     options.splice index, 1
     @model.set "field_options.options", options
+    @model.trigger "change:field_options.options"
+    @forceRender()
 
   defaultUpdated: (e) ->
     $el = $(e.currentTarget)
