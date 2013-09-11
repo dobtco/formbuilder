@@ -5,4 +5,4 @@
 </div>
 <%= FormBuilder.templates['edit/common']() %>
 
-<%= FormBuilder.all_fields[rf.get('field_type')].edit({rf: rf}) %>
+<%= FormBuilder.fields[rf.get('field_type')].edit({rf: rf}) %>

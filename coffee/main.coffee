@@ -1,364 +1,362 @@
-window.FormBuilder ||= {}
+class FormBuilder
+  @helpers:
+    defaultFieldAttrs: (field_type) ->
+      attrs =
+        label: "Untitled"
+        field_type: field_type
+        field_options:
+          required: true
 
-FormBuilder.all_fields = {}
-FormBuilder.input_fields = {}
-FormBuilder.non_input_fields = {}
-FormBuilder.helpers = {}
-FormBuilder.models = {}
-FormBuilder.views = {}
-FormBuilder.collections = {}
+      FormBuilder.fields[field_type].defaultAttributes?(attrs) || attrs
 
-FormBuilder.helpers.defaultFieldAttrs = (field_type) ->
-  attrs =
-    label: "Untitled"
-    field_type: field_type
-    field_options:
-      required: true
+    simple_format: (x) ->
+      x?.replace(/\n/g, '<br />')
 
-  FormBuilder.all_fields[field_type].defaultAttributes?(attrs) || attrs
+  @options: {}
 
-FormBuilder.helpers.simple_format = (x) ->
-  x?.replace(/\n/g, '<br />')
+  @fields: {}
+  @inputFields: {}
+  @nonInputFields: {}
 
-FormBuilder.registerField = (name, opts) ->
-  for x in ['view', 'edit']
-    opts[x] = _.template(opts[x])
+  @model: Backbone.DeepModel.extend
+    sync: -> # noop
+    indexInDOM: ->
+      $wrapper = $(".response-field-wrapper").filter ( (_, el) => $(el).data('cid') == @cid  )
+      $(".response-field-wrapper").index $wrapper
+    is_input: ->
+      FormBuilder.inputFields[@get('field_type')]?
 
-  FormBuilder.all_fields[name] = opts
+  @collection: Backbone.Collection.extend
+    model: FormBuilder.model
+    comparator: (model) ->
+      model.indexInDOM()
+    addCidsToModels: ->
+      @each (model) ->
+        model.attributes.cid = model.cid
 
-  if opts.type == 'non_input'
-    FormBuilder.non_input_fields[name] = opts
-  else
-    FormBuilder.input_fields[name] = opts
+  @registerField: (name, opts) ->
+    for x in ['view', 'edit']
+      opts[x] = _.template(opts[x])
 
-FormBuilder.views.view_field = Backbone.View.extend
-  className: "response-field-wrapper"
+    FormBuilder.fields[name] = opts
 
-  events:
-    'click .subtemplate-wrapper': 'focusEditView'
-    'click .js-duplicate': 'duplicate'
-    'click .js-clear': 'clear'
-
-  initialize: ->
-    @parentView = @options.parentView
-    @listenTo @model, "change", @render
-    @listenTo @model, "destroy", @remove
-
-  render: ->
-    @$el.addClass('response-field-'+@model.get('field_type'))
-        .data('cid', @model.cid)
-        .html(FormBuilder.templates["view/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
-
-    return @
-
-  focusEditView: ->
-    @parentView.createAndShowEditView(@model)
-
-  clear: ->
-    @parentView.handleFormUpdate()
-    @model.destroy()
-
-  duplicate: ->
-    attrs = _.clone(@model.attributes)
-    delete attrs['id']
-    attrs['label'] += ' Copy'
-    @parentView.createField attrs, { position: @model.indexInDOM() + 1 }
-
-FormBuilder.views.edit_field = Backbone.View.extend
-  className: "edit-response-field"
-
-  events:
-    'click .js-add-option': 'addOption'
-    'click .js-remove-option': 'removeOption'
-    'click .js-default-updated': 'defaultUpdated'
-    'input .option-label-input': 'forceRender'
-
-  initialize: ->
-    @listenTo @model, "destroy", @remove
-    @listenTo @model, "change:field_options.review_this_field", @auditReviewThisFieldChanged
-
-  render: ->
-    @$el.html(FormBuilder.templates["edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
-    rivets.bind @$el, { model: @model }
-    return @
-
-  remove: ->
-    @options.parentView.editView = undefined
-    @options.parentView.$el.find("[href=\"#addField\"]").click()
-    Backbone.View.prototype.remove.call(@)
-
-  # @todo this should really be on the model, not the view
-  addOption: (e) ->
-    $el = $(e.currentTarget)
-    i = @$el.find('.option').index($el.closest('.option'))
-    options = @model.get("field_options.options") || []
-    newOption = {label: "", checked: false}
-
-    if i > -1
-      options.splice(i + 1, 0, newOption)
+    if opts.type == 'non_input'
+      FormBuilder.nonInputFields[name] = opts
     else
-      options.push newOption
+      FormBuilder.inputFields[name] = opts
 
-    @model.set "field_options.options", options
-    @model.trigger "change:field_options.options"
-    @forceRender()
+  @views:
+    view_field: Backbone.View.extend
+      className: "response-field-wrapper"
 
-  removeOption: (e) ->
-    $el = $(e.currentTarget)
-    index = @$el.find(".js-remove-option").index($el)
-    options = @model.get "field_options.options"
-    options.splice index, 1
-    @model.set "field_options.options", options
-    @model.trigger "change:field_options.options"
-    @forceRender()
+      events:
+        'click .subtemplate-wrapper': 'focusEditView'
+        'click .js-duplicate': 'duplicate'
+        'click .js-clear': 'clear'
 
-  defaultUpdated: (e) ->
-    $el = $(e.currentTarget)
+      initialize: ->
+        @parentView = @options.parentView
+        @listenTo @model, "change", @render
+        @listenTo @model, "destroy", @remove
 
-    unless @model.get('field_type') == 'checkboxes' # checkboxes can have multiple options selected
-      @$el.find(".js-default-updated").not($el).attr('checked', false).trigger('change')
+      render: ->
+        @$el.addClass('response-field-'+@model.get('field_type'))
+            .data('cid', @model.cid)
+            .html(FormBuilder.templates["view/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
 
-    @forceRender()
+        return @
 
-  forceRender: ->
-    @model.trigger('change')
+      focusEditView: ->
+        @parentView.createAndShowEditView(@model)
 
-FormBuilder.models.response_field = Backbone.DeepModel.extend
-  sync: -> # noop
+      clear: ->
+        @parentView.handleFormUpdate()
+        @model.destroy()
 
-  indexInDOM: ->
-    $wrapper = $(".response-field-wrapper").filter ( (_, el) => $(el).data('cid') == @cid  )
-    $(".response-field-wrapper").index $wrapper
+      duplicate: ->
+        attrs = _.clone(@model.attributes)
+        delete attrs['id']
+        attrs['label'] += ' Copy'
+        @parentView.createField attrs, { position: @model.indexInDOM() + 1 }
+    edit_field: Backbone.View.extend
+      className: "edit-response-field"
 
-  is_input: ->
-    FormBuilder.input_fields[@get('field_type')]?
+      events:
+        'click .js-add-option': 'addOption'
+        'click .js-remove-option': 'removeOption'
+        'click .js-default-updated': 'defaultUpdated'
+        'input .option-label-input': 'forceRender'
 
-FormBuilder.collections.response_fields = Backbone.Collection.extend
-  model: FormBuilder.models.response_field
+      initialize: ->
+        @listenTo @model, "destroy", @remove
+        @listenTo @model, "change:field_options.review_this_field", @auditReviewThisFieldChanged
 
-  comparator: (model) ->
-    model.indexInDOM()
+      render: ->
+        @$el.html(FormBuilder.templates["edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
+        rivets.bind @$el, { model: @model }
+        return @
 
-  addCidsToModels: ->
-    @each (model) ->
-      model.attributes.cid = model.cid
+      remove: ->
+        @options.parentView.editView = undefined
+        @options.parentView.$el.find("[href=\"#addField\"]").click()
+        Backbone.View.prototype.remove.call(@)
 
-FormBuilder.main = Backbone.View.extend
-  el: "#formBuilder"
+      # @todo this should really be on the model, not the view
+      addOption: (e) ->
+        $el = $(e.currentTarget)
+        i = @$el.find('.option').index($el.closest('.option'))
+        options = @model.get("field_options.options") || []
+        newOption = {label: "", checked: false}
 
-  SUBVIEWS: []
+        if i > -1
+          options.splice(i + 1, 0, newOption)
+        else
+          options.push newOption
 
-  events:
-    'click .js-save-form': 'saveForm'
-    'click .fb-tabs a': 'showTab'
-    'click .fb-add-field-types a': 'addField'
+        @model.set "field_options.options", options
+        @model.trigger "change:field_options.options"
+        @forceRender()
 
-  initialize: ->
-    # Create the collection, and bind the appropriate events
-    @collection = new FormBuilder.collections.response_fields
-    @collection.bind 'add', @addOne, @
-    @collection.bind 'reset', @reset, @
-    @collection.bind 'change', @handleFormUpdate, @
-    @collection.bind 'destroy add reset', @hideShowNoResponseFields, @
-    @collection.bind 'destroy', @ensureEditViewScrolled, @
+      removeOption: (e) ->
+        $el = $(e.currentTarget)
+        index = @$el.find(".js-remove-option").index($el)
+        options = @model.get "field_options.options"
+        options.splice index, 1
+        @model.set "field_options.options", options
+        @model.trigger "change:field_options.options"
+        @forceRender()
 
-    @render()
-    @collection.reset(@options.bootstrapData)
-    @initAutosave()
+      defaultUpdated: (e) ->
+        $el = $(e.currentTarget)
 
-  initAutosave: ->
-    @formSaved = true
-    @saveFormButton = @$el.find(".js-save-form")
-    # @saveFormButton.button 'loading'
+        unless @model.get('field_type') == 'checkboxes' # checkboxes can have multiple options selected
+          @$el.find(".js-default-updated").not($el).attr('checked', false).trigger('change')
 
-    setInterval =>
-      @saveForm.call(@)
-    , 5000
+        @forceRender()
 
-    $(window).bind 'beforeunload', =>
-      if @formSaved then undefined else 'You have unsaved changes. If you leave this page, you will lose those changes!'
+      forceRender: ->
+        @model.trigger('change')
+    main: Backbone.View.extend
+      SUBVIEWS: []
 
-  reset: ->
-    @$responseFields.html('')
-    @addAll()
+      events:
+        'click .js-save-form': 'saveForm'
+        'click .fb-tabs a': 'showTab'
+        'click .fb-add-field-types a': 'addField'
 
-  render: ->
-    @$el.html FormBuilder.templates['page']()
+      initialize: ->
+        @$el = $(@options.selector)
 
-    # Save jQuery objects for easy use
-    @$fbLeft = @$el.find('.fb-left')
-    @$responseFields = @$el.find('.fb-response-fields')
+        # Create the collection, and bind the appropriate events
+        @collection = new FormBuilder.collection
+        @collection.bind 'add', @addOne, @
+        @collection.bind 'reset', @reset, @
+        @collection.bind 'change', @handleFormUpdate, @
+        @collection.bind 'destroy add reset', @hideShowNoResponseFields, @
+        @collection.bind 'destroy', @ensureEditViewScrolled, @
 
-    @bindWindowScrollEvent()
-    @hideShowNoResponseFields()
+        @render()
+        @collection.reset(@options.bootstrapData)
+        @initAutosave()
 
-    # Render any subviews (this is an easy way of extending the FormBuilder)
-    new subview({parentView: @}).render() for subview in @SUBVIEWS
+      initAutosave: ->
+        @formSaved = true
+        @saveFormButton = @$el.find(".js-save-form")
+        # @saveFormButton.button 'loading'
 
-    return @
+        setInterval =>
+          @saveForm.call(@)
+        , 5000
 
-  bindWindowScrollEvent: ->
-    $(window).on 'scroll', =>
-      return if @$fbLeft.data('locked') == true
-      newMargin = Math.max(0, $(window).scrollTop())
-      maxMargin = @$responseFields.height()
+        $(window).bind 'beforeunload', =>
+          if @formSaved then undefined else 'You have unsaved changes. If you leave this page, you will lose those changes!'
 
-      @$fbLeft.css
-        'margin-top': Math.min(maxMargin, newMargin)
+      reset: ->
+        @$responseFields.html('')
+        @addAll()
 
-  showTab: (e) ->
-    $el = $(e.currentTarget)
-    target = $el.data('target')
-    $el.closest('li').addClass('active').siblings('li').removeClass('active')
-    $(target).addClass('active').siblings('.fb-tab-pane').removeClass('active')
+      render: ->
+        @$el.html FormBuilder.templates['page']()
 
-    @unlockLeftWrapper() unless target == '#editField'
+        # Save jQuery objects for easy use
+        @$fbLeft = @$el.find('.fb-left')
+        @$responseFields = @$el.find('.fb-response-fields')
 
-    if target == '#editField' && !@editView && (first_model = @collection.models[0])
-      @createAndShowEditView(first_model)
+        @bindWindowScrollEvent()
+        @hideShowNoResponseFields()
 
-  addOne: (responseField, _, options) ->
-    view = new FormBuilder.views.view_field
-      model: responseField
-      parentView: @
+        # Render any subviews (this is an easy way of extending the FormBuilder)
+        new subview({parentView: @}).render() for subview in @SUBVIEWS
 
-    #####
-    # Calculates where to place this new field.
-    #
-    # Are we replacing a temporarily drag placeholder?
-    if options.$replaceEl?
-      options.$replaceEl.replaceWith(view.render().el)
+        return @
 
-    # Are we adding to the bottom?
-    else if !options.position? || options.position == -1
-      @$responseFields.append view.render().el
+      bindWindowScrollEvent: ->
+        $(window).on 'scroll', =>
+          return if @$fbLeft.data('locked') == true
+          newMargin = Math.max(0, $(window).scrollTop())
+          maxMargin = @$responseFields.height()
 
-    # Are we adding to the top?
-    else if options.position == 0
-      @$responseFields.prepend view.render().el
+          @$fbLeft.css
+            'margin-top': Math.min(maxMargin, newMargin)
 
-    # Are we adding below an existing field?
-    else if ($replacePosition = @$responseFields.find(".response-field-wrapper").eq(options.position))[0]
-      $replacePosition.before view.render().el
+      showTab: (e) ->
+        $el = $(e.currentTarget)
+        target = $el.data('target')
+        $el.closest('li').addClass('active').siblings('li').removeClass('active')
+        $(target).addClass('active').siblings('.fb-tab-pane').removeClass('active')
 
-    # Catch-all: add to bottom
-    else
-      @$responseFields.append view.render().el
+        @unlockLeftWrapper() unless target == '#editField'
 
-  setSortable: ->
-    @$responseFields.sortable('destroy') if @$responseFields.hasClass('ui-sortable')
-    @$responseFields.sortable
-      forcePlaceholderSize: true
-      placeholder: 'sortable-placeholder'
-      stop: (e, ui) =>
-        if ui.item.data('field-type')
-          rf = @collection.create FormBuilder.helpers.defaultFieldAttrs(ui.item.data('field-type')), {$replaceEl: ui.item}
-          @createAndShowEditView(rf)
+        if target == '#editField' && !@editView && (first_model = @collection.models[0])
+          @createAndShowEditView(first_model)
 
+      addOne: (responseField, _, options) ->
+        view = new FormBuilder.views.view_field
+          model: responseField
+          parentView: @
+
+        #####
+        # Calculates where to place this new field.
+        #
+        # Are we replacing a temporarily drag placeholder?
+        if options.$replaceEl?
+          options.$replaceEl.replaceWith(view.render().el)
+
+        # Are we adding to the bottom?
+        else if !options.position? || options.position == -1
+          @$responseFields.append view.render().el
+
+        # Are we adding to the top?
+        else if options.position == 0
+          @$responseFields.prepend view.render().el
+
+        # Are we adding below an existing field?
+        else if ($replacePosition = @$responseFields.find(".response-field-wrapper").eq(options.position))[0]
+          $replacePosition.before view.render().el
+
+        # Catch-all: add to bottom
+        else
+          @$responseFields.append view.render().el
+
+      setSortable: ->
+        @$responseFields.sortable('destroy') if @$responseFields.hasClass('ui-sortable')
+        @$responseFields.sortable
+          forcePlaceholderSize: true
+          placeholder: 'sortable-placeholder'
+          stop: (e, ui) =>
+            if ui.item.data('field-type')
+              rf = @collection.create FormBuilder.helpers.defaultFieldAttrs(ui.item.data('field-type')), {$replaceEl: ui.item}
+              @createAndShowEditView(rf)
+
+            @handleFormUpdate()
+            return true
+          update: (e, ui) =>
+            # ensureEditViewScrolled, unless we're updating from the draggable
+            @ensureEditViewScrolled() unless ui.item.data('field-type')
+
+        @setDraggable()
+
+      setDraggable: ->
+        $addFieldButtons = @$el.find("[data-field-type]")
+
+        $addFieldButtons.draggable
+          connectToSortable: @$responseFields
+          helper: =>
+            $helper = $("<div class='response-field-draggable-helper' />")
+            $helper.css
+              width: @$responseFields.width() # hacky, won't get set without inline style
+              height: '80px'
+
+            $helper
+
+      addAll: ->
+        @collection.each @addOne, @
+        @setSortable()
+
+      hideShowNoResponseFields: ->
+        @$el.find(".fb-no-response-fields")[if @collection.length > 0 then 'hide' else 'show']()
+
+      addField: (e) ->
+        field_type = $(e.currentTarget).data('field-type')
+        @createField FormBuilder.helpers.defaultFieldAttrs(field_type)
+
+      createField: (attrs, options) ->
+        rf = @collection.create attrs, options
+        @createAndShowEditView(rf)
         @handleFormUpdate()
-        return true
-      update: (e, ui) =>
-        # ensureEditViewScrolled, unless we're updating from the draggable
-        @ensureEditViewScrolled() unless ui.item.data('field-type')
 
-    @setDraggable()
+      createAndShowEditView: (model) ->
+        $responseFieldEl = @$el.find(".response-field-wrapper").filter( -> $(@).data('cid') == model.cid )
+        $responseFieldEl.addClass('editing').siblings('.response-field-wrapper').removeClass('editing')
 
-  setDraggable: ->
-    $addFieldButtons = @$el.find("[data-field-type]")
+        if @editView
+          if @editView.model.cid is model.cid
+            @$el.find(".fb-tabs a[data-target=\"#editField\"]").click()
+            @scrollLeftWrapper $responseFieldEl, (oldPadding? && oldPadding)
+            return
 
-    $addFieldButtons.draggable
-      connectToSortable: @$responseFields
-      helper: =>
-        $helper = $("<div class='response-field-draggable-helper' />")
-        $helper.css
-          width: @$responseFields.width() # hacky, won't get set without inline style
-          height: '80px'
+          oldPadding = @$fbLeft.css('padding-top')
+          @editView.remove()
 
-        $helper
+        @editView = new FormBuilder.views.edit_field
+          model: model
+          parentView: @
 
-  addAll: ->
-    @collection.each @addOne, @
-    @setSortable()
-
-  hideShowNoResponseFields: ->
-    @$el.find(".fb-no-response-fields")[if @collection.length > 0 then 'hide' else 'show']()
-
-  addField: (e) ->
-    field_type = $(e.currentTarget).data('field-type')
-    @createField FormBuilder.helpers.defaultFieldAttrs(field_type)
-
-  createField: (attrs, options) ->
-    rf = @collection.create attrs, options
-    @createAndShowEditView(rf)
-    @handleFormUpdate()
-
-  createAndShowEditView: (model) ->
-    $responseFieldEl = @$el.find(".response-field-wrapper").filter( -> $(@).data('cid') == model.cid )
-    $responseFieldEl.addClass('editing').siblings('.response-field-wrapper').removeClass('editing')
-
-    if @editView
-      if @editView.model.cid is model.cid
+        $newEditEl = @editView.render().$el
+        @$el.find("#edit-response-field-wrapper").html $newEditEl
         @$el.find(".fb-tabs a[data-target=\"#editField\"]").click()
-        @scrollLeftWrapper $responseFieldEl, (oldPadding? && oldPadding)
-        return
+        @scrollLeftWrapper($responseFieldEl)
+        return @
 
-      oldPadding = @$fbLeft.css('padding-top')
-      @editView.remove()
+      ensureEditViewScrolled: ->
+        return unless @editView
+        @scrollLeftWrapper $(".response-field-wrapper.editing")
 
-    @editView = new FormBuilder.views.edit_field
-      model: model
-      parentView: @
+      scrollLeftWrapper: ($responseFieldEl) ->
+        @unlockLeftWrapper()
+        $.scrollWindowTo ($responseFieldEl.offset().top - @$responseFields.offset().top), 200, =>
+          @lockLeftWrapper()
 
-    $newEditEl = @editView.render().$el
-    @$el.find("#edit-response-field-wrapper").html $newEditEl
-    @$el.find(".fb-tabs a[data-target=\"#editField\"]").click()
-    @scrollLeftWrapper($responseFieldEl)
-    return @
+      lockLeftWrapper: ->
+        @$fbLeft.data('locked', true)
 
-  ensureEditViewScrolled: ->
-    return unless @editView
-    @scrollLeftWrapper $(".response-field-wrapper.editing")
+      unlockLeftWrapper: ->
+        @$fbLeft.data('locked', false)
 
-  scrollLeftWrapper: ($responseFieldEl) ->
-    @unlockLeftWrapper()
-    $.scrollWindowTo ($responseFieldEl.offset().top - @$responseFields.offset().top), 200, =>
-      @lockLeftWrapper()
+      handleFormUpdate: ->
+        return if @updatingBatch
+        @formSaved = false
+        # @saveFormButton.button('reset')
 
-  lockLeftWrapper: ->
-    @$fbLeft.data('locked', true)
+      saveForm: (e) ->
+        return if @formSaved is true
+        @formSaved = true
+        # @saveFormButton.button 'loading'
 
-  unlockLeftWrapper: ->
-    @$fbLeft.data('locked', false)
+        @collection.sort()
 
-  handleFormUpdate: ->
-    return if @updatingBatch
-    @formSaved = false
-    # @saveFormButton.button('reset')
+        # we need to send the cids to the server
+        @collection.addCidsToModels()
 
-  saveForm: (e) ->
-    return if @formSaved is true
-    @formSaved = true
-    # @saveFormButton.button 'loading'
+        # trigger an event that we're syncing up to the server
+        @collection.trigger 'batchUpdate'
 
-    @collection.sort()
+        $.ajax
+          url: "/response_fields/batch?#{@collection.urlParams}"
+          type: "PUT"
+          contentType: "application/json"
+          data: JSON.stringify({response_fields: @collection.toJSON(), form_options: @response_fieldable?.toJSON()})
+          success: (data) =>
+            @updatingBatch = true
 
-    # we need to send the cids to the server
-    @collection.addCidsToModels()
+            for datum in data
+              # set the IDs of new response fields, returned from the server
+              @collection.get(datum.cid)?.set({id: datum.id})
+              @collection.trigger 'sync'
 
-    # trigger an event that we're syncing up to the server
-    @collection.trigger 'batchUpdate'
+            @updatingBatch = undefined
 
-    $.ajax
-      url: "/response_fields/batch?#{@collection.urlParams}"
-      type: "PUT"
-      contentType: "application/json"
-      data: JSON.stringify({response_fields: @collection.toJSON(), form_options: @response_fieldable?.toJSON()})
-      success: (data) =>
-        @updatingBatch = true
+  constructor: (selector) ->
+    new FormBuilder.views.main({ selector: selector })
 
-        for datum in data
-          # set the IDs of new response fields, returned from the server
-          @collection.get(datum.cid)?.set({id: datum.id})
-          @collection.trigger 'sync'
-
-        @updatingBatch = undefined
+window.FormBuilder = FormBuilder

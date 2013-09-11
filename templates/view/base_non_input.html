@@ -1,5 +1,5 @@
 <div class='subtemplate-wrapper'>
   <div class='cover'></div>
-  <%= FormBuilder.all_fields[rf.get('field_type')].view({rf: rf}) %>
+  <%= FormBuilder.fields[rf.get('field_type')].view({rf: rf}) %>
   <%= FormBuilder.templates['view/duplicate_remove']({rf: rf}) %>
 </div>
