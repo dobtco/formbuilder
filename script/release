@@ -14,3 +14,5 @@ git commit -am 'Deploying to gh-pages'
 git push origin gh-pages --force
 
 git checkout master
+
+bower install
