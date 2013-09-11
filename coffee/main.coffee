@@ -246,21 +246,19 @@ FormBuilder.main = Backbone.View.extend
       forcePlaceholderSize: true
       placeholder: 'sortable-placeholder'
       stop: (e, ui) =>
-        if ui.item.is('a')
-          field_type = ui.item.data('field-type')
-          pos = $(".response-field-wrapper").index(ui.item.next(".response-field-wrapper"))
-          rf = @collection.create FormBuilder.helpers.defaultFieldAttrs(field_type), {$replaceEl: ui.item}
+        if ui.item.data('field-type')
+          rf = @collection.create FormBuilder.helpers.defaultFieldAttrs(ui.item.data('field-type')), {$replaceEl: ui.item}
           @createAndShowEditView(rf)
 
         @handleFormUpdate()
       update: (e, ui) =>
         # ensureEditViewScrolled, unless we're updating from the draggable
-        @ensureEditViewScrolled() unless ui.item.hasClass('btn')
+        @ensureEditViewScrolled() unless ui.item.data('field-type')
 
     @setDraggable()
 
   setDraggable: ->
-    $addFieldButtons = @$el.find(".fb-add-field-types a")
+    $addFieldButtons = @$el.find("[data-field-type]")
 
     $addFieldButtons.draggable
       connectToSortable: @$responseFields

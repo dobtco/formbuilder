@@ -321,11 +321,9 @@
         forcePlaceholderSize: true,
         placeholder: 'sortable-placeholder',
         stop: function(e, ui) {
-          var field_type, pos, rf;
-          if (ui.item.is('a')) {
-            field_type = ui.item.data('field-type');
-            pos = $(".response-field-wrapper").index(ui.item.next(".response-field-wrapper"));
-            rf = _this.collection.create(FormBuilder.helpers.defaultFieldAttrs(field_type), {
+          var rf;
+          if (ui.item.data('field-type')) {
+            rf = _this.collection.create(FormBuilder.helpers.defaultFieldAttrs(ui.item.data('field-type')), {
               $replaceEl: ui.item
             });
             _this.createAndShowEditView(rf);
@@ -333,7 +331,7 @@
           return _this.handleFormUpdate();
         },
         update: function(e, ui) {
-          if (!ui.item.hasClass('btn')) {
+          if (!ui.item.data('field-type')) {
             return _this.ensureEditViewScrolled();
           }
         }
@@ -343,7 +341,7 @@
     setDraggable: function() {
       var $addFieldButtons,
         _this = this;
-      $addFieldButtons = this.$el.find(".fb-add-field-types a");
+      $addFieldButtons = this.$el.find("[data-field-type]");
       return $addFieldButtons.draggable({
         connectToSortable: this.$responseFields,
         helper: function() {
