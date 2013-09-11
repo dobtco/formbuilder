@@ -323,7 +323,7 @@
         stop: function(e, ui) {
           var field_type, pos, rf;
           if (ui.item.is('a')) {
-            field_type = ui.item.data('backbone-params');
+            field_type = ui.item.data('field-type');
             pos = $(".response-field-wrapper").index(ui.item.next(".response-field-wrapper"));
             rf = _this.collection.create(FormBuilder.helpers.defaultFieldAttrs(field_type), {
               $replaceEl: ui.item
@@ -343,7 +343,6 @@
     setDraggable: function() {
       var $addFieldButtons,
         _this = this;
-      return;
       $addFieldButtons = this.$el.find(".fb-add-field-types a");
       return $addFieldButtons.draggable({
         connectToSortable: this.$responseFields,

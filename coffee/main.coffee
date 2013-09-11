@@ -247,7 +247,7 @@ FormBuilder.main = Backbone.View.extend
       placeholder: 'sortable-placeholder'
       stop: (e, ui) =>
         if ui.item.is('a')
-          field_type = ui.item.data('backbone-params')
+          field_type = ui.item.data('field-type')
           pos = $(".response-field-wrapper").index(ui.item.next(".response-field-wrapper"))
           rf = @collection.create FormBuilder.helpers.defaultFieldAttrs(field_type), {$replaceEl: ui.item}
           @createAndShowEditView(rf)
@@ -260,7 +260,6 @@ FormBuilder.main = Backbone.View.extend
     @setDraggable()
 
   setDraggable: ->
-    return # @temp
     $addFieldButtons = @$el.find(".fb-add-field-types a")
 
     $addFieldButtons.draggable
