@@ -7,8 +7,10 @@ module.exports = (grunt) ->
 
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-contrib-concat')
+  grunt.loadNpmTasks('grunt-contrib-cssmin')
   grunt.loadNpmTasks('grunt-contrib-jst')
   grunt.loadNpmTasks('grunt-contrib-stylus')
+  grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-watch')
 
   grunt.initConfig
@@ -35,10 +37,20 @@ module.exports = (grunt) ->
         src: ['js/compiled.js', 'templates/compiled.js']
         dest: 'formbuilder.js'
 
+    cssmin:
+      dist:
+        files:
+          'formbuilder-min.css': ['formbuilder.css']
+
     stylus:
       all:
         files:
           'formbuilder.css': 'styl/formbuilder.styl'
+
+    uglify:
+      dist:
+        files:
+          'formbuilder-min.js': 'formbuilder.js'
 
     watch:
       all:
@@ -46,3 +58,4 @@ module.exports = (grunt) ->
         tasks: ALL_TASKS
 
   grunt.registerTask 'default', ALL_TASKS
+  grunt.registerTask 'dist', ['cssmin:dist', 'uglify:dist']
