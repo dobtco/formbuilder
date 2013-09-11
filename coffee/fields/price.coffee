@@ -1,4 +1,4 @@
-FormBuilder.registerField 'price',
+Formbuilder.registerField 'price',
 
   view: """
     <div class='input-line'>

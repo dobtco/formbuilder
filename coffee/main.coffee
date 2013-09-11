@@ -1,4 +1,4 @@
-class FormBuilder
+class Formbuilder
   @helpers:
     defaultFieldAttrs: (field_type) ->
       attrs =
@@ -7,7 +7,7 @@ class FormBuilder
         field_options:
           required: true
 
-      FormBuilder.fields[field_type].defaultAttributes?(attrs) || attrs
+      Formbuilder.fields[field_type].defaultAttributes?(attrs) || attrs
 
     simple_format: (x) ->
       x?.replace(/\n/g, '<br />')
@@ -32,13 +32,13 @@ class FormBuilder
       $wrapper = $(".response-field-wrapper").filter ( (_, el) => $(el).data('cid') == @cid  )
       $(".response-field-wrapper").index $wrapper
     is_input: ->
-      FormBuilder.inputFields[@get('field_type')]?
+      Formbuilder.inputFields[@get('field_type')]?
 
   @collection: Backbone.Collection.extend
     initialize: ->
       @on 'add', @copyCidToModel
 
-    model: FormBuilder.model
+    model: Formbuilder.model
 
     comparator: (model) ->
       model.indexInDOM()
@@ -50,12 +50,12 @@ class FormBuilder
     for x in ['view', 'edit']
       opts[x] = _.template(opts[x])
 
-    FormBuilder.fields[name] = opts
+    Formbuilder.fields[name] = opts
 
     if opts.type == 'non_input'
-      FormBuilder.nonInputFields[name] = opts
+      Formbuilder.nonInputFields[name] = opts
     else
-      FormBuilder.inputFields[name] = opts
+      Formbuilder.inputFields[name] = opts
 
   @views:
     view_field: Backbone.View.extend
@@ -74,7 +74,7 @@ class FormBuilder
       render: ->
         @$el.addClass('response-field-'+@model.get('field_type'))
             .data('cid', @model.cid)
-            .html(FormBuilder.templates["view/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
+            .html(Formbuilder.templates["view/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
 
         return @
 
@@ -104,7 +104,7 @@ class FormBuilder
         @listenTo @model, "change:field_options.review_this_field", @auditReviewThisFieldChanged
 
       render: ->
-        @$el.html(FormBuilder.templates["edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
+        @$el.html(Formbuilder.templates["edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
         rivets.bind @$el, { model: @model }
         return @
 
@@ -161,7 +161,7 @@ class FormBuilder
         @formBuilder = @options.formBuilder
 
         # Create the collection, and bind the appropriate events
-        @collection = new FormBuilder.collection
+        @collection = new Formbuilder.collection
         @collection.bind 'add', @addOne, @
         @collection.bind 'reset', @reset, @
         @collection.bind 'change', @handleFormUpdate, @
@@ -175,21 +175,21 @@ class FormBuilder
       initAutosave: ->
         @formSaved = true
         @saveFormButton = @$el.find(".js-save-form")
-        @saveFormButton.attr('disabled', true).text(FormBuilder.options.dict.ALL_CHANGES_SAVED)
+        @saveFormButton.attr('disabled', true).text(Formbuilder.options.dict.ALL_CHANGES_SAVED)
 
         setInterval =>
           @saveForm.call(@)
         , 5000
 
         $(window).bind 'beforeunload', =>
-          if @formSaved then undefined else FormBuilder.options.dict.UNSAVED_CHANGES
+          if @formSaved then undefined else Formbuilder.options.dict.UNSAVED_CHANGES
 
       reset: ->
         @$responseFields.html('')
         @addAll()
 
       render: ->
-        @$el.html FormBuilder.templates['page']()
+        @$el.html Formbuilder.templates['page']()
 
         # Save jQuery objects for easy use
         @$fbLeft = @$el.find('.fb-left')
@@ -198,7 +198,7 @@ class FormBuilder
         @bindWindowScrollEvent()
         @hideShowNoResponseFields()
 
-        # Render any subviews (this is an easy way of extending the FormBuilder)
+        # Render any subviews (this is an easy way of extending the Formbuilder)
         new subview({parentView: @}).render() for subview in @SUBVIEWS
 
         return @
@@ -224,7 +224,7 @@ class FormBuilder
           @createAndShowEditView(first_model)
 
       addOne: (responseField, _, options) ->
-        view = new FormBuilder.views.view_field
+        view = new Formbuilder.views.view_field
           model: responseField
           parentView: @
 
@@ -258,7 +258,7 @@ class FormBuilder
           placeholder: 'sortable-placeholder'
           stop: (e, ui) =>
             if ui.item.data('field-type')
-              rf = @collection.create FormBuilder.helpers.defaultFieldAttrs(ui.item.data('field-type')), {$replaceEl: ui.item}
+              rf = @collection.create Formbuilder.helpers.defaultFieldAttrs(ui.item.data('field-type')), {$replaceEl: ui.item}
               @createAndShowEditView(rf)
 
             @handleFormUpdate()
@@ -291,7 +291,7 @@ class FormBuilder
 
       addField: (e) ->
         field_type = $(e.currentTarget).data('field-type')
-        @createField FormBuilder.helpers.defaultFieldAttrs(field_type)
+        @createField Formbuilder.helpers.defaultFieldAttrs(field_type)
 
       createField: (attrs, options) ->
         rf = @collection.create attrs, options
@@ -311,7 +311,7 @@ class FormBuilder
           oldPadding = @$fbLeft.css('padding-top')
           @editView.remove()
 
-        @editView = new FormBuilder.views.edit_field
+        @editView = new Formbuilder.views.edit_field
           model: model
           parentView: @
 
@@ -339,22 +339,22 @@ class FormBuilder
       handleFormUpdate: ->
         return if @updatingBatch
         @formSaved = false
-        @saveFormButton.removeAttr('disabled').text(FormBuilder.options.dict.SAVE_FORM)
+        @saveFormButton.removeAttr('disabled').text(Formbuilder.options.dict.SAVE_FORM)
 
       saveForm: (e) ->
         return if @formSaved
         @formSaved = true
-        @saveFormButton.attr('disabled', true).text(FormBuilder.options.dict.ALL_CHANGES_SAVED)
+        @saveFormButton.attr('disabled', true).text(Formbuilder.options.dict.ALL_CHANGES_SAVED)
         @collection.sort()
         payload = JSON.stringify fields: @collection.toJSON()
 
-        if FormBuilder.options.HTTP_ENDPOINT then @doAjaxSave(payload)
+        if Formbuilder.options.HTTP_ENDPOINT then @doAjaxSave(payload)
         @formBuilder.trigger 'save', payload
 
       doAjaxSave: (payload) ->
         $.ajax
-          url: FormBuilder.options.HTTP_ENDPOINT
-          type: FormBuilder.options.HTTP_METHOD
+          url: Formbuilder.options.HTTP_ENDPOINT
+          type: Formbuilder.options.HTTP_METHOD
           data: payload
           success: (data) =>
             @updatingBatch = true
@@ -368,11 +368,11 @@ class FormBuilder
 
   constructor: (selector) ->
     _.extend @, Backbone.Events
-    @mainView = new FormBuilder.views.main({ selector: selector, formBuilder: @ })
+    @mainView = new Formbuilder.views.main({ selector: selector, formBuilder: @ })
 
-window.FormBuilder = FormBuilder
+window.Formbuilder = Formbuilder
 
 if module?
-  module.exports = FormBuilder
+  module.exports = Formbuilder
 else
-  window.FormBuilder = FormBuilder
+  window.Formbuilder = Formbuilder

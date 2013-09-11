@@ -5,7 +5,7 @@
     "grunt-contrib-concat": "*",
     "grunt-contrib-coffee": "*",
     "grunt-contrib-jst": "*",
-    "grunt-contrib-sass": "*",
+    "grunt-contrib-stylus": "*",
     "grunt-contrib-watch": "*"
   }
 }

@@ -1,4 +1,4 @@
-FormBuilder.registerField 'email',
+Formbuilder.registerField 'email',
 
   view: """
     <input type='text' class='rf-size-<%= rf.get('field_options.size') %>' />

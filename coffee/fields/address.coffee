@@ -1,4 +1,4 @@
-FormBuilder.registerField 'address',
+Formbuilder.registerField 'address',
 
   view: """
     <div class='input-line'>

@@ -1,4 +1,4 @@
-FormBuilder.registerField 'number',
+Formbuilder.registerField 'number',
 
   view: """
     <input type='text' />
@@ -8,9 +8,9 @@ FormBuilder.registerField 'number',
   """
 
   edit: """
-    <%= FormBuilder.templates['edit/min_max']() %>
-    <%= FormBuilder.templates['edit/units']() %>
-    <%= FormBuilder.templates['edit/integer_only']() %>
+    <%= Formbuilder.templates['edit/min_max']() %>
+    <%= Formbuilder.templates['edit/units']() %>
+    <%= Formbuilder.templates['edit/integer_only']() %>
   """
 
   addButton: """

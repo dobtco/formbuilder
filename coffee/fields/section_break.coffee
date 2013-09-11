@@ -1,4 +1,4 @@
-FormBuilder.registerField 'section_break',
+Formbuilder.registerField 'section_break',
 
   type: 'non_input'
 

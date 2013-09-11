@@ -1,17 +1,17 @@
 <div class='fb-tab-pane active' id='addField'>
   <div class='fb-add-field-types'>
     <div class='section'>
-      <% for (i in FormBuilder.inputFields) { %>
+      <% for (i in Formbuilder.inputFields) { %>
         <a data-field-type="<%= i %>">
-          <%= FormBuilder.inputFields[i].addButton %>
+          <%= Formbuilder.inputFields[i].addButton %>
         </a>
       <% } %>
     </div>
 
     <div class='section'>
-      <% for (i in FormBuilder.nonInputFields) { %>
+      <% for (i in Formbuilder.nonInputFields) { %>
         <a data-field-type="<%= i %>">
-          <%= FormBuilder.nonInputFields[i].addButton %>
+          <%= Formbuilder.nonInputFields[i].addButton %>
         </a>
       <% } %>
     </div>

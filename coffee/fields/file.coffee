@@ -1,4 +1,4 @@
-FormBuilder.registerField 'file',
+Formbuilder.registerField 'file',
 
   view: """
     <input type='file' />

@@ -1,4 +1,4 @@
-FormBuilder.registerField 'time',
+Formbuilder.registerField 'time',
 
   view: """
     <div class='input-line'>

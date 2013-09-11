@@ -1,12 +1,12 @@
-FormBuilder.registerField 'text',
+Formbuilder.registerField 'text',
 
   view: """
     <input type='text' class='rf-size-<%= rf.get('field_options.size') %>' />
   """
 
   edit: """
-    <%= FormBuilder.templates['edit/size']() %>
-    <%= FormBuilder.templates['edit/min_max_length']() %>
+    <%= Formbuilder.templates['edit/size']() %>
+    <%= Formbuilder.templates['edit/min_max_length']() %>
   """
 
   addButton: """

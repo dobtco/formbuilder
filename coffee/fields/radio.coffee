@@ -1,4 +1,4 @@
-FormBuilder.registerField 'radio',
+Formbuilder.registerField 'radio',
 
   view: """
     <% for (i in (rf.get('field_options.options') || [])) { %>
@@ -23,7 +23,7 @@ FormBuilder.registerField 'radio',
   """
 
   edit: """
-    <%= FormBuilder.templates['edit/options']({ includeOther: true }) %>
+    <%= Formbuilder.templates['edit/options']({ includeOther: true }) %>
   """
 
   addButton: """

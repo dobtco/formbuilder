@@ -1,4 +1,4 @@
-ALL_TASKS = ['jst:all', 'coffee:all', 'concat:all', 'sass:all']
+ALL_TASKS = ['jst:all', 'coffee:all', 'concat:all', 'stylus:all']
 
 module.exports = (grunt) ->
 
@@ -8,7 +8,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-contrib-concat')
   grunt.loadNpmTasks('grunt-contrib-jst')
-  grunt.loadNpmTasks('grunt-contrib-sass')
+  grunt.loadNpmTasks('grunt-contrib-stylus')
   grunt.loadNpmTasks('grunt-contrib-watch')
 
   grunt.initConfig
@@ -18,7 +18,7 @@ module.exports = (grunt) ->
     jst:
       all:
         options:
-          namespace: 'FormBuilder.templates'
+          namespace: 'Formbuilder.templates'
           processName: (filename) ->
             filename.replace('./templates/', '').replace('.html', '')
 
@@ -33,16 +33,16 @@ module.exports = (grunt) ->
     concat:
       all:
         src: ['js/compiled.js', 'templates/compiled.js']
-        dest: 'form-builder.js'
+        dest: 'formbuilder.js'
 
-    sass:
+    stylus:
       all:
         files:
-          'form-builder.css': 'sass/formbuilder.sass'
+          'formbuilder.css': 'styl/formbuilder.styl'
 
     watch:
       all:
-        files: ['./coffee/**/*.coffee', 'templates/**/*.html', './sass/**/*.sass']
+        files: ['./coffee/**/*.coffee', 'templates/**/*.html', './styl/**/*.styl']
         tasks: ALL_TASKS
 
   grunt.registerTask 'default', ALL_TASKS

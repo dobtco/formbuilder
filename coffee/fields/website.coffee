@@ -1,11 +1,11 @@
-FormBuilder.registerField 'website',
+Formbuilder.registerField 'website',
 
   view: """
     <input type='text' class='rf-size-<%= rf.get('field_options.size') %>' placeholder='http://' />
   """
 
   edit: """
-    <%= FormBuilder.templates['edit/size']() %>
+    <%= Formbuilder.templates['edit/size']() %>
   """
 
   addButton: """

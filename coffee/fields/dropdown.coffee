@@ -1,4 +1,4 @@
-FormBuilder.registerField 'dropdown',
+Formbuilder.registerField 'dropdown',
 
   view: """
     <select>
@@ -15,7 +15,7 @@ FormBuilder.registerField 'dropdown',
   """
 
   edit: """
-    <%= FormBuilder.templates['edit/options']({ includeBlank: true }) %>
+    <%= Formbuilder.templates['edit/options']({ includeBlank: true }) %>
   """
 
   addButton: """

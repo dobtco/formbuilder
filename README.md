@@ -8,7 +8,7 @@ Formbuilder is…
 ## Events
 #### `save`
 ```
-var fb = new FormBuilder('#fb');
+var fb = new Formbuilder('#fb');
 
 fb.on('save', function(payload){
   ...
