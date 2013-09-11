@@ -76,11 +76,11 @@ __p += '<div class=\'fb-edit-section-header\'>Options</div>\n\n';
  if (typeof includeBlank !== 'undefined'){ ;
 __p += '\n  <label>\n    <input type=\'checkbox\' data-rv-checked=\'model.field_options.include_blank_option\' />\n    Include blank\n  </label>\n';
  } ;
-__p += '\n\n<div class=\'option\' data-rv-each-option=\'model.field_options.options\'>\n  <input type="checkbox" data-rv-checked="option:checked" data-backbone-click="defaultUpdated" />\n  <input type="text" data-rv-input="option:label" data-backbone-input="forceRender" />\n  <a data-backbone-click="addOption" title="Add Option"><i class=\'icon-plus-sign\'></i></a>\n  <a data-backbone-click="removeOption" title="Remove Option"><i class=\'icon-minus-sign\'></i></a>\n</div>\n\n';
+__p += '\n\n<div class=\'option\' data-rv-each-option=\'model.field_options.options\'>\n  <input type="checkbox" class=\'js-default-updated\' data-rv-checked="option:checked" />\n  <input type="text" data-rv-input="option:label" class=\'option-label-input\' />\n  <a class="js-add-option" title="Add Option"><i class=\'icon-plus-sign\'></i></a>\n  <a class="js-remove-option" title="Remove Option"><i class=\'icon-minus-sign\'></i></a>\n</div>\n\n';
  if (typeof includeOther !== 'undefined'){ ;
 __p += '\n  <label>\n    <input type=\'checkbox\' data-rv-checked=\'model.field_options.include_other_option\' />\n    Include "other"\n  </label>\n';
  } ;
-__p += '\n\n<a data-backbone-click="addOption">Add option</a>\n';
+__p += '\n\n<a class="js-add-option">Add option</a>\n';
 
 }
 return __p
@@ -137,7 +137,7 @@ this["FormBuilder"]["templates"]["view/base"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'subtemplate-wrapper\' data-backbone-click=\'focusEditView\'>\n  <div class=\'cover\'></div>\n  ' +
+__p += '<div class=\'subtemplate-wrapper\'>\n  <div class=\'cover\'></div>\n  ' +
 ((__t = ( FormBuilder.templates['view/label']({rf: rf}) )) == null ? '' : __t) +
 '\n\n  ' +
 ((__t = ( FormBuilder.all_fields[rf.get('field_type')].view({rf: rf}) )) == null ? '' : __t) +
@@ -155,7 +155,7 @@ this["FormBuilder"]["templates"]["view/base_non_input"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'subtemplate-wrapper\' data-backbone-click=\'focusEditView\'>\n  <div class=\'cover\'></div>\n  ' +
+__p += '<div class=\'subtemplate-wrapper\'>\n  <div class=\'cover\'></div>\n  ' +
 ((__t = ( FormBuilder.all_fields[rf.get('field_type')].view({rf: rf}) )) == null ? '' : __t) +
 '\n  ' +
 ((__t = ( FormBuilder.templates['view/duplicate_remove']({rf: rf}) )) == null ? '' : __t) +
@@ -181,7 +181,7 @@ this["FormBuilder"]["templates"]["view/duplicate_remove"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'actions-wrapper\'>\n  <a data-backbone-click="duplicate" title="Duplicate Field"><i class=\'icon-plus-sign\'></i></a>\n  <a data-backbone-click="clear" title="Remove Field"><i class=\'icon-minus-sign\'></i></a>\n</div>';
+__p += '<div class=\'actions-wrapper\'>\n  <a class="js-duplicate" title="Duplicate Field"><i class=\'icon-plus-sign\'></i></a>\n  <a class="js-clear" title="Remove Field"><i class=\'icon-minus-sign\'></i></a>\n</div>';
 
 }
 return __p

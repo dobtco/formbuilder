@@ -34,6 +34,11 @@ FormBuilder.registerField = (name, opts) ->
 FormBuilder.views.view_field = Backbone.View.extend
   className: "response-field-wrapper"
 
+  events:
+    'click .subtemplate-wrapper': 'focusEditView'
+    'click .js-duplicate': 'duplicate'
+    'click .js-clear': 'clear'
+
   initialize: ->
     @parentView = @options.parentView
     @listenTo @model, "change", @render
@@ -62,6 +67,12 @@ FormBuilder.views.view_field = Backbone.View.extend
 FormBuilder.views.edit_field = Backbone.View.extend
   className: "edit-response-field"
 
+  events:
+    'click .js-add-option': 'addOption'
+    'click .js-remove-option': 'removeOption'
+    'click .js-default-updated': 'defaultUpdated'
+    'input .option-label-input': 'forceRender'
+
   initialize: ->
     @listenTo @model, "destroy", @remove
     @listenTo @model, "change:field_options.review_this_field", @auditReviewThisFieldChanged
@@ -77,7 +88,8 @@ FormBuilder.views.edit_field = Backbone.View.extend
     Backbone.View.prototype.remove.call(@)
 
   # @todo this should really be on the model, not the view
-  addOption: (e, $el) ->
+  addOption: (e) ->
+    $el = $(e.currentTarget)
     i = @$el.find('.option').index($el.closest('.option'))
     options = @model.get("field_options.options") || []
     newOption = {label: "", checked: false}
@@ -90,14 +102,16 @@ FormBuilder.views.edit_field = Backbone.View.extend
     @model.set "field_options.options", options
 
   removeOption: (e, $el) ->
-    index = @$el.find("[data-backbone-click=removeOption]").index($el)
+    index = @$el.find(".js-remove-option").index($el)
     options = @model.get "field_options.options"
     options.splice index, 1
     @model.set "field_options.options", options
 
-  defaultUpdated: (e, $el) ->
+  defaultUpdated: (e) ->
+    $el = $(e.currentTarget)
+
     unless @model.get('field_type') == 'checkboxes' # checkboxes can have multiple options selected
-      @$el.find("[data-backbone-click=defaultUpdated]").not($el).attr('checked', false).trigger('change')
+      @$el.find(".js-default-updated").not($el).attr('checked', false).trigger('change')
 
     @forceRender()
 
@@ -149,7 +163,7 @@ FormBuilder.main = Backbone.View.extend
 
   initAutosave: ->
     @formSaved = true
-    @saveFormButton = @$el.find("[data-backbone-click=saveForm]")
+    @saveFormButton = @$el.find(".js-save-form")
     # @saveFormButton.button 'loading'
 
     setInterval =>
@@ -246,9 +260,8 @@ FormBuilder.main = Backbone.View.extend
     @setDraggable()
 
   setDraggable: ->
-    return
-    $addFieldButtons = @$el.find("[data-backbone-click=addField], [data-backbone-click=addExistingField]")
-    $addFieldButtons.draggable('destroy') if $addFieldButtons.hasClass('ui-draggable')
+    return # @temp
+    $addFieldButtons = @$el.find(".fb-add-field-types a")
 
     $addFieldButtons.draggable
       connectToSortable: @$responseFields
