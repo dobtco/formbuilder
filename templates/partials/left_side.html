@@ -5,28 +5,7 @@
   </ul>
 
   <div class='fb-tab-content'>
-    <div class='fb-tab-pane active' id='addField'>
-      <div class='fb-add-field-types'>
-        <div class='section'>
-          <% for (i in FormBuilder.inputFields) { %>
-            <a data-field-type="<%= i %>">
-              <%= FormBuilder.inputFields[i].addButton %>
-            </a>
-          <% } %>
-        </div>
-
-        <div class='section'>
-          <% for (i in FormBuilder.nonInputFields) { %>
-            <a data-field-type="<%= i %>">
-              <%= FormBuilder.nonInputFields[i].addButton %>
-            </a>
-          <% } %>
-        </div>
-      </div>
-    </div>
-
-    <div class='fb-tab-pane' id='editField'>
-      <div id='edit-response-field-wrapper'></div>
-    </div>
+    <%= FormBuilder.templates['partials/add_field']() %>
+    <%= FormBuilder.templates['partials/edit_field']() %>
   </div>
 </div>

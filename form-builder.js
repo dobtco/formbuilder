@@ -826,28 +826,52 @@ __p +=
 return __p
 };
 
-this["FormBuilder"]["templates"]["partials/left_side"] = function(obj) {
+this["FormBuilder"]["templates"]["partials/add_field"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<div class=\'fb-left\'>\n  <ul class=\'fb-tabs\'>\n    <li class=\'active\'><a data-target=\'#addField\'>Add new field</a></li>\n    <li><a data-target=\'#editField\'>Edit field</a></li>\n  </ul>\n\n  <div class=\'fb-tab-content\'>\n    <div class=\'fb-tab-pane active\' id=\'addField\'>\n      <div class=\'fb-add-field-types\'>\n        <div class=\'section\'>\n          ';
+__p += '<div class=\'fb-tab-pane active\' id=\'addField\'>\n  <div class=\'fb-add-field-types\'>\n    <div class=\'section\'>\n      ';
  for (i in FormBuilder.inputFields) { ;
-__p += '\n            <a data-field-type="' +
+__p += '\n        <a data-field-type="' +
 ((__t = ( i )) == null ? '' : __t) +
-'">\n              ' +
+'">\n          ' +
 ((__t = ( FormBuilder.inputFields[i].addButton )) == null ? '' : __t) +
-'\n            </a>\n          ';
+'\n        </a>\n      ';
  } ;
-__p += '\n        </div>\n\n        <div class=\'section\'>\n          ';
+__p += '\n    </div>\n\n    <div class=\'section\'>\n      ';
  for (i in FormBuilder.nonInputFields) { ;
-__p += '\n            <a data-field-type="' +
+__p += '\n        <a data-field-type="' +
 ((__t = ( i )) == null ? '' : __t) +
-'">\n              ' +
+'">\n          ' +
 ((__t = ( FormBuilder.nonInputFields[i].addButton )) == null ? '' : __t) +
-'\n            </a>\n          ';
+'\n        </a>\n      ';
  } ;
-__p += '\n        </div>\n      </div>\n    </div>\n\n    <div class=\'fb-tab-pane\' id=\'editField\'>\n      <div id=\'edit-response-field-wrapper\'></div>\n    </div>\n  </div>\n</div>';
+__p += '\n    </div>\n  </div>\n</div>';
+
+}
+return __p
+};
+
+this["FormBuilder"]["templates"]["partials/edit_field"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class=\'fb-tab-pane\' id=\'editField\'>\n  <div id=\'edit-response-field-wrapper\'></div>\n</div>\n';
+
+}
+return __p
+};
+
+this["FormBuilder"]["templates"]["partials/left_side"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class=\'fb-left\'>\n  <ul class=\'fb-tabs\'>\n    <li class=\'active\'><a data-target=\'#addField\'>Add new field</a></li>\n    <li><a data-target=\'#editField\'>Edit field</a></li>\n  </ul>\n\n  <div class=\'fb-tab-content\'>\n    ' +
+((__t = ( FormBuilder.templates['partials/add_field']() )) == null ? '' : __t) +
+'\n    ' +
+((__t = ( FormBuilder.templates['partials/edit_field']() )) == null ? '' : __t) +
+'\n  </div>\n</div>';
 
 }
 return __p

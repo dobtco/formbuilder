@@ -1,0 +1,19 @@
+<div class='fb-tab-pane active' id='addField'>
+  <div class='fb-add-field-types'>
+    <div class='section'>
+      <% for (i in FormBuilder.inputFields) { %>
+        <a data-field-type="<%= i %>">
+          <%= FormBuilder.inputFields[i].addButton %>
+        </a>
+      <% } %>
+    </div>
+
+    <div class='section'>
+      <% for (i in FormBuilder.nonInputFields) { %>
+        <a data-field-type="<%= i %>">
+          <%= FormBuilder.nonInputFields[i].addButton %>
+        </a>
+      <% } %>
+    </div>
+  </div>
+</div>
