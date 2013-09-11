@@ -5,11 +5,23 @@ this["FormBuilder"]["templates"]["edit/base"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-field-label\'>\n  <span data-rv-text="model.label"></span>\n  <code class=\'field-type\' data-rv-text=\'model.field_type\'></code>\n  <span class=\'icon-arrow-right pull-right\'></span>\n</div>\n' +
+__p +=
+((__t = ( FormBuilder.templates['edit/base_header']() )) == null ? '' : __t) +
+'\n' +
 ((__t = ( FormBuilder.templates['edit/common']() )) == null ? '' : __t) +
-'\n\n' +
+'\n' +
 ((__t = ( FormBuilder.fields[rf.get('field_type')].edit({rf: rf}) )) == null ? '' : __t) +
 '\n';
+
+}
+return __p
+};
+
+this["FormBuilder"]["templates"]["edit/base_header"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class=\'fb-field-label\'>\n  <span data-rv-text="model.label"></span>\n  <code class=\'field-type\' data-rv-text=\'model.field_type\'></code>\n  <span class=\'icon-arrow-right pull-right\'></span>\n</div>';
 
 }
 return __p
@@ -19,9 +31,21 @@ this["FormBuilder"]["templates"]["edit/base_non_input"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-field-label\'>\n  <span data-rv-text="model.label"></span>\n  <code class=\'field-type\' data-rv-text=\'model.field_type\'></code>\n  <span class=\'icon-arrow-right pull-right\'></span>\n</div>\n\n' +
+__p +=
+((__t = ( FormBuilder.templates['edit/base_header']() )) == null ? '' : __t) +
+'\n' +
 ((__t = ( FormBuilder.fields[rf.get('field_type')].edit({rf: rf}) )) == null ? '' : __t) +
 '\n';
+
+}
+return __p
+};
+
+this["FormBuilder"]["templates"]["edit/checkboxes"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<label>\n  Required\n  <input type=\'checkbox\' data-rv-checked=\'model.field_options.required\' />\n</label>\n<label>\n  Admin only\n  <input type=\'checkbox\' data-rv-checked=\'model.field_options.admin_only\' />\n</label>';
 
 }
 return __p
@@ -31,7 +55,11 @@ this["FormBuilder"]["templates"]["edit/common"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'db-edit-section-header\'>Label</div>\n\n<div class=\'grid\'>\n  <div class=\'grid-item two_thirds\'>\n    <input type=\'text\' data-rv-input=\'model.label\' />\n    <textarea data-rv-input=\'model.field_options.description\' placeholder=\'Add a longer description to this field\'></textarea>\n  </div>\n  <div class=\'grid-item one_third\'>\n    <label>\n      Required\n      <input type=\'checkbox\' data-rv-checked=\'model.field_options.required\' />\n    </label>\n    <label>\n      Blind\n      <input type=\'checkbox\' data-rv-checked=\'model.field_options.blind\' />\n    </label>\n    <label>\n      Admin only\n      <input type=\'checkbox\' data-rv-checked=\'model.field_options.admin_only\' />\n    </label>\n  </div>\n</div>\n';
+__p += '<div class=\'fb-edit-section-header\'>Label</div>\n\n<div class=\'fb-common-wrapper\'>\n  <div class=\'fb-label-description\'>\n    ' +
+((__t = ( FormBuilder.templates['edit/label_description']() )) == null ? '' : __t) +
+'\n  </div>\n  <div class=\'fb-common-checkboxes\'>\n    ' +
+((__t = ( FormBuilder.templates['edit/checkboxes']() )) == null ? '' : __t) +
+'\n  </div>\n</div>\n';
 
 }
 return __p
@@ -42,6 +70,16 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<div class=\'fb-edit-section-header\'>Integer only</div>\n<label>\n  <input type=\'checkbox\' data-rv-checked=\'model.field_options.integer_only\' />\n  Only accept integers\n</label>\n';
+
+}
+return __p
+};
+
+this["FormBuilder"]["templates"]["edit/label_description"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<input type=\'text\' data-rv-input=\'model.label\' />\n<textarea data-rv-input=\'model.field_options.description\' placeholder=\'Add a longer description to this field\'></textarea>';
 
 }
 return __p
@@ -108,10 +146,26 @@ return __p
 
 this["FormBuilder"]["templates"]["page"] = function(obj) {
 obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p +=
+((__t = ( FormBuilder.templates['partials/save_button']() )) == null ? '' : __t) +
+'\n' +
+((__t = ( FormBuilder.templates['partials/left_side']() )) == null ? '' : __t) +
+'\n' +
+((__t = ( FormBuilder.templates['partials/right_side']() )) == null ? '' : __t) +
+'\n\n<div class=\'fb-clear\'></div>';
+
+}
+return __p
+};
+
+this["FormBuilder"]["templates"]["partials/left_side"] = function(obj) {
+obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<div class=\'response-field-save-wrapper\'>\n  <button class=\'js-save-form\' data-loading-text=\'All changes saved\'>Save form</button>\n</div>\n\n<div class=\'fb-left\'>\n  <ul class=\'fb-tabs\'>\n    <li class=\'active\'><a data-target=\'#addField\'>Add new field</a></li>\n    <li><a data-target=\'#editField\'>Edit field</a></li>\n  </ul>\n\n  <div class=\'fb-tab-content\'>\n    <div class=\'fb-tab-pane active\' id=\'addField\'>\n      <div class=\'fb-add-field-types\'>\n        <div class=\'section\'>\n          ';
+__p += '<div class=\'fb-left\'>\n  <ul class=\'fb-tabs\'>\n    <li class=\'active\'><a data-target=\'#addField\'>Add new field</a></li>\n    <li><a data-target=\'#editField\'>Edit field</a></li>\n  </ul>\n\n  <div class=\'fb-tab-content\'>\n    <div class=\'fb-tab-pane active\' id=\'addField\'>\n      <div class=\'fb-add-field-types\'>\n        <div class=\'section\'>\n          ';
  for (i in FormBuilder.inputFields) { ;
 __p += '\n            <a data-field-type="' +
 ((__t = ( i )) == null ? '' : __t) +
@@ -127,7 +181,27 @@ __p += '\n            <a data-field-type="' +
 ((__t = ( FormBuilder.nonInputFields[i].addButton )) == null ? '' : __t) +
 '\n            </a>\n          ';
  } ;
-__p += '\n        </div>\n      </div>\n    </div>\n\n    <div class=\'fb-tab-pane\' id=\'editField\'>\n      <div id=\'edit-response-field-wrapper\'></div>\n    </div>\n  </div>\n</div>\n\n<div class=\'fb-right\'>\n  <div class=\'fb-no-response-fields\'>No response fields</div>\n  <div class=\'fb-response-fields\'></div>\n</div>\n\n<div class=\'fb-clear\'></div>\n';
+__p += '\n        </div>\n      </div>\n    </div>\n\n    <div class=\'fb-tab-pane\' id=\'editField\'>\n      <div id=\'edit-response-field-wrapper\'></div>\n    </div>\n  </div>\n</div>';
+
+}
+return __p
+};
+
+this["FormBuilder"]["templates"]["partials/right_side"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class=\'fb-right\'>\n  <div class=\'fb-no-response-fields\'>No response fields</div>\n  <div class=\'fb-response-fields\'></div>\n</div>';
+
+}
+return __p
+};
+
+this["FormBuilder"]["templates"]["partials/save_button"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class=\'response-field-save-wrapper\'>\n  <button class=\'js-save-form\' data-loading-text=\'All changes saved\'>Save form</button>\n</div>';
 
 }
 return __p

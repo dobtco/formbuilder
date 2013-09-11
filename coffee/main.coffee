@@ -12,7 +12,8 @@ class FormBuilder
     simple_format: (x) ->
       x?.replace(/\n/g, '<br />')
 
-  @options: {}
+  @options:
+    BUTTON_CLASS: ''
 
   @fields: {}
   @inputFields: {}

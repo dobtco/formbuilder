@@ -1,43 +1,4 @@
-<div class='response-field-save-wrapper'>
-  <button class='js-save-form' data-loading-text='All changes saved'>Save form</button>
-</div>
-
-<div class='fb-left'>
-  <ul class='fb-tabs'>
-    <li class='active'><a data-target='#addField'>Add new field</a></li>
-    <li><a data-target='#editField'>Edit field</a></li>
-  </ul>
-
-  <div class='fb-tab-content'>
-    <div class='fb-tab-pane active' id='addField'>
-      <div class='fb-add-field-types'>
-        <div class='section'>
-          <% for (i in FormBuilder.inputFields) { %>
-            <a data-field-type="<%= i %>">
-              <%= FormBuilder.inputFields[i].addButton %>
-            </a>
-          <% } %>
-        </div>
-
-        <div class='section'>
-          <% for (i in FormBuilder.nonInputFields) { %>
-            <a data-field-type="<%= i %>">
-              <%= FormBuilder.nonInputFields[i].addButton %>
-            </a>
-          <% } %>
-        </div>
-      </div>
-    </div>
-
-    <div class='fb-tab-pane' id='editField'>
-      <div id='edit-response-field-wrapper'></div>
-    </div>
-  </div>
-</div>
-
-<div class='fb-right'>
-  <div class='fb-no-response-fields'>No response fields</div>
-  <div class='fb-response-fields'></div>
-</div>
-
+<%= FormBuilder.templates['partials/save_button']() %>
+<%= FormBuilder.templates['partials/left_side']() %>
+<%= FormBuilder.templates['partials/right_side']() %>
 <div class='fb-clear'></div>

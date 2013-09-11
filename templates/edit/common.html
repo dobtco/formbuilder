@@ -1,22 +1,10 @@
-<div class='db-edit-section-header'>Label</div>
+<div class='fb-edit-section-header'>Label</div>
 
-<div class='grid'>
-  <div class='grid-item two_thirds'>
-    <input type='text' data-rv-input='model.label' />
-    <textarea data-rv-input='model.field_options.description' placeholder='Add a longer description to this field'></textarea>
+<div class='fb-common-wrapper'>
+  <div class='fb-label-description'>
+    <%= FormBuilder.templates['edit/label_description']() %>
   </div>
-  <div class='grid-item one_third'>
-    <label>
-      Required
-      <input type='checkbox' data-rv-checked='model.field_options.required' />
-    </label>
-    <label>
-      Blind
-      <input type='checkbox' data-rv-checked='model.field_options.blind' />
-    </label>
-    <label>
-      Admin only
-      <input type='checkbox' data-rv-checked='model.field_options.admin_only' />
-    </label>
+  <div class='fb-common-checkboxes'>
+    <%= FormBuilder.templates['edit/checkboxes']() %>
   </div>
 </div>
