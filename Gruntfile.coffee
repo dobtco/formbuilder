@@ -1,4 +1,4 @@
-ALL_TASKS = ['jst', 'coffee', 'concat', 'sass']
+ALL_TASKS = ['jst:all', 'coffee:all', 'concat:all', 'sass:all']
 
 module.exports = (grunt) ->
 
