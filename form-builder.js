@@ -64,7 +64,11 @@
     FormBuilder.options = {
       BUTTON_CLASS: '',
       HTTP_ENDPOINT: '',
-      HTTP_METHOD: 'POST'
+      HTTP_METHOD: 'POST',
+      dict: {
+        ALL_CHANGES_SAVED: 'All changes saved',
+        SAVE_FORM: 'Save form'
+      }
     };
 
     FormBuilder.fields = {};
@@ -242,6 +246,7 @@
           var _this = this;
           this.formSaved = true;
           this.saveFormButton = this.$el.find(".js-save-form");
+          this.saveFormButton.attr('disabled', true).text(FormBuilder.options.dict.ALL_CHANGES_SAVED);
           setInterval(function() {
             return _this.saveForm.call(_this);
           }, 5000);
@@ -428,7 +433,8 @@
           if (this.updatingBatch) {
             return;
           }
-          return this.formSaved = false;
+          this.formSaved = false;
+          return this.saveFormButton.removeAttr('disabled').text(FormBuilder.options.dict.SAVE_FORM);
         },
         saveForm: function(e) {
           var payload;
@@ -436,6 +442,7 @@
             return;
           }
           this.formSaved = true;
+          this.saveFormButton.attr('disabled', true).text(FormBuilder.options.dict.ALL_CHANGES_SAVED);
           this.collection.sort();
           payload = JSON.stringify({
             fields: this.collection.toJSON()
@@ -859,7 +866,7 @@ this["FormBuilder"]["templates"]["partials/save_button"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'response-field-save-wrapper\'>\n  <button class=\'js-save-form\' data-loading-text=\'All changes saved\'>Save form</button>\n</div>';
+__p += '<div class=\'response-field-save-wrapper\'>\n  <button class=\'js-save-form\'></button>\n</div>';
 
 }
 return __p

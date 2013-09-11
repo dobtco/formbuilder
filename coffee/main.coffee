@@ -17,6 +17,10 @@ class FormBuilder
     HTTP_ENDPOINT: ''
     HTTP_METHOD: 'POST'
 
+    dict:
+      ALL_CHANGES_SAVED: 'All changes saved'
+      SAVE_FORM: 'Save form'
+
   @fields: {}
   @inputFields: {}
   @nonInputFields: {}
@@ -170,7 +174,7 @@ class FormBuilder
       initAutosave: ->
         @formSaved = true
         @saveFormButton = @$el.find(".js-save-form")
-        # @saveFormButton.button 'loading'
+        @saveFormButton.attr('disabled', true).text(FormBuilder.options.dict.ALL_CHANGES_SAVED)
 
         setInterval =>
           @saveForm.call(@)
@@ -334,12 +338,12 @@ class FormBuilder
       handleFormUpdate: ->
         return if @updatingBatch
         @formSaved = false
-        # @saveFormButton.button('reset')
+        @saveFormButton.removeAttr('disabled').text(FormBuilder.options.dict.SAVE_FORM)
 
       saveForm: (e) ->
         return if @formSaved
         @formSaved = true
-        # @saveFormButton.button 'loading'
+        @saveFormButton.attr('disabled', true).text(FormBuilder.options.dict.ALL_CHANGES_SAVED)
         @collection.sort()
         payload = JSON.stringify fields: @collection.toJSON()
 
