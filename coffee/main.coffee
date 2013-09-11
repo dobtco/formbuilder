@@ -251,6 +251,7 @@ FormBuilder.main = Backbone.View.extend
           @createAndShowEditView(rf)
 
         @handleFormUpdate()
+        return true
       update: (e, ui) =>
         # ensureEditViewScrolled, unless we're updating from the draggable
         @ensureEditViewScrolled() unless ui.item.data('field-type')

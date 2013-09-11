@@ -328,7 +328,8 @@
             });
             _this.createAndShowEditView(rf);
           }
-          return _this.handleFormUpdate();
+          _this.handleFormUpdate();
+          return true;
         },
         update: function(e, ui) {
           if (!ui.item.data('field-type')) {
