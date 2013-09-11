@@ -51,7 +51,7 @@ this["FormBuilder"]["templates"]["edit/min_max"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-edit-section-header\'>Minimum / Maximum</div>\n\nAbove\n<input type="text" data-rv-value="model.field_options.min" style="width: 30px" />\n\n&nbsp;&nbsp;\n\nBelow\n<input type="text" data-rv-value="model.field_options.max" style="width: 30px" />\n';
+__p += '<div class=\'fb-edit-section-header\'>Minimum / Maximum</div>\n\nAbove\n<input type="text" data-rv-input="model.field_options.min" style="width: 30px" />\n\n&nbsp;&nbsp;\n\nBelow\n<input type="text" data-rv-input="model.field_options.max" style="width: 30px" />\n';
 
 }
 return __p
@@ -61,7 +61,7 @@ this["FormBuilder"]["templates"]["edit/min_max_length"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-edit-section-header\'>Length Limit</div>\n\nMin\n<input type="text" data-rv-value="model.field_options.minlength" style="width: 30px" />\n\n&nbsp;&nbsp;\n\nMax\n<input type="text" data-rv-value="model.field_options.maxlength" style="width: 30px" />\n\n&nbsp;&nbsp;\n\n<select data-rv-value="model.field_options.min_max_length_units" style="width: auto;">\n  <option value="characters">characters</option>\n  <option value="words">words</option>\n</select>\n';
+__p += '<div class=\'fb-edit-section-header\'>Length Limit</div>\n\nMin\n<input type="text" data-rv-input="model.field_options.minlength" style="width: 30px" />\n\n&nbsp;&nbsp;\n\nMax\n<input type="text" data-rv-input="model.field_options.maxlength" style="width: 30px" />\n\n&nbsp;&nbsp;\n\n<select data-rv-value="model.field_options.min_max_length_units" style="width: auto;">\n  <option value="characters">characters</option>\n  <option value="words">words</option>\n</select>\n';
 
 }
 return __p
@@ -76,7 +76,7 @@ __p += '<div class=\'fb-edit-section-header\'>Options</div>\n\n';
  if (typeof includeBlank !== 'undefined'){ ;
 __p += '\n  <label>\n    <input type=\'checkbox\' data-rv-checked=\'model.field_options.include_blank_option\' />\n    Include blank\n  </label>\n';
  } ;
-__p += '\n\n<div class=\'option\' data-rv-each-option=\'model.field_options.options\'>\n  <input type="checkbox" data-rv-checked="option:checked" data-backbone-click="defaultUpdated" />\n  <input type="text" data-rv-value="option:label" data-backbone-input="forceRender" />\n  <a data-backbone-click="addOption" title="Add Option"><i class=\'icon-plus-sign\'></i></a>\n  <a data-backbone-click="removeOption" title="Remove Option"><i class=\'icon-minus-sign\'></i></a>\n</div>\n\n';
+__p += '\n\n<div class=\'option\' data-rv-each-option=\'model.field_options.options\'>\n  <input type="checkbox" data-rv-checked="option:checked" data-backbone-click="defaultUpdated" />\n  <input type="text" data-rv-input="option:label" data-backbone-input="forceRender" />\n  <a data-backbone-click="addOption" title="Add Option"><i class=\'icon-plus-sign\'></i></a>\n  <a data-backbone-click="removeOption" title="Remove Option"><i class=\'icon-minus-sign\'></i></a>\n</div>\n\n';
  if (typeof includeOther !== 'undefined'){ ;
 __p += '\n  <label>\n    <input type=\'checkbox\' data-rv-checked=\'model.field_options.include_other_option\' />\n    Include "other"\n  </label>\n';
  } ;
@@ -100,7 +100,7 @@ this["FormBuilder"]["templates"]["edit/units"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-edit-section-header\'>Units</div>\n<input type="text" data-rv-value="model.field_options.units" />\n';
+__p += '<div class=\'fb-edit-section-header\'>Units</div>\n<input type="text" data-rv-input="model.field_options.units" />\n';
 
 }
 return __p

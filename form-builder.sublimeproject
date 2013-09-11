@@ -4,7 +4,7 @@
     {
       "path": ".",
       "folder_exclude_patterns": ["bower_components", ".sass-cache", "css", "js", "node_modules"],
-      "file_exclude_patterns": ["*.sublime-workspace", "form-builder.js", "form-builder.css"]
+      "file_exclude_patterns": ["*.sublime-workspace", "form-builder.js", "form-builder.css", "templates/compiled.js"]
     }
   ],
 
