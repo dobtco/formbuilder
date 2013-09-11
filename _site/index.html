@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="bower_components/formbuilder/formbuilder-min.css" />
+
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Formbuilder.js by dobtco</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Formbuilder.js</h1>
+        <h2></h2>
+        <a href="https://github.com/dobtco/formbuilder" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+
+      <div class="inner clearfix">
+        <div class='fb-main'></div>
+        <section id="main-content">
+           <h2 id='formbuilderjs'>Formbuilder.js</h2>
+
+<p>Formbuilder is a graphical interface for letting users build their own webforms. Think Wufoo or Google Forms, but a lightweight component that can be integrated into your application.</p>
+
+<p><em>As of right now, Formbuilder only handles the client-side logic of creating a form. It will output a structured JSON representation of your form, but saving the form, rendering it on the server, and storing users&#8217; responses is all up to you. I&#8217;m planning on releasing a Rails gem to handle this logic, but the ETA on that is pretty up in the air. If you&#8217;d like to help, feel free to reach out.</em></p>
+
+<h2 id='demo'>Demo</h2>
+
+<p><a href='#'>Click here</a> to see Formbuilder in action.</p>
+
+<h2 id='basic_usage'>Basic usage</h2>
+<div class='highlight'><pre><code class='html'><span class='nt'>&lt;div</span> <span class='na'>class=</span><span class='s'>&#39;fb-main&#39;</span><span class='nt'>&gt;&lt;/div&gt;</span>
+
+<span class='nt'>&lt;script&gt;</span>
+<span class='kd'>var</span> <span class='nx'>fb</span> <span class='o'>=</span> <span class='k'>new</span> <span class='nx'>Formbuilder</span><span class='p'>(</span><span class='s1'>&#39;.fb-main&#39;</span><span class='p'>);</span>
+<span class='nt'>&lt;/script&gt;</span>
+</code></pre></div>
+<p>See more usage examples in the <a href='https://github.com/dobtco/formbuilder/wiki'>wiki</a>.</p>
+
+<h2 id='design__dependencies'>Design &#38; Dependencies</h2>
+
+<p>Formbuilder itself is a pretty small codebase (6kb gzip&#8217;d javascript) but it <em>does</em> rely on some external libraries, namely Backbone &#38; Rivets. We use bower to manage our dependencies, which can be seen <a href='https://github.com/dobtco/formbuilder/blob/master/bower.json'>here</a>. I&#8217;d like to reduce some of these in the future, (especially font-awesome, because that&#8217;s just silly,) but for now that&#8217;s what you&#8217;ll have to include.</p>
+
+<p>Formbuilder consists of a few different components that all live in the <code>Formbuilder</code> namespace:</p>
+
+<ul>
+<li>
+<p><code>Formbuilder.templates</code> are compiled Underscore.js templates that are used to render the Formbuilder interface. You can see these individual files in the <code>./templates</code> directory, but if you&#8217;re including <code>formbuilder.js</code>, you don&#8217;t need to worry about them.</p>
+</li>
+
+<li>
+<p><code>Formbuilder.fields</code> are the different kinds of inputs that users can add to their forms. We expose a simple API, <code>Formbuilder.registerField()</code>, that allows you to add more kinds of inputs.</p>
+</li>
+
+<li>
+<p><code>Formbuilder.views</code></p>
+</li>
+</ul>
+
+<p>Because of its modular nature, Formbuilder is easy to customize. Most of the configuration lives in class variables, which means you can simply override a template or method. If you have questions, feel free to open an issue &#8211; we&#8217;ve tried to bridge the gap between convention and configuration, but there&#8217;s no guarantee that we were successful.</p>
+
+<h2 id='events'>Events</h2>
+
+<p>More coming soon&#8230;</p>
+
+<h4 id='id15'><code>save</code></h4>
+<div class='highlight'><pre><code class='html'>var fb = new Formbuilder(&#39;#fb&#39;);
+
+fb.on(&#39;save&#39;, function(payload){
+  ...
+});
+</code></pre></div>
+<h2 id='developing'>Developing</h2>
+
+<ol>
+<li><code>npm install</code></li>
+
+<li><code>bower install</code></li>
+
+<li><code>grunt watch</code></li>
+
+<li>open <code>example/index.html</code> and you&#8217;re all set!</li>
+</ol>
+        </section>
+
+      </div>
+    </div>
+
+    <script src="bower_components/jquery/jquery.js"></script>
+    <script src="bower_components/jquery-ui/ui/jquery.ui.core.js"></script>
+    <script src="bower_components/jquery-ui/ui/jquery.ui.widget.js"></script>
+    <script src="bower_components/jquery-ui/ui/jquery.ui.mouse.js"></script>
+    <script src="bower_components/jquery-ui/ui/jquery.ui.draggable.js"></script>
+    <script src="bower_components/jquery-ui/ui/jquery.ui.droppable.js"></script>
+    <script src="bower_components/jquery-ui/ui/jquery.ui.sortable.js"></script>
+    <script src="bower_components/jquery.scrollWindowTo/index.js"></script>
+    <script src="bower_components/underscore/underscore-min.js"></script>
+    <script src="bower_components/underscore.mixin.deepExtend/index.js"></script>
+    <script src="bower_components/rivets/dist/rivets.js"></script>
+    <script src="bower_components/backbone/backbone.js"></script>
+    <script src="bower_components/backbone-deep-model/src/deep-model.js"></script>
+
+    <script src="bower_components/formbuilder/formbuilder-min.js"></script>
+
+    <script>
+      $(function(){
+        var fb = new Formbuilder('.fb-main');
+
+        fb.on('save', function(payload){
+          console.log(payload);
+          alert('Check the console!');
+        });
+      });
+    </script>
+
+
+  </body>
+</html>

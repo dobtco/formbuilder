@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="bower_components/formbuilder/formbuilder-min.css" />
+
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Formbuilder.js by dobtco</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Formbuilder.js</h1>
+        <h2></h2>
+        <a href="https://github.com/dobtco/formbuilder" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+
+      <div class="inner clearfix">
+        <div class='fb-main'></div>
+        <section id="main-content">
+           {{ content }}
+        </section>
+
+      </div>
+    </div>
+
+    <script src="bower_components/jquery/jquery.js"></script>
+    <script src="bower_components/jquery-ui/ui/jquery.ui.core.js"></script>
+    <script src="bower_components/jquery-ui/ui/jquery.ui.widget.js"></script>
+    <script src="bower_components/jquery-ui/ui/jquery.ui.mouse.js"></script>
+    <script src="bower_components/jquery-ui/ui/jquery.ui.draggable.js"></script>
+    <script src="bower_components/jquery-ui/ui/jquery.ui.droppable.js"></script>
+    <script src="bower_components/jquery-ui/ui/jquery.ui.sortable.js"></script>
+    <script src="bower_components/jquery.scrollWindowTo/index.js"></script>
+    <script src="bower_components/underscore/underscore-min.js"></script>
+    <script src="bower_components/underscore.mixin.deepExtend/index.js"></script>
+    <script src="bower_components/rivets/dist/rivets.js"></script>
+    <script src="bower_components/backbone/backbone.js"></script>
+    <script src="bower_components/backbone-deep-model/src/deep-model.js"></script>
+
+    <script src="bower_components/formbuilder/formbuilder-min.js"></script>
+
+    <script>
+      $(function(){
+        var fb = new Formbuilder('.fb-main');
+
+        fb.on('save', function(payload){
+          console.log(payload);
+          alert('Check the console!');
+        });
+      });
+    </script>
+
+
+  </body>
+</html>
