@@ -129,6 +129,11 @@ FormBuilder.main = Backbone.View.extend
 
   SUBVIEWS: []
 
+  events:
+    'click .js-save-form': 'saveForm'
+    'click .fb-tabs a': 'showTab'
+    'click .fb-add-field-types a': 'addField'
+
   initialize: ->
     # Create the collection, and bind the appropriate events
     @collection = new FormBuilder.collections.response_fields
@@ -182,7 +187,9 @@ FormBuilder.main = Backbone.View.extend
       @$fbLeft.css
         'margin-top': Math.min(maxMargin, newMargin)
 
-  showTab: (_, $el, target) ->
+  showTab: (e) ->
+    $el = $(e.currentTarget)
+    target = $el.data('target')
     $el.closest('li').addClass('active').siblings('li').removeClass('active')
     $(target).addClass('active').siblings('.fb-tab-pane').removeClass('active')
 
@@ -260,7 +267,8 @@ FormBuilder.main = Backbone.View.extend
   hideShowNoResponseFields: ->
     @$el.find(".fb-no-response-fields")[if @collection.length > 0 then 'hide' else 'show']()
 
-  addField: (_, __, field_type) ->
+  addField: (e) ->
+    field_type = $(e.currentTarget).data('field-type')
     @createField FormBuilder.helpers.defaultFieldAttrs(field_type)
 
   createField: (attrs, options) ->
@@ -274,7 +282,7 @@ FormBuilder.main = Backbone.View.extend
 
     if @editView
       if @editView.model.cid is model.cid
-        @$el.find(".fb-tabs a[data-backbone-params=\"#editField\"]").click()
+        @$el.find(".fb-tabs a[data-target=\"#editField\"]").click()
         @scrollLeftWrapper $responseFieldEl, (oldPadding? && oldPadding)
         return
 
@@ -287,7 +295,7 @@ FormBuilder.main = Backbone.View.extend
 
     $newEditEl = @editView.render().$el
     @$el.find("#edit-response-field-wrapper").html $newEditEl
-    @$el.find(".fb-tabs a[data-backbone-params=\"#editField\"]").click()
+    @$el.find(".fb-tabs a[data-target=\"#editField\"]").click()
     @scrollLeftWrapper($responseFieldEl)
     return @
 

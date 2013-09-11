@@ -31,7 +31,7 @@ this["FormBuilder"]["templates"]["edit/common"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'db-edit-section-header\'>Label</div>\n\n<div class=\'grid\'>\n  <div class=\'grid-item two_thirds\'>\n    <input type=\'text\' data-rv-value=\'model.label\' />\n    <textarea data-rv-value=\'model.field_options.description\' placeholder=\'Add a longer description to this field\'></textarea>\n  </div>\n  <div class=\'grid-item one_third\'>\n    <label>\n      Required\n      <input type=\'checkbox\' data-rv-checked=\'model.field_options.required\' />\n    </label>\n    <label>\n      Blind\n      <input type=\'checkbox\' data-rv-checked=\'model.field_options.blind\' />\n    </label>\n    <label>\n      Admin only\n      <input type=\'checkbox\' data-rv-checked=\'model.field_options.admin_only\' />\n    </label>\n  </div>\n</div>\n';
+__p += '<div class=\'db-edit-section-header\'>Label</div>\n\n<div class=\'grid\'>\n  <div class=\'grid-item two_thirds\'>\n    <input type=\'text\' data-rv-input=\'model.label\' />\n    <textarea data-rv-input=\'model.field_options.description\' placeholder=\'Add a longer description to this field\'></textarea>\n  </div>\n  <div class=\'grid-item one_third\'>\n    <label>\n      Required\n      <input type=\'checkbox\' data-rv-checked=\'model.field_options.required\' />\n    </label>\n    <label>\n      Blind\n      <input type=\'checkbox\' data-rv-checked=\'model.field_options.blind\' />\n    </label>\n    <label>\n      Admin only\n      <input type=\'checkbox\' data-rv-checked=\'model.field_options.admin_only\' />\n    </label>\n  </div>\n</div>\n';
 
 }
 return __p
@@ -111,9 +111,9 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<div class=\'response-field-save-wrapper\'>\n  <button data-backbone-click=\'saveForm\' data-loading-text=\'All changes saved\'>Save form</button>\n</div>\n\n<div class=\'fb-left\'>\n  <ul class=\'fb-tabs\'>\n    <li class=\'active\'><a data-backbone-click=\'showTab\' data-backbone-params=\'#addField\'>Add new field</a></li>\n    <li><a data-backbone-click=\'showTab\' data-backbone-params=\'#editField\'>Edit field</a></li>\n  </ul>\n\n  <div class=\'fb-tab-content\'>\n    <div class=\'fb-tab-pane active\' id=\'addField\'>\n      <div class=\'fb-add-field-types\'>\n        <div class=\'section\'>\n          ';
+__p += '<div class=\'response-field-save-wrapper\'>\n  <button class=\'js-save-form\' data-loading-text=\'All changes saved\'>Save form</button>\n</div>\n\n<div class=\'fb-left\'>\n  <ul class=\'fb-tabs\'>\n    <li class=\'active\'><a data-target=\'#addField\'>Add new field</a></li>\n    <li><a data-target=\'#editField\'>Edit field</a></li>\n  </ul>\n\n  <div class=\'fb-tab-content\'>\n    <div class=\'fb-tab-pane active\' id=\'addField\'>\n      <div class=\'fb-add-field-types\'>\n        <div class=\'section\'>\n          ';
  for (i in FormBuilder.input_fields) { ;
-__p += '\n            <a data-backbone-click="addField" data-backbone-params="' +
+__p += '\n            <a data-field-type="' +
 ((__t = ( i )) == null ? '' : __t) +
 '">\n              ' +
 ((__t = ( FormBuilder.input_fields[i].addButton )) == null ? '' : __t) +
@@ -121,13 +121,13 @@ __p += '\n            <a data-backbone-click="addField" data-backbone-params="' 
  } ;
 __p += '\n        </div>\n\n        <div class=\'section\'>\n          ';
  for (i in FormBuilder.non_input_fields) { ;
-__p += '\n            <a data-backbone-click="addField" data-backbone-params="' +
+__p += '\n            <a data-field-type="' +
 ((__t = ( i )) == null ? '' : __t) +
 '">\n              ' +
 ((__t = ( FormBuilder.non_input_fields[i].addButton )) == null ? '' : __t) +
 '\n            </a>\n          ';
  } ;
-__p += '\n        </div>\n      </div>\n    </div>\n\n\n    <div class=\'fb-tab-pane\' id=\'editField\'>\n      <div id=\'edit-response-field-wrapper\'></div>\n    </div>\n  </div>\n</div>\n\n<div class=\'fb-right\'>\n  <div class=\'fb-no-response-fields\'>No response fields</div>\n  <div class=\'fb-response-fields\'></div>\n</div>\n\n<div class=\'fb-clear\'></div>\n';
+__p += '\n        </div>\n      </div>\n    </div>\n\n    <div class=\'fb-tab-pane\' id=\'editField\'>\n      <div id=\'edit-response-field-wrapper\'></div>\n    </div>\n  </div>\n</div>\n\n<div class=\'fb-right\'>\n  <div class=\'fb-no-response-fields\'>No response fields</div>\n  <div class=\'fb-response-fields\'></div>\n</div>\n\n<div class=\'fb-clear\'></div>\n';
 
 }
 return __p

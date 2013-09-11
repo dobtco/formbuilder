@@ -28,7 +28,7 @@ module.exports = (grunt) ->
     coffee:
       all:
         files:
-          'js/compiled.js': ['coffee/main.coffee', 'coffee/fields/*.coffee']
+          'js/compiled.js': ['coffee/rivets-config.coffee', 'coffee/main.coffee', 'coffee/fields/*.coffee']
 
     concat:
       all:
