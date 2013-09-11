@@ -473,6 +473,12 @@
 
   window.FormBuilder = FormBuilder;
 
+  if (typeof module !== "undefined" && module !== null) {
+    module.exports = FormBuilder;
+  } else {
+    window.FormBuilder = FormBuilder;
+  }
+
 }).call(this);
 
 (function() {

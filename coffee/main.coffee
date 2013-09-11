@@ -360,3 +360,8 @@ class FormBuilder
     new FormBuilder.views.main({ selector: selector })
 
 window.FormBuilder = FormBuilder
+
+if module?
+  module.exports = FormBuilder
+else
+  window.FormBuilder = FormBuilder
