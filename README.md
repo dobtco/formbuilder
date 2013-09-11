@@ -3,7 +3,7 @@ Formbuilder.js
 
 Formbuilder is a graphical interface for letting users build their own webforms. Think Wufoo or Google Forms, but a lightweight component that can be integrated into your application.
 
-*As of right now, Formbuilder only handles the client-side logic of creating a form. It will output a structured JSON representation of your form, but saving the form, rendering it on the server, and storing users' responses is all up to you. I'm planning on releasing a Rails gem to handle this logic, but ETA on that is pretty up in the air. If you'd like to help, feel free to reach out.*
+*As of right now, Formbuilder only handles the client-side logic of creating a form. It will output a structured JSON representation of your form, but saving the form, rendering it on the server, and storing users' responses is all up to you. I'm planning on releasing a Rails gem to handle this logic, but the ETA on that is pretty up in the air. If you'd like to help, feel free to reach out.*
 
 ## Demo
 [Click here](#) to see Formbuilder in action.
@@ -13,35 +13,15 @@ Formbuilder is a graphical interface for letting users build their own webforms.
 <div class='fb-main'></div>
 
 <script>
-Formbuilder.options.HTTP_ENDPOINT = '/save_form';
 var fb = new Formbuilder('.fb-main');
 </script>
 ```
 
-Some more advanced examples are covered in the [wiki](https://github.com/dobtco/formbuilder/wiki)
+See more usage examples in the [wiki](https://github.com/dobtco/formbuilder/wiki).
 
 ## Design &amp; Dependencies
 
-Formbuilder itself is a pretty small codebase (6kb gzip'd javascript) but it *does* rely on some external libraries, namely Backbone &amp; Rivets. We use bower to manage our dependencies:
-
-```
-  ...
-
-  "dependencies": {
-    "jquery": "*",
-    "jquery-ui": "*",
-    "jquery.scrollWindowTo": "https://gist.github.com/adamjacobbecker/6519570/raw/cd741057495d0fb19e545a0f9a098efba3bef9c8/jquery.scrollWindowTo.js",
-    "underscore": "*",
-    "underscore.mixin.deepExtend": "https://gist.github.com/adamjacobbecker/6519561/raw/63682037af9b10200b05c1a3d5890903397b2103/underscore.mixin.deepExtend.js",
-    "backbone": "*",
-    "backbone-deep-model": "*",
-    "rivets": "*",
-    "font-awesome": "*"
-  }
-  ...
-```
-
-I'd like to reduce some of these in the future, (especially font-awesome, because that's just silly,) but for now that's what you'll have to include.
+Formbuilder itself is a pretty small codebase (6kb gzip'd javascript) but it *does* rely on some external libraries, namely Backbone &amp; Rivets. We use bower to manage our dependencies, which can be seen [here](https://github.com/dobtco/formbuilder/blob/master/bower.json). I'd like to reduce some of these in the future, (especially font-awesome, because that's just silly,) but for now that's what you'll have to include.
 
 Formbuilder consists of a few different components that all live in the `Formbuilder` namespace:
 
