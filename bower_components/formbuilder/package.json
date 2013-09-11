@@ -1,0 +1,13 @@
+{
+  "main": "Gruntfile.coffee",
+  "dependencies": {
+    "grunt": "*",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-coffee": "*",
+    "grunt-contrib-cssmin": "*",
+    "grunt-contrib-jst": "*",
+    "grunt-contrib-stylus": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-watch": "*"
+  }
+}

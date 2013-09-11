@@ -1,0 +1,14 @@
+{
+  "name": "rivets",
+  "homepage": "https://github.com/mikeric/rivets",
+  "version": "0.5.12",
+  "_release": "0.5.12",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.5.12",
+    "commit": "ca778fae4f8953d581634c0d9035e559d9d461b9"
+  },
+  "_source": "git://github.com/mikeric/rivets.git",
+  "_target": "*",
+  "_originalSource": "rivets"
+}

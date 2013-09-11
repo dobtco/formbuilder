@@ -1,0 +1,29 @@
+{
+  "name": "formbuilder",
+  "version": "0.0.1",
+  "homepage": "https://github.com/dobtco/formbuilder",
+  "authors": [
+    "adamjacobbecker <ad@mbecker.cc>"
+  ],
+  "description": "Graphical form builder for the web.",
+  "main": "index.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "*",
+    "jquery-ui": "*",
+    "jquery.scrollWindowTo": "https://gist.github.com/adamjacobbecker/6519570/raw/cd741057495d0fb19e545a0f9a098efba3bef9c8/jquery.scrollWindowTo.js",
+    "underscore": "*",
+    "underscore.mixin.deepExtend": "https://gist.github.com/adamjacobbecker/6519561/raw/63682037af9b10200b05c1a3d5890903397b2103/underscore.mixin.deepExtend.js",
+    "backbone": "*",
+    "backbone-deep-model": "*",
+    "rivets": "*",
+    "font-awesome": "*"
+  }
+}

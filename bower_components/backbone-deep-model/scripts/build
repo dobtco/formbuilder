@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+
+var builder = require('buildify'),
+    path = require('path');
+
+var templateData = {
+  version: require('../package.json').version
+};
+
+var baseDir = __dirname + '/..',
+    sourceDir = baseDir + '/src',
+    outputDir = baseDir + '/distribution';
+
+//Files to concatenate into main file
+var fileList = [
+  'lib/underscore.mixin.deepExtend.js',
+  'src/deep-model.js'
+];
+
+//Create distribution files
+var contents = builder(baseDir)
+  .concat(fileList)
+  .wrap('scripts/template.js', templateData)
+  .save('distribution/deep-model.js')
+  .uglify()
+  .wrap('scripts/template.js', templateData)
+  .save('distribution/deep-model.min.js');

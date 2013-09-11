@@ -1,0 +1,14 @@
+{
+  "name": "backbone-deep-model",
+  "homepage": "https://github.com/powmedia/backbone-deep-model",
+  "version": "0.10.4",
+  "_release": "0.10.4",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.10.4",
+    "commit": "709ca367afa864253517f05690984179a0504664"
+  },
+  "_source": "git://github.com/powmedia/backbone-deep-model.git",
+  "_target": "*",
+  "_originalSource": "backbone-deep-model"
+}

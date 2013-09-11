@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Make sure we've built the dist version
+grunt dist
+
+git branch -D gh-pages
+git checkout -b gh-pages
+
+# Remove bower components from .gitignore
+sed '/bower_components/d' ./.gitignore > tempgitignore && mv tempgitignore .gitignore
+
+bower install
+git add .
+git commit -am 'Deploying to gh-pages'
+
+# We don't care if our history gets overwritten on this branch
+git push origin gh-pages --force
+
+git checkout master
+
+bower install

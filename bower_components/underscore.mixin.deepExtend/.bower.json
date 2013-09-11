@@ -1,0 +1,13 @@
+{
+  "name": "underscore.mixin.deepExtend",
+  "_cacheHeaders": {
+    "ETag": "\"bc013937ec74c2b5d490f761b0ded411\"",
+    "Content-Type": "text/plain; charset=utf-8",
+    "Content-Disposition": "inline"
+  },
+  "_release": "e-tag:bc013937e",
+  "main": "index.js",
+  "_source": "https://gist.github.com/adamjacobbecker/6519561/raw/63682037af9b10200b05c1a3d5890903397b2103/underscore.mixin.deepExtend.js",
+  "_target": "*",
+  "_originalSource": "https://gist.github.com/adamjacobbecker/6519561/raw/63682037af9b10200b05c1a3d5890903397b2103/underscore.mixin.deepExtend.js"
+}

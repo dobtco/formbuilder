@@ -1,0 +1,6 @@
+<label>
+  <span><%= Formbuilder.helpers.simple_format(rf.get('label')) %>
+  <% if (rf.get('field_options.required')) { %>
+    <abbr title='required'>*</abbr>
+  <% } %>
+</label>

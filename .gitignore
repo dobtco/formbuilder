@@ -1,5 +1,2 @@
-node_modules
 .sass-cache
-bower_components
-js/compiled.js
-templates/compiled.js
+_site/
