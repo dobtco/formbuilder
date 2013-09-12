@@ -3,7 +3,7 @@ Formbuilder.registerField 'radio',
   view: """
     <% for (i in (rf.get('field_options.options') || [])) { %>
       <div>
-        <label>
+        <label class='fb-option'>
           <input type='radio' <%= rf.get('field_options.options')[i].checked && 'checked' %> onclick="javascript: return false;" />
           <%= rf.get('field_options.options')[i].label %>
         </label>
@@ -12,7 +12,7 @@ Formbuilder.registerField 'radio',
 
     <% if (rf.get('field_options.include_other_option')) { %>
       <div class='other-option'>
-        <label>
+        <label class='fb-option'>
           <input type='radio' />
           Other
         </label>

@@ -45,7 +45,7 @@ this["Formbuilder"]["templates"]["edit/checkboxes"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<label>\n  Required\n  <input type=\'checkbox\' data-rv-checked=\'model.field_options.required\' />\n</label>\n<label>\n  Admin only\n  <input type=\'checkbox\' data-rv-checked=\'model.field_options.admin_only\' />\n</label>';
+__p += '<label>\n  <input type=\'checkbox\' data-rv-checked=\'model.field_options.required\' />\n  Required\n</label>\n<label>\n  <input type=\'checkbox\' data-rv-checked=\'model.field_options.admin_only\' />\n  Admin only\n</label>';
 
 }
 return __p
@@ -59,7 +59,7 @@ __p += '<div class=\'fb-edit-section-header\'>Label</div>\n\n<div class=\'fb-com
 ((__t = ( Formbuilder.templates['edit/label_description']() )) == null ? '' : __t) +
 '\n  </div>\n  <div class=\'fb-common-checkboxes\'>\n    ' +
 ((__t = ( Formbuilder.templates['edit/checkboxes']() )) == null ? '' : __t) +
-'\n  </div>\n</div>\n';
+'\n  </div>\n  <div class=\'fb-clear\'></div>\n</div>\n';
 
 }
 return __p
@@ -114,11 +114,17 @@ __p += '<div class=\'fb-edit-section-header\'>Options</div>\n\n';
  if (typeof includeBlank !== 'undefined'){ ;
 __p += '\n  <label>\n    <input type=\'checkbox\' data-rv-checked=\'model.field_options.include_blank_option\' />\n    Include blank\n  </label>\n';
  } ;
-__p += '\n\n<div class=\'option\' data-rv-each-option=\'model.field_options.options\'>\n  <input type="checkbox" class=\'js-default-updated\' data-rv-checked="option:checked" />\n  <input type="text" data-rv-input="option:label" class=\'option-label-input\' />\n  <a class="js-add-option" title="Add Option"><i class=\'icon-plus-sign\'></i></a>\n  <a class="js-remove-option" title="Remove Option"><i class=\'icon-minus-sign\'></i></a>\n</div>\n\n';
+__p += '\n\n<div class=\'option\' data-rv-each-option=\'model.field_options.options\'>\n  <input type="checkbox" class=\'js-default-updated\' data-rv-checked="option:checked" />\n  <input type="text" data-rv-input="option:label" class=\'option-label-input\' />\n  <a class="js-add-option ' +
+((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
+'" title="Add Option"><i class=\'icon-plus-sign\'></i></a>\n  <a class="js-remove-option ' +
+((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
+'" title="Remove Option"><i class=\'icon-minus-sign\'></i></a>\n</div>\n\n';
  if (typeof includeOther !== 'undefined'){ ;
 __p += '\n  <label>\n    <input type=\'checkbox\' data-rv-checked=\'model.field_options.include_other_option\' />\n    Include "other"\n  </label>\n';
  } ;
-__p += '\n\n<a class="js-add-option">Add option</a>\n';
+__p += '\n\n<div class=\'fb-bottom-add\'>\n  <a class="js-add-option ' +
+((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
+'">Add option</a>\n</div>\n';
 
 }
 return __p
@@ -169,6 +175,8 @@ __p += '<div class=\'fb-tab-pane active\' id=\'addField\'>\n  <div class=\'fb-ad
  for (i in Formbuilder.inputFields) { ;
 __p += '\n        <a data-field-type="' +
 ((__t = ( i )) == null ? '' : __t) +
+'" class="' +
+((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
 '">\n          ' +
 ((__t = ( Formbuilder.inputFields[i].addButton )) == null ? '' : __t) +
 '\n        </a>\n      ';
@@ -177,6 +185,8 @@ __p += '\n    </div>\n\n    <div class=\'section\'>\n      ';
  for (i in Formbuilder.nonInputFields) { ;
 __p += '\n        <a data-field-type="' +
 ((__t = ( i )) == null ? '' : __t) +
+'" class="' +
+((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
 '">\n          ' +
 ((__t = ( Formbuilder.nonInputFields[i].addButton )) == null ? '' : __t) +
 '\n        </a>\n      ';
@@ -191,7 +201,7 @@ this["Formbuilder"]["templates"]["partials/edit_field"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-tab-pane\' id=\'editField\'>\n  <div id=\'edit-response-field-wrapper\'></div>\n</div>\n';
+__p += '<div class=\'fb-tab-pane\' id=\'editField\'>\n  <div class=\'fb-edit-field-wrapper\'></div>\n</div>\n';
 
 }
 return __p
@@ -215,7 +225,7 @@ this["Formbuilder"]["templates"]["partials/right_side"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-right\'>\n  <div class=\'fb-no-response-fields\'>No response fields</div>\n  <div class=\'fb-response-fields\'></div>\n</div>';
+__p += '<div class=\'fb-right\'>\n  <div class=\'fb-no-response-fields\'>No response fields</div>\n  <div class=\'fb-response-fields\'></div>\n</div>\n';
 
 }
 return __p
@@ -225,7 +235,9 @@ this["Formbuilder"]["templates"]["partials/save_button"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'response-field-save-wrapper\'>\n  <button class=\'js-save-form\'></button>\n</div>';
+__p += '<div class=\'fb-save-wrapper\'>\n  <button class=\'js-save-form ' +
+((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
+'\'></button>\n</div>';
 
 }
 return __p
@@ -279,7 +291,11 @@ this["Formbuilder"]["templates"]["view/duplicate_remove"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'actions-wrapper\'>\n  <a class="js-duplicate" title="Duplicate Field"><i class=\'icon-plus-sign\'></i></a>\n  <a class="js-clear" title="Remove Field"><i class=\'icon-minus-sign\'></i></a>\n</div>';
+__p += '<div class=\'actions-wrapper\'>\n  <a class="js-duplicate ' +
+((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
+'" title="Duplicate Field"><i class=\'icon-plus-sign\'></i></a>\n  <a class="js-clear ' +
+((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
+'" title="Remove Field"><i class=\'icon-minus-sign\'></i></a>\n</div>';
 
 }
 return __p
