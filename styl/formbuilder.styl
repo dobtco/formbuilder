@@ -144,6 +144,12 @@
       background-color: #ccc
       padding: 2px 8px
 
+      &.js-duplicate
+        background-color green
+
+      &.js-clear
+        background-color red
+
   .subtemplate-wrapper
     border: 1px dashed transparent
     margin-bottom: 10px
@@ -186,8 +192,14 @@
         font-size: 13px
         margin-left: 3px
 
+  .help-block
+    display block
+    font-size: 12px
+    margin-top: 5px
 
 .fb-edit-field-wrapper
+  font-size: 13px
+
   .fb-field-label
     font-weight: bold
     font-size: 16px
@@ -196,6 +208,31 @@
     font-weight: bold
     border-bottom: 1px solid #ccc
     margin-top: 15px
+    margin-bottom: 5px
+    clear: both
+
+  .js-add-option, .js-remove-option
+    padding: 3px 6px
+
+  .js-add-option
+    background-color green
+
+  .js-remove-option
+    background-color red
+
+  .fb-bottom-add
+    margin-top: 8px
+
+.fb-common-wrapper
+  .fb-label-description
+    float: left
+    width: 180px
+
+    input, textarea
+      width: 100%
+
+  .fb-common-checkboxes
+    margin-left: 190px
 
 .response-field-draggable-helper
   border: 1px dashed #ddd

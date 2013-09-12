@@ -22,7 +22,9 @@
 .fb-field-wrapper.editing{background-color:#dfefff;}
 .fb-field-wrapper.editing .subtemplate-wrapper{border-color:#c2d7ef;border-style:solid}
 .fb-field-wrapper .actions-wrapper{display:none;position:absolute;bottom:-7px;right:5px;z-index:3;}
-.fb-field-wrapper .actions-wrapper a{display:inline-block;background-color:#ccc;padding:2px 8px}
+.fb-field-wrapper .actions-wrapper a{display:inline-block;background-color:#ccc;padding:2px 8px;}
+.fb-field-wrapper .actions-wrapper a.js-duplicate{background-color:#008000}
+.fb-field-wrapper .actions-wrapper a.js-clear{background-color:#f00}
 .fb-field-wrapper .subtemplate-wrapper{border:1px dashed transparent;margin-bottom:10px;padding:10px;position:relative;}
 .fb-field-wrapper .subtemplate-wrapper .cover{position:absolute;top:0;left:0;height:100%;width:100%;z-index:2}
 .fb-field-wrapper .subtemplate-wrapper > label{display:block;font-weight:bold;margin-bottom:5px}
@@ -32,8 +34,17 @@
 .fb-field-wrapper .input-line > span{display:inline-block;vertical-align:top;}
 .fb-field-wrapper .input-line > span input{width:100%}
 .fb-field-wrapper .input-line > span > label{display:block;font-size:13px;margin-left:3px}
+.fb-field-wrapper .help-block{display:block;font-size:12px;margin-top:5px}
+.fb-edit-field-wrapper{font-size:13px;}
 .fb-edit-field-wrapper .fb-field-label{font-weight:bold;font-size:16px}
-.fb-edit-field-wrapper .fb-edit-section-header{font-weight:bold;border-bottom:1px solid #ccc;margin-top:15px}
+.fb-edit-field-wrapper .fb-edit-section-header{font-weight:bold;border-bottom:1px solid #ccc;margin-top:15px;margin-bottom:5px;clear:both}
+.fb-edit-field-wrapper .js-add-option,.fb-edit-field-wrapper .js-remove-option{padding:3px 6px}
+.fb-edit-field-wrapper .js-add-option{background-color:#008000}
+.fb-edit-field-wrapper .js-remove-option{background-color:#f00}
+.fb-edit-field-wrapper .fb-bottom-add{margin-top:8px}
+.fb-common-wrapper .fb-label-description{float:left;width:180px;}
+.fb-common-wrapper .fb-label-description input,.fb-common-wrapper .fb-label-description textarea{width:100%}
+.fb-common-wrapper .fb-common-checkboxes{margin-left:190px}
 .response-field-draggable-helper{border:1px dashed #ddd;background:#eee}
 .response-field-address .street{width:400px}
 .response-field-address .city,.response-field-address .state,.response-field-address .zip,.response-field-address .country{width:198px}

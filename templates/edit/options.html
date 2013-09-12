@@ -10,8 +10,8 @@
 <div class='option' data-rv-each-option='model.field_options.options'>
   <input type="checkbox" class='js-default-updated' data-rv-checked="option:checked" />
   <input type="text" data-rv-input="option:label" class='option-label-input' />
-  <a class="js-add-option" title="Add Option"><i class='icon-plus-sign'></i></a>
-  <a class="js-remove-option" title="Remove Option"><i class='icon-minus-sign'></i></a>
+  <a class="js-add-option <%= Formbuilder.options.BUTTON_CLASS %>" title="Add Option"><i class='icon-plus-sign'></i></a>
+  <a class="js-remove-option <%= Formbuilder.options.BUTTON_CLASS %>" title="Remove Option"><i class='icon-minus-sign'></i></a>
 </div>
 
 <% if (typeof includeOther !== 'undefined'){ %>
@@ -21,4 +21,6 @@
   </label>
 <% } %>
 
-<a class="js-add-option">Add option</a>
+<div class='fb-bottom-add'>
+  <a class="js-add-option <%= Formbuilder.options.BUTTON_CLASS %>">Add option</a>
+</div>
