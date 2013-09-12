@@ -5,8 +5,10 @@
 .fb-save-wrapper{text-align:right;margin-bottom:20px}
 .fb-left{width:320px;float:left;background-color:#eee;padding:20px}
 .fb-right{margin-left:340px}
-.fb-tabs{list-style:none;margin:0;padding:0;}
-.fb-tabs li{display:inline-block;margin:5px 10px 20px 0}
+.fb-tabs{list-style:none;margin:0 0 20px 0;padding:0;border-bottom:1px solid #ccc;}
+.fb-tabs li{display:inline-block;}
+.fb-tabs li a{display:block;padding:10px;border-radius:5px 5px 0 0;font-size:13px;cursor:pointer;border-left:1px solid transparent;border-right:1px solid transparent}
+.fb-tabs li.active a{border:1px solid #ccc;margin-bottom:-1px;border-bottom-color:#eee}
 .fb-tab-content .fb-tab-pane{display:none;}
 .fb-tab-content .fb-tab-pane.active{display:block}
 .fb-add-field-types .section{border-bottom:1px solid #ccc;padding-bottom:5px;margin-bottom:10px;}

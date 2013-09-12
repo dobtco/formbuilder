@@ -52,12 +52,27 @@
 
 .fb-tabs
   list-style: none
-  margin: 0
+  margin: 0 0 20px 0
   padding: 0
+  border-bottom: 1px solid #ccc
 
   li
     display: inline-block
-    margin: 5px 10px 20px 0
+
+    a
+      display block
+      padding: 10px
+      border-radius: 5px 5px 0 0
+      font-size: 13px
+      cursor: pointer
+      border-left: 1px solid transparent
+      border-right: 1px solid transparent
+
+    &.active
+      a
+        border: 1px solid #ccc
+        margin-bottom: -1px
+        border-bottom-color: #eee
 
 .fb-tab-content
   .fb-tab-pane
