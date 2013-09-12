@@ -356,6 +356,7 @@ class Formbuilder
           url: Formbuilder.options.HTTP_ENDPOINT
           type: Formbuilder.options.HTTP_METHOD
           data: payload
+          contentType: "application/json"
           success: (data) =>
             @updatingBatch = true
 
