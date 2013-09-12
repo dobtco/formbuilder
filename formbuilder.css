@@ -2,7 +2,7 @@
 .fb-button[disabled]{background:#ddd !important;-webkit-box-shadow:none !important;-moz-box-shadow:none !important;box-shadow:none !important;color:#777 !important;text-shadow:none !important;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=65)";opacity:.65;cursor:default}
 .fb-clear{clear:both}
 .fb-main{max-width:1000px;margin:0 auto;padding:0 20px 0 0;position:relative}
-.fb-save-wrapper{position:absolute;right:10px;top:10px}
+.fb-save-wrapper{position:absolute;right:20px;top:10px}
 .fb-left{width:320px;float:left;padding-top:30px}
 .fb-right{padding-top:70px;margin-left:320px;border-left:1px solid #ddd;padding-left:20px;min-height:100%;overflow:hidden}
 .fb-no-response-fields{color:#999}
