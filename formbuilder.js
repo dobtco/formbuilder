@@ -62,7 +62,7 @@
     };
 
     Formbuilder.options = {
-      BUTTON_CLASS: '',
+      BUTTON_CLASS: 'fb-button',
       HTTP_ENDPOINT: '',
       HTTP_METHOD: 'POST',
       dict: {
@@ -835,6 +835,8 @@ __p += '<div class=\'fb-tab-pane active\' id=\'addField\'>\n  <div class=\'fb-ad
  for (i in Formbuilder.inputFields) { ;
 __p += '\n        <a data-field-type="' +
 ((__t = ( i )) == null ? '' : __t) +
+'" class="' +
+((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
 '">\n          ' +
 ((__t = ( Formbuilder.inputFields[i].addButton )) == null ? '' : __t) +
 '\n        </a>\n      ';
@@ -843,6 +845,8 @@ __p += '\n    </div>\n\n    <div class=\'section\'>\n      ';
  for (i in Formbuilder.nonInputFields) { ;
 __p += '\n        <a data-field-type="' +
 ((__t = ( i )) == null ? '' : __t) +
+'" class="' +
+((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
 '">\n          ' +
 ((__t = ( Formbuilder.nonInputFields[i].addButton )) == null ? '' : __t) +
 '\n        </a>\n      ';
@@ -891,7 +895,9 @@ this["Formbuilder"]["templates"]["partials/save_button"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'response-field-save-wrapper\'>\n  <button class=\'js-save-form\'></button>\n</div>';
+__p += '<div class=\'fb-save-wrapper\'>\n  <button class=\'js-save-form ' +
+((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
+'\'></button>\n</div>';
 
 }
 return __p

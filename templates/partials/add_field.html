@@ -2,7 +2,7 @@
   <div class='fb-add-field-types'>
     <div class='section'>
       <% for (i in Formbuilder.inputFields) { %>
-        <a data-field-type="<%= i %>">
+        <a data-field-type="<%= i %>" class="<%= Formbuilder.options.BUTTON_CLASS %>">
           <%= Formbuilder.inputFields[i].addButton %>
         </a>
       <% } %>
@@ -10,7 +10,7 @@
 
     <div class='section'>
       <% for (i in Formbuilder.nonInputFields) { %>
-        <a data-field-type="<%= i %>">
+        <a data-field-type="<%= i %>" class="<%= Formbuilder.options.BUTTON_CLASS %>">
           <%= Formbuilder.nonInputFields[i].addButton %>
         </a>
       <% } %>

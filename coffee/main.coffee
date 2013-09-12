@@ -13,7 +13,7 @@ class Formbuilder
       x?.replace(/\n/g, '<br />')
 
   @options:
-    BUTTON_CLASS: ''
+    BUTTON_CLASS: 'fb-button'
     HTTP_ENDPOINT: ''
     HTTP_METHOD: 'POST'
 
