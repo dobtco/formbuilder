@@ -83,10 +83,10 @@
       indexInDOM: function() {
         var $wrapper,
           _this = this;
-        $wrapper = $(".response-field-wrapper").filter((function(_, el) {
+        $wrapper = $(".fb-field-wrapper").filter((function(_, el) {
           return $(el).data('cid') === _this.cid;
         }));
-        return $(".response-field-wrapper").index($wrapper);
+        return $(".fb-field-wrapper").index($wrapper);
       },
       is_input: function() {
         return Formbuilder.inputFields[this.get('field_type')] != null;
@@ -123,7 +123,7 @@
 
     Formbuilder.views = {
       view_field: Backbone.View.extend({
-        className: "response-field-wrapper",
+        className: "fb-field-wrapper",
         events: {
           'click .subtemplate-wrapper': 'focusEditView',
           'click .js-duplicate': 'duplicate',
@@ -318,7 +318,7 @@
             return this.$responseFields.append(view.render().el);
           } else if (options.position === 0) {
             return this.$responseFields.prepend(view.render().el);
-          } else if (($replacePosition = this.$responseFields.find(".response-field-wrapper").eq(options.position))[0]) {
+          } else if (($replacePosition = this.$responseFields.find(".fb-field-wrapper").eq(options.position))[0]) {
             return $replacePosition.before(view.render().el);
           } else {
             return this.$responseFields.append(view.render().el);
@@ -388,10 +388,10 @@
         },
         createAndShowEditView: function(model) {
           var $newEditEl, $responseFieldEl, oldPadding;
-          $responseFieldEl = this.$el.find(".response-field-wrapper").filter(function() {
+          $responseFieldEl = this.$el.find(".fb-field-wrapper").filter(function() {
             return $(this).data('cid') === model.cid;
           });
-          $responseFieldEl.addClass('editing').siblings('.response-field-wrapper').removeClass('editing');
+          $responseFieldEl.addClass('editing').siblings('.fb-field-wrapper').removeClass('editing');
           if (this.editView) {
             if (this.editView.model.cid === model.cid) {
               this.$el.find(".fb-tabs a[data-target=\"#editField\"]").click();
@@ -406,7 +406,7 @@
             parentView: this
           });
           $newEditEl = this.editView.render().$el;
-          this.$el.find("#edit-response-field-wrapper").html($newEditEl);
+          this.$el.find(".fb-edit-field-wrapper").html($newEditEl);
           this.$el.find(".fb-tabs a[data-target=\"#editField\"]").click();
           this.scrollLeftWrapper($responseFieldEl);
           return this;
@@ -415,7 +415,7 @@
           if (!this.editView) {
             return;
           }
-          return this.scrollLeftWrapper($(".response-field-wrapper.editing"));
+          return this.scrollLeftWrapper($(".fb-field-wrapper.editing"));
         },
         scrollLeftWrapper: function($responseFieldEl) {
           var _this = this;
@@ -478,12 +478,16 @@
       })
     };
 
-    function Formbuilder(selector) {
+    function Formbuilder(selector, opts) {
+      if (opts == null) {
+        opts = {};
+      }
       _.extend(this, Backbone.Events);
-      this.mainView = new Formbuilder.views.main({
-        selector: selector,
+      this.mainView = new Formbuilder.views.main(_.extend({
+        selector: selector
+      }, opts, {
         formBuilder: this
-      });
+      }));
     }
 
     return Formbuilder;
@@ -502,7 +506,7 @@
 
 (function() {
   Formbuilder.registerField('address', {
-    view: "<div class='input-line'>\n  <span class='street'>\n    <input type='text' />\n    <label>Address</label>\n  </span>\n</div>\n\n<div class='input-line'>\n  <span class='city'>\n    <input type='text' />\n    <label>City</label>\n  </span>\n\n  <span class='state'>\n    <input type='text' />\n    <label>State / Province / Region</label>\n  </span>\n</div>\n\n<div class='input-line'>\n  <span class='zip'>\n    <input type='text' />\n    <label>Zipcode</label>\n  </span>\n\n  <span class='country'>\n    <select></select>\n    <label>Country</label>\n  </span>\n</div>",
+    view: "<div class='input-line'>\n  <span class='street'>\n    <input type='text' />\n    <label>Address</label>\n  </span>\n</div>\n\n<div class='input-line'>\n  <span class='city'>\n    <input type='text' />\n    <label>City</label>\n  </span>\n\n  <span class='state'>\n    <input type='text' />\n    <label>State / Province / Region</label>\n  </span>\n</div>\n\n<div class='input-line'>\n  <span class='zip'>\n    <input type='text' />\n    <label>Zipcode</label>\n  </span>\n\n  <span class='country'>\n    <select><option>United States</option></select>\n    <label>Country</label>\n  </span>\n</div>",
     edit: "",
     addButton: "<span class=\"symbol\"><span class=\"icon-home\"></span></span> Address"
   });
@@ -511,7 +515,7 @@
 
 (function() {
   Formbuilder.registerField('checkboxes', {
-    view: "<% for (i in (rf.get('field_options.options') || [])) { %>\n  <div>\n    <label>\n      <input type='checkbox' <%= rf.get('field_options.options')[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get('field_options.options')[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get('field_options.include_other_option')) { %>\n  <div class='other-option'>\n    <label>\n      <input type='checkbox' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
+    view: "<% for (i in (rf.get('field_options.options') || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='checkbox' <%= rf.get('field_options.options')[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get('field_options.options')[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get('field_options.include_other_option')) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='checkbox' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/options']({ includeOther: true }) %>",
     addButton: "<span class=\"symbol\"><span class=\"icon-check-empty\"></span></span> Checkboxes",
     defaultAttributes: function(attrs) {
@@ -608,7 +612,7 @@
 
 (function() {
   Formbuilder.registerField('radio', {
-    view: "<% for (i in (rf.get('field_options.options') || [])) { %>\n  <div>\n    <label>\n      <input type='radio' <%= rf.get('field_options.options')[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get('field_options.options')[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get('field_options.include_other_option')) { %>\n  <div class='other-option'>\n    <label>\n      <input type='radio' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
+    view: "<% for (i in (rf.get('field_options.options') || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='radio' <%= rf.get('field_options.options')[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get('field_options.options')[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get('field_options.include_other_option')) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='radio' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/options']({ includeOther: true }) %>",
     addButton: "<span class=\"symbol\"><span class=\"icon-circle-blank\"></span></span> Multiple Choice",
     defaultAttributes: function(attrs) {
@@ -861,7 +865,7 @@ this["Formbuilder"]["templates"]["partials/edit_field"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-tab-pane\' id=\'editField\'>\n  <div id=\'edit-response-field-wrapper\'></div>\n</div>\n';
+__p += '<div class=\'fb-tab-pane\' id=\'editField\'>\n  <div class=\'fb-edit-field-wrapper\'></div>\n</div>\n';
 
 }
 return __p

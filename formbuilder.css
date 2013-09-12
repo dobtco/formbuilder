@@ -4,7 +4,8 @@
 .fb-main{max-width:1000px;margin:0 auto;padding:0 20px 0 0;position:relative}
 .fb-save-wrapper{position:absolute;right:10px;top:10px}
 .fb-left{width:320px;float:left;padding-top:30px}
-.fb-right{padding-top:70px;margin-left:320px;border-left:1px solid #ddd;padding-left:20px;min-height:100%}
+.fb-right{padding-top:70px;margin-left:320px;border-left:1px solid #ddd;padding-left:20px;min-height:100%;overflow:hidden}
+.fb-no-response-fields{color:#999}
 .fb-tabs{list-style:none;margin:0 0 20px 0;padding:0 0 0 20px;border-bottom:1px solid #ccc;}
 .fb-tabs li{display:inline-block;}
 .fb-tabs li a{display:block;padding:10px;border-radius:5px 5px 0 0;font-size:13px;cursor:pointer;border-left:1px solid transparent;border-right:1px solid transparent}
@@ -15,15 +16,27 @@
 .fb-add-field-types a{display:inline-block;width:45%;background-color:#666;margin-bottom:5px}
 .fb-response-fields{padding-bottom:450px;}
 .fb-response-fields a.sortable-placeholder{display:block;border:1px dashed #ddd;min-height:80px;height:80px;width:100%}
-.fb-response-fields .response-field-wrapper{cursor:pointer;position:relative;margin-bottom:20px;}
-.fb-response-fields .response-field-wrapper:hover .actions-wrapper,.fb-response-fields .response-field-wrapper.editing .actions-wrapper{display:block}
-.fb-response-fields .response-field-wrapper:hover .subtemplate-wrapper{border-color:#ddd}
-.fb-response-fields .response-field-wrapper.editing{background-color:#dfefff;}
-.fb-response-fields .response-field-wrapper.editing .subtemplate-wrapper{border-color:#c2d7ef;border-style:solid}
-.fb-response-fields .response-field-wrapper .actions-wrapper{display:none;position:absolute;bottom:-7px;right:5px;z-index:3;}
-.fb-response-fields .response-field-wrapper .actions-wrapper a{display:inline-block;background-color:#ccc;padding:2px 8px}
-.fb-response-fields .subtemplate-wrapper{border:1px dashed transparent;margin-bottom:10px;padding:10px;position:relative;}
-.fb-response-fields .subtemplate-wrapper .cover{position:absolute;height:100%;width:100%;z-index:2}
-#edit-response-field-wrapper .fb-field-label{font-weight:bold;font-size:16px}
-#edit-response-field-wrapper .fb-edit-section-header{font-weight:bold;border-bottom:1px solid #ccc;margin-top:15px}
+.fb-field-wrapper{cursor:pointer;position:relative;margin-bottom:20px;}
+.fb-field-wrapper:hover .actions-wrapper,.fb-field-wrapper.editing .actions-wrapper{display:block}
+.fb-field-wrapper:hover .subtemplate-wrapper{border-color:#ddd}
+.fb-field-wrapper.editing{background-color:#dfefff;}
+.fb-field-wrapper.editing .subtemplate-wrapper{border-color:#c2d7ef;border-style:solid}
+.fb-field-wrapper .actions-wrapper{display:none;position:absolute;bottom:-7px;right:5px;z-index:3;}
+.fb-field-wrapper .actions-wrapper a{display:inline-block;background-color:#ccc;padding:2px 8px}
+.fb-field-wrapper .subtemplate-wrapper{border:1px dashed transparent;margin-bottom:10px;padding:10px;position:relative;}
+.fb-field-wrapper .subtemplate-wrapper .cover{position:absolute;top:0;left:0;height:100%;width:100%;z-index:2}
+.fb-field-wrapper .subtemplate-wrapper > label{display:block;font-weight:bold;margin-bottom:5px}
+.fb-field-wrapper .subtemplate-wrapper abbr{color:#f00}
+.fb-field-wrapper .input-line{clear:both;margin-bottom:10px;}
+.fb-field-wrapper .input-line .above-line{margin-top:7px}
+.fb-field-wrapper .input-line > span{display:inline-block;vertical-align:top;}
+.fb-field-wrapper .input-line > span input{width:100%}
+.fb-field-wrapper .input-line > span > label{display:block;font-size:13px;margin-left:3px}
+.fb-edit-field-wrapper .fb-field-label{font-weight:bold;font-size:16px}
+.fb-edit-field-wrapper .fb-edit-section-header{font-weight:bold;border-bottom:1px solid #ccc;margin-top:15px}
 .response-field-draggable-helper{border:1px dashed #ddd;background:#eee}
+.response-field-address .street{width:400px}
+.response-field-address .city,.response-field-address .state,.response-field-address .zip,.response-field-address .country{width:198px}
+.response-field-date .month,.response-field-date .day,.response-field-date .year{width:50px}
+.response-field-time .hours,.response-field-time .minutes,.response-field-time .seconds{width:50px}
+.response-field-checkboxes .fb-option,.response-field-radio .fb-option{margin-bottom:5px;display:inline-block}

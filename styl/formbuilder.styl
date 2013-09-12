@@ -53,6 +53,10 @@
   border-left: 1px solid #ddd
   padding-left: 20px
   min-height: 100%
+  overflow hidden
+
+.fb-no-response-fields
+  color: #999
 
 .fb-tabs
   list-style: none
@@ -107,38 +111,38 @@
     height: 80px
     width: 100%
 
-  .response-field-wrapper
-    cursor: pointer
-    position: relative
-    margin-bottom: 20px
+.fb-field-wrapper
+  cursor: pointer
+  position: relative
+  margin-bottom: 20px
 
-    &:hover, &.editing
-      .actions-wrapper
-        display: block
-
-    &:hover
-      .subtemplate-wrapper
-        border-color: #ddd
-
-    &.editing
-      background-color: #dfefff
-
-      .subtemplate-wrapper
-        border-color: #c2d7ef
-        border-style: solid
-
-    /* remove/duplicate buttons */
+  &:hover, &.editing
     .actions-wrapper
-      display: none
-      position: absolute
-      bottom: -7px
-      right: 5px
-      z-index: 3
+      display: block
 
-      a
-        display: inline-block
-        background-color: #ccc
-        padding: 2px 8px
+  &:hover
+    .subtemplate-wrapper
+      border-color: #ddd
+
+  &.editing
+    background-color: #dfefff
+
+    .subtemplate-wrapper
+      border-color: #c2d7ef
+      border-style: solid
+
+  /* remove/duplicate buttons */
+  .actions-wrapper
+    display: none
+    position: absolute
+    bottom: -7px
+    right: 5px
+    z-index: 3
+
+    a
+      display: inline-block
+      background-color: #ccc
+      padding: 2px 8px
 
   .subtemplate-wrapper
     border: 1px dashed transparent
@@ -148,11 +152,42 @@
 
     .cover
       position: absolute
+      top: 0
+      left: 0
       height: 100%
       width: 100%
       z-index: 2
 
-#edit-response-field-wrapper
+    > label
+      display: block
+      font-weight: bold
+      margin-bottom: 5px
+
+    abbr
+      color red
+
+
+  .input-line
+    clear both
+    margin-bottom: 10px
+
+    .above-line
+      margin-top: 7px
+
+    > span
+      display: inline-block
+      vertical-align: top
+
+      input
+        width: 100%
+
+      > label
+        display block
+        font-size: 13px
+        margin-left: 3px
+
+
+.fb-edit-field-wrapper
   .fb-field-label
     font-weight: bold
     font-size: 16px
@@ -165,3 +200,25 @@
 .response-field-draggable-helper
   border: 1px dashed #ddd
   background: #eee
+
+
+// FIELD TYPES
+.response-field-address
+  .street
+    width: 400px
+
+  .city, .state, .zip, .country
+    width: 198px
+
+.response-field-date
+  .month, .day, .year
+    width: 50px
+
+.response-field-time
+  .hours, .minutes, .seconds
+    width: 50px
+
+.response-field-checkboxes, .response-field-radio
+  .fb-option
+    margin-bottom: 5px
+    display: inline-block

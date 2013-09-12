@@ -20,6 +20,16 @@
     border-radius: 5px;
     min-height: 600px;
   }
+
+  input[type=text] {
+    height: 26px;
+    margin-bottom: 3px;
+  }
+
+  select {
+    margin-bottom: 5px;
+    font-size: 40px;
+  }
   </style>
 </head>
 <body>
@@ -43,7 +53,38 @@
 
   <script>
     $(function(){
-      fb = new Formbuilder('.fb-main');
+      fb = new Formbuilder('.fb-main', {
+        bootstrapData: [{
+            "label": "Untitled",
+            "field_type": "address",
+            "field_options": {
+                "required": true
+            },
+            "cid": "c2"
+        }, {
+            "label": "Untitled",
+            "field_type": "date",
+            "field_options": {
+                "required": true
+            },
+            "cid": "c6"
+        }, {
+            "label": "Untitled",
+            "field_type": "checkboxes",
+            "field_options": {
+                "required": true,
+                "options": [{
+                    "label": "ASDFADSF",
+                    "checked": false
+                }, {
+                    "label": "ASDFASD",
+                    "checked": false
+                }],
+                "include_other_option": true
+            },
+            "cid": "c10"
+        }]
+      });
 
       fb.on('save', function(payload){
         console.log(payload);

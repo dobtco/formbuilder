@@ -29,8 +29,8 @@ class Formbuilder
   @model: Backbone.DeepModel.extend
     sync: -> # noop
     indexInDOM: ->
-      $wrapper = $(".response-field-wrapper").filter ( (_, el) => $(el).data('cid') == @cid  )
-      $(".response-field-wrapper").index $wrapper
+      $wrapper = $(".fb-field-wrapper").filter ( (_, el) => $(el).data('cid') == @cid  )
+      $(".fb-field-wrapper").index $wrapper
     is_input: ->
       Formbuilder.inputFields[@get('field_type')]?
 
@@ -59,7 +59,7 @@ class Formbuilder
 
   @views:
     view_field: Backbone.View.extend
-      className: "response-field-wrapper"
+      className: "fb-field-wrapper"
 
       events:
         'click .subtemplate-wrapper': 'focusEditView'
@@ -244,7 +244,7 @@ class Formbuilder
           @$responseFields.prepend view.render().el
 
         # Are we adding below an existing field?
-        else if ($replacePosition = @$responseFields.find(".response-field-wrapper").eq(options.position))[0]
+        else if ($replacePosition = @$responseFields.find(".fb-field-wrapper").eq(options.position))[0]
           $replacePosition.before view.render().el
 
         # Catch-all: add to bottom
@@ -299,8 +299,8 @@ class Formbuilder
         @handleFormUpdate()
 
       createAndShowEditView: (model) ->
-        $responseFieldEl = @$el.find(".response-field-wrapper").filter( -> $(@).data('cid') == model.cid )
-        $responseFieldEl.addClass('editing').siblings('.response-field-wrapper').removeClass('editing')
+        $responseFieldEl = @$el.find(".fb-field-wrapper").filter( -> $(@).data('cid') == model.cid )
+        $responseFieldEl.addClass('editing').siblings('.fb-field-wrapper').removeClass('editing')
 
         if @editView
           if @editView.model.cid is model.cid
@@ -316,14 +316,14 @@ class Formbuilder
           parentView: @
 
         $newEditEl = @editView.render().$el
-        @$el.find("#edit-response-field-wrapper").html $newEditEl
+        @$el.find(".fb-edit-field-wrapper").html $newEditEl
         @$el.find(".fb-tabs a[data-target=\"#editField\"]").click()
         @scrollLeftWrapper($responseFieldEl)
         return @
 
       ensureEditViewScrolled: ->
         return unless @editView
-        @scrollLeftWrapper $(".response-field-wrapper.editing")
+        @scrollLeftWrapper $(".fb-field-wrapper.editing")
 
       scrollLeftWrapper: ($responseFieldEl) ->
         @unlockLeftWrapper()
@@ -366,9 +366,9 @@ class Formbuilder
 
             @updatingBatch = undefined
 
-  constructor: (selector) ->
+  constructor: (selector, opts = {}) ->
     _.extend @, Backbone.Events
-    @mainView = new Formbuilder.views.main({ selector: selector, formBuilder: @ })
+    @mainView = new Formbuilder.views.main _.extend({ selector: selector }, opts, { formBuilder: @ })
 
 window.Formbuilder = Formbuilder
 
