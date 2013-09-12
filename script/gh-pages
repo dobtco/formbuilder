@@ -3,7 +3,7 @@
 echo 'Deploying docs...'
 
 git checkout gh-pages
-bower install
+bower update formbuilder
 rm -rf bower_components/font-awesome/src/
 git add .
 git commit -am 'Deploying docs'
