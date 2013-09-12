@@ -14,7 +14,7 @@
 .fb-tab-content .fb-tab-pane.active{display:block}
 .fb-add-field-types .section{padding-bottom:5px;margin-bottom:20px}
 .fb-add-field-types a{display:inline-block;width:45%;background-color:#666;margin-bottom:5px}
-.fb-response-fields{padding-bottom:450px;}
+.fb-response-fields{padding-bottom:150px;}
 .fb-response-fields a.sortable-placeholder{display:block;border:1px dashed #ddd;min-height:80px;height:80px;width:100%}
 .fb-field-wrapper{cursor:pointer;position:relative;margin-bottom:20px;}
 .fb-field-wrapper:hover .actions-wrapper,.fb-field-wrapper.editing .actions-wrapper{display:block}
