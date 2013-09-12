@@ -1,0 +1,20 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'install' ]
+2 info using npm@1.2.32
+3 info using node@v0.10.12
+4 verbose read json /Users/adamb/github/formbuilder/package.json
+5 error install Couldn't read dependencies
+6 error Error: ENOENT, open '/Users/adamb/github/formbuilder/package.json'
+7 error If you need help, you may report this log at:
+7 error     <http://github.com/isaacs/npm/issues>
+7 error or email it to:
+7 error     <npm-@googlegroups.com>
+8 error System Darwin 12.4.0
+9 error command "node" "/usr/local/bin/npm" "install"
+10 error cwd /Users/adamb/github/formbuilder
+11 error node -v v0.10.12
+12 error npm -v 1.2.32
+13 error path /Users/adamb/github/formbuilder/package.json
+14 error code ENOENT
+15 error errno 34
+16 verbose exit [ 34, true ]

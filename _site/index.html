@@ -79,7 +79,7 @@
 
 <p>More coming soon&#8230;</p>
 
-<h4 id='id3'><code>save</code></h4>
+<h4 id='id4'><code>save</code></h4>
 <div class='highlight'><pre><code class='html'>var fb = new Formbuilder(&#39;#fb&#39;);
 
 fb.on(&#39;save&#39;, function(payload){
@@ -120,7 +120,9 @@ fb.on(&#39;save&#39;, function(payload){
 
     <script>
       $(function(){
-        var fb = new Formbuilder('.fb-main');
+        var fb = new Formbuilder('.fb-main', {
+          bootstrapData: [{"label":"What's today's date?","field_type":"date","field_options":{"required":true},"cid":"c6"},{"label":"Your resume","field_type":"file","field_options":{"required":false},"cid":"c18"},{"label":"Some options","field_type":"checkboxes","field_options":{"required":true,"options":[{"label":"Bananas","checked":true},{"label":"Melons","checked":false}],"include_other_option":false},"cid":"c10"},{"label":"Street address","field_type":"address","field_options":{"required":true},"cid":"c2"}]
+        });
 
         fb.on('save', function(payload){
           console.log(payload);
