@@ -28,32 +28,36 @@
     opacity: 0.65;
     cursor: default
 
-
 .fb-clear
   clear: both
 
 .fb-main
   max-width: 1000px
   margin: 0 auto
-  padding: 20px
+  padding: 0 20px 0 0
+  position relative
 
 .fb-save-wrapper
-  text-align: right
-  margin-bottom: 20px
+  position absolute
+  right: 10px
+  top: 10px
 
 .fb-left
   width: 320px
   float: left
-  background-color: #eee
-  padding: 20px
+  padding-top: 30px
 
 .fb-right
-  margin-left: 340px
+  padding-top: 70px
+  margin-left: 320px
+  border-left: 1px solid #ddd
+  padding-left: 20px
+  min-height: 100%
 
 .fb-tabs
   list-style: none
   margin: 0 0 20px 0
-  padding: 0
+  padding: 0 0 0 20px
   border-bottom: 1px solid #ccc
 
   li
@@ -72,10 +76,11 @@
       a
         border: 1px solid #ccc
         margin-bottom: -1px
-        border-bottom-color: #eee
+        border-bottom-color: #fff
 
 .fb-tab-content
   .fb-tab-pane
+    padding: 0 20px
     display: none
 
     &.active
@@ -83,12 +88,8 @@
 
 .fb-add-field-types
   .section
-    border-bottom: 1px solid #ccc
     padding-bottom: 5px
-    margin-bottom: 10px
-
-    &:last-child
-      border-bottom: 0
+    margin-bottom: 20px
 
   a
     display: inline-block
