@@ -1,4 +1,8 @@
 #!/bin/bash
+#
+# Grabs the latest version of Formbuilder from the Bower registry,
+# and installs it on the gh-pages branch.
+#
 
 echo 'Deploying docs...'
 
