@@ -459,6 +459,7 @@
             url: Formbuilder.options.HTTP_ENDPOINT,
             type: Formbuilder.options.HTTP_METHOD,
             data: payload,
+            contentType: "application/json",
             success: function(data) {
               var datum, _i, _len, _ref;
               _this.updatingBatch = true;
@@ -715,7 +716,7 @@ this["Formbuilder"]["templates"]["edit/checkboxes"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<label>\n  <input type=\'checkbox\' data-rv-checked=\'model.field_options.required\' />\n  Required\n</label>\n<label>\n  <input type=\'checkbox\' data-rv-checked=\'model.field_options.admin_only\' />\n  Admin only\n</label>';
+__p += '<label>\n  <input type=\'checkbox\' data-rv-checked=\'model.required\' />\n  Required\n</label>\n<label>\n  <input type=\'checkbox\' data-rv-checked=\'model.admin_only\' />\n  Admin only\n</label>';
 
 }
 return __p
