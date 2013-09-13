@@ -17,6 +17,11 @@ class Formbuilder
     HTTP_ENDPOINT: ''
     HTTP_METHOD: 'POST'
 
+    mappings:
+      REQUIRED: 'required'
+      ADMIN_ONLY: 'admin_only'
+      OPTIONS: 'field_options.options'
+
     dict:
       ALL_CHANGES_SAVED: 'All changes saved'
       SAVE_FORM: 'Save form'
@@ -101,7 +106,6 @@ class Formbuilder
 
       initialize: ->
         @listenTo @model, "destroy", @remove
-        @listenTo @model, "change:field_options.review_this_field", @auditReviewThisFieldChanged
 
       render: ->
         @$el.html(Formbuilder.templates["edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
@@ -117,7 +121,7 @@ class Formbuilder
       addOption: (e) ->
         $el = $(e.currentTarget)
         i = @$el.find('.option').index($el.closest('.option'))
-        options = @model.get("field_options.options") || []
+        options = @model.get(Formbuilder.options.mappings.OPTIONS) || []
         newOption = {label: "", checked: false}
 
         if i > -1
@@ -125,17 +129,17 @@ class Formbuilder
         else
           options.push newOption
 
-        @model.set "field_options.options", options
-        @model.trigger "change:field_options.options"
+        @model.set Formbuilder.options.mappings.OPTIONS, options
+        @model.trigger "change:#{Formbuilder.options.mappings.OPTIONS}"
         @forceRender()
 
       removeOption: (e) ->
         $el = $(e.currentTarget)
         index = @$el.find(".js-remove-option").index($el)
-        options = @model.get "field_options.options"
+        options = @model.get Formbuilder.options.mappings.OPTIONS
         options.splice index, 1
-        @model.set "field_options.options", options
-        @model.trigger "change:field_options.options"
+        @model.set Formbuilder.options.mappings.OPTIONS, options
+        @model.trigger "change:#{Formbuilder.options.mappings.OPTIONS}"
         @forceRender()
 
       defaultUpdated: (e) ->

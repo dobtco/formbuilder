@@ -7,7 +7,7 @@
   </label>
 <% } %>
 
-<div class='option' data-rv-each-option='model.field_options.options'>
+<div class='option' data-rv-each-option='model.<%= Formbuilder.options.mappings.OPTIONS %>'>
   <input type="checkbox" class='js-default-updated' data-rv-checked="option:checked" />
   <input type="text" data-rv-input="option:label" class='option-label-input' />
   <a class="js-add-option <%= Formbuilder.options.BUTTON_CLASS %>" title="Add Option"><i class='icon-plus-sign'></i></a>
