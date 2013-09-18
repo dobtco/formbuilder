@@ -4,8 +4,8 @@ class Formbuilder
       attrs =
         label: "Untitled"
         field_type: field_type
-        field_options:
-          required: true
+        required: true
+        field_options: {}
 
       Formbuilder.fields[field_type].defaultAttributes?(attrs) || attrs
 
@@ -18,9 +18,22 @@ class Formbuilder
     HTTP_METHOD: 'POST'
 
     mappings:
+      SIZE: 'field_options.size'
+      UNITS: 'field_options.units'
+      LABEL: 'label'
+      FIELD_TYPE: 'field_type'
       REQUIRED: 'required'
       ADMIN_ONLY: 'admin_only'
       OPTIONS: 'field_options.options'
+      DESCRIPTION: 'field_options.description'
+      INCLUDE_OTHER: 'field_options.include_other_option'
+      INCLUDE_BLANK: 'field_options.include_blank_option'
+      INTEGER_ONLY: 'field_options.integer_only'
+      MIN: 'field_options.min'
+      MAX: 'field_options.max'
+      MINLENGTH: 'field_options.minlength'
+      MAXLENGTH: 'field_options.maxlength'
+      LENGTH_UNITS: 'field_options.min_max_length_units'
 
     dict:
       ALL_CHANGES_SAVED: 'All changes saved'
@@ -37,7 +50,7 @@ class Formbuilder
       $wrapper = $(".fb-field-wrapper").filter ( (_, el) => $(el).data('cid') == @cid  )
       $(".fb-field-wrapper").index $wrapper
     is_input: ->
-      Formbuilder.inputFields[@get('field_type')]?
+      Formbuilder.inputFields[@get(Formbuilder.options.mappings.FIELD_TYPE)]?
 
   @collection: Backbone.Collection.extend
     initialize: ->
@@ -77,7 +90,7 @@ class Formbuilder
         @listenTo @model, "destroy", @remove
 
       render: ->
-        @$el.addClass('response-field-'+@model.get('field_type'))
+        @$el.addClass('response-field-'+@model.get(Formbuilder.options.mappings.FIELD_TYPE))
             .data('cid', @model.cid)
             .html(Formbuilder.templates["view/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
 
@@ -145,7 +158,7 @@ class Formbuilder
       defaultUpdated: (e) ->
         $el = $(e.currentTarget)
 
-        unless @model.get('field_type') == 'checkboxes' # checkboxes can have multiple options selected
+        unless @model.get(Formbuilder.options.mappings.FIELD_TYPE) == 'checkboxes' # checkboxes can have multiple options selected
           @$el.find(".js-default-updated").not($el).attr('checked', false).trigger('change')
 
         @forceRender()

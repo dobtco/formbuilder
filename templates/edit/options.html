@@ -2,7 +2,7 @@
 
 <% if (typeof includeBlank !== 'undefined'){ %>
   <label>
-    <input type='checkbox' data-rv-checked='model.field_options.include_blank_option' />
+    <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.INCLUDE_BLANK %>' />
     Include blank
   </label>
 <% } %>
@@ -16,7 +16,7 @@
 
 <% if (typeof includeOther !== 'undefined'){ %>
   <label>
-    <input type='checkbox' data-rv-checked='model.field_options.include_other_option' />
+    <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.INCLUDE_OTHER %>' />
     Include "other"
   </label>
 <% } %>

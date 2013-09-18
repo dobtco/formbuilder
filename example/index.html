@@ -54,7 +54,7 @@
   <script>
     $(function(){
       fb = new Formbuilder('.fb-main', {
-        bootstrapData: [{"label":"What's today's date?","field_type":"date","field_options":{"required":true},"cid":"c6"},{"label":"Your resume","field_type":"file","field_options":{"required":false},"cid":"c18"},{"label":"Some options","field_type":"checkboxes","field_options":{"required":true,"options":[{"label":"Bananas","checked":true},{"label":"Melons","checked":false}],"include_other_option":false},"cid":"c10"},{"label":"Street address","field_type":"address","field_options":{"required":true},"cid":"c2"}]
+        bootstrapData: [{"label":"Please enter your clearance number","field_type":"text","required":true,"field_options":{},"cid":"c6"},{"label":"Security personnel #82?","field_type":"radio","required":true,"field_options":{"options":[{"label":"Yes","checked":false},{"label":"No","checked":false}],"include_other_option":true},"cid":"c10"},{"label":"Medical history","field_type":"file","required":true,"field_options":{},"cid":"c14"}]
       });
 
       fb.on('save', function(payload){

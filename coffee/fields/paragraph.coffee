@@ -1,7 +1,7 @@
 Formbuilder.registerField 'paragraph',
 
   view: """
-    <textarea class='rf-size-<%= rf.get('field_options.size') %>'></textarea>
+    <textarea class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>'></textarea>
   """
 
   edit: """

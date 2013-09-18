@@ -2,7 +2,7 @@ Formbuilder.registerField 'dropdown',
 
   view: """
     <select>
-      <% if (rf.get('field_options.include_blank_option')) { %>
+      <% if (rf.get(Formbuilder.options.mappings.INCLUDE_BLANK)) { %>
         <option value=''></option>
       <% } %>
 

@@ -10,7 +10,7 @@ Formbuilder.registerField 'radio',
       </div>
     <% } %>
 
-    <% if (rf.get('field_options.include_other_option')) { %>
+    <% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>
       <div class='other-option'>
         <label class='fb-option'>
           <input type='radio' />
