@@ -1,7 +1,7 @@
 Formbuilder.registerField 'website',
 
   view: """
-    <input type='text' class='rf-size-<%= rf.get('field_options.size') %>' placeholder='http://' />
+    <input type='text' class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' placeholder='http://' />
   """
 
   edit: """

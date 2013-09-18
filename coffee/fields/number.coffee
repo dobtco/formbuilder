@@ -2,7 +2,7 @@ Formbuilder.registerField 'number',
 
   view: """
     <input type='text' />
-    <% if (units = rf.get('field_options.units')) { %>
+    <% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>
       <%= units %>
     <% } %>
   """

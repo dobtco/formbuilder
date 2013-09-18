@@ -2,13 +2,13 @@ Formbuilder.registerField 'dropdown',
 
   view: """
     <select>
-      <% if (rf.get('field_options.include_blank_option')) { %>
+      <% if (rf.get(Formbuilder.options.mappings.INCLUDE_BLANK)) { %>
         <option value=''></option>
       <% } %>
 
-      <% for (i in (rf.get('field_options.options') || [])) { %>
-        <option <%= rf.get('field_options.options')[i].checked && 'selected' %>>
-          <%= rf.get('field_options.options')[i].label %>
+      <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>
+        <option <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'selected' %>>
+          <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>
         </option>
       <% } %>
     </select>

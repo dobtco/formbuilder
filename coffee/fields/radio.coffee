@@ -1,16 +1,16 @@
 Formbuilder.registerField 'radio',
 
   view: """
-    <% for (i in (rf.get('field_options.options') || [])) { %>
+    <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>
       <div>
         <label class='fb-option'>
-          <input type='radio' <%= rf.get('field_options.options')[i].checked && 'checked' %> onclick="javascript: return false;" />
-          <%= rf.get('field_options.options')[i].label %>
+          <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick="javascript: return false;" />
+          <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>
         </label>
       </div>
     <% } %>
 
-    <% if (rf.get('field_options.include_other_option')) { %>
+    <% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>
       <div class='other-option'>
         <label class='fb-option'>
           <input type='radio' />
@@ -31,6 +31,7 @@ Formbuilder.registerField 'radio',
   """
 
   defaultAttributes: (attrs) ->
+    # @todo
     attrs.field_options.options = [
       label: "",
       checked: false

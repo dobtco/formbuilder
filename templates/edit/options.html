@@ -2,12 +2,12 @@
 
 <% if (typeof includeBlank !== 'undefined'){ %>
   <label>
-    <input type='checkbox' data-rv-checked='model.field_options.include_blank_option' />
+    <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.INCLUDE_BLANK %>' />
     Include blank
   </label>
 <% } %>
 
-<div class='option' data-rv-each-option='model.field_options.options'>
+<div class='option' data-rv-each-option='model.<%= Formbuilder.options.mappings.OPTIONS %>'>
   <input type="checkbox" class='js-default-updated' data-rv-checked="option:checked" />
   <input type="text" data-rv-input="option:label" class='option-label-input' />
   <a class="js-add-option <%= Formbuilder.options.BUTTON_CLASS %>" title="Add Option"><i class='icon-plus-sign'></i></a>
@@ -16,7 +16,7 @@
 
 <% if (typeof includeOther !== 'undefined'){ %>
   <label>
-    <input type='checkbox' data-rv-checked='model.field_options.include_other_option' />
+    <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.INCLUDE_OTHER %>' />
     Include "other"
   </label>
 <% } %>
