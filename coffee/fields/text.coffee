@@ -12,3 +12,7 @@ Formbuilder.registerField 'text',
   addButton: """
     <span class='symbol'><span class='icon-font'></span></span> Text
   """
+
+  defaultAttributes: (attrs) ->
+    attrs.field_options.size = 'small'
+    attrs

@@ -46,6 +46,12 @@
 .fb-common-wrapper .fb-label-description input,.fb-common-wrapper .fb-label-description textarea{width:100%}
 .fb-common-wrapper .fb-common-checkboxes{margin-left:190px}
 .response-field-draggable-helper{border:1px dashed #ddd;background:#eee}
+.response-field-text input.rf-size-small{width:130px}
+.response-field-text input.rf-size-medium{width:300px}
+.response-field-text input.rf-size-large{width:100%}
+.response-field-paragraph textarea.rf-size-small{width:200px;min-height:60px}
+.response-field-paragraph textarea.rf-size-medium{width:400px;min-height:100px}
+.response-field-paragraph textarea.rf-size-large{width:100%;min-height:200px}
 .response-field-address .street{width:400px}
 .response-field-address .city,.response-field-address .state,.response-field-address .zip,.response-field-address .country{width:198px}
 .response-field-date .month,.response-field-date .day,.response-field-date .year{width:50px}

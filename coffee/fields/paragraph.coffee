@@ -12,3 +12,7 @@ Formbuilder.registerField 'paragraph',
   addButton: """
     <span class="symbol">&#182;</span> Paragraph
   """
+
+  defaultAttributes: (attrs) ->
+    attrs.field_options.size = 'small'
+    attrs

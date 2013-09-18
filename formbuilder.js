@@ -613,7 +613,11 @@
   Formbuilder.registerField('paragraph', {
     view: "<textarea class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>'></textarea>",
     edit: "<%= Formbuilder.templates['edit/size']() %>\n<%= Formbuilder.templates['edit/min_max_length']() %>",
-    addButton: "<span class=\"symbol\">&#182;</span> Paragraph"
+    addButton: "<span class=\"symbol\">&#182;</span> Paragraph",
+    defaultAttributes: function(attrs) {
+      attrs.field_options.size = 'small';
+      return attrs;
+    }
   });
 
 }).call(this);
@@ -662,7 +666,11 @@
   Formbuilder.registerField('text', {
     view: "<input type='text' class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />",
     edit: "<%= Formbuilder.templates['edit/size']() %>\n<%= Formbuilder.templates['edit/min_max_length']() %>",
-    addButton: "<span class='symbol'><span class='icon-font'></span></span> Text"
+    addButton: "<span class='symbol'><span class='icon-font'></span></span> Text",
+    defaultAttributes: function(attrs) {
+      attrs.field_options.size = 'small';
+      return attrs;
+    }
   });
 
 }).call(this);
