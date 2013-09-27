@@ -130,6 +130,7 @@
         x = _ref[_i];
         opts[x] = _.template(opts[x]);
       }
+      opts.field_type = name;
       Formbuilder.fields[name] = opts;
       if (opts.type === 'non_input') {
         return Formbuilder.nonInputFields[name] = opts;
@@ -915,9 +916,9 @@ var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<div class=\'fb-tab-pane active\' id=\'addField\'>\n  <div class=\'fb-add-field-types\'>\n    <div class=\'section\'>\n      ';
- _.each(_.sortBy(Formbuilder.inputFields, 'order'), function(f, i){ ;
+ _.each(_.sortBy(Formbuilder.inputFields, 'order'), function(f){ ;
 __p += '\n        <a data-field-type="' +
-((__t = ( i )) == null ? '' : __t) +
+((__t = ( f.field_type )) == null ? '' : __t) +
 '" class="' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
 '">\n          ' +
@@ -925,9 +926,9 @@ __p += '\n        <a data-field-type="' +
 '\n        </a>\n      ';
  }); ;
 __p += '\n    </div>\n\n    <div class=\'section\'>\n      ';
- _.each(_.sortBy(Formbuilder.nonInputFields, 'order'), function(f, i){ ;
+ _.each(_.sortBy(Formbuilder.nonInputFields, 'order'), function(f){ ;
 __p += '\n        <a data-field-type="' +
-((__t = ( i )) == null ? '' : __t) +
+((__t = ( f.field_type )) == null ? '' : __t) +
 '" class="' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
 '">\n          ' +

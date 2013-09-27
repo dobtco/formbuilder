@@ -68,6 +68,8 @@ class Formbuilder
     for x in ['view', 'edit']
       opts[x] = _.template(opts[x])
 
+    opts.field_type = name
+
     Formbuilder.fields[name] = opts
 
     if opts.type == 'non_input'
