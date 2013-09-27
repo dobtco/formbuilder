@@ -197,7 +197,7 @@
         },
         remove: function() {
           this.options.parentView.editView = void 0;
-          this.options.parentView.$el.find("[href=\"#addField\"]").click();
+          this.options.parentView.$el.find("[data-target=\"#addField\"]").click();
           return Backbone.View.prototype.remove.call(this);
         },
         addOption: function(e) {
