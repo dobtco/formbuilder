@@ -1,5 +1,7 @@
 Formbuilder.registerField 'time',
 
+  order: 25
+
   view: """
     <div class='input-line'>
       <span class='hours'>

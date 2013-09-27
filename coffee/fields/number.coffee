@@ -1,5 +1,7 @@
 Formbuilder.registerField 'number',
 
+  order: 30
+
   view: """
     <input type='text' />
     <% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>

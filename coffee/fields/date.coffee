@@ -1,5 +1,7 @@
 Formbuilder.registerField 'date',
 
+  order: 20
+
   view: """
     <div class='input-line'>
       <span class='month'>

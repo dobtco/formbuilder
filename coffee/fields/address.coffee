@@ -1,5 +1,7 @@
 Formbuilder.registerField 'address',
 
+  order: 50
+
   view: """
     <div class='input-line'>
       <span class='street'>

@@ -1,19 +1,19 @@
 <div class='fb-tab-pane active' id='addField'>
   <div class='fb-add-field-types'>
     <div class='section'>
-      <% for (i in Formbuilder.inputFields) { %>
+      <% _.each(_.sortBy(Formbuilder.inputFields, 'order'), function(f, i){ %>
         <a data-field-type="<%= i %>" class="<%= Formbuilder.options.BUTTON_CLASS %>">
-          <%= Formbuilder.inputFields[i].addButton %>
+          <%= f.addButton %>
         </a>
-      <% } %>
+      <% }); %>
     </div>
 
     <div class='section'>
-      <% for (i in Formbuilder.nonInputFields) { %>
+      <% _.each(_.sortBy(Formbuilder.nonInputFields, 'order'), function(f, i){ %>
         <a data-field-type="<%= i %>" class="<%= Formbuilder.options.BUTTON_CLASS %>">
-          <%= Formbuilder.nonInputFields[i].addButton %>
+          <%= f.addButton %>
         </a>
-      <% } %>
+      <% }); %>
     </div>
   </div>
 </div>

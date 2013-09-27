@@ -1,5 +1,7 @@
 Formbuilder.registerField 'dropdown',
 
+  order: 24
+
   view: """
     <select>
       <% if (rf.get(Formbuilder.options.mappings.INCLUDE_BLANK)) { %>

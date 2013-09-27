@@ -1,5 +1,7 @@
 Formbuilder.registerField 'section_break',
 
+  order: 0
+
   type: 'non_input'
 
   view: """

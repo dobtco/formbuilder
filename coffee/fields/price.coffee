@@ -1,5 +1,7 @@
 Formbuilder.registerField 'price',
 
+  order: 45
+
   view: """
     <div class='input-line'>
       <span class='above-line'>$</span>
