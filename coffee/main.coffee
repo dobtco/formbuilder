@@ -346,6 +346,7 @@ class Formbuilder
 
       scrollLeftWrapper: ($responseFieldEl) ->
         @unlockLeftWrapper()
+        return unless $responseFieldEl[0]
         $.scrollWindowTo ($responseFieldEl.offset().top - @$responseFields.offset().top), 200, =>
           @lockLeftWrapper()
 

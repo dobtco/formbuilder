@@ -437,6 +437,9 @@
         scrollLeftWrapper: function($responseFieldEl) {
           var _this = this;
           this.unlockLeftWrapper();
+          if (!$responseFieldEl[0]) {
+            return;
+          }
           return $.scrollWindowTo($responseFieldEl.offset().top - this.$responseFields.offset().top, 200, function() {
             return _this.lockLeftWrapper();
           });
