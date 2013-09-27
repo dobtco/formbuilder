@@ -110,5 +110,4 @@ You'll need [node and npm](http://nodejs.org/) installed.
 4. open `example/index.html` and you're all set!
 
 ## License
-
 MIT
