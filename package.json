@@ -1,7 +1,6 @@
 {
   "name": "formbuilder",
-  "name": "formbuilder",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "homepage": "https://github.com/dobtco/formbuilder",
   "authors": [
     "adamjacobbecker <ad@mbecker.cc>"
@@ -17,5 +16,8 @@
     "grunt-contrib-stylus": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-watch": "*"
+  },
+  "devDependencies": {
+    "grunt-release": "~0.6.0"
   }
 }
