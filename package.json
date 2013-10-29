@@ -1,4 +1,12 @@
 {
+  "name": "formbuilder",
+  "name": "formbuilder",
+  "version": "0.1.5",
+  "homepage": "https://github.com/dobtco/formbuilder",
+  "authors": [
+    "adamjacobbecker <ad@mbecker.cc>"
+  ],
+  "description": "Graphical form builder for the web.",
   "main": "Gruntfile.coffee",
   "dependencies": {
     "grunt": "*",
