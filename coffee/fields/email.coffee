@@ -9,5 +9,5 @@ Formbuilder.registerField 'email',
   edit: ""
 
   addButton: """
-    <span class="symbol"><span class="icon-envelope-alt"></span></span> Email
+    <span class="symbol"><span class="fa fa-envelope-o"></span></span> Email
   """

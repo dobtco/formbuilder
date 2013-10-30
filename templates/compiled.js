@@ -25,7 +25,7 @@ __p += '<div class=\'fb-field-label\'>\n  <span data-rv-text="model.' +
 ((__t = ( Formbuilder.options.mappings.LABEL )) == null ? '' : __t) +
 '"></span>\n  <code class=\'field-type\' data-rv-text=\'model.' +
 ((__t = ( Formbuilder.options.mappings.FIELD_TYPE )) == null ? '' : __t) +
-'\'></code>\n  <span class=\'icon-arrow-right pull-right\'></span>\n</div>';
+'\'></code>\n  <span class=\'fa fa-arrow-right pull-right\'></span>\n</div>';
 
 }
 return __p
@@ -144,9 +144,9 @@ __p += '\n\n<div class=\'option\' data-rv-each-option=\'model.' +
 ((__t = ( Formbuilder.options.mappings.OPTIONS )) == null ? '' : __t) +
 '\'>\n  <input type="checkbox" class=\'js-default-updated\' data-rv-checked="option:checked" />\n  <input type="text" data-rv-input="option:label" class=\'option-label-input\' />\n  <a class="js-add-option ' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
-'" title="Add Option"><i class=\'icon-plus-sign\'></i></a>\n  <a class="js-remove-option ' +
+'" title="Add Option"><i class=\'fa fa-plus-circle\'></i></a>\n  <a class="js-remove-option ' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
-'" title="Remove Option"><i class=\'icon-minus-sign\'></i></a>\n</div>\n\n';
+'" title="Remove Option"><i class=\'fa fa-minus-circle\'></i></a>\n</div>\n\n';
  if (typeof includeOther !== 'undefined'){ ;
 __p += '\n  <label>\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INCLUDE_OTHER )) == null ? '' : __t) +
@@ -327,9 +327,9 @@ var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<div class=\'actions-wrapper\'>\n  <a class="js-duplicate ' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
-'" title="Duplicate Field"><i class=\'icon-plus-sign\'></i></a>\n  <a class="js-clear ' +
+'" title="Duplicate Field"><i class=\'fa fa-plus-circle\'></i></a>\n  <a class="js-clear ' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
-'" title="Remove Field"><i class=\'icon-minus-sign\'></i></a>\n</div>';
+'" title="Remove Field"><i class=\'fa fa-minus-circle\'></i></a>\n</div>';
 
 }
 return __p

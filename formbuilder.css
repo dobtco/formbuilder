@@ -46,7 +46,7 @@
 .fb-edit-field-wrapper .fb-field-label{font-weight:normal;background:#eee;padding:.75em;color:#666;font-size:1.25em;}
 .fb-edit-field-wrapper .fb-field-label .field-type{margin-top:.5em;display:block;font-family:'Source Sans Pro',sans-serif;font-size:1em;}
 .fb-edit-field-wrapper .fb-field-label .field-type:before{content:'Type: ';color:#999}
-.fb-edit-field-wrapper .fb-field-label .icon-arrow-right{display:none}
+.fb-edit-field-wrapper .fb-field-label .fa.fa-arrow-right{display:none}
 .fb-edit-field-wrapper .fb-edit-section-header{border-bottom:1px solid #ddd;margin-top:25px;margin-bottom:10px;padding-bottom:5px;clear:both;font-weight:700}
 .fb-edit-field-wrapper .js-add-option,.fb-edit-field-wrapper .js-remove-option{padding:3px 6px}
 .fb-edit-field-wrapper .fb-bottom-add{margin-top:8px}

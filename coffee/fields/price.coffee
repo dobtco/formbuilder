@@ -20,5 +20,5 @@ Formbuilder.registerField 'price',
   edit: ""
 
   addButton: """
-    <span class="symbol"><span class="icon-dollar"></span></span> Price
+    <span class="symbol"><span class="fa fa-usd"></span></span> Price
   """

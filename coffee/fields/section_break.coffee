@@ -17,5 +17,5 @@ Formbuilder.registerField 'section_break',
   """
 
   addButton: """
-    <span class='symbol'><span class='icon-minus'></span></span> Section Break
+    <span class='symbol'><span class='fa fa-minus'></span></span> Section Break
   """
