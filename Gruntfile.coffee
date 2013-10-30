@@ -12,10 +12,12 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-stylus')
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-watch')
+  grunt.loadNpmTasks('grunt-release')
 
   grunt.initConfig
 
     pkg: '<json:package.json>'
+    distFolder: 'dist'
 
     jst:
       all:
@@ -40,7 +42,7 @@ module.exports = (grunt) ->
     cssmin:
       dist:
         files:
-          'formbuilder-min.css': ['formbuilder.css']
+          '<%= distFolder %>/formbuilder-min.css': ['formbuilder.css']
 
     stylus:
       all:
@@ -50,12 +52,16 @@ module.exports = (grunt) ->
     uglify:
       dist:
         files:
-          'formbuilder-min.js': 'formbuilder.js'
+          '<%= distFolder %>/formbuilder-min.js': 'formbuilder.js'
 
     watch:
       all:
         files: ['./coffee/**/*.coffee', 'templates/**/*.html', './styl/**/*.styl']
         tasks: ALL_TASKS
+
+    # To test, run `grunt --no-write -v release`
+    release:
+      npm: false
 
   grunt.registerTask 'default', ALL_TASKS
   grunt.registerTask 'dist', ['cssmin:dist', 'uglify:dist']
