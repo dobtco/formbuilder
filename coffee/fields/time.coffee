@@ -35,5 +35,5 @@ Formbuilder.registerField 'time',
   edit: ""
 
   addButton: """
-    <span class="symbol"><span class="icon-time"></span></span> Time
+    <span class="symbol"><span class="fa fa-clock-o"></span></span> Time
   """

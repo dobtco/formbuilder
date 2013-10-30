@@ -38,5 +38,5 @@ Formbuilder.registerField 'address',
   edit: ""
 
   addButton: """
-    <span class="symbol"><span class="icon-home"></span></span> Address
+    <span class="symbol"><span class="fa fa-home"></span></span> Address
   """
