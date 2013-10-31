@@ -86,8 +86,8 @@ class Formbuilder
         'click .js-duplicate': 'duplicate'
         'click .js-clear': 'clear'
 
-      initialize: ->
-        @parentView = @options.parentView
+      initialize: (options) ->
+        {@parentView} = options
         @listenTo @model, "change", @render
         @listenTo @model, "destroy", @remove
 
@@ -119,7 +119,8 @@ class Formbuilder
         'click .js-default-updated': 'defaultUpdated'
         'input .option-label-input': 'forceRender'
 
-      initialize: ->
+      initialize: (options) ->
+        {@parentView} = options
         @listenTo @model, "destroy", @remove
 
       render: ->
@@ -128,8 +129,8 @@ class Formbuilder
         return @
 
       remove: ->
-        @options.parentView.editView = undefined
-        @options.parentView.$el.find("[data-target=\"#addField\"]").click()
+        @parentView.editView = undefined
+        @parentView.$el.find("[data-target=\"#addField\"]").click()
         Backbone.View.prototype.remove.call(@)
 
       # @todo this should really be on the model, not the view
@@ -175,9 +176,12 @@ class Formbuilder
         'click .fb-tabs a': 'showTab'
         'click .fb-add-field-types a': 'addField'
 
-      initialize: ->
-        @$el = $(@options.selector)
-        @formBuilder = @options.formBuilder
+      initialize: (options) ->
+        {selector, @formBuilder, @bootstrapData} = options
+
+        # This is a terrible idea because it's not scoped to this view.
+        if selector?
+          @setElement $(selector)
 
         # Create the collection, and bind the appropriate events
         @collection = new Formbuilder.collection
@@ -188,7 +192,7 @@ class Formbuilder
         @collection.bind 'destroy', @ensureEditViewScrolled, @
 
         @render()
-        @collection.reset(@options.bootstrapData)
+        @collection.reset(@bootstrapData)
         @initAutosave()
 
       initAutosave: ->
@@ -387,9 +391,10 @@ class Formbuilder
 
             @updatingBatch = undefined
 
-  constructor: (selector, opts = {}) ->
+  constructor: (opts={}) ->
     _.extend @, Backbone.Events
-    @mainView = new Formbuilder.views.main _.extend({ selector: selector }, opts, { formBuilder: @ })
+    args = _.extend opts, {formBuilder: @}
+    @mainView = new Formbuilder.views.main args
 
 window.Formbuilder = Formbuilder
 

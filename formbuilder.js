@@ -147,8 +147,8 @@
           'click .js-duplicate': 'duplicate',
           'click .js-clear': 'clear'
         },
-        initialize: function() {
-          this.parentView = this.options.parentView;
+        initialize: function(options) {
+          this.parentView = options.parentView;
           this.listenTo(this.model, "change", this.render);
           return this.listenTo(this.model, "destroy", this.remove);
         },
@@ -183,7 +183,8 @@
           'click .js-default-updated': 'defaultUpdated',
           'input .option-label-input': 'forceRender'
         },
-        initialize: function() {
+        initialize: function(options) {
+          this.parentView = options.parentView;
           return this.listenTo(this.model, "destroy", this.remove);
         },
         render: function() {
@@ -196,8 +197,8 @@
           return this;
         },
         remove: function() {
-          this.options.parentView.editView = void 0;
-          this.options.parentView.$el.find("[data-target=\"#addField\"]").click();
+          this.parentView.editView = void 0;
+          this.parentView.$el.find("[data-target=\"#addField\"]").click();
           return Backbone.View.prototype.remove.call(this);
         },
         addOption: function(e) {
@@ -247,9 +248,12 @@
           'click .fb-tabs a': 'showTab',
           'click .fb-add-field-types a': 'addField'
         },
-        initialize: function() {
-          this.$el = $(this.options.selector);
-          this.formBuilder = this.options.formBuilder;
+        initialize: function(options) {
+          var selector;
+          selector = options.selector, this.formBuilder = options.formBuilder, this.bootstrapData = options.bootstrapData;
+          if (selector != null) {
+            this.setElement($(selector));
+          }
           this.collection = new Formbuilder.collection;
           this.collection.bind('add', this.addOne, this);
           this.collection.bind('reset', this.reset, this);
@@ -257,7 +261,7 @@
           this.collection.bind('destroy add reset', this.hideShowNoResponseFields, this);
           this.collection.bind('destroy', this.ensureEditViewScrolled, this);
           this.render();
-          this.collection.reset(this.options.bootstrapData);
+          this.collection.reset(this.bootstrapData);
           return this.initAutosave();
         },
         initAutosave: function() {
@@ -499,16 +503,16 @@
       })
     };
 
-    function Formbuilder(selector, opts) {
+    function Formbuilder(opts) {
+      var args;
       if (opts == null) {
         opts = {};
       }
       _.extend(this, Backbone.Events);
-      this.mainView = new Formbuilder.views.main(_.extend({
-        selector: selector
-      }, opts, {
+      args = _.extend(opts, {
         formBuilder: this
-      }));
+      });
+      this.mainView = new Formbuilder.views.main(args);
     }
 
     return Formbuilder;
