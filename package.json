@@ -7,6 +7,9 @@
   ],
   "description": "Graphical form builder for the web.",
   "main": "Gruntfile.coffee",
+  "scripts": {
+    "test": "grunt test",
+  },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-concat": "~0.3.0",
@@ -17,7 +20,9 @@
     "grunt-contrib-uglify": "~0.2.5",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-release": "~0.6.0",
+    "grunt-karma": "~0.6.2",
     "karma": "~0.10.4",
+    "mocha": "~1.13.0",
     "karma-mocha": "~0.1.0",
     "karma-safari-launcher": "~0.1.1",
     "karma-chrome-launcher": "~0.1.0",

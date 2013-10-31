@@ -1,0 +1,80 @@
+# Karma configuration
+
+module.exports = (config) ->
+    config.set
+        # base path, that will be used to resolve files and exclude
+        basePath: '../'
+
+        # list of files / patterns to load in the browser
+        files: [
+            # Dependencies. Yes, I am aware this is lame.
+            'bower_components/jquery/jquery.js'
+            'bower_components/jquery-ui/ui/jquery.ui.core.js'
+            'bower_components/jquery-ui/ui/jquery.ui.widget.js'
+            'bower_components/jquery-ui/ui/jquery.ui.mouse.js'
+            'bower_components/jquery-ui/ui/jquery.ui.draggable.js'
+            'bower_components/jquery-ui/ui/jquery.ui.droppable.js'
+            'bower_components/jquery-ui/ui/jquery.ui.sortable.js'
+            'bower_components/jquery.scrollWindowTo/index.js'
+            'bower_components/underscore/underscore-min.js'
+            'bower_components/underscore.mixin.deepExtend/index.js'
+            'bower_components/rivets/dist/rivets.js'
+            'bower_components/backbone/backbone.js'
+            'bower_components/backbone-deep-model/src/deep-model.js'
+
+            'dist/formbuilder-min.js'
+
+            'test/vendor/js/chai.js'
+            'test/vendor/js/sinon.js'
+
+            'test/vendor/js/chai-jquery.js'
+            'test/vendor/js/chai-changes.js'
+            'test/vendor/js/chai-backbone.js'
+            'test/vendor/js/sinon-chai.js'
+
+            'test/helpers.coffee'
+            'test/**/*_test.coffee'
+        ]
+
+        # web server port
+        port: 8080
+
+        # cli runner port
+        runnerPort: 9100
+
+        # enable / disable colors in the output (reporters and logs)
+        colors: yes
+
+        # level of logging
+        # possible values: LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG
+        logLevel: config.LOG_INFO
+
+        # enable / disable watching file and executing tests whenever any file changes
+        autoWatch: no
+
+        # Start these browsers, currently available:
+        # - Chrome
+        # - ChromeCanary
+        # - Firefox
+        # - Opera
+        # - Safari
+        # - PhantomJS
+        browsers: ['PhantomJS']
+
+        # Continuous Integration mode
+        # if true, it capture browsers, run tests and exit
+        # singleRun: yes
+
+        # compile coffee scripts
+        preprocessors: '**/*.coffee': 'coffee'
+
+        frameworks: ['mocha']
+
+        plugins: [
+            'karma-mocha',
+            'karma-coffee-preprocessor',
+            'karma-phantomjs-launcher',
+            'karma-chrome-launcher',
+            'karma-firefox-launcher',
+            'karma-safari-launcher'
+        ]
