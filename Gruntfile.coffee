@@ -13,11 +13,13 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-release')
+  grunt.loadNpmTasks('grunt-karma')
 
   grunt.initConfig
 
     pkg: '<json:package.json>'
     distFolder: 'dist'
+    testFolder: 'test'
 
     jst:
       all:
@@ -63,5 +65,11 @@ module.exports = (grunt) ->
     release:
       npm: false
 
+    karma:
+      unit:
+        configFile: '<%= testFolder %>/karma.conf.coffee'
+
+
   grunt.registerTask 'default', ALL_TASKS
   grunt.registerTask 'dist', ['cssmin:dist', 'uglify:dist']
+  grunt.registerTask 'test', ['dist', 'karma']
