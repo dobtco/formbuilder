@@ -9,6 +9,6 @@
     "commit": "709ca367afa864253517f05690984179a0504664"
   },
   "_source": "git://github.com/powmedia/backbone-deep-model.git",
-  "_target": "*",
+  "_target": "~0.10.4",
   "_originalSource": "backbone-deep-model"
 }
