@@ -24,6 +24,6 @@
     "backbone": "~1.1.0",
     "backbone-deep-model": "~0.10.4",
     "rivets": "~0.5.13",
-    "font-awesome": "~3.2.1"
+    "font-awesome": "~4.0.0"
   }
 }

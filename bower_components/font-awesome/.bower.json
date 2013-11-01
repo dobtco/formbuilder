@@ -1,14 +1,14 @@
 {
   "name": "font-awesome",
   "homepage": "https://github.com/FortAwesome/Font-Awesome",
-  "version": "3.2.1",
-  "_release": "3.2.1",
+  "version": "4.0.1",
+  "_release": "4.0.1",
   "_resolution": {
     "type": "version",
-    "tag": "v3.2.1",
-    "commit": "8d6f493a347c6408f47b8526bf815fecdb0d827a"
+    "tag": "v4.0.1",
+    "commit": "431f3223f9ec7d0068d294adf2963234ab1ba7e2"
   },
   "_source": "git://github.com/FortAwesome/Font-Awesome.git",
-  "_target": "~3.2.1",
+  "_target": "~4.0.0",
   "_originalSource": "font-awesome"
 }
