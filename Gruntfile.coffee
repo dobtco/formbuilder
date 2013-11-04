@@ -39,11 +39,27 @@ module.exports = (grunt) ->
     concat:
       all:
         '<%= distFolder %>/formbuilder.js': ['js/compiled.js', 'templates/compiled.js']
+        'vendor/js/vendor.js': [
+          'bower_components/jquery/jquery.js'
+          'bower_components/jquery-ui/ui/jquery.ui.core.js'
+          'bower_components/jquery-ui/ui/jquery.ui.widget.js'
+          'bower_components/jquery-ui/ui/jquery.ui.mouse.js'
+          'bower_components/jquery-ui/ui/jquery.ui.draggable.js'
+          'bower_components/jquery-ui/ui/jquery.ui.droppable.js'
+          'bower_components/jquery-ui/ui/jquery.ui.sortable.js'
+          'bower_components/jquery.scrollWindowTo/index.js'
+          'bower_components/underscore/underscore-min.js'
+          'bower_components/underscore.mixin.deepExtend/index.js'
+          'bower_components/rivets/dist/rivets.js'
+          'bower_components/backbone/backbone.js'
+          'bower_components/backbone-deep-model/src/deep-model.js'
+        ]
 
     cssmin:
       dist:
         files:
           '<%= distFolder %>/formbuilder-min.css': '<%= distFolder %>/formbuilder.css'
+          'vendor/css/vendor.css': 'bower_components/font-awesome/css/font-awesome.css'
 
     stylus:
       all:
