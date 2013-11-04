@@ -1,4 +1,4 @@
-FormbuilderModel = Backbone.DeepModel.extend
+class FormbuilderModel extends Backbone.DeepModel
   sync: -> # noop
   indexInDOM: ->
     $wrapper = $(".fb-field-wrapper").filter ( (_, el) => $(el).data('cid') == @cid  )
@@ -7,7 +7,7 @@ FormbuilderModel = Backbone.DeepModel.extend
     Formbuilder.inputFields[@get(Formbuilder.options.mappings.FIELD_TYPE)]?
 
 
-FormbuilderCollection = Backbone.Collection.extend
+class FormbuilderCollection extends Backbone.Collection
   initialize: ->
     @on 'add', @copyCidToModel
 
