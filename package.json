@@ -5,6 +5,13 @@
   "authors": [
     "adamjacobbecker <ad@mbecker.cc>"
   ],
+  "maintainers": [
+    {
+      "name": "Jonathan Kim",
+      "email": "me@jonathan-kim.com",
+      "web": "http://jonathan-kim.com"
+    }
+  ],
   "description": "Graphical form builder for the web.",
   "main": "Gruntfile.coffee",
   "scripts": {
