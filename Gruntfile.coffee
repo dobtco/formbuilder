@@ -18,7 +18,10 @@ module.exports = (grunt) ->
   grunt.initConfig
 
     pkg: '<json:package.json>'
+    srcFolder: 'src'
+    compiledFolder: 'compiled'  # Temporary holding area.
     distFolder: 'dist'
+    vendorFolder: 'vendor'
     testFolder: 'test'
 
     jst:
@@ -26,20 +29,20 @@ module.exports = (grunt) ->
         options:
           namespace: 'Formbuilder.templates'
           processName: (filename) ->
-            filename.replace('./templates/', '').replace('.html', '')
+            filename.replace('<%= srcFolder %>/templates/', '').replace('.html', '')
 
         files:
-          'templates/compiled.js': ['./templates/**/*.html']
+          '<%= compiledFolder %>/templates.js': '<%= srcFolder %>/templates/**/*.html'
 
     coffee:
       all:
         files:
-          'js/compiled.js': ['coffee/rivets-config.coffee', 'coffee/main.coffee', 'coffee/fields/*.coffee']
+          '<%= compiledFolder %>/scripts.js': '<%= srcFolder %>/scripts/**/*.coffee'
 
     concat:
       all:
-        '<%= distFolder %>/formbuilder.js': ['js/compiled.js', 'templates/compiled.js']
-        'vendor/js/vendor.js': [
+        '<%= distFolder %>/formbuilder.js': '<%= compiledFolder %>/*.js'
+        '<%= vendorFolder %>/js/vendor.js': [
           'bower_components/jquery/jquery.js'
           'bower_components/jquery-ui/ui/jquery.ui.core.js'
           'bower_components/jquery-ui/ui/jquery.ui.widget.js'
@@ -59,12 +62,13 @@ module.exports = (grunt) ->
       dist:
         files:
           '<%= distFolder %>/formbuilder-min.css': '<%= distFolder %>/formbuilder.css'
-          'vendor/css/vendor.css': 'bower_components/font-awesome/css/font-awesome.css'
+          '<%= vendorFolder %>/css/vendor.css': 'bower_components/font-awesome/css/font-awesome.css'
 
     stylus:
       all:
         files:
-          '<%= distFolder %>/formbuilder.css': 'styl/formbuilder.styl'
+          '<%= compiledFolder %>/formbuilder.css': '<%= srcFolder %>/styles/**.styl'
+          '<%= distFolder %>/formbuilder.css': '<%= compiledFolder %>/**/*.css'
 
     uglify:
       dist:
@@ -73,7 +77,7 @@ module.exports = (grunt) ->
 
     watch:
       all:
-        files: ['./coffee/**/*.coffee', 'templates/**/*.html', './styl/**/*.styl']
+        files: ['<%= srcFolder %>/**/*.(coffee|styl|html)']
         tasks: ALL_TASKS
 
     # To test, run `grunt --no-write -v release`

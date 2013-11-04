@@ -7,20 +7,8 @@ module.exports = (config) ->
 
         # list of files / patterns to load in the browser
         files: [
-            # Dependencies. Yes, I am aware this is lame.
-            'bower_components/jquery/jquery.js'
-            'bower_components/jquery-ui/ui/jquery.ui.core.js'
-            'bower_components/jquery-ui/ui/jquery.ui.widget.js'
-            'bower_components/jquery-ui/ui/jquery.ui.mouse.js'
-            'bower_components/jquery-ui/ui/jquery.ui.draggable.js'
-            'bower_components/jquery-ui/ui/jquery.ui.droppable.js'
-            'bower_components/jquery-ui/ui/jquery.ui.sortable.js'
-            'bower_components/jquery.scrollWindowTo/index.js'
-            'bower_components/underscore/underscore-min.js'
-            'bower_components/underscore.mixin.deepExtend/index.js'
-            'bower_components/rivets/dist/rivets.js'
-            'bower_components/backbone/backbone.js'
-            'bower_components/backbone-deep-model/src/deep-model.js'
+            # Dependencies.
+            'vendor/js/vendor.js'
 
             'dist/formbuilder-min.js'
 
