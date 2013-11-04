@@ -38,23 +38,22 @@ module.exports = (grunt) ->
 
     concat:
       all:
-        src: ['js/compiled.js', 'templates/compiled.js']
-        dest: 'formbuilder.js'
+        '<%= distFolder %>/formbuilder.js': ['js/compiled.js', 'templates/compiled.js']
 
     cssmin:
       dist:
         files:
-          '<%= distFolder %>/formbuilder-min.css': ['formbuilder.css']
+          '<%= distFolder %>/formbuilder-min.css': '<%= distFolder %>/formbuilder.css'
 
     stylus:
       all:
         files:
-          'formbuilder.css': 'styl/formbuilder.styl'
+          '<%= distFolder %>/formbuilder.css': 'styl/formbuilder.styl'
 
     uglify:
       dist:
         files:
-          '<%= distFolder %>/formbuilder-min.js': 'formbuilder.js'
+          '<%= distFolder %>/formbuilder-min.js': '<%= distFolder %>/formbuilder.js'
 
     watch:
       all:
