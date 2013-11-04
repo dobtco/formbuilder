@@ -1,4 +1,5 @@
 node_modules
+bower_components
 .sass-cache
 js/compiled.js
 templates/compiled.js
