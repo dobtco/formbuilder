@@ -8,7 +8,7 @@
   "description": "Graphical form builder for the web.",
   "main": "Gruntfile.coffee",
   "scripts": {
-    "test": "grunt test",
+    "test": "grunt test"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
