@@ -41,44 +41,69 @@
 }).call(this);
 
 (function() {
-  var BuilderView, EditFieldView, Formbuilder, FormbuilderCollection, FormbuilderModel, ViewFieldView, _ref, _ref1, _ref2,
+  var BuilderView, EditFieldView, Formbuilder, FormbuilderCollection, FormbuilderModel, ViewFieldView, _ref, _ref1, _ref2, _ref3, _ref4,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  FormbuilderModel = Backbone.DeepModel.extend({
-    sync: function() {},
-    indexInDOM: function() {
+  FormbuilderModel = (function(_super) {
+    __extends(FormbuilderModel, _super);
+
+    function FormbuilderModel() {
+      _ref = FormbuilderModel.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    FormbuilderModel.prototype.sync = function() {};
+
+    FormbuilderModel.prototype.indexInDOM = function() {
       var $wrapper,
         _this = this;
       $wrapper = $(".fb-field-wrapper").filter((function(_, el) {
         return $(el).data('cid') === _this.cid;
       }));
       return $(".fb-field-wrapper").index($wrapper);
-    },
-    is_input: function() {
-      return Formbuilder.inputFields[this.get(Formbuilder.options.mappings.FIELD_TYPE)] != null;
-    }
-  });
+    };
 
-  FormbuilderCollection = Backbone.Collection.extend({
-    initialize: function() {
-      return this.on('add', this.copyCidToModel);
-    },
-    model: FormbuilderModel,
-    comparator: function(model) {
-      return model.indexInDOM();
-    },
-    copyCidToModel: function(model) {
-      return model.attributes.cid = model.cid;
+    FormbuilderModel.prototype.is_input = function() {
+      return Formbuilder.inputFields[this.get(Formbuilder.options.mappings.FIELD_TYPE)] != null;
+    };
+
+    return FormbuilderModel;
+
+  })(Backbone.DeepModel);
+
+  FormbuilderCollection = (function(_super) {
+    __extends(FormbuilderCollection, _super);
+
+    function FormbuilderCollection() {
+      _ref1 = FormbuilderCollection.__super__.constructor.apply(this, arguments);
+      return _ref1;
     }
-  });
+
+    FormbuilderCollection.prototype.initialize = function() {
+      return this.on('add', this.copyCidToModel);
+    };
+
+    FormbuilderCollection.prototype.model = FormbuilderModel;
+
+    FormbuilderCollection.prototype.comparator = function(model) {
+      return model.indexInDOM();
+    };
+
+    FormbuilderCollection.prototype.copyCidToModel = function(model) {
+      return model.attributes.cid = model.cid;
+    };
+
+    return FormbuilderCollection;
+
+  })(Backbone.Collection);
 
   ViewFieldView = (function(_super) {
     __extends(ViewFieldView, _super);
 
     function ViewFieldView() {
-      _ref = ViewFieldView.__super__.constructor.apply(this, arguments);
-      return _ref;
+      _ref2 = ViewFieldView.__super__.constructor.apply(this, arguments);
+      return _ref2;
     }
 
     ViewFieldView.prototype.className = "fb-field-wrapper";
@@ -129,8 +154,8 @@
     __extends(EditFieldView, _super);
 
     function EditFieldView() {
-      _ref1 = EditFieldView.__super__.constructor.apply(this, arguments);
-      return _ref1;
+      _ref3 = EditFieldView.__super__.constructor.apply(this, arguments);
+      return _ref3;
     }
 
     EditFieldView.prototype.className = "edit-response-field";
@@ -214,8 +239,8 @@
     __extends(BuilderView, _super);
 
     function BuilderView() {
-      _ref2 = BuilderView.__super__.constructor.apply(this, arguments);
-      return _ref2;
+      _ref4 = BuilderView.__super__.constructor.apply(this, arguments);
+      return _ref4;
     }
 
     BuilderView.prototype.SUBVIEWS = [];
@@ -266,15 +291,15 @@
     };
 
     BuilderView.prototype.render = function() {
-      var subview, _i, _len, _ref3;
+      var subview, _i, _len, _ref5;
       this.$el.html(Formbuilder.templates['page']());
       this.$fbLeft = this.$el.find('.fb-left');
       this.$responseFields = this.$el.find('.fb-response-fields');
       this.bindWindowScrollEvent();
       this.hideShowNoResponseFields();
-      _ref3 = this.SUBVIEWS;
-      for (_i = 0, _len = _ref3.length; _i < _len; _i++) {
-        subview = _ref3[_i];
+      _ref5 = this.SUBVIEWS;
+      for (_i = 0, _len = _ref5.length; _i < _len; _i++) {
+        subview = _ref5[_i];
         new subview({
           parentView: this
         }).render();
@@ -483,12 +508,12 @@
         data: payload,
         contentType: "application/json",
         success: function(data) {
-          var datum, _i, _len, _ref3;
+          var datum, _i, _len, _ref5;
           _this.updatingBatch = true;
           for (_i = 0, _len = data.length; _i < _len; _i++) {
             datum = data[_i];
-            if ((_ref3 = _this.collection.get(datum.cid)) != null) {
-              _ref3.set({
+            if ((_ref5 = _this.collection.get(datum.cid)) != null) {
+              _ref5.set({
                 id: datum.id
               });
             }
@@ -556,10 +581,10 @@
     Formbuilder.nonInputFields = {};
 
     Formbuilder.registerField = function(name, opts) {
-      var x, _i, _len, _ref3;
-      _ref3 = ['view', 'edit'];
-      for (_i = 0, _len = _ref3.length; _i < _len; _i++) {
-        x = _ref3[_i];
+      var x, _i, _len, _ref5;
+      _ref5 = ['view', 'edit'];
+      for (_i = 0, _len = _ref5.length; _i < _len; _i++) {
+        x = _ref5[_i];
         opts[x] = _.template(opts[x]);
       }
       opts.field_type = name;
