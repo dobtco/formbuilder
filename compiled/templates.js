@@ -1,7 +1,7 @@
 this["Formbuilder"] = this["Formbuilder"] || {};
 this["Formbuilder"]["templates"] = this["Formbuilder"]["templates"] || {};
 
-this["Formbuilder"]["templates"]["edit/base"] = function(obj) {
+this["Formbuilder"]["templates"]["src/templates/edit/base"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
@@ -17,7 +17,7 @@ __p +=
 return __p
 };
 
-this["Formbuilder"]["templates"]["edit/base_header"] = function(obj) {
+this["Formbuilder"]["templates"]["src/templates/edit/base_header"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
@@ -31,7 +31,7 @@ __p += '<div class=\'fb-field-label\'>\n  <span data-rv-text="model.' +
 return __p
 };
 
-this["Formbuilder"]["templates"]["edit/base_non_input"] = function(obj) {
+this["Formbuilder"]["templates"]["src/templates/edit/base_non_input"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
@@ -45,7 +45,7 @@ __p +=
 return __p
 };
 
-this["Formbuilder"]["templates"]["edit/checkboxes"] = function(obj) {
+this["Formbuilder"]["templates"]["src/templates/edit/checkboxes"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
@@ -59,7 +59,7 @@ __p += '<label>\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
 return __p
 };
 
-this["Formbuilder"]["templates"]["edit/common"] = function(obj) {
+this["Formbuilder"]["templates"]["src/templates/edit/common"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
@@ -73,7 +73,7 @@ __p += '<div class=\'fb-edit-section-header\'>Label</div>\n\n<div class=\'fb-com
 return __p
 };
 
-this["Formbuilder"]["templates"]["edit/integer_only"] = function(obj) {
+this["Formbuilder"]["templates"]["src/templates/edit/integer_only"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
@@ -85,7 +85,7 @@ __p += '<div class=\'fb-edit-section-header\'>Integer only</div>\n<label>\n  <in
 return __p
 };
 
-this["Formbuilder"]["templates"]["edit/label_description"] = function(obj) {
+this["Formbuilder"]["templates"]["src/templates/edit/label_description"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
@@ -99,7 +99,7 @@ __p += '<input type=\'text\' data-rv-input=\'model.' +
 return __p
 };
 
-this["Formbuilder"]["templates"]["edit/min_max"] = function(obj) {
+this["Formbuilder"]["templates"]["src/templates/edit/min_max"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
@@ -113,7 +113,7 @@ __p += '<div class=\'fb-edit-section-header\'>Minimum / Maximum</div>\n\nAbove\n
 return __p
 };
 
-this["Formbuilder"]["templates"]["edit/min_max_length"] = function(obj) {
+this["Formbuilder"]["templates"]["src/templates/edit/min_max_length"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
@@ -129,7 +129,7 @@ __p += '<div class=\'fb-edit-section-header\'>Length Limit</div>\n\nMin\n<input 
 return __p
 };
 
-this["Formbuilder"]["templates"]["edit/options"] = function(obj) {
+this["Formbuilder"]["templates"]["src/templates/edit/options"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
@@ -160,7 +160,7 @@ __p += '\n\n<div class=\'fb-bottom-add\'>\n  <a class="js-add-option ' +
 return __p
 };
 
-this["Formbuilder"]["templates"]["edit/size"] = function(obj) {
+this["Formbuilder"]["templates"]["src/templates/edit/size"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
@@ -172,7 +172,7 @@ __p += '<div class=\'fb-edit-section-header\'>Size</div>\n<select data-rv-value=
 return __p
 };
 
-this["Formbuilder"]["templates"]["edit/units"] = function(obj) {
+this["Formbuilder"]["templates"]["src/templates/edit/units"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
@@ -184,7 +184,7 @@ __p += '<div class=\'fb-edit-section-header\'>Units</div>\n<input type="text" da
 return __p
 };
 
-this["Formbuilder"]["templates"]["page"] = function(obj) {
+this["Formbuilder"]["templates"]["src/templates/page"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
@@ -200,7 +200,7 @@ __p +=
 return __p
 };
 
-this["Formbuilder"]["templates"]["partials/add_field"] = function(obj) {
+this["Formbuilder"]["templates"]["src/templates/partials/add_field"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
@@ -231,7 +231,7 @@ __p += '\n    </div>\n  </div>\n</div>';
 return __p
 };
 
-this["Formbuilder"]["templates"]["partials/edit_field"] = function(obj) {
+this["Formbuilder"]["templates"]["src/templates/partials/edit_field"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
@@ -241,7 +241,7 @@ __p += '<div class=\'fb-tab-pane\' id=\'editField\'>\n  <div class=\'fb-edit-fie
 return __p
 };
 
-this["Formbuilder"]["templates"]["partials/left_side"] = function(obj) {
+this["Formbuilder"]["templates"]["src/templates/partials/left_side"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
@@ -255,7 +255,7 @@ __p += '<div class=\'fb-left\'>\n  <ul class=\'fb-tabs\'>\n    <li class=\'activ
 return __p
 };
 
-this["Formbuilder"]["templates"]["partials/right_side"] = function(obj) {
+this["Formbuilder"]["templates"]["src/templates/partials/right_side"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
@@ -265,7 +265,7 @@ __p += '<div class=\'fb-right\'>\n  <div class=\'fb-no-response-fields\'>No resp
 return __p
 };
 
-this["Formbuilder"]["templates"]["partials/save_button"] = function(obj) {
+this["Formbuilder"]["templates"]["src/templates/partials/save_button"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
@@ -277,7 +277,7 @@ __p += '<div class=\'fb-save-wrapper\'>\n  <button class=\'js-save-form ' +
 return __p
 };
 
-this["Formbuilder"]["templates"]["view/base"] = function(obj) {
+this["Formbuilder"]["templates"]["src/templates/view/base"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
@@ -295,7 +295,7 @@ __p += '<div class=\'subtemplate-wrapper\'>\n  <div class=\'cover\'></div>\n  ' 
 return __p
 };
 
-this["Formbuilder"]["templates"]["view/base_non_input"] = function(obj) {
+this["Formbuilder"]["templates"]["src/templates/view/base_non_input"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
@@ -309,7 +309,7 @@ __p += '<div class=\'subtemplate-wrapper\'>\n  <div class=\'cover\'></div>\n  ' 
 return __p
 };
 
-this["Formbuilder"]["templates"]["view/description"] = function(obj) {
+this["Formbuilder"]["templates"]["src/templates/view/description"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
@@ -321,7 +321,7 @@ __p += '<span class=\'help-block\'>\n  ' +
 return __p
 };
 
-this["Formbuilder"]["templates"]["view/duplicate_remove"] = function(obj) {
+this["Formbuilder"]["templates"]["src/templates/view/duplicate_remove"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
@@ -335,7 +335,7 @@ __p += '<div class=\'actions-wrapper\'>\n  <a class="js-duplicate ' +
 return __p
 };
 
-this["Formbuilder"]["templates"]["view/label"] = function(obj) {
+this["Formbuilder"]["templates"]["src/templates/view/label"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
