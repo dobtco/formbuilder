@@ -13,55 +13,82 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-release')
+  grunt.loadNpmTasks('grunt-karma')
 
   grunt.initConfig
 
     pkg: '<json:package.json>'
+    srcFolder: 'src'
+    compiledFolder: 'compiled'  # Temporary holding area.
     distFolder: 'dist'
+    vendorFolder: 'vendor'
+    testFolder: 'test'
 
     jst:
       all:
         options:
           namespace: 'Formbuilder.templates'
           processName: (filename) ->
-            filename.replace('./templates/', '').replace('.html', '')
+            filename.replace('<%= srcFolder %>/templates/', '').replace('.html', '')
 
         files:
-          'templates/compiled.js': ['./templates/**/*.html']
+          '<%= compiledFolder %>/templates.js': '<%= srcFolder %>/templates/**/*.html'
 
     coffee:
       all:
         files:
-          'js/compiled.js': ['coffee/rivets-config.coffee', 'coffee/main.coffee', 'coffee/fields/*.coffee']
+          '<%= compiledFolder %>/scripts.js': '<%= srcFolder %>/scripts/**/*.coffee'
 
     concat:
       all:
-        src: ['js/compiled.js', 'templates/compiled.js']
-        dest: 'formbuilder.js'
+        '<%= distFolder %>/formbuilder.js': '<%= compiledFolder %>/*.js'
+        '<%= vendorFolder %>/js/vendor.js': [
+          'bower_components/jquery/jquery.js'
+          'bower_components/jquery-ui/ui/jquery.ui.core.js'
+          'bower_components/jquery-ui/ui/jquery.ui.widget.js'
+          'bower_components/jquery-ui/ui/jquery.ui.mouse.js'
+          'bower_components/jquery-ui/ui/jquery.ui.draggable.js'
+          'bower_components/jquery-ui/ui/jquery.ui.droppable.js'
+          'bower_components/jquery-ui/ui/jquery.ui.sortable.js'
+          'bower_components/jquery.scrollWindowTo/index.js'
+          'bower_components/underscore/underscore-min.js'
+          'bower_components/underscore.mixin.deepExtend/index.js'
+          'bower_components/rivets/dist/rivets.js'
+          'bower_components/backbone/backbone.js'
+          'bower_components/backbone-deep-model/src/deep-model.js'
+        ]
 
     cssmin:
       dist:
         files:
-          '<%= distFolder %>/formbuilder-min.css': ['formbuilder.css']
+          '<%= distFolder %>/formbuilder-min.css': '<%= distFolder %>/formbuilder.css'
+          '<%= vendorFolder %>/css/vendor.css': 'bower_components/font-awesome/css/font-awesome.css'
 
     stylus:
       all:
         files:
-          'formbuilder.css': 'styl/formbuilder.styl'
+          '<%= compiledFolder %>/formbuilder.css': '<%= srcFolder %>/styles/**.styl'
+          '<%= distFolder %>/formbuilder.css': '<%= compiledFolder %>/**/*.css'
 
     uglify:
       dist:
         files:
-          '<%= distFolder %>/formbuilder-min.js': 'formbuilder.js'
+          '<%= distFolder %>/formbuilder-min.js': '<%= distFolder %>/formbuilder.js'
 
     watch:
       all:
-        files: ['./coffee/**/*.coffee', 'templates/**/*.html', './styl/**/*.styl']
+        files: ['<%= srcFolder %>/**/*.(coffee|styl|html)']
         tasks: ALL_TASKS
 
     # To test, run `grunt --no-write -v release`
     release:
       npm: false
 
+    karma:
+      unit:
+        configFile: '<%= testFolder %>/karma.conf.coffee'
+
+
   grunt.registerTask 'default', ALL_TASKS
   grunt.registerTask 'dist', ['cssmin:dist', 'uglify:dist']
+  grunt.registerTask 'test', ['dist', 'karma']
