@@ -111,7 +111,7 @@ You'll need [node and npm](http://nodejs.org/) installed.
 1. `npm install`
 2. `bower install`
 3. `grunt watch`
-4. open `example/index.html` and you're all set!
+4. open `index.html` and you're all set!
 
 ## License
 MIT
