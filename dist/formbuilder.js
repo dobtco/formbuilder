@@ -314,7 +314,7 @@
         if (_this.$fbLeft.data('locked') === true) {
           return;
         }
-        newMargin = Math.max(0, $(window).scrollTop());
+        newMargin = Math.max(0, $(window).scrollTop() - _this.$el.offset().top);
         maxMargin = _this.$responseFields.height();
         return _this.$fbLeft.css({
           'margin-top': Math.min(maxMargin, newMargin)
@@ -462,7 +462,7 @@
       if (!$responseFieldEl[0]) {
         return;
       }
-      return $.scrollWindowTo($responseFieldEl.offset().top - this.$responseFields.offset().top, 200, function() {
+      return $.scrollWindowTo((this.$el.offset().top + $responseFieldEl.offset().top) - this.$responseFields.offset().top, 200, function() {
         return _this.lockLeftWrapper();
       });
     };
