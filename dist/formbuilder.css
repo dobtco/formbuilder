@@ -65,3 +65,4 @@
 .response-field-date .month,.response-field-date .day,.response-field-date .year{width:50px}
 .response-field-time .hours,.response-field-time .minutes,.response-field-time .seconds{width:50px}
 .response-field-checkboxes .fb-option,.response-field-radio .fb-option{margin-bottom:5px;display:inline-block}
+.response-field-website input{width:200px}

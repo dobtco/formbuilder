@@ -3,11 +3,10 @@ Formbuilder.registerField 'website',
   order: 35
 
   view: """
-    <input type='text' class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' placeholder='http://' />
+    <input type='text' placeholder='http://' />
   """
 
   edit: """
-    <%= Formbuilder.templates['edit/size']() %>
   """
 
   addButton: """
