@@ -43,9 +43,23 @@ class ViewFieldView extends Backbone.View
   focusEditView: ->
     @parentView.createAndShowEditView(@model)
 
-  clear: ->
-    @parentView.handleFormUpdate()
-    @model.destroy()
+  clear: (e) ->
+    e.preventDefault()
+    e.stopPropagation()
+
+    cb = =>
+      @parentView.handleFormUpdate()
+      @model.destroy()
+
+    x = Formbuilder.options.CLEAR_FIELD_CONFIRM
+
+    switch typeof x
+      when 'string'
+        if confirm(x) then cb()
+      when 'function'
+        x(cb)
+      else
+        cb()
 
   duplicate: ->
     attrs = _.clone(@model.attributes)
@@ -358,6 +372,7 @@ class Formbuilder
     HTTP_ENDPOINT: ''
     HTTP_METHOD: 'POST'
     AUTOSAVE: true
+    CLEAR_FIELD_CONFIRM: false
 
     mappings:
       SIZE: 'field_options.size'

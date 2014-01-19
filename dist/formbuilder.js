@@ -131,9 +131,27 @@
       return this.parentView.createAndShowEditView(this.model);
     };
 
-    ViewFieldView.prototype.clear = function() {
-      this.parentView.handleFormUpdate();
-      return this.model.destroy();
+    ViewFieldView.prototype.clear = function(e) {
+      var cb, x,
+        _this = this;
+      e.preventDefault();
+      e.stopPropagation();
+      cb = function() {
+        _this.parentView.handleFormUpdate();
+        return _this.model.destroy();
+      };
+      x = Formbuilder.options.CLEAR_FIELD_CONFIRM;
+      switch (typeof x) {
+        case 'string':
+          if (confirm(x)) {
+            return cb();
+          }
+          break;
+        case 'function':
+          return x(cb);
+        default:
+          return cb();
+      }
     };
 
     ViewFieldView.prototype.duplicate = function() {
@@ -552,6 +570,7 @@
       HTTP_ENDPOINT: '',
       HTTP_METHOD: 'POST',
       AUTOSAVE: true,
+      CLEAR_FIELD_CONFIRM: false,
       mappings: {
         SIZE: 'field_options.size',
         UNITS: 'field_options.units',
