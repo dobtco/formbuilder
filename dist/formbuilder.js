@@ -249,8 +249,8 @@
       'click .js-save-form': 'saveForm',
       'click .fb-tabs a': 'showTab',
       'click .fb-add-field-types a': 'addField',
-      'mouseover .fb-left': 'lockLeftWrapper',
-      'mouseout .fb-left': 'unlockLeftWrapper'
+      'mouseover .fb-add-field-types': 'lockLeftWrapper',
+      'mouseout .fb-add-field-types': 'unlockLeftWrapper'
     };
 
     BuilderView.prototype.initialize = function(options) {
@@ -319,7 +319,7 @@
           return;
         }
         newMargin = Math.max(0, $(window).scrollTop() - _this.$el.offset().top);
-        maxMargin = _this.$responseFields.height() - _this.$el.find('.fb-tab-content').height();
+        maxMargin = _this.$responseFields.height();
         return _this.$fbLeft.css({
           'margin-top': Math.min(maxMargin, newMargin)
         });

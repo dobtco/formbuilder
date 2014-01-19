@@ -121,8 +121,8 @@ class BuilderView extends Backbone.View
     'click .js-save-form': 'saveForm'
     'click .fb-tabs a': 'showTab'
     'click .fb-add-field-types a': 'addField'
-    'mouseover .fb-left': 'lockLeftWrapper'
-    'mouseout .fb-left': 'unlockLeftWrapper'
+    'mouseover .fb-add-field-types': 'lockLeftWrapper'
+    'mouseout .fb-add-field-types': 'unlockLeftWrapper'
 
   initialize: (options) ->
     {selector, @formBuilder, @bootstrapData} = options
@@ -179,7 +179,7 @@ class BuilderView extends Backbone.View
     $(window).on 'scroll', =>
       return if @$fbLeft.data('locked') == true
       newMargin = Math.max(0, $(window).scrollTop() - @$el.offset().top)
-      maxMargin = @$responseFields.height() - @$el.find('.fb-tab-content').height()
+      maxMargin = @$responseFields.height()
 
       @$fbLeft.css
         'margin-top': Math.min(maxMargin, newMargin)
