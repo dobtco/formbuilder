@@ -175,7 +175,7 @@ class BuilderView extends Backbone.View
   bindWindowScrollEvent: ->
     $(window).on 'scroll', =>
       return if @$fbLeft.data('locked') == true
-      newMargin = Math.max(0, $(window).scrollTop())
+      newMargin = Math.max(0, $(window).scrollTop() - @$el.offset().top)
       maxMargin = @$responseFields.height()
 
       @$fbLeft.css
@@ -297,7 +297,7 @@ class BuilderView extends Backbone.View
   scrollLeftWrapper: ($responseFieldEl) ->
     @unlockLeftWrapper()
     return unless $responseFieldEl[0]
-    $.scrollWindowTo ($responseFieldEl.offset().top - @$responseFields.offset().top), 200, =>
+    $.scrollWindowTo ((@$el.offset().top + $responseFieldEl.offset().top) - @$responseFields.offset().top), 200, =>
       @lockLeftWrapper()
 
   lockLeftWrapper: ->
