@@ -265,17 +265,19 @@
       this.collection.bind('destroy', this.ensureEditViewScrolled, this);
       this.render();
       this.collection.reset(this.bootstrapData);
-      return this.initAutosave();
+      return this.bindSaveEvent();
     };
 
-    BuilderView.prototype.initAutosave = function() {
+    BuilderView.prototype.bindSaveEvent = function() {
       var _this = this;
       this.formSaved = true;
       this.saveFormButton = this.$el.find(".js-save-form");
       this.saveFormButton.attr('disabled', true).text(Formbuilder.options.dict.ALL_CHANGES_SAVED);
-      setInterval(function() {
-        return _this.saveForm.call(_this);
-      }, 5000);
+      if (!!Formbuilder.options.AUTOSAVE) {
+        setInterval(function() {
+          return _this.saveForm.call(_this);
+        }, 5000);
+      }
       return $(window).bind('beforeunload', function() {
         if (_this.formSaved) {
           return void 0;
@@ -549,6 +551,7 @@
       BUTTON_CLASS: 'fb-button',
       HTTP_ENDPOINT: '',
       HTTP_METHOD: 'POST',
+      AUTOSAVE: true,
       mappings: {
         SIZE: 'field_options.size',
         UNITS: 'field_options.units',

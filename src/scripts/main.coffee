@@ -139,16 +139,17 @@ class BuilderView extends Backbone.View
 
     @render()
     @collection.reset(@bootstrapData)
-    @initAutosave()
+    @bindSaveEvent()
 
-  initAutosave: ->
+  bindSaveEvent: ->
     @formSaved = true
     @saveFormButton = @$el.find(".js-save-form")
     @saveFormButton.attr('disabled', true).text(Formbuilder.options.dict.ALL_CHANGES_SAVED)
 
-    setInterval =>
-      @saveForm.call(@)
-    , 5000
+    unless !Formbuilder.options.AUTOSAVE
+      setInterval =>
+        @saveForm.call(@)
+      , 5000
 
     $(window).bind 'beforeunload', =>
       if @formSaved then undefined else Formbuilder.options.dict.UNSAVED_CHANGES
@@ -356,6 +357,7 @@ class Formbuilder
     BUTTON_CLASS: 'fb-button'
     HTTP_ENDPOINT: ''
     HTTP_METHOD: 'POST'
+    AUTOSAVE: true
 
     mappings:
       SIZE: 'field_options.size'
