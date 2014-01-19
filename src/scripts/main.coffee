@@ -121,6 +121,8 @@ class BuilderView extends Backbone.View
     'click .js-save-form': 'saveForm'
     'click .fb-tabs a': 'showTab'
     'click .fb-add-field-types a': 'addField'
+    'mouseover .fb-left': 'lockLeftWrapper'
+    'mouseout .fb-left': 'unlockLeftWrapper'
 
   initialize: (options) ->
     {selector, @formBuilder, @bootstrapData} = options
@@ -177,7 +179,7 @@ class BuilderView extends Backbone.View
     $(window).on 'scroll', =>
       return if @$fbLeft.data('locked') == true
       newMargin = Math.max(0, $(window).scrollTop() - @$el.offset().top)
-      maxMargin = @$responseFields.height()
+      maxMargin = @$responseFields.height() - @$el.find('.fb-tab-content').height()
 
       @$fbLeft.css
         'margin-top': Math.min(maxMargin, newMargin)
@@ -275,10 +277,9 @@ class BuilderView extends Backbone.View
     if @editView
       if @editView.model.cid is model.cid
         @$el.find(".fb-tabs a[data-target=\"#editField\"]").click()
-        @scrollLeftWrapper $responseFieldEl, (oldPadding? && oldPadding)
+        @scrollLeftWrapper($responseFieldEl)
         return
 
-      oldPadding = @$fbLeft.css('padding-top')
       @editView.remove()
 
     @editView = new EditFieldView
