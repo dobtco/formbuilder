@@ -342,12 +342,11 @@ class BuilderView extends Backbone.View
 class Formbuilder
   @helpers:
     defaultFieldAttrs: (field_type) ->
-      attrs =
-        label: "Untitled"
-        field_type: field_type
-        required: true
-        field_options: {}
-
+      attrs = {}
+      attrs[Formbuilder.options.mappings.LABEL] = 'Untitled'
+      attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type
+      attrs[Formbuilder.options.mappings.REQUIRED] = true
+      attrs['field_options'] = {}
       Formbuilder.fields[field_type].defaultAttributes?(attrs) || attrs
 
     simple_format: (x) ->
