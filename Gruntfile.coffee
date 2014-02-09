@@ -57,6 +57,7 @@ module.exports = (grunt) ->
         files:
           '<%= distFolder %>/formbuilder.js': '<%= compiledFolder %>/*.js'
           '<%= vendorFolder %>/js/vendor.js': [
+            'bower_components/ie8-node-enum/index.js'
             'bower_components/jquery/jquery.js'
             'bower_components/jquery-ui/ui/jquery.ui.core.js'
             'bower_components/jquery-ui/ui/jquery.ui.widget.js'

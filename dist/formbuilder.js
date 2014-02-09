@@ -3,10 +3,10 @@
     publishes: true,
     routine: rivets.binders.value.routine,
     bind: function(el) {
-      return el.addEventListener('input', this.publish);
+      return $(el).bind('input.rivets', this.publish);
     },
     unbind: function(el) {
-      return el.removeEventListener('input', this.publish);
+      return $(el).unbind('input.rivets');
     }
   };
 
