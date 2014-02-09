@@ -13,7 +13,7 @@ Formbuilder is a graphical interface for letting users build their own webforms.
 <div id='formbuilder'></div>
 
 <script>
-var formbuilder = new Formbuilder('#formbuilder');
+var formbuilder = new Formbuilder({ selector: '#formbuilder' });
 </script>
 ```
 
@@ -94,7 +94,7 @@ More coming soon...
 
 #### `save`
 ```
-var builder = new Formbuilder('#formbuilder');
+var builder = new Formbuilder({ selector: '#formbuilder' });
 
 builder.on('save', function(payload){
   ...
