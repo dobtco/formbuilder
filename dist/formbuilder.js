@@ -976,9 +976,9 @@ __p += '\n\n<div class=\'option\' data-rv-each-option=\'model.' +
 ((__t = ( Formbuilder.options.mappings.OPTIONS )) == null ? '' : __t) +
 '\'>\n  <input type="checkbox" class=\'js-default-updated\' data-rv-checked="option:checked" />\n  <input type="text" data-rv-input="option:label" class=\'option-label-input\' />\n  <a class="js-add-option ' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
-'" title="Add Option"><i class=\'fa fa-plus-circle\'></i></a>\n  <a class="js-remove-option ' +
+'" title="Add Option"><span class=\'glyphicon glyphicon-plus-sign\'></span></a>\n  <a class="js-remove-option ' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
-'" title="Remove Option"><i class=\'fa fa-minus-circle\'></i></a>\n</div>\n\n';
+'" title="Remove Option"><span class=\'glyphicon glyphicon-minus-sign\'></span></a>\n</div>\n\n';
  if (typeof includeOther !== 'undefined'){ ;
 __p += '\n  <label>\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INCLUDE_OTHER )) == null ? '' : __t) +
@@ -1077,7 +1077,7 @@ this["Formbuilder"]["templates"]["partials/left_side"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-left\'>\n  <ul class=\'fb-tabs\'>\n    <li class=\'active\'><a data-target=\'#addField\'>Add new field</a></li>\n    <li><a data-target=\'#editField\'>Edit field</a></li>\n  </ul>\n\n  <div class=\'fb-tab-content\'>\n    ' +
+__p += '<div class=\'fb-left\'>\n  <ul class=\'fb-tabs nav nav-tabs\'>\n    <li class=\'active\'><a data-target=\'#addField\'>Add new field</a></li>\n    <li><a data-target=\'#editField\'>Edit field</a></li>\n  </ul>\n\n  <div class=\'fb-tab-content\'>\n    ' +
 ((__t = ( Formbuilder.templates['partials/add_field']() )) == null ? '' : __t) +
 '\n    ' +
 ((__t = ( Formbuilder.templates['partials/edit_field']() )) == null ? '' : __t) +
@@ -1091,7 +1091,7 @@ this["Formbuilder"]["templates"]["partials/right_side"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-right\'>\n  <div class=\'fb-no-response-fields\'>No response fields</div>\n  <div class=\'fb-response-fields\'></div>\n</div>\n';
+__p += '<div class=\'fb-right panel\'>\n  <div class=\'fb-no-response-fields\'>No response fields</div>\n  <div class=\'fb-response-fields panel-body\'></div>\n</div>\n';
 
 }
 return __p
@@ -1159,9 +1159,9 @@ var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<div class=\'actions-wrapper\'>\n  <a class="js-duplicate ' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
-'" title="Duplicate Field"><i class=\'fa fa-plus-circle\'></i></a>\n  <a class="js-clear ' +
+'" title="Duplicate Field"><span class=\'glyphicon glyphicon-plus-sign\'></span></a>\n  <a class="js-clear ' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
-'" title="Remove Field"><i class=\'fa fa-minus-circle\'></i></a>\n</div>';
+'" title="Remove Field"><span class=\'glyphicon glyphicon-minus-sign\'></span></a>\n</div>';
 
 }
 return __p
