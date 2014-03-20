@@ -21,7 +21,7 @@ See more usage examples in the [wiki](https://github.com/dobtco/formbuilder/wiki
 
 ## Design &amp; Dependencies
 
-Formbuilder itself is a pretty small codebase (6kb gzip'd javascript) but it *does* rely on some external libraries, namely Backbone &amp; Rivets. We use bower to manage our dependencies, which can be seen [here](https://github.com/dobtco/formbuilder/blob/master/bower.json). I'd like to reduce some of these in the future, (especially font-awesome, because that's just silly,) but for now that's what you'll have to include.
+Formbuilder itself is a pretty small codebase (6kb gzip'd javascript) but it *does* rely on some external libraries, namely Backbone &amp; Rivets. We use bower to manage our dependencies, which can be seen [here](https://github.com/dobtco/formbuilder/blob/gh-pages/bower.json). I'd like to reduce some of these in the future, (especially font-awesome, because that's just silly,) but for now that's what you'll have to include.
 
 Formbuilder consists of a few different components that all live in the `Formbuilder` namespace:
 
@@ -35,7 +35,7 @@ Because of its modular nature, Formbuilder is easy to customize. Most of the con
 
 ## Data format
 
-Keeping with the customizable nature of Formbuilder, you are also able to modify how Formbuilder structures its JSON output. The [default keypaths](https://github.com/dobtco/formbuilder/blob/master/coffee/main.coffee#L20) are:
+Keeping with the customizable nature of Formbuilder, you are also able to modify how Formbuilder structures its JSON output. The [default keypaths](https://github.com/dobtco/formbuilder/blob/gh-pages/coffee/main.coffee#L20) are:
 
 ```coffeescript
 SIZE: 'field_options.size'
