@@ -1,5 +1,7 @@
 Formbuilder.registerField 'number',
 
+  name: 'Number'
+
   order: 30
 
   view: """

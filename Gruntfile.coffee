@@ -71,6 +71,7 @@ module.exports = (grunt) ->
             'bower_components/rivets/dist/rivets.js'
             'bower_components/backbone/backbone.js'
             'bower_components/backbone-deep-model/src/deep-model.js'
+            'bower_components/signature_pad/signature_pad.js'
           ]
 
     cssmin:

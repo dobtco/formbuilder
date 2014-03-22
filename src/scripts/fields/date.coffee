@@ -1,5 +1,7 @@
 Formbuilder.registerField 'date',
 
+  name: 'Date'
+
   order: 20
 
   view: """

@@ -1,5 +1,7 @@
 Formbuilder.registerField 'email',
 
+  name: 'Email'
+
   order: 40
 
   view: """

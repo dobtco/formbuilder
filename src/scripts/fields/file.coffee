@@ -1,9 +1,11 @@
 Formbuilder.registerField 'file',
 
+  name: 'File'
+
   order: 55
 
   view: """
-    <input type='file' />
+    <canvas />
   """
 
   edit: ""

@@ -1,4 +1,5 @@
 Formbuilder.registerField 'dropdown',
+  name: 'Dropdown'
 
   order: 24
 

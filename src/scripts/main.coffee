@@ -20,6 +20,7 @@ class FormbuilderCollection extends Backbone.Collection
     model.attributes.cid = model.cid
 
 
+
 class ViewFieldView extends Backbone.View
   className: "fb-field-wrapper"
 
@@ -131,8 +132,9 @@ class EditFieldView extends Backbone.View
 class BuilderView extends Backbone.View
   SUBVIEWS: []
 
+  saveFormButton: $()
+
   events:
-    'click .js-save-form': 'saveForm'
     'click .fb-tabs a': 'showTab'
     'click .fb-add-field-types a': 'addField'
     'mouseover .fb-add-field-types': 'lockLeftWrapper'
@@ -159,7 +161,6 @@ class BuilderView extends Backbone.View
 
   bindSaveEvent: ->
     @formSaved = true
-    @saveFormButton = @$el.find(".js-save-form")
     @saveFormButton.attr('disabled', true).text(Formbuilder.options.dict.ALL_CHANGES_SAVED)
 
     unless !Formbuilder.options.AUTOSAVE
@@ -327,12 +328,15 @@ class BuilderView extends Backbone.View
     @formSaved = false
     @saveFormButton.removeAttr('disabled').text(Formbuilder.options.dict.SAVE_FORM)
 
+  getPayload: ->
+    return JSON.stringify fields: @collection.toJSON()
+
   saveForm: (e) ->
     return if @formSaved
     @formSaved = true
     @saveFormButton.attr('disabled', true).text(Formbuilder.options.dict.ALL_CHANGES_SAVED)
     @collection.sort()
-    payload = JSON.stringify fields: @collection.toJSON()
+    payload = @getPayload()
 
     if Formbuilder.options.HTTP_ENDPOINT then @doAjaxSave(payload)
     @formBuilder.trigger 'save', payload
@@ -368,16 +372,18 @@ class Formbuilder
       x?.replace(/\n/g, '<br />')
 
   @options:
-    BUTTON_CLASS: 'fb-button'
+    BUTTON_CLASS: 'btn btn-default'
     HTTP_ENDPOINT: ''
     HTTP_METHOD: 'POST'
     AUTOSAVE: true
     CLEAR_FIELD_CONFIRM: false
+    ENABLED_FIELDS: ['text','checkboxes','dropdown', 'paragraph', 'radio', 'date','section_break', 'signature']
 
     mappings:
       SIZE: 'field_options.size'
       UNITS: 'field_options.units'
       LABEL: 'label'
+      NAME: 'field_options.name'
       FIELD_TYPE: 'field_type'
       REQUIRED: 'required'
       ADMIN_ONLY: 'admin_only'
@@ -401,7 +407,16 @@ class Formbuilder
   @inputFields: {}
   @nonInputFields: {}
 
+  markSaved: ->
+    @mainView.formSaved = true
+
+  getPayload: ->
+    return @mainView.getPayload()
+
+
   @registerField: (name, opts) ->
+    unless _.contains(Formbuilder.options.ENABLED_FIELDS, name)
+      return
     for x in ['view', 'edit']
       opts[x] = _.template(opts[x])
 

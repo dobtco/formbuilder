@@ -1,4 +1,5 @@
 Formbuilder.registerField 'checkboxes',
+  name: 'Checkboxes'
 
   order: 10
 

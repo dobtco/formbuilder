@@ -1,5 +1,7 @@
 Formbuilder.registerField 'paragraph',
 
+  name: 'Paragraph'
+
   order: 5
 
   view: """

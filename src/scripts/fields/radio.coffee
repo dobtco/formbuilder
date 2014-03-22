@@ -1,5 +1,7 @@
 Formbuilder.registerField 'radio',
 
+  name: 'Radio'
+
   order: 15
 
   view: """

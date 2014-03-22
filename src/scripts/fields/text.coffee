@@ -1,5 +1,7 @@
 Formbuilder.registerField 'text',
 
+  type: 'Text'
+
   order: 0
 
   view: """

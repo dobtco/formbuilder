@@ -1,5 +1,7 @@
 Formbuilder.registerField 'price',
 
+  name: 'Price'
+
   order: 45
 
   view: """

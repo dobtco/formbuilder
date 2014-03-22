@@ -1,4 +1,5 @@
 Formbuilder.registerField 'address',
+  name: 'Address'
 
   order: 50
 
