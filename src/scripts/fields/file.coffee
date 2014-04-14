@@ -11,5 +11,5 @@ Formbuilder.registerField 'file',
   edit: ""
 
   addButton: """
-    <span class="symbol"><span class="fa fa-cloud-upload"></span></span> File
+    <span class="icon-file"></span> File
   """

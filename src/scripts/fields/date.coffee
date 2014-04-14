@@ -30,5 +30,5 @@ Formbuilder.registerField 'date',
   edit: ""
 
   addButton: """
-    <span class="symbol"><span class="fa fa-calendar"></span></span> Date
+    <span class="icon-date"></span> Date
   """

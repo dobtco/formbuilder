@@ -1,3 +1,23 @@
+@font-face {
+  font-family: 'fontello';
+  src: url('../fonts/fontello.eot?xxxx');
+  src: url('../fonts/fontello.eot?xxxx#iefix') format('embedded-opentype');
+  src: url('../fonts/fontello.woff?xxxx') format('woff');
+  src: url('../fonts/fontello.ttf?xxxx') format('truetype');
+  src: url('../fonts/fontello.svg?xxxx#fontello') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'fontello';
+    src: url('../font/fontello.svg?29204961#fontello') format('svg');
+  }
+}
+*/
 /*!
  * Bootstrap v3.1.1 (http://getbootstrap.com)
  * Copyright 2011-2014 Twitter, Inc.
@@ -6129,4 +6149,4 @@ button.close {
   -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, .05), 0 1px 0 rgba(255, 255, 255, .1);
           box-shadow: inset 0 1px 3px rgba(0, 0, 0, .05), 0 1px 0 rgba(255, 255, 255, .1);
 }
-/*# sourceMappingURL=bootstrap-theme.css.map */
+

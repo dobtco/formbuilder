@@ -1,49 +1,75 @@
-$prim-color = #1abc9c
-$sec-color = #16a085
-
-$affirmitive-color = #2ecc71
-$negative-color = #e74c3c
-
 $editing-bg = #ecf0f1
 $editing-border = darken($editing-bg, 7%)
 
-.fb-button {
-  display: inline-block;
-  margin: 0;
-  padding: .563rem .844rem;
-  border: 0 none;
-  background: #16a085;
-  color: #fff;
-  text-align: center;
-  text-decoration: none;
-  font-size: 12px;
-  line-height: 1.5;
-  cursor: pointer;
-  border-radius: .125rem;
-  border: thin solid darken($prim-color, 5%);
-  border-bottom: 2px solid $sec-color;
+/* hidden until implemented */
+.fb-scoring-wrapper {
+  display: none !important;
 }
 
-.fb-button[disabled] {
-  background: #ddd !important;
-  border: thin solid #ccc;
-  color: #777 !important;
-  text-shadow: none !important;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=65)";
-  opacity: .65;
-  cursor: default;
+[class^="icon-"]:before, [class*=" icon-"]:before {
+  font-family: "fontello";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: .2em;
+  text-align: center;
+  /* opacity: .8; */
+
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+
+  /* fix buttons height, for twitter bootstrap */
+  line-height: 1em;
+
+  /* Animation center compensation - margins should be symmetric */
+  /* remove if not needed */
+  margin-left: .2em;
+
+  /* you can be more comfortable with increased icons size */
+  /* font-size: 120%; */
+
+  /* Uncomment for 3D effect */
+  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
+
+.icon-picture:before { content: '\e811'; } /* '' */
+.icon-email:before { content: '\e805'; } /* '' */
+.icon-section:before { content: '\e80c'; } /* '' */
+.icon-minus:before { content: '\e810'; } /* '' */
+.icon-website:before { content: '\e802'; } /* '' */
+.icon-dropdown:before { content: '\e803'; } /* '' */
+.icon-text:before { content: '\e80a'; } /* '' */
+.icon-checkboxes:before { content: '\e800'; } /* '' */
+.icon-radio:before { content: '\e801'; } /* '' */
+.icon-add:before { content: '\e80f'; } /* '' */
+.icon-price:before { content: '\e806'; } /* '' */
+.icon-file:before { content: '\e809'; } /* '' */
+.icon-signature:before { content: '\e804'; } /* '' */
+.icon-address:before { content: '\e80d'; } /* '' */
+.icon-date:before { content: '\e807'; } /* '' */
+.icon-time:before { content: '\e808'; } /* '' */
+.icon-number:before { content: '\e80b'; } /* '' */
+.icon-paragraph:before { content: '\e80e'; } /* '' */
+.icon-graph:before { content: '\e812'; } /* '' */
+
+.fb-button {
+  text-align: left;
+}
+
 
 .fb-clear {
   clear: both;
 }
 
 .fb-main {
-  max-width: 1000px;
-  margin: 0 auto;
+  max-width: 1280px;
   padding: 0 20px 0 0;
   position: relative;
-  font-family: 'Source Sans Pro', 'Open Sans', Tahoma;
 }
 
 .fb-save-wrapper {
@@ -121,7 +147,6 @@ $editing-border = darken($editing-bg, 7%)
   font-size: 13px;
   display: inline-block;
   width: 48.5%;
-  background-color: $prim-color;
   margin-bottom: 9px;
   box-sizing: border-box;
 
@@ -209,7 +234,6 @@ $editing-border = darken($editing-bg, 7%)
 
     &:focus {
       outline: none;
-      border: thin solid $prim-color;
     }
   }
   select {
@@ -219,13 +243,11 @@ $editing-border = darken($editing-bg, 7%)
 
 .fb-field-wrapper .actions-wrapper a.js-duplicate,
 .fb-edit-field-wrapper .js-add-option {
-  background-color: $affirmitive-color;
   border: none;
 }
 
 .fb-field-wrapper .actions-wrapper a.js-clear,
 .fb-edit-field-wrapper .js-remove-option {
-  background-color: $negative-color;
   border: none;
 }
 
@@ -342,6 +364,14 @@ $editing-border = darken($editing-bg, 7%)
   min-height: 5em;
 }
 
+.option-score-input {
+  width: 50px;
+}
+
+.option-label-input {
+  width: 170px;
+}
+
 .response-field-draggable-helper {
   border: 1px dashed #ddd;
   background: #eee;
@@ -398,3 +428,13 @@ $editing-border = darken($editing-bg, 7%)
 .response-field-website input {
   width: 200px;
 }
+
+.response-field-signature .fb-signature {
+  width: 300px;
+  height: 150px;
+}
+
+.response-field-signature .fb-signature-placeholder {
+  color: #AAA;
+}
+

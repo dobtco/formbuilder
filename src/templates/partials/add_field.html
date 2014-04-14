@@ -1,7 +1,10 @@
 <div class='fb-tab-pane active' id='addField'>
   <div class='fb-add-field-types'>
     <div class='section'>
-      <% _.each(_.sortBy(Formbuilder.inputFields, 'order'), function(f){ %>
+      <% _.chain(Formbuilder.inputFields)
+          .sortBy('order')
+          .filter(function(f){ return f.enabled; })
+          .each(function(f){ %>
         <a data-field-type="<%= f.field_type %>" class="<%= Formbuilder.options.BUTTON_CLASS %>">
           <%= f.addButton %>
         </a>
@@ -9,7 +12,10 @@
     </div>
 
     <div class='section'>
-      <% _.each(_.sortBy(Formbuilder.nonInputFields, 'order'), function(f){ %>
+      <% _.chain(Formbuilder.nonInputFields)
+          .sortBy('order')
+          .filter(function(f){ return f.enabled; })
+          .each(function(f){ %>
         <a data-field-type="<%= f.field_type %>" class="<%= Formbuilder.options.BUTTON_CLASS %>">
           <%= f.addButton %>
         </a>

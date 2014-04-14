@@ -31,11 +31,13 @@
     font-size: 40px;
   }
   </style>
+  <script src="vendor/js/gremlins.js"></script>
+
 </head>
 <body>
-  <div class='fb-main'></div>
-    <script src="vendor/js/vendor.js"></script>
 
+  <div class='fb-main'></div>
+  <script src="vendor/js/vendor.js"></script>
   <script src="dist/formbuilder.js"></script>
 
   <script>
@@ -83,11 +85,18 @@
         ]
       });
 
-      fb.on('save', function(payload){
-        console.log(payload);
-      })
     });
   </script>
-
+  <script>
+    var horde = gremlins.createHorde();
+    var hordeButton = document.createElement("button");
+    hordeButton.className = 'btn btn-danger';
+    hordeButton.innerHTML = 'Unleash the Gremlins';
+    document.body.appendChild(hordeButton);
+    hordeButton.addEventListener('click', function() {
+      horde.unleash({ nb: 500 });
+      this.style.display = 'none';
+    });
+  </script>
 </body>
 </html>

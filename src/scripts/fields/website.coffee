@@ -12,5 +12,5 @@ Formbuilder.registerField 'website',
   """
 
   addButton: """
-    <span class="symbol"><span class="fa fa-link"></span></span> Website
+    <span class="icon-website"></span> Website
   """

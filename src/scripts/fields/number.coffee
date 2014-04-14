@@ -11,12 +11,8 @@ Formbuilder.registerField 'number',
     <% } %>
   """
 
-  edit: """
-    <%= Formbuilder.templates['edit/min_max']() %>
-    <%= Formbuilder.templates['edit/units']() %>
-    <%= Formbuilder.templates['edit/integer_only']() %>
-  """
+  edit: ""
 
   addButton: """
-    <span class="symbol"><span class="fa fa-number">123</span></span> Number
+    <span class="icon-number></span> Number
   """

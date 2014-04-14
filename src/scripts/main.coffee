@@ -20,7 +20,6 @@ class FormbuilderCollection extends Backbone.Collection
     model.attributes.cid = model.cid
 
 
-
 class ViewFieldView extends Backbone.View
   className: "fb-field-wrapper"
 
@@ -64,7 +63,10 @@ class ViewFieldView extends Backbone.View
 
   duplicate: ->
     attrs = _.clone(@model.attributes)
+    console.log(attrs)
+
     delete attrs['id']
+    delete attrs['cid']
     attrs['label'] += ' Copy'
     @parentView.createField attrs, { position: @model.indexInDOM() + 1 }
 
@@ -77,15 +79,21 @@ class EditFieldView extends Backbone.View
     'click .js-remove-option': 'removeOption'
     'click .js-default-updated': 'defaultUpdated'
     'input .option-label-input': 'forceRender'
+    'click .js-scoring': 'reset'
 
   initialize: (options) ->
     {@parentView} = options
     @listenTo @model, "destroy", @remove
 
+
   render: ->
     @$el.html(Formbuilder.templates["edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
     rivets.bind @$el, { model: @model }
     return @
+
+  reset: ->
+    @parentView.editView = undefined
+    @parentView.createAndShowEditView(@model)
 
   remove: ->
     @parentView.editView = undefined
@@ -127,6 +135,7 @@ class EditFieldView extends Backbone.View
 
   forceRender: ->
     @model.trigger('change')
+
 
 
 class BuilderView extends Backbone.View
@@ -365,6 +374,8 @@ class Formbuilder
       attrs[Formbuilder.options.mappings.LABEL] = 'Untitled'
       attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type
       attrs[Formbuilder.options.mappings.REQUIRED] = true
+      attrs[Formbuilder.options.mappings.SCORING] = false
+      attrs['definition'] = Formbuilder.fields[field_type]
       attrs['field_options'] = {}
       Formbuilder.fields[field_type].defaultAttributes?(attrs) || attrs
 
@@ -372,7 +383,7 @@ class Formbuilder
       x?.replace(/\n/g, '<br />')
 
   @options:
-    BUTTON_CLASS: 'btn btn-default'
+    BUTTON_CLASS: 'fb-button btn btn-default'
     HTTP_ENDPOINT: ''
     HTTP_METHOD: 'POST'
     AUTOSAVE: true
@@ -383,14 +394,16 @@ class Formbuilder
       SIZE: 'field_options.size'
       UNITS: 'field_options.units'
       LABEL: 'label'
-      NAME: 'field_options.name'
+      NAME: 'definition.name'
       FIELD_TYPE: 'field_type'
       REQUIRED: 'required'
       ADMIN_ONLY: 'admin_only'
+      SCORE: 'score'
       OPTIONS: 'field_options.options'
       DESCRIPTION: 'field_options.description'
       INCLUDE_OTHER: 'field_options.include_other_option'
       INCLUDE_BLANK: 'field_options.include_blank_option'
+      INCLUDE_SCORING: 'field_options.include_scoring'
       INTEGER_ONLY: 'field_options.integer_only'
       MIN: 'field_options.min'
       MAX: 'field_options.max'
@@ -413,14 +426,15 @@ class Formbuilder
   getPayload: ->
     return @mainView.getPayload()
 
-
   @registerField: (name, opts) ->
+    enabled = true
     unless _.contains(Formbuilder.options.ENABLED_FIELDS, name)
-      return
+      enabled = false
     for x in ['view', 'edit']
-      opts[x] = _.template(opts[x])
+      opts[x] = if enabled then _.template(opts[x]) else (x) -> ''
 
     opts.field_type = name
+    opts.enabled = enabled
 
     Formbuilder.fields[name] = opts
 
@@ -433,7 +447,23 @@ class Formbuilder
     _.extend @, Backbone.Events
     args = _.extend opts, {formBuilder: @}
     @mainView = new BuilderView args
+    @mainView.collection
 
+    setInterval =>
+      collection = @mainView.collection.models
+      ids = []
+      attribute_ids = []
+      _.each collection, (value, key, list) =>
+        ids.push value.cid
+      _.each collection, (value, key, list) =>
+        attribute_ids.push value.attributes.cid
+      if _.uniq(ids).length != ids.length
+        console.log('ids')
+        console.log(ids)
+      if _.uniq(attribute_ids).length != attribute_ids.length
+        console.log('attribute ids')
+        console.log(attribute_ids)
+    , 250
 window.Formbuilder = Formbuilder
 
 if module?

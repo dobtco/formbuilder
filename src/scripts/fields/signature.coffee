@@ -5,11 +5,15 @@ Formbuilder.registerField 'signature',
   order: 65
 
   view: """
-    <canvas />
+    <div class="fb-signature form-control">
+        <div class="fb-signature-placeholder">Sign Here</div>
+        <div class="fb-signature-pad"></div>
+    </div>
+    <button class="btn btn-default btn-xs">Clear</button>
   """
 
   edit: ""
 
   addButton: """
-    <span class="glyphicon glyphicon-search"></span> Signature
+    <span class="icon-signature"></span> Signature
   """

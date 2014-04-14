@@ -8,13 +8,10 @@ Formbuilder.registerField 'paragraph',
     <textarea class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>'></textarea>
   """
 
-  edit: """
-    <%= Formbuilder.templates['edit/size']() %>
-    <%= Formbuilder.templates['edit/min_max_length']() %>
-  """
+  edit: ""
 
   addButton: """
-    <span class="symbol">&#182;</span> Paragraph
+    <span class="icon-paragraph"></span> Paragraph
   """
 
   defaultAttributes: (attrs) ->
