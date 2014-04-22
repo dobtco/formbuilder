@@ -568,7 +568,7 @@
         attrs = {};
         attrs[Formbuilder.options.mappings.LABEL] = 'Untitled';
         attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type;
-        attrs[Formbuilder.options.mappings.REQUIRED] = true;
+        attrs[Formbuilder.options.mappings.REQUIRED] = false;
         attrs[Formbuilder.options.mappings.SCORING] = false;
         attrs['definition'] = Formbuilder.fields[field_type];
         attrs['field_options'] = {};
@@ -715,7 +715,7 @@
     name: 'Checkboxes',
     order: 10,
     view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='checkbox' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
-    edit: "<%= Formbuilder.templates['edit/options']({ includeOther: true, rf: rf }) %>",
+    edit: "<%= Formbuilder.templates['edit/options']({ rf: rf }) %>",
     addButton: "<span class=\"icon-checkboxes\"></span> Checkboxes",
     defaultAttributes: function(attrs) {
       attrs.field_options.options = [
@@ -751,7 +751,7 @@
     name: 'Dropdown',
     order: 24,
     view: "<select>\n  <% if (rf.get(Formbuilder.options.mappings.INCLUDE_BLANK)) { %>\n    <option value=''></option>\n  <% } %>\n\n  <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n    <option <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'selected' %>>\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </option>\n  <% } %>\n</select>",
-    edit: "<%= Formbuilder.templates['edit/scoring']() %>\n<%= Formbuilder.templates['edit/options']({ includeBlank: true, rf: rf }) %>",
+    edit: "<%= Formbuilder.templates['edit/scoring']() %>\n<%= Formbuilder.templates['edit/options']({ rf: rf }) %>",
     addButton: "<span class=\"icon-dropdown\"></span> Dropdown",
     defaultAttributes: function(attrs) {
       attrs.field_options.options = [
@@ -836,7 +836,7 @@
     name: 'Multiple Choice',
     order: 15,
     view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='radio' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
-    edit: "<%= Formbuilder.templates['edit/scoring']() %>\n<%= Formbuilder.templates['edit/options']({ includeOther: true, rf: rf }) %>",
+    edit: "<%= Formbuilder.templates['edit/scoring']() %>\n<%= Formbuilder.templates['edit/options']({ rf: rf }) %>",
     addButton: "<span class=\"icon-radio\"></span> Multiple Choice",
     defaultAttributes: function(attrs) {
       attrs.field_options.options = [

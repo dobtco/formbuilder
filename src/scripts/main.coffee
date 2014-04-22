@@ -373,7 +373,7 @@ class Formbuilder
       attrs = {}
       attrs[Formbuilder.options.mappings.LABEL] = 'Untitled'
       attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type
-      attrs[Formbuilder.options.mappings.REQUIRED] = true
+      attrs[Formbuilder.options.mappings.REQUIRED] = false
       attrs[Formbuilder.options.mappings.SCORING] = false
       attrs['definition'] = Formbuilder.fields[field_type]
       attrs['field_options'] = {}

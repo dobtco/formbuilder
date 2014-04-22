@@ -28,7 +28,7 @@ Formbuilder.registerField 'radio',
 
   edit: """
     <%= Formbuilder.templates['edit/scoring']() %>
-    <%= Formbuilder.templates['edit/options']({ includeOther: true, rf: rf }) %>
+    <%= Formbuilder.templates['edit/options']({ rf: rf }) %>
   """
 
 

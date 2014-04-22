@@ -19,7 +19,7 @@ Formbuilder.registerField 'dropdown',
 
   edit: """
     <%= Formbuilder.templates['edit/scoring']() %>
-    <%= Formbuilder.templates['edit/options']({ includeBlank: true, rf: rf }) %>
+    <%= Formbuilder.templates['edit/options']({ rf: rf }) %>
   """
 
   addButton: """
