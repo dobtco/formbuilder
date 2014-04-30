@@ -184,13 +184,18 @@
       'click .js-add-option': 'addOption',
       'click .js-remove-option': 'removeOption',
       'click .js-default-updated': 'defaultUpdated',
-      'input .option-label-input': 'forceRender',
-      'click .js-scoring': 'reset'
+      'input .option-label-input': 'forceRender'
     };
 
     EditFieldView.prototype.initialize = function(options) {
+      var _this = this;
       this.parentView = options.parentView;
-      return this.listenTo(this.model, "destroy", this.remove);
+      this.listenTo(this.model, "destroy", this.remove);
+      return _.each(Formbuilder.options.change, function(callback, key) {
+        var eventName;
+        eventName = 'change:' + Formbuilder.options.mappings[key];
+        return _this.listenTo(_this.model, eventName, callback);
+      });
     };
 
     EditFieldView.prototype.render = function() {
@@ -568,8 +573,7 @@
         attrs = {};
         attrs[Formbuilder.options.mappings.LABEL] = 'Untitled';
         attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type;
-        attrs[Formbuilder.options.mappings.REQUIRED] = true;
-        attrs[Formbuilder.options.mappings.SCORING] = false;
+        attrs[Formbuilder.options.mappings.REQUIRED] = false;
         attrs['definition'] = Formbuilder.fields[field_type];
         attrs['field_options'] = {};
         return (typeof (_base = Formbuilder.fields[field_type]).defaultAttributes === "function" ? _base.defaultAttributes(attrs) : void 0) || attrs;
@@ -594,7 +598,6 @@
         FIELD_TYPE: 'field_type',
         REQUIRED: 'required',
         ADMIN_ONLY: 'admin_only',
-        SCORE: 'score',
         OPTIONS: 'field_options.options',
         DESCRIPTION: 'field_options.description',
         INCLUDE_OTHER: 'field_options.include_other_option',
@@ -606,6 +609,11 @@
         MINLENGTH: 'field_options.minlength',
         MAXLENGTH: 'field_options.maxlength',
         LENGTH_UNITS: 'field_options.min_max_length_units'
+      },
+      change: {
+        INCLUDE_SCORING: function() {
+          return this.reset();
+        }
       },
       dict: {
         ALL_CHANGES_SAVED: 'All changes saved',
@@ -715,7 +723,7 @@
     name: 'Checkboxes',
     order: 10,
     view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='checkbox' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
-    edit: "<%= Formbuilder.templates['edit/options']({ includeOther: true, rf: rf }) %>",
+    edit: "<%= Formbuilder.templates['edit/options']({ rf: rf }) %>",
     addButton: "<span class=\"icon-checkboxes\"></span> Checkboxes",
     defaultAttributes: function(attrs) {
       attrs.field_options.options = [
@@ -751,20 +759,21 @@
     name: 'Dropdown',
     order: 24,
     view: "<select>\n  <% if (rf.get(Formbuilder.options.mappings.INCLUDE_BLANK)) { %>\n    <option value=''></option>\n  <% } %>\n\n  <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n    <option <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'selected' %>>\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </option>\n  <% } %>\n</select>",
-    edit: "<%= Formbuilder.templates['edit/scoring']() %>\n<%= Formbuilder.templates['edit/options']({ includeBlank: true, rf: rf }) %>",
+    edit: "<%= Formbuilder.templates['edit/scoring']() %>\n<%= Formbuilder.templates['edit/options']({ rf: rf }) %>",
     addButton: "<span class=\"icon-dropdown\"></span> Dropdown",
     defaultAttributes: function(attrs) {
       attrs.field_options.options = [
         {
           label: "",
           checked: false,
-          score: false
+          score: ""
         }, {
           label: "",
           checked: false,
-          score: false
+          score: ""
         }
       ];
+      attrs.field_options.include_scoring = false;
       attrs.field_options.include_blank_option = false;
       return attrs;
     }
@@ -833,23 +842,24 @@
 
 (function() {
   Formbuilder.registerField('radio', {
-    name: 'Multiple Choice',
+    name: 'Radio Button',
     order: 15,
     view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='radio' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
-    edit: "<%= Formbuilder.templates['edit/scoring']() %>\n<%= Formbuilder.templates['edit/options']({ includeOther: true, rf: rf }) %>",
+    edit: "<%= Formbuilder.templates['edit/scoring']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/options']({ rf: rf }) %>",
     addButton: "<span class=\"icon-radio\"></span> Multiple Choice",
     defaultAttributes: function(attrs) {
       attrs.field_options.options = [
         {
           label: "",
           checked: false,
-          score: false
+          score: ""
         }, {
           label: "",
           checked: false,
-          score: false
+          score: ""
         }
       ];
+      attrs.field_options.include_scoring = false;
       return attrs;
     }
   });
@@ -1084,7 +1094,7 @@ var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<label class="fb-scoring-wrapper">\n  <input class="js-scoring" type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INCLUDE_SCORING )) == null ? '' : __t) +
-'\' />\n  Include Scoring\n</label>\n';
+'\' />\n  Include Scoring\n</label>\n\n';
 
 }
 return __p

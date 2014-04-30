@@ -26,7 +26,7 @@ Formbuilder.registerField 'checkboxes',
   """
 
   edit: """
-    <%= Formbuilder.templates['edit/options']({ includeOther: true, rf: rf }) %>
+    <%= Formbuilder.templates['edit/options']({ rf: rf }) %>
   """
 
   addButton: """

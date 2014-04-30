@@ -79,11 +79,14 @@ class EditFieldView extends Backbone.View
     'click .js-remove-option': 'removeOption'
     'click .js-default-updated': 'defaultUpdated'
     'input .option-label-input': 'forceRender'
-    'click .js-scoring': 'reset'
+
 
   initialize: (options) ->
     {@parentView} = options
     @listenTo @model, "destroy", @remove
+    _.each Formbuilder.options.change, (callback, key) =>
+      eventName = 'change:' + Formbuilder.options.mappings[key]
+      @listenTo @model, eventName, callback
 
 
   render: ->
@@ -373,8 +376,7 @@ class Formbuilder
       attrs = {}
       attrs[Formbuilder.options.mappings.LABEL] = 'Untitled'
       attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type
-      attrs[Formbuilder.options.mappings.REQUIRED] = true
-      attrs[Formbuilder.options.mappings.SCORING] = false
+      attrs[Formbuilder.options.mappings.REQUIRED] = false
       attrs['definition'] = Formbuilder.fields[field_type]
       attrs['field_options'] = {}
       Formbuilder.fields[field_type].defaultAttributes?(attrs) || attrs
@@ -398,7 +400,6 @@ class Formbuilder
       FIELD_TYPE: 'field_type'
       REQUIRED: 'required'
       ADMIN_ONLY: 'admin_only'
-      SCORE: 'score'
       OPTIONS: 'field_options.options'
       DESCRIPTION: 'field_options.description'
       INCLUDE_OTHER: 'field_options.include_other_option'
@@ -410,6 +411,10 @@ class Formbuilder
       MINLENGTH: 'field_options.minlength'
       MAXLENGTH: 'field_options.maxlength'
       LENGTH_UNITS: 'field_options.min_max_length_units'
+
+    change:
+      INCLUDE_SCORING: ->
+        @reset()
 
     dict:
       ALL_CHANGES_SAVED: 'All changes saved'

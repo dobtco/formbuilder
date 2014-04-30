@@ -1,6 +1,6 @@
 Formbuilder.registerField 'radio',
 
-  name: 'Multiple Choice'
+  name: 'Radio Button'
 
   order: 15
 
@@ -27,8 +27,8 @@ Formbuilder.registerField 'radio',
   """
 
   edit: """
-    <%= Formbuilder.templates['edit/scoring']() %>
-    <%= Formbuilder.templates['edit/options']({ includeOther: true, rf: rf }) %>
+    <%= Formbuilder.templates['edit/scoring']({ rf: rf }) %>
+    <%= Formbuilder.templates['edit/options']({ rf: rf }) %>
   """
 
 
@@ -41,11 +41,13 @@ Formbuilder.registerField 'radio',
     attrs.field_options.options = [
       label: "",
       checked: false,
-      score: false
+      score: ""
     ,
       label: "",
       checked: false,
-      score: false
+      score: ""
     ]
+
+    attrs.field_options.include_scoring = false
 
     attrs

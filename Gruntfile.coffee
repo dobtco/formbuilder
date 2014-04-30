@@ -73,12 +73,16 @@ module.exports = (grunt) ->
             'bower_components/backbone-deep-model/src/deep-model.js'
             'bower_components/signature_pad/signature_pad.js'
           ]
+          '<%= vendorFolder %>/css/vendor.css': [
+              'bower_components/font-awesome/css/font-awesome.css',
+              'bower_components/bootstrap/dist/css/bootstrap.css',
+          ]
 
     cssmin:
       dist:
         files:
           '<%= distFolder %>/formbuilder-min.css': '<%= distFolder %>/formbuilder.css'
-          '<%= vendorFolder %>/css/vendor.css': 'bower_components/font-awesome/css/font-awesome.css'
+
 
     stylus:
       all:
