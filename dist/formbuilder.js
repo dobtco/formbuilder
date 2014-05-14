@@ -720,12 +720,7 @@
 }).call(this);
 
 (function() {
-  Formbuilder.registerField('file', {
-    order: 55,
-    view: "<input type='file' />",
-    edit: "",
-    addButton: "<span class=\"symbol\"><span class=\"fa fa-cloud-upload\"></span></span> File"
-  });
+
 
 }).call(this);
 
@@ -883,9 +878,9 @@ var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<label>\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.REQUIRED )) == null ? '' : __t) +
-'\' />\n  Required\n</label>\n<label>\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
+'\' />\n  Required\n</label>\n<!-- label>\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.ADMIN_ONLY )) == null ? '' : __t) +
-'\' />\n  Admin only\n</label>';
+'\' />\n  Admin only\n</label -->';
 
 }
 return __p
@@ -1047,7 +1042,7 @@ __p += '\n        <a data-field-type="' +
 ((__t = ( f.addButton )) == null ? '' : __t) +
 '\n        </a>\n      ';
  }); ;
-__p += '\n    </div>\n\n    <div class=\'section\'>\n      ';
+__p += '\n    </div>\n\n    <!--div class=\'section\'>\n      ';
  _.each(_.sortBy(Formbuilder.nonInputFields, 'order'), function(f){ ;
 __p += '\n        <a data-field-type="' +
 ((__t = ( f.field_type )) == null ? '' : __t) +
@@ -1057,7 +1052,7 @@ __p += '\n        <a data-field-type="' +
 ((__t = ( f.addButton )) == null ? '' : __t) +
 '\n        </a>\n      ';
  }); ;
-__p += '\n    </div>\n  </div>\n</div>';
+__p += '\n    </div -->\n  </div>\n</div>';
 
 }
 return __p
@@ -1131,11 +1126,7 @@ this["Formbuilder"]["templates"]["view/base_non_input"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'subtemplate-wrapper\'>\n  <div class=\'cover\'></div>\n  ' +
-((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].view({rf: rf}) )) == null ? '' : __t) +
-'\n  ' +
-((__t = ( Formbuilder.templates['view/duplicate_remove']({rf: rf}) )) == null ? '' : __t) +
-'\n</div>\n';
+__p += '';
 
 }
 return __p
