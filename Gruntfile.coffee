@@ -72,10 +72,10 @@ module.exports = (grunt) ->
             'bower_components/backbone/backbone.js'
             'bower_components/backbone-deep-model/src/deep-model.js'
           ]
-      limited:
+      mobile_friendly:
         files:
           '<%= distFolder %>/formbuilder.js': '<%= compiledFolder %>/*.js'
-          '<%= vendorFolder %>/js/vendor_limited.js': [
+          '<%= vendorFolder %>/js/vendor_mobile_friendly.js': [
             'bower_components/ie8-node-enum/index.js'
             'bower_components/jquery.scrollWindowTo/index.js'
             'bower_components/underscore.mixin.deepExtend/index.js'
@@ -119,6 +119,6 @@ module.exports = (grunt) ->
 
 
   grunt.registerTask 'default', ALL_TASKS
-  grunt.registerTask 'limited', ['jst:all', 'coffee:all', 'concat:limited', 'stylus:all', 'clean:compiled']
+  grunt.registerTask 'mobile_friendly', ['jst:all', 'coffee:all', 'concat:mobile_friendly', 'stylus:all', 'clean:compiled']
   grunt.registerTask 'dist', ['cssmin:dist', 'uglify:dist']
   grunt.registerTask 'test', ['dist', 'karma']
