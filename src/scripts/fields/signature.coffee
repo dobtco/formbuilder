@@ -15,5 +15,5 @@ Formbuilder.registerField 'signature',
   edit: ""
 
   addButton: """
-    <span class="icon-signature"></span> Signature
+    <span class="fb-icon-signature"></span> Signature
   """

@@ -37,5 +37,5 @@ Formbuilder.registerField 'time',
   edit: ""
 
   addButton: """
-    <span class="icon-time"></span> Time
+    <span class="fb-icon-time"></span> Time
   """

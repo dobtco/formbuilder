@@ -11,7 +11,7 @@ Formbuilder.registerField 'text',
   edit: ""
 
   addButton: """
-    <span class="icon-text"></span> Text
+    <span class="fb-icon-text"></span> Text
   """
 
   defaultAttributes: (attrs) ->

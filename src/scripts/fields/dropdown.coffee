@@ -23,7 +23,7 @@ Formbuilder.registerField 'dropdown',
   """
 
   addButton: """
-    <span class="icon-dropdown"></span> Dropdown
+    <span class="fb-icon-dropdown"></span> Dropdown
   """
 
   defaultAttributes: (attrs) ->

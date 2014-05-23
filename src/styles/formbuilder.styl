@@ -1,7 +1,7 @@
 $editing-bg = #ecf0f1
 $editing-border = darken($editing-bg, 7%)
 
-[class^="icon-"]:before, [class*=" icon-"]:before {
+[class^="fb-icon-"]:before, [class*=" fb-icon-"]:before {
   font-family: "fontello";
   font-style: normal;
   font-weight: normal;
@@ -32,25 +32,29 @@ $editing-border = darken($editing-bg, 7%)
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
-.icon-picture:before { content: '\e811'; } /* '' */
-.icon-email:before { content: '\e805'; } /* '' */
-.icon-section:before { content: '\e80c'; } /* '' */
-.icon-minus:before { content: '\e810'; } /* '' */
-.icon-website:before { content: '\e802'; } /* '' */
-.icon-dropdown:before { content: '\e803'; } /* '' */
-.icon-text:before { content: '\e80a'; } /* '' */
-.icon-checkboxes:before { content: '\e800'; } /* '' */
-.icon-radio:before { content: '\e801'; } /* '' */
-.icon-add:before { content: '\e80f'; } /* '' */
-.icon-price:before { content: '\e806'; } /* '' */
-.icon-file:before { content: '\e809'; } /* '' */
-.icon-signature:before { content: '\e804'; } /* '' */
-.icon-address:before { content: '\e80d'; } /* '' */
-.icon-date:before { content: '\e807'; } /* '' */
-.icon-time:before { content: '\e808'; } /* '' */
-.icon-number:before { content: '\e80b'; } /* '' */
-.icon-paragraph:before { content: '\e80e'; } /* '' */
-.icon-graph:before { content: '\e812'; } /* '' */
+.fb-icon-picture:before { content: '\e811'; } /* '' */
+.fb-icon-email:before { content: '\e805'; } /* '' */
+.fb-icon-add:before { content: '\e80f'; } /* '' */
+.fb-icon-section:before { content: '\e80c'; } /* '' */
+.fb-icon-minus:before { content: '\e810'; } /* '' */
+.fb-icon-website:before { content: '\e802'; } /* '' */
+.fb-icon-dropdown:before { content: '\e803'; } /* '' */
+.fb-icon-text:before { content: '\e80a'; } /* '' */
+.fb-icon-checkboxes:before { content: '\e800'; } /* '' */
+.fb-icon-check-empty:before { content: '\e813'; } /* '' */
+.fb-icon-circle-empty:before { content: '\e814'; } /* '' */
+.fb-icon-grid:before { content: '\e816'; } /* '' */
+.fb-icon-graph:before { content: '\e812'; } /* '' */
+.fb-icon-price:before { content: '\e806'; } /* '' */
+.fb-icon-info:before { content: '\e815'; } /* '' */
+.fb-icon-file:before { content: '\e809'; } /* '' */
+.fb-icon-signature:before { content: '\e804'; } /* '' */
+.fb-icon-address:before { content: '\e80d'; } /* '' */
+.fb-icon-date:before { content: '\e807'; } /* '' */
+.fb-icon-time:before { content: '\e808'; } /* '' */
+.fb-icon-number:before { content: '\e80b'; } /* '' */
+.fb-icon-paragraph:before { content: '\e80e'; } /* '' */
+.fb-icon-radio:before { content: '\e801'; } /* '' */
 
 .fb-button {
   text-align: left;
@@ -62,7 +66,6 @@ $editing-border = darken($editing-bg, 7%)
 }
 
 .fb-main {
-  max-width: 1280px;
   padding: 0 20px 0 0;
   position: relative;
 }
@@ -303,6 +306,13 @@ $editing-border = darken($editing-bg, 7%)
   margin-top: 5px;
 }
 
+.fb-edit-field-grid {
+    .fb-label-description
+    {
+        display: none;
+    }
+}
+
 .fb-edit-field-wrapper {
   font-size: 13px;
 }
@@ -373,7 +383,6 @@ $editing-border = darken($editing-bg, 7%)
 }
 
 .response-field-text input.rf-size-small {
-  width: 130px;
 }
 
 .response-field-text input.rf-size-medium {
@@ -433,3 +442,39 @@ $editing-border = darken($editing-bg, 7%)
   color: #AAA;
 }
 
+.response-field-grid {
+  .cover {
+    display: none;
+  }
+}
+
+.response-field-grid-table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  table-layout: fixed;
+  width: 100%;
+  .response-field-grid-row {
+    height: 100px;
+    vertical-align: top;
+  }
+  .response-field-grid-cell {
+    padding: 10px 10px 0 10px;
+    border: 1px dashed #ddd
+    background-color: rgba(255, 255, 255, 0.8);
+    .cover {
+      display: block;
+    }
+    .response-field-selector {
+      margin: 0.5em;
+    }
+    .subtemplate-wrapper > label {
+      display:none;
+    }
+    .help-block {
+      display:none;
+    }
+    select, input[type=text], textarea {
+      width: 100%;
+    }
+  }
+}

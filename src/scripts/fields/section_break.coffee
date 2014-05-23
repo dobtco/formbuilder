@@ -12,7 +12,7 @@ Formbuilder.registerField 'section_break',
   """
 
   edit: """
-  <div class="fb-edit-section-header">Label</div>
+  <div class="fb-edit-section-header">Details</div>
   <div class="fb-common-wrapper">
   <div class="fb-label-description">
     <input type="text" data-rv-input="model.<%= Formbuilder.options.mappings.LABEL %>">
@@ -23,5 +23,5 @@ Formbuilder.registerField 'section_break',
   """
 
   addButton: """
-    <span class="icon-section"></span> Section Break
+    <span class="fb-icon-section"></span> Section Break
   """

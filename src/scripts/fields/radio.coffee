@@ -33,7 +33,7 @@ Formbuilder.registerField 'radio',
 
 
   addButton: """
-    <span class="icon-radio"></span> Multiple Choice
+    <span class="fb-icon-radio"></span> Multiple Choice
   """
 
   defaultAttributes: (attrs) ->

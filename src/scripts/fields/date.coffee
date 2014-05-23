@@ -30,5 +30,5 @@ Formbuilder.registerField 'date',
   edit: ""
 
   addButton: """
-    <span class="icon-date"></span> Date
+    <span class="fb-icon-date"></span> Date
   """

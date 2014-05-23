@@ -1,0 +1,41 @@
+Formbuilder.registerField 'info',
+
+  name: 'Info'
+
+  order: 0
+
+  type: 'non_input'
+
+  view: """
+    <label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>
+    <p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>
+  """
+
+  edit: """
+  <div class="fb-edit-section-header">Details</div>
+  <div class="fb-common-wrapper">
+    <div class="fb-label-description">
+      <input type="text" data-rv-input="model.<%= Formbuilder.options.mappings.LABEL %>">
+    </div>
+    <textarea style="display:none;" data-rv-input="model.<%= Formbuilder.options.mappings.DESCRIPTION %>">
+    </textarea>
+    <div class="fb-info-editor"></div>
+  </div>
+  """
+
+  addButton: """
+    <span class="fb-icon-info"></span> Info
+  """
+
+  onEdit: (model) ->
+    update = ->
+        model.set(Formbuilder.options.mappings.DESCRIPTION, $(@).html())
+        model.trigger('change:' + Formbuilder.options.mappings.DESCRIPTION)
+    $('.fb-info-editor').summernote(
+        airmode: true
+        onchange: -> update.call(@)
+        onkeyup: -> update.call(@)
+        toolbar: [
+            ['style', ['bold', 'italic', 'underline']],
+            ['table',['table']]]
+    )

@@ -39,5 +39,5 @@ Formbuilder.registerField 'address',
   edit: ""
 
   addButton: """
-    <span class="icon-address"></span> Address
+    <span class="fb-icon-address"></span> Address
   """

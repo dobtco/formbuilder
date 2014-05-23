@@ -12,5 +12,5 @@ Formbuilder.registerField 'website',
   """
 
   addButton: """
-    <span class="icon-website"></span> Website
+    <span class="fb-icon-website"></span> Website
   """

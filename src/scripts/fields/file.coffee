@@ -11,5 +11,5 @@ Formbuilder.registerField 'file',
   edit: ""
 
   addButton: """
-    <span class="icon-file"></span> File
+    <span class="fb-icon-file"></span> File
   """

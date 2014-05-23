@@ -1,26 +1,30 @@
-[class^="icon-"]:before,[class*=" icon-"]:before{font-family:"fontello";font-style:normal;font-weight:normal;speak:none;display:inline-block;text-decoration:inherit;width:1em;margin-right:.2em;text-align:center;font-variant:normal;text-transform:none;line-height:1em;margin-left:.2em}
-.icon-picture:before{content:'\e811'}
-.icon-email:before{content:'\e805'}
-.icon-section:before{content:'\e80c'}
-.icon-minus:before{content:'\e810'}
-.icon-website:before{content:'\e802'}
-.icon-dropdown:before{content:'\e803'}
-.icon-text:before{content:'\e80a'}
-.icon-checkboxes:before{content:'\e800'}
-.icon-radio:before{content:'\e801'}
-.icon-add:before{content:'\e80f'}
-.icon-price:before{content:'\e806'}
-.icon-file:before{content:'\e809'}
-.icon-signature:before{content:'\e804'}
-.icon-address:before{content:'\e80d'}
-.icon-date:before{content:'\e807'}
-.icon-time:before{content:'\e808'}
-.icon-number:before{content:'\e80b'}
-.icon-paragraph:before{content:'\e80e'}
-.icon-graph:before{content:'\e812'}
+[class^="fb-icon-"]:before,[class*=" fb-icon-"]:before{font-family:"fontello";font-style:normal;font-weight:normal;speak:none;display:inline-block;text-decoration:inherit;width:1em;margin-right:.2em;text-align:center;font-variant:normal;text-transform:none;line-height:1em;margin-left:.2em}
+.fb-icon-picture:before{content:'\e811'}
+.fb-icon-email:before{content:'\e805'}
+.fb-icon-add:before{content:'\e80f'}
+.fb-icon-section:before{content:'\e80c'}
+.fb-icon-minus:before{content:'\e810'}
+.fb-icon-website:before{content:'\e802'}
+.fb-icon-dropdown:before{content:'\e803'}
+.fb-icon-text:before{content:'\e80a'}
+.fb-icon-checkboxes:before{content:'\e800'}
+.fb-icon-check-empty:before{content:'\e813'}
+.fb-icon-circle-empty:before{content:'\e814'}
+.fb-icon-grid:before{content:'\e816'}
+.fb-icon-graph:before{content:'\e812'}
+.fb-icon-price:before{content:'\e806'}
+.fb-icon-info:before{content:'\e815'}
+.fb-icon-file:before{content:'\e809'}
+.fb-icon-signature:before{content:'\e804'}
+.fb-icon-address:before{content:'\e80d'}
+.fb-icon-date:before{content:'\e807'}
+.fb-icon-time:before{content:'\e808'}
+.fb-icon-number:before{content:'\e80b'}
+.fb-icon-paragraph:before{content:'\e80e'}
+.fb-icon-radio:before{content:'\e801'}
 .fb-button{text-align:left}
 .fb-clear{clear:both}
-.fb-main{max-width:1280px;padding:0 20px 0 0;position:relative}
+.fb-main{padding:0 20px 0 0;position:relative}
 .fb-save-wrapper{position:absolute;right:20px;top:10px}
 .fb-left{float:left;width:320px;padding-top:30px}
 .fb-right{padding-top:70px;margin-left:320px;border-left:1px solid #ddd;padding-left:20px;min-height:100%;overflow:hidden}
@@ -61,6 +65,7 @@
 .fb-field-wrapper .input-line > span input{width:100%}
 .fb-field-wrapper .input-line > span > label{display:block;font-size:13px;margin-left:3px}
 .fb-field-wrapper .help-block{display:block;font-size:12px;margin-top:5px}
+.fb-edit-field-grid .fb-label-description{display:none}
 .fb-edit-field-wrapper{font-size:13px}
 .fb-edit-field-wrapper .fb-field-label{font-weight:normal;background:#eee;padding:.75em;color:#666;font-size:1.25em}
 .fb-edit-field-wrapper .fb-field-label .field-type{margin-top:.5em;display:block;font-family:'Source Sans Pro',sans-serif;font-size:1em}
@@ -75,7 +80,6 @@
 .option-score-input{width:50px}
 .option-label-input{width:170px}
 .response-field-draggable-helper{border:1px dashed #ddd;background:#eee}
-.response-field-text input.rf-size-small{width:130px}
 .response-field-text input.rf-size-medium{width:300px}
 .response-field-text input.rf-size-large{width:100%}
 .response-field-paragraph textarea.rf-size-small{width:200px;min-height:60px}
@@ -89,3 +93,12 @@
 .response-field-website input{width:200px}
 .response-field-signature .fb-signature{width:300px;height:150px}
 .response-field-signature .fb-signature-placeholder{color:#aaa}
+.response-field-grid .cover{display:none}
+.response-field-grid-table{border-collapse:collapse;border-spacing:0;table-layout:fixed;width:100%}
+.response-field-grid-table .response-field-grid-row{height:100px;vertical-align:top}
+.response-field-grid-table .response-field-grid-cell{padding:10px 10px 0 10px;border:1px dashed #ddd;background-color:rgba(255,255,255,0.8)}
+.response-field-grid-table .response-field-grid-cell .cover{display:block}
+.response-field-grid-table .response-field-grid-cell .response-field-selector{margin:.5em}
+.response-field-grid-table .response-field-grid-cell .subtemplate-wrapper > label{display:none}
+.response-field-grid-table .response-field-grid-cell .help-block{display:none}
+.response-field-grid-table .response-field-grid-cell select,.response-field-grid-table .response-field-grid-cell input[type=text],.response-field-grid-table .response-field-grid-cell textarea{width:100%}

@@ -14,5 +14,5 @@ Formbuilder.registerField 'number',
   edit: ""
 
   addButton: """
-    <span class="icon-number></span> Number
+    <span class="fb-icon-number></span> Number
   """

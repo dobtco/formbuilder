@@ -11,7 +11,7 @@ Formbuilder.registerField 'paragraph',
   edit: ""
 
   addButton: """
-    <span class="icon-paragraph"></span> Paragraph
+    <span class="fb-icon-paragraph"></span> Paragraph
   """
 
   defaultAttributes: (attrs) ->

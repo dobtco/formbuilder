@@ -49,11 +49,12 @@
 
   <div class='fb-main'></div>
   <script src="vendor/js/vendor.js"></script>
+  <script src="bower_components/summernote/dist/summernote.js"></script>
   <script src="dist/formbuilder.js"></script>
 
   <script>
     $(function(){
-      fb = new Formbuilder({
+      window.fb = new Formbuilder({
         selector: '.fb-main',
         bootstrapData: [
           {
@@ -68,7 +69,7 @@
             "field_type": "text",
             "required": true,
             "field_options": {},
-            "cid": "c6"
+            "cid": "c2"
           },
           {
             "label": "Security personnel #82?",
@@ -83,14 +84,54 @@
                 }],
                 "include_other_option": true
             },
-            "cid": "c10"
+            "cid": "c3"
           },
           {
             "label": "Medical history",
             "field_type": "file",
             "required": true,
             "field_options": {},
-            "cid": "c14"
+            "cid": "c4"
+          },
+          {
+            "label": "",
+            "field_type": "grid",
+            "field_options": {
+                num_rows: 2,
+                num_cols: 2
+            },
+            children: [
+                {
+                    "field_type": "radio",
+                    "field_options": {
+                        "options": [{
+                            "label": "Yes",
+                            "checked": false
+                        }, {
+                            "label": "No",
+                            "checked": false
+                        }],
+                        "include_other_option": true
+                    },
+                    "grid": {
+                        row: 0,
+                        col: 0
+                    },
+                    "cid": "c6"
+                },
+                {
+                    "field_type": "text",
+                    "required": true,
+                    "field_options": {},
+                    "grid": {
+                        row: 0,
+                        col: 1,
+                        cid: 'c5'
+                    },
+                    "cid": "c6"
+                }
+            ],
+            "cid": "c5"
           }
         ]
       });

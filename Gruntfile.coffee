@@ -1,4 +1,4 @@
-ALL_TASKS = ['jst:all', 'coffee:all', 'concat:all', 'stylus:all', 'clean:compiled']
+ALL_TASKS = ['jst:all', 'coffee:all', 'concat:all', 'stylus:all', 'clean:compiled', 'copy:all']
 
 # formbuilder.js must be compiled in this order:
 # 1. rivets-config
@@ -19,6 +19,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-contrib-clean')
+  grunt.loadNpmTasks('grunt-contrib-copy')
   grunt.loadNpmTasks('grunt-release')
   grunt.loadNpmTasks('grunt-karma')
 
@@ -58,7 +59,7 @@ module.exports = (grunt) ->
           '<%= distFolder %>/formbuilder.js': '<%= compiledFolder %>/*.js'
           '<%= vendorFolder %>/js/vendor.js': [
             'bower_components/ie8-node-enum/index.js'
-            'bower_components/jquery/jquery.js'
+            'bower_components/jquery/dist/jquery.js'
             'bower_components/jquery-ui/ui/jquery.ui.core.js'
             'bower_components/jquery-ui/ui/jquery.ui.widget.js'
             'bower_components/jquery-ui/ui/jquery.ui.mouse.js'
@@ -71,12 +72,21 @@ module.exports = (grunt) ->
             'bower_components/rivets/dist/rivets.js'
             'bower_components/backbone/backbone.js'
             'bower_components/backbone-deep-model/src/deep-model.js'
+            'bower_components/bootstrap/dist/js/bootstrap.js',
             'bower_components/signature_pad/signature_pad.js'
           ]
           '<%= vendorFolder %>/css/vendor.css': [
               'bower_components/font-awesome/css/font-awesome.css',
               'bower_components/bootstrap/dist/css/bootstrap.css',
+              'bower_components/summernote/dist/summernote.css'
           ]
+
+    copy:
+        all:
+            expand: true,
+            flatten: true,
+            src: 'bower_components/font-awesome/fonts/*',
+            dest: '<%= vendorFolder %>/fonts/'
 
     cssmin:
       dist:

@@ -41,7 +41,7 @@
 }).call(this);
 
 (function() {
-  var BuilderView, EditFieldView, Formbuilder, FormbuilderCollection, FormbuilderModel, ViewFieldView, _ref, _ref1, _ref2, _ref3, _ref4,
+  var BuilderView, EditFieldView, Formbuilder, FormbuilderCollection, FormbuilderModel, GridFieldView, ViewFieldView, _ref, _ref1, _ref2, _ref3, _ref4, _ref5,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -154,19 +154,240 @@
       }
     };
 
-    ViewFieldView.prototype.duplicate = function() {
+    ViewFieldView.prototype.duplicate = function(e) {
       var attrs;
+      e.preventDefault();
+      e.stopPropagation();
       attrs = _.clone(this.model.attributes);
-      console.log(attrs);
       delete attrs['id'];
       delete attrs['cid'];
       attrs['label'] += ' Copy';
-      return this.parentView.createField(attrs, {
+      this.parentView.createField(attrs, {
         position: this.model.indexInDOM() + 1
       });
+      return this.model.trigger("duplicate:viewfield");
     };
 
     return ViewFieldView;
+
+  })(Backbone.View);
+
+  GridFieldView = (function(_super) {
+    __extends(GridFieldView, _super);
+
+    function GridFieldView() {
+      _ref3 = GridFieldView.__super__.constructor.apply(this, arguments);
+      return _ref3;
+    }
+
+    GridFieldView.prototype.className = "fb-field-wrapper";
+
+    GridFieldView.prototype.events = {
+      'click .response-field-grid-cell li': 'inlineAdd',
+      'click .response-field-grid-cell .js-clear': 'subelementClear',
+      'click .js-duplicate': 'duplicate',
+      'click .js-clear': 'clear',
+      'click .subtemplate-wrapper': 'focusEditView'
+    };
+
+    GridFieldView.prototype.initialize = function(options) {
+      this.parentView = options.parentView;
+      this.listenTo(this.model, "change", this.renderTable);
+      this.listenTo(this.model, "destroy", this.remove);
+      this.parentView.collection.bind('add', this.addSubelement, this);
+      this.parentView.collection.bind('destroy', this.removeSubelement, this);
+      return this.render;
+    };
+
+    GridFieldView.prototype.render = function() {
+      this.$el.addClass('response-field-' + this.model.get(Formbuilder.options.mappings.FIELD_TYPE)).data('cid', this.model.cid).html(Formbuilder.templates["view/base" + (!this.model.is_input() ? '_non_input' : '')]({
+        rf: this.model
+      }));
+      this.renderTable();
+      this.renderChildren();
+      return this;
+    };
+
+    GridFieldView.prototype.renderTable = function() {
+      var currentCols, currentRows, numCols, numRows, rows, table, _i, _ref4, _results,
+        _this = this;
+      numRows = this.model.get('field_options.num_rows') || 1;
+      numCols = this.model.get('field_options.num_cols') || 1;
+      table = this.$el.find('table');
+      currentRows = table.find('tr').length;
+      currentCols = table.find("tr:nth-child(1) td").length;
+      rows = $.makeArray(table.find('tr'));
+      if (currentRows < numRows) {
+        rows = rows.concat((function() {
+          _results = [];
+          for (var _i = _ref4 = rows.length; _ref4 <= numRows ? _i < numRows : _i > numRows; _ref4 <= numRows ? _i++ : _i--){ _results.push(_i); }
+          return _results;
+        }).apply(this));
+      }
+      rows = _.map(rows, function(row) {
+        var cols, _j, _ref5, _results1;
+        if (_.isNumber(row)) {
+          row = $('<tr class="response-field-grid-row"></tr>').appendTo(table);
+        }
+        cols = $.makeArray($(row).find('td'));
+        if (cols.length < numCols) {
+          cols = cols.concat((function() {
+            _results1 = [];
+            for (var _j = _ref5 = cols.length; _ref5 <= numCols ? _j < numCols : _j > numCols; _ref5 <= numCols ? _j++ : _j--){ _results1.push(_j); }
+            return _results1;
+          }).apply(this));
+        }
+        cols = _.map(cols, function(col) {
+          if (_.isNumber(col)) {
+            return col = $('<td class="response-field-grid-cell"></td>').appendTo(row).html(Formbuilder.templates["view/element_selector"]());
+          }
+        });
+        return row;
+      });
+      if (currentRows > numRows) {
+        _.each(this.subelements(), function(subelement) {
+          var grid;
+          grid = _this.parentView.gridAttr(subelement);
+          if (grid.row > numRows) {
+            return subelement.destroy();
+          }
+        });
+        table.find('tr').slice(numRows - currentRows).remove();
+      }
+      if (currentCols > numCols) {
+        _.each(this.subelements(), function(subelement) {
+          var grid;
+          grid = _this.parentView.gridAttr(subelement);
+          if (grid.col > numCols) {
+            return subelement.destroy();
+          }
+        });
+        return table.find('tr').find('td:gt(' + (numCols - 1) + ')').remove();
+      }
+    };
+
+    GridFieldView.prototype.renderChildren = function() {
+      var children,
+        _this = this;
+      children = this.model.get('children') || [];
+      return _.each(children, function(child) {
+        var grid;
+        grid = child.grid;
+        return _this.createField(child, _this.getSubelement(grid.row, grid.col));
+      });
+    };
+
+    GridFieldView.prototype.focusEditView = function(e) {
+      if ($(e.target).parents('table').length === 0) {
+        return this.parentView.createAndShowEditView(this.model);
+      }
+    };
+
+    GridFieldView.prototype.clear = function(e) {
+      var cb, x,
+        _this = this;
+      e.preventDefault();
+      e.stopPropagation();
+      _.each(this.subelements(), function(model) {
+        return model.destroy();
+      });
+      cb = function() {
+        _this.parentView.handleFormUpdate();
+        return _this.model.destroy();
+      };
+      x = Formbuilder.options.CLEAR_FIELD_CONFIRM;
+      switch (typeof x) {
+        case 'string':
+          if (confirm(x)) {
+            return cb();
+          }
+          break;
+        case 'function':
+          return x(cb);
+        default:
+          return cb();
+      }
+    };
+
+    GridFieldView.prototype.duplicate = function() {
+      var attrs, children,
+        _this = this;
+      attrs = _.clone(this.model.attributes);
+      delete attrs['id'];
+      delete attrs['cid'];
+      attrs['label'] += ' Copy';
+      children = this.subelements();
+      attrs['children'] = _.map(children, function(child) {
+        var childattrs;
+        childattrs = _.clone(child.attributes);
+        delete childattrs['id'];
+        delete childattrs['cid'];
+        return childattrs;
+      });
+      return this.parentView.createField(attrs, {
+        position: -1
+      });
+    };
+
+    GridFieldView.prototype.addSubelement = function(model) {
+      var grid;
+      if (this.belongsToMe(model)) {
+        grid = this.parentView.gridAttr(model);
+        return model.attributes.label = 'Row: ' + (grid.row + 1) + ', Col: ' + (grid.col + 1);
+      }
+    };
+
+    GridFieldView.prototype.removeSubelement = function(model) {
+      var grid;
+      if (this.belongsToMe(model)) {
+        grid = this.parentView.gridAttr(model);
+        return this.getSubelement(grid.row, grid.col).html(Formbuilder.templates["view/element_selector"]({
+          rf: this.model
+        }));
+      }
+    };
+
+    GridFieldView.prototype.subelements = function() {
+      var _this = this;
+      return this.parentView.collection.filter(function(item) {
+        return _this.belongsToMe(item);
+      });
+    };
+
+    GridFieldView.prototype.belongsToMe = function(model) {
+      return this.parentView.inGrid(model) && this.parentView.gridAttr(model).cid === this.model.cid;
+    };
+
+    GridFieldView.prototype.inlineAdd = function(e) {
+      var target, type;
+      e.preventDefault();
+      e.stopPropagation();
+      type = $(e.currentTarget).data('field-type');
+      target = $(e.currentTarget).parents('.response-field-grid-cell');
+      return this.createField(type, target);
+    };
+
+    GridFieldView.prototype.getSubelement = function(row, col) {
+      row++;
+      col++;
+      return this.$el.find('tr:nth-child(' + row + ') td:nth-child(' + col + ')');
+    };
+
+    GridFieldView.prototype.createField = function(attrs, target) {
+      if (_.isString(attrs)) {
+        attrs = Formbuilder.helpers.defaultFieldAttrs(attrs);
+      }
+      attrs.grid = {
+        cid: this.model.cid,
+        col: target.prop('cellIndex'),
+        row: target.parents('tr').prop('rowIndex')
+      };
+      return this.parentView.createField(attrs, {
+        $appendEl: target
+      });
+    };
+
+    return GridFieldView;
 
   })(Backbone.View);
 
@@ -174,8 +395,8 @@
     __extends(EditFieldView, _super);
 
     function EditFieldView() {
-      _ref3 = EditFieldView.__super__.constructor.apply(this, arguments);
-      return _ref3;
+      _ref4 = EditFieldView.__super__.constructor.apply(this, arguments);
+      return _ref4;
     }
 
     EditFieldView.prototype.className = "edit-response-field";
@@ -270,8 +491,8 @@
     __extends(BuilderView, _super);
 
     function BuilderView() {
-      _ref4 = BuilderView.__super__.constructor.apply(this, arguments);
-      return _ref4;
+      _ref5 = BuilderView.__super__.constructor.apply(this, arguments);
+      return _ref5;
     }
 
     BuilderView.prototype.SUBVIEWS = [];
@@ -326,15 +547,15 @@
     };
 
     BuilderView.prototype.render = function() {
-      var subview, _i, _len, _ref5;
+      var subview, _i, _len, _ref6;
       this.$el.html(Formbuilder.templates['page']());
       this.$fbLeft = this.$el.find('.fb-left');
       this.$responseFields = this.$el.find('.fb-response-fields');
       this.bindWindowScrollEvent();
       this.hideShowNoResponseFields();
-      _ref5 = this.SUBVIEWS;
-      for (_i = 0, _len = _ref5.length; _i < _len; _i++) {
-        subview = _ref5[_i];
+      _ref6 = this.SUBVIEWS;
+      for (_i = 0, _len = _ref6.length; _i < _len; _i++) {
+        subview = _ref6[_i];
         new subview({
           parentView: this
         }).render();
@@ -372,12 +593,32 @@
     };
 
     BuilderView.prototype.addOne = function(responseField, _, options) {
-      var $replacePosition, view;
-      view = new ViewFieldView({
-        model: responseField,
-        parentView: this
-      });
-      if (options.$replaceEl != null) {
+      var $replacePosition, appendEl, grid, view;
+      if (responseField.attributes.field_type === 'grid') {
+        view = new GridFieldView({
+          model: responseField,
+          parentView: this
+        });
+      } else {
+        view = new ViewFieldView({
+          model: responseField,
+          parentView: this
+        });
+      }
+      grid = this.gridAttr(responseField);
+      if (options.$appendEl === void 0 && (grid != null)) {
+        appendEl = $('tr td:nth-child(' + (grid.col + 1) + '):has(.element-selector)').first();
+        if (appendEl.length === 1) {
+          options.$appendEl = appendEl;
+          grid.row = appendEl.parents('tr').prop('rowIndex');
+        } else {
+          options.position = null;
+          delete responseField.attributes['grid'];
+        }
+      }
+      if (options.$appendEl != null) {
+        return options.$appendEl.html(view.render().el);
+      } else if (options.$replaceEl != null) {
         return options.$replaceEl.replaceWith(view.render().el);
       } else if ((options.position == null) || options.position === -1) {
         return this.$responseFields.append(view.render().el);
@@ -448,7 +689,7 @@
     BuilderView.prototype.addField = function(e) {
       var field_type;
       field_type = $(e.currentTarget).data('field-type');
-      return this.createField(Formbuilder.helpers.defaultFieldAttrs(field_type));
+      return this.createField(Formbuilder.helpers.defaultFieldAttrs(field_type, {}));
     };
 
     BuilderView.prototype.createField = function(attrs, options) {
@@ -459,11 +700,12 @@
     };
 
     BuilderView.prototype.createAndShowEditView = function(model) {
-      var $newEditEl, $responseFieldEl;
+      var $newEditEl, $responseFieldEl, fieldWrapper;
       $responseFieldEl = this.$el.find(".fb-field-wrapper").filter(function() {
         return $(this).data('cid') === model.cid;
       });
-      $responseFieldEl.addClass('editing').siblings('.fb-field-wrapper').removeClass('editing');
+      $('.fb-field-wrapper').removeClass('editing');
+      $responseFieldEl.addClass('editing');
       if (this.editView) {
         if (this.editView.model.cid === model.cid) {
           this.$el.find(".fb-tabs a[data-target=\"#editField\"]").click();
@@ -477,10 +719,32 @@
         parentView: this
       });
       $newEditEl = this.editView.render().$el;
-      this.$el.find(".fb-edit-field-wrapper").html($newEditEl);
+      fieldWrapper = this.$el.find(".fb-edit-field-wrapper");
+      fieldWrapper.html($newEditEl);
+      if (this.inGrid(model)) {
+        fieldWrapper.addClass('fb-edit-field-grid');
+      } else {
+        fieldWrapper.removeClass('fb-edit-field-grid');
+      }
       this.$el.find(".fb-tabs a[data-target=\"#editField\"]").click();
       this.scrollLeftWrapper($responseFieldEl);
+      if (model.get('definition.onEdit')) {
+        model.get('definition.onEdit')(model);
+      }
       return this;
+    };
+
+    BuilderView.prototype.inGrid = function(model) {
+      var grid;
+      grid = model.attributes.grid || false;
+      return grid !== false && grid.cid !== void 0;
+    };
+
+    BuilderView.prototype.gridAttr = function(model) {
+      if (this.inGrid(model)) {
+        return model.get('grid');
+      }
+      return null;
     };
 
     BuilderView.prototype.ensureEditViewScrolled = function() {
@@ -546,12 +810,12 @@
         data: payload,
         contentType: "application/json",
         success: function(data) {
-          var datum, _i, _len, _ref5;
+          var datum, _i, _len, _ref6;
           _this.updatingBatch = true;
           for (_i = 0, _len = data.length; _i < _len; _i++) {
             datum = data[_i];
-            if ((_ref5 = _this.collection.get(datum.cid)) != null) {
-              _ref5.set({
+            if ((_ref6 = _this.collection.get(datum.cid)) != null) {
+              _ref6.set({
                 id: datum.id
               });
             }
@@ -589,7 +853,7 @@
       HTTP_METHOD: 'POST',
       AUTOSAVE: true,
       CLEAR_FIELD_CONFIRM: false,
-      ENABLED_FIELDS: ['text', 'checkboxes', 'dropdown', 'paragraph', 'radio', 'date', 'section_break', 'signature'],
+      ENABLED_FIELDS: ['text', 'checkboxes', 'dropdown', 'paragraph', 'radio', 'date', 'section_break', 'signature', 'info', 'grid'],
       mappings: {
         SIZE: 'field_options.size',
         UNITS: 'field_options.units',
@@ -604,6 +868,12 @@
         INCLUDE_BLANK: 'field_options.include_blank_option',
         INCLUDE_SCORING: 'field_options.include_scoring',
         INTEGER_ONLY: 'field_options.integer_only',
+        TABLE: {
+          COLS: 'field_options.cols',
+          NUMCOLS: 'field_options.num_cols',
+          ROWS: 'field_options.rows',
+          NUMROWS: 'field_options.num_rows'
+        },
         MIN: 'field_options.min',
         MAX: 'field_options.max',
         MINLENGTH: 'field_options.minlength',
@@ -637,14 +907,14 @@
     };
 
     Formbuilder.registerField = function(name, opts) {
-      var enabled, x, _i, _len, _ref5;
+      var enabled, x, _i, _len, _ref6;
       enabled = true;
       if (!_.contains(Formbuilder.options.ENABLED_FIELDS, name)) {
         enabled = false;
       }
-      _ref5 = ['view', 'edit'];
-      for (_i = 0, _len = _ref5.length; _i < _len; _i++) {
-        x = _ref5[_i];
+      _ref6 = ['view', 'edit'];
+      for (_i = 0, _len = _ref6.length; _i < _len; _i++) {
+        x = _ref6[_i];
         opts[x] = enabled ? _.template(opts[x]) : function(x) {
           return '';
         };
@@ -660,8 +930,7 @@
     };
 
     function Formbuilder(opts) {
-      var args,
-        _this = this;
+      var args;
       if (opts == null) {
         opts = {};
       }
@@ -671,26 +940,6 @@
       });
       this.mainView = new BuilderView(args);
       this.mainView.collection;
-      setInterval(function() {
-        var attribute_ids, collection, ids;
-        collection = _this.mainView.collection.models;
-        ids = [];
-        attribute_ids = [];
-        _.each(collection, function(value, key, list) {
-          return ids.push(value.cid);
-        });
-        _.each(collection, function(value, key, list) {
-          return attribute_ids.push(value.attributes.cid);
-        });
-        if (_.uniq(ids).length !== ids.length) {
-          console.log('ids');
-          console.log(ids);
-        }
-        if (_.uniq(attribute_ids).length !== attribute_ids.length) {
-          console.log('attribute ids');
-          return console.log(attribute_ids);
-        }
-      }, 250);
     }
 
     return Formbuilder;
@@ -713,7 +962,7 @@
     order: 50,
     view: "<div class='input-line'>\n  <span class='street'>\n    <input type='text' />\n    <label>Address</label>\n  </span>\n</div>\n\n<div class='input-line'>\n  <span class='city'>\n    <input type='text' />\n    <label>City</label>\n  </span>\n\n  <span class='state'>\n    <input type='text' />\n    <label>State / Province / Region</label>\n  </span>\n</div>\n\n<div class='input-line'>\n  <span class='zip'>\n    <input type='text' />\n    <label>Zipcode</label>\n  </span>\n\n  <span class='country'>\n    <select><option>United States</option></select>\n    <label>Country</label>\n  </span>\n</div>",
     edit: "",
-    addButton: "<span class=\"icon-address\"></span> Address"
+    addButton: "<span class=\"fb-icon-address\"></span> Address"
   });
 
 }).call(this);
@@ -724,7 +973,7 @@
     order: 10,
     view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='checkbox' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/options']({ rf: rf }) %>",
-    addButton: "<span class=\"icon-checkboxes\"></span> Checkboxes",
+    addButton: "<span class=\"fb-icon-checkboxes\"></span> Checkboxes",
     defaultAttributes: function(attrs) {
       attrs.field_options.options = [
         {
@@ -749,7 +998,7 @@
     order: 20,
     view: "<div class='input-line'>\n  <span class='month'>\n    <input type=\"text\" />\n    <label>MM</label>\n  </span>\n\n  <span class='above-line'>/</span>\n\n  <span class='day'>\n    <input type=\"text\" />\n    <label>DD</label>\n  </span>\n\n  <span class='above-line'>/</span>\n\n  <span class='year'>\n    <input type=\"text\" />\n    <label>YYYY</label>\n  </span>\n</div>",
     edit: "",
-    addButton: "<span class=\"icon-date\"></span> Date"
+    addButton: "<span class=\"fb-icon-date\"></span> Date"
   });
 
 }).call(this);
@@ -760,7 +1009,7 @@
     order: 24,
     view: "<select>\n  <% if (rf.get(Formbuilder.options.mappings.INCLUDE_BLANK)) { %>\n    <option value=''></option>\n  <% } %>\n\n  <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n    <option <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'selected' %>>\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </option>\n  <% } %>\n</select>",
     edit: "<%= Formbuilder.templates['edit/scoring']() %>\n<%= Formbuilder.templates['edit/options']({ rf: rf }) %>",
-    addButton: "<span class=\"icon-dropdown\"></span> Dropdown",
+    addButton: "<span class=\"fb-icon-dropdown\"></span> Dropdown",
     defaultAttributes: function(attrs) {
       attrs.field_options.options = [
         {
@@ -782,12 +1031,13 @@
 }).call(this);
 
 (function() {
-  Formbuilder.registerField('email', {
-    name: 'Email',
-    order: 40,
-    view: "<input type='text' class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />",
-    edit: "",
-    addButton: "<span class=\"icon-email\"></span> Email"
+  Formbuilder.registerField('section_break', {
+    name: 'Section break',
+    order: 0,
+    type: 'non_input',
+    view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>",
+    edit: "<div class=\"fb-edit-section-header\">Details</div>\n<div class=\"fb-common-wrapper\">\n<div class=\"fb-label-description\">\n  <input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.LABEL %>\">\n  <textarea data-rv-input=\"model.<%= Formbuilder.options.mappings.DESCRIPTION %>\" placeholder=\"Add a longer description to this field\">\n  </textarea>\n</div>\n</div>",
+    addButton: "<span class=\"fb-icon-section\"></span> Section Break"
   });
 
 }).call(this);
@@ -798,7 +1048,54 @@
     order: 55,
     view: "<canvas />",
     edit: "",
-    addButton: "<span class=\"icon-file\"></span> File"
+    addButton: "<span class=\"fb-icon-file\"></span> File"
+  });
+
+}).call(this);
+
+(function() {
+  Formbuilder.registerField('grid', {
+    name: 'Grid',
+    order: 0,
+    type: 'non_input',
+    view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<table class=\"response-field-grid-table\">\n</table>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>",
+    edit: "<div class=\"fb-edit-section-header\">Details</div>\n<div class=\"fb-common-wrapper\">\n<div class=\"fb-label-description\">\n  <input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.LABEL %>\">\n  <textarea data-rv-input=\"model.<%= Formbuilder.options.mappings.DESCRIPTION %>\" placeholder=\"Add a longer description to this field\">\n  </textarea>\n<div class='fb-edit-section-header'>Number of Columns</div>\n  <select data-rv-value=\"model.<%= Formbuilder.options.mappings.TABLE.NUMCOLS %>\">\n      <option value=\"1\">1</option>\n      <option value=\"2\">2</option>\n      <option value=\"3\">3</option>\n      <option value=\"4\">4</option>\n      <option value=\"5\">5</option>\n      <option value=\"6\">6</option>\n      <option value=\"7\">7</option>\n      <option value=\"8\">8</option>\n      <option value=\"9\">9</option>\n      <option value=\"10\">10</option>\n  </select>\n<div class='fb-edit-section-header'>Number of Rows</div>\n  <select data-rv-value=\"model.<%= Formbuilder.options.mappings.TABLE.NUMROWS %>\">\n      <option value=\"1\">1</option>\n      <option value=\"2\">2</option>\n      <option value=\"3\">3</option>\n      <option value=\"4\">4</option>\n      <option value=\"5\">5</option>\n      <option value=\"6\">6</option>\n      <option value=\"7\">7</option>\n      <option value=\"8\">8</option>\n      <option value=\"9\">9</option>\n      <option value=\"10\">10</option>\n      <option value=\"11\">11</option>\n      <option value=\"12\">12</option>\n      <option value=\"13\">13</option>\n      <option value=\"14\">14</option>\n      <option value=\"15\">15</option>\n      <option value=\"16\">16</option>\n      <option value=\"17\">17</option>\n      <option value=\"18\">18</option>\n      <option value=\"19\">19</option>\n      <option value=\"20\">20</option>\n  </select>\n</div>\n</div>",
+    addButton: "<span class=\"fb-icon-grid\"></span> Grid",
+    defaultAttributes: function(attrs) {
+      attrs.field_options.num_cols = 1;
+      attrs.field_options.num_rows = 1;
+      attrs.children = [];
+      return attrs;
+    }
+  });
+
+}).call(this);
+
+(function() {
+  Formbuilder.registerField('info', {
+    name: 'Info',
+    order: 0,
+    type: 'non_input',
+    view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>",
+    edit: "<div class=\"fb-edit-section-header\">Details</div>\n<div class=\"fb-common-wrapper\">\n  <div class=\"fb-label-description\">\n    <input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.LABEL %>\">\n  </div>\n  <textarea style=\"display:none;\" data-rv-input=\"model.<%= Formbuilder.options.mappings.DESCRIPTION %>\">\n  </textarea>\n  <div class=\"fb-info-editor\"></div>\n</div>",
+    addButton: "<span class=\"fb-icon-info\"></span> Info",
+    onEdit: function(model) {
+      var update;
+      update = function() {
+        model.set(Formbuilder.options.mappings.DESCRIPTION, $(this).html());
+        return model.trigger('change:' + Formbuilder.options.mappings.DESCRIPTION);
+      };
+      return $('.fb-info-editor').summernote({
+        airmode: true,
+        onchange: function() {
+          return update.call(this);
+        },
+        onkeyup: function() {
+          return update.call(this);
+        },
+        toolbar: [['style', ['bold', 'italic', 'underline']], ['table', ['table']]]
+      });
+    }
   });
 
 }).call(this);
@@ -809,7 +1106,7 @@
     order: 30,
     view: "<input type='text' />\n<% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>\n  <%= units %>\n<% } %>",
     edit: "",
-    addButton: "<span class=\"icon-number></span> Number"
+    addButton: "<span class=\"fb-icon-number></span> Number"
   });
 
 }).call(this);
@@ -820,7 +1117,7 @@
     order: 5,
     view: "<textarea class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>'></textarea>",
     edit: "",
-    addButton: "<span class=\"icon-paragraph\"></span> Paragraph",
+    addButton: "<span class=\"fb-icon-paragraph\"></span> Paragraph",
     defaultAttributes: function(attrs) {
       attrs.field_options.size = 'small';
       return attrs;
@@ -835,7 +1132,7 @@
     order: 45,
     view: "<div class='input-line'>\n  <span class='above-line'>$</span>\n  <span class='dolars'>\n    <input type='text' />\n    <label>Dollars</label>\n  </span>\n  <span class='above-line'>.</span>\n  <span class='cents'>\n    <input type='text' />\n    <label>Cents</label>\n  </span>\n</div>",
     edit: "",
-    addButton: "<span class=\"icon-price\"></span> Price"
+    addButton: "<span class=\"fb-icon-price\"></span> Price"
   });
 
 }).call(this);
@@ -846,7 +1143,7 @@
     order: 15,
     view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='radio' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/scoring']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/options']({ rf: rf }) %>",
-    addButton: "<span class=\"icon-radio\"></span> Multiple Choice",
+    addButton: "<span class=\"fb-icon-radio\"></span> Multiple Choice",
     defaultAttributes: function(attrs) {
       attrs.field_options.options = [
         {
@@ -872,8 +1169,8 @@
     order: 0,
     type: 'non_input',
     view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>",
-    edit: "<div class=\"fb-edit-section-header\">Label</div>\n<div class=\"fb-common-wrapper\">\n<div class=\"fb-label-description\">\n  <input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.LABEL %>\">\n  <textarea data-rv-input=\"model.<%= Formbuilder.options.mappings.DESCRIPTION %>\" placeholder=\"Add a longer description to this field\">\n  </textarea>\n</div>\n</div>",
-    addButton: "<span class=\"icon-section\"></span> Section Break"
+    edit: "<div class=\"fb-edit-section-header\">Details</div>\n<div class=\"fb-common-wrapper\">\n<div class=\"fb-label-description\">\n  <input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.LABEL %>\">\n  <textarea data-rv-input=\"model.<%= Formbuilder.options.mappings.DESCRIPTION %>\" placeholder=\"Add a longer description to this field\">\n  </textarea>\n</div>\n</div>",
+    addButton: "<span class=\"fb-icon-section\"></span> Section Break"
   });
 
 }).call(this);
@@ -884,7 +1181,7 @@
     order: 65,
     view: "<div class=\"fb-signature form-control\">\n    <div class=\"fb-signature-placeholder\">Sign Here</div>\n    <div class=\"fb-signature-pad\"></div>\n</div>\n<button class=\"btn btn-default btn-xs\">Clear</button>",
     edit: "",
-    addButton: "<span class=\"icon-signature\"></span> Signature"
+    addButton: "<span class=\"fb-icon-signature\"></span> Signature"
   });
 
 }).call(this);
@@ -895,7 +1192,7 @@
     order: 0,
     view: "<input type='text' class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />",
     edit: "",
-    addButton: "<span class=\"icon-text\"></span> Text",
+    addButton: "<span class=\"fb-icon-text\"></span> Text",
     defaultAttributes: function(attrs) {
       attrs.field_options.size = 'small';
       return attrs;
@@ -910,7 +1207,7 @@
     order: 25,
     view: "<div class='input-line'>\n  <span class='hours'>\n    <input type=\"text\" />\n    <label>HH</label>\n  </span>\n\n  <span class='above-line'>:</span>\n\n  <span class='minutes'>\n    <input type=\"text\" />\n    <label>MM</label>\n  </span>\n\n  <span class='above-line'>:</span>\n\n  <span class='seconds'>\n    <input type=\"text\" />\n    <label>SS</label>\n  </span>\n\n  <span class='am_pm'>\n    <select>\n      <option>AM</option>\n      <option>PM</option>\n    </select>\n  </span>\n</div>",
     edit: "",
-    addButton: "<span class=\"icon-time\"></span> Time"
+    addButton: "<span class=\"fb-icon-time\"></span> Time"
   });
 
 }).call(this);
@@ -921,7 +1218,7 @@
     order: 35,
     view: "<input type='text' placeholder='http://' />",
     edit: "",
-    addButton: "<span class=\"icon-website\"></span> Website"
+    addButton: "<span class=\"fb-icon-website\"></span> Website"
   });
 
 }).call(this);
@@ -934,9 +1231,9 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
 __p +=
-((__t = ( Formbuilder.templates['edit/base_header']() )) == null ? '' : __t) +
+((__t = ( Formbuilder.templates['edit/base_header']({rf: rf}) )) == null ? '' : __t) +
 '\n' +
-((__t = ( Formbuilder.templates['edit/common']() )) == null ? '' : __t) +
+((__t = ( Formbuilder.templates['edit/common']({rf: rf}) )) == null ? '' : __t) +
 '\n' +
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].edit({rf: rf}) )) == null ? '' : __t) +
 '\n';
@@ -953,7 +1250,7 @@ __p += '<div class=\'fb-field-label\'>\n  <span data-rv-text="model.' +
 ((__t = ( Formbuilder.options.mappings.LABEL )) == null ? '' : __t) +
 '"></span>\n  <code class=\'field-type\' data-rv-text=\'model.' +
 ((__t = ( Formbuilder.options.mappings.NAME )) == null ? '' : __t) +
-'\'></code>\n  <span class=\'fa fa-arrow-right pull-right\'></span>\n</div>';
+'\'></code>\n  <span class=\'fa fa-arrow-right pull-right\'></span>\n</div>\n';
 
 }
 return __p
@@ -964,7 +1261,7 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
 __p +=
-((__t = ( Formbuilder.templates['edit/base_header']() )) == null ? '' : __t) +
+((__t = ( Formbuilder.templates['edit/base_header']({rf: rf}) )) == null ? '' : __t) +
 '\n' +
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].edit({rf: rf}) )) == null ? '' : __t) +
 '\n';
@@ -989,8 +1286,8 @@ this["Formbuilder"]["templates"]["edit/common"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-edit-section-header\'>Label</div>\n\n<div class=\'fb-common-wrapper\'>\n  <div class=\'fb-label-description\'>\n    ' +
-((__t = ( Formbuilder.templates['edit/label_description']() )) == null ? '' : __t) +
+__p += '<div class=\'fb-edit-section-header\'>Details</div>\n\n<div class=\'fb-common-wrapper\'>\n  <div class=\'fb-label-description\'>\n    ' +
+((__t = ( Formbuilder.templates['edit/label_description']({rf: rf}) )) == null ? '' : __t) +
 '\n  </div>\n  <div class=\'fb-common-checkboxes\'>\n    ' +
 ((__t = ( Formbuilder.templates['edit/checkboxes']() )) == null ? '' : __t) +
 '\n  </div>\n  <div class=\'fb-clear\'></div>\n</div>\n';
@@ -1259,9 +1556,19 @@ var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<div class=\'actions-wrapper\'>\n  <a class="js-duplicate ' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
-'" title="Duplicate Field"><span class="icon-add"></span></a>\n  <a class="js-clear ' +
+'" title="Duplicate Field"><span class="fb-icon-add"></span></a>\n  <a class="js-clear ' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
-'" title="Remove Field"><span class="icon-minus"></span></a>\n</div>';
+'" title="Remove Field"><span class="fb-icon-minus"></span></a>\n</div>';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["view/element_selector"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class="element-selector btn-group">\n<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">\n    <span class="glyphicon glyphicon-plus"></span>\n    <span class="caret"></span>\n</button>\n<ul class="dropdown-menu" role="menu">\n    <li data-field-type="text"><span class="fb-icon-text"></span> Text</li>\n    <li data-field-type="paragraph"><span class="fb-icon-paragraph"></span> Paragraph</li>\n    <li data-field-type="dropdown"><span class="fb-icon-dropdown"></span> Dropdown</li>\n    <li data-field-type="checkboxes"><span class="fb-icon-checkboxes"></span> Checkboxes</li>\n    <li data-field-type="radio"><span class="fb-icon-radio"></span> Radio</li>\n    <li data-field-type="info"><span class="fb-icon-info"></span> Info</li>\n</ul>\n</div>';
 
 }
 return __p

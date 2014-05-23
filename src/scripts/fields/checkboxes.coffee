@@ -30,7 +30,7 @@ Formbuilder.registerField 'checkboxes',
   """
 
   addButton: """
-    <span class="icon-checkboxes"></span> Checkboxes
+    <span class="fb-icon-checkboxes"></span> Checkboxes
   """
 
   defaultAttributes: (attrs) ->
