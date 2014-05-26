@@ -94,7 +94,7 @@
 .response-field-signature .fb-signature{width:300px;height:150px}
 .response-field-signature .fb-signature-placeholder{color:#aaa}
 .response-field-grid .cover{display:none}
-.response-field-grid-table{border-collapse:collapse;border-spacing:0;table-layout:fixed;width:100%}
+.response-field-grid-table{border-collapse:collapse;border-spacing:0;margin-bottom:5px;table-layout:fixed;width:100%}
 .response-field-grid-table .response-field-grid-row{height:100px;vertical-align:top}
 .response-field-grid-table .response-field-grid-cell{padding:10px 10px 0 10px;border:1px dashed #ddd;background-color:rgba(255,255,255,0.8)}
 .response-field-grid-table .response-field-grid-cell .cover{display:block}

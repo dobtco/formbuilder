@@ -192,7 +192,7 @@
 
     GridFieldView.prototype.initialize = function(options) {
       this.parentView = options.parentView;
-      this.listenTo(this.model, "change", this.renderTable);
+      this.listenTo(this.model, "change", this.redraw);
       this.listenTo(this.model, "destroy", this.remove);
       this.parentView.collection.bind('add', this.addSubelement, this);
       this.parentView.collection.bind('destroy', this.removeSubelement, this);
@@ -200,12 +200,21 @@
     };
 
     GridFieldView.prototype.render = function() {
+      this.redraw();
+      this.renderChildren();
+      return this;
+    };
+
+    GridFieldView.prototype.redraw = function() {
+      var table;
+      table = this.$el.find('.response-field-grid-table').detach();
       this.$el.addClass('response-field-' + this.model.get(Formbuilder.options.mappings.FIELD_TYPE)).data('cid', this.model.cid).html(Formbuilder.templates["view/base" + (!this.model.is_input() ? '_non_input' : '')]({
         rf: this.model
       }));
-      this.renderTable();
-      this.renderChildren();
-      return this;
+      if (table.length === 1) {
+        this.$el.find('.response-field-grid-table').replaceWith(table);
+      }
+      return this.renderTable();
     };
 
     GridFieldView.prototype.renderTable = function() {
@@ -378,7 +387,7 @@
         attrs = Formbuilder.helpers.defaultFieldAttrs(attrs);
       }
       attrs.grid = {
-        cid: this.model.cid,
+        cid: this.model.get('cid'),
         col: target.prop('cellIndex'),
         row: target.parents('tr').prop('rowIndex')
       };
@@ -593,7 +602,9 @@
     };
 
     BuilderView.prototype.addOne = function(responseField, _, options) {
-      var $replacePosition, appendEl, grid, view;
+      var $replacePosition, addOne, append, appendEl, grid, gridModel, replaceEl, retry, view, wrapper;
+      appendEl = options.$appendEl || null;
+      replaceEl = options.$replaceEl || null;
       if (responseField.attributes.field_type === 'grid') {
         view = new GridFieldView({
           model: responseField,
@@ -606,20 +617,39 @@
         });
       }
       grid = this.gridAttr(responseField);
-      if (options.$appendEl === void 0 && (grid != null)) {
-        appendEl = $('tr td:nth-child(' + (grid.col + 1) + '):has(.element-selector)').first();
-        if (appendEl.length === 1) {
-          options.$appendEl = appendEl;
-          grid.row = appendEl.parents('tr').prop('rowIndex');
+      if (appendEl === null && (grid != null)) {
+        if (grid.col !== void 0 && grid.row !== void 0 && grid.cid !== void 0) {
+          gridModel = this.collection.find(function(model) {
+            return model.get('cid') === grid.cid;
+          });
+          wrapper = $('.fb-field-wrapper').filter(function(item) {
+            return $(this).data('cid') === gridModel.cid;
+          });
+          append = wrapper.find('tr:nth-child(' + (grid.row + 1) + ') td:nth-child(' + (grid.col + 1) + ')');
+          retry = options.retry || 0;
+          if (append.length === 1) {
+            appendEl = append;
+          } else if (retry < 5) {
+            options.retry = retry + 1;
+            addOne = window._.bind(this.addOne, this);
+            window._.delay(addOne, 250, responseField, _, options);
+            return;
+          }
         } else {
-          options.position = null;
-          delete responseField.attributes['grid'];
+          append = $('tr td:nth-child(' + (grid.col + 1) + '):has(.element-selector)').first();
+          if (append.length === 1) {
+            appendEl = append;
+            grid.row = appendEl.parents('tr').prop('rowIndex');
+          } else {
+            options.position = null;
+            delete responseField.attributes['grid'];
+          }
         }
       }
-      if (options.$appendEl != null) {
-        return options.$appendEl.html(view.render().el);
-      } else if (options.$replaceEl != null) {
-        return options.$replaceEl.replaceWith(view.render().el);
+      if (appendEl != null) {
+        return appendEl.html(view.render().el);
+      } else if (replaceEl != null) {
+        return replaceEl.replaceWith(view.render().el);
       } else if ((options.position == null) || options.position === -1) {
         return this.$responseFields.append(view.render().el);
       } else if (options.position === 0) {
@@ -1371,7 +1401,7 @@ __p += '\n  <input type="text" data-rv-input="option:score" placeholder="Score" 
  } ;
 __p += '\n\n  <a class="js-remove-option ' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
-'" title="Remove Option"><span class=\'icon-minus\'></span></a>\n</div>\n\n';
+'" title="Remove Option"><span class=\'fb-icon-minus\'></span></a>\n</div>\n\n';
  if (typeof includeOther !== 'undefined'){ ;
 __p += '\n  <label>\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INCLUDE_OTHER )) == null ? '' : __t) +

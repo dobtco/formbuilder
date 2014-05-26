@@ -62,14 +62,14 @@
             "field_type": "website",
             "required": false,
             "field_options": {},
-            "cid": "c1"
+            "cid": "p1"
           },
           {
             "label": "Please enter your clearance number",
             "field_type": "text",
             "required": true,
             "field_options": {},
-            "cid": "c2"
+            "cid": "p2"
           },
           {
             "label": "Security personnel #82?",
@@ -84,54 +84,53 @@
                 }],
                 "include_other_option": true
             },
-            "cid": "c3"
+            "cid": "p3"
           },
           {
             "label": "Medical history",
             "field_type": "file",
             "required": true,
             "field_options": {},
-            "cid": "c4"
+            "cid": "p4"
           },
           {
-            "label": "",
+            "field_type": "radio",
+            "field_options": {
+                "options": [{
+                    "label": "Yes",
+                    "checked": false
+                }, {
+                    "label": "No",
+                    "checked": false
+                }],
+                "include_other_option": true
+            },
+            "grid": {
+                row: 0,
+                col: 0,
+                cid: 'p5'
+            },
+            "cid": "p6"
+          },
+          {
+            "label": "Grid",
             "field_type": "grid",
             "field_options": {
                 num_rows: 2,
                 num_cols: 2
             },
-            children: [
-                {
-                    "field_type": "radio",
-                    "field_options": {
-                        "options": [{
-                            "label": "Yes",
-                            "checked": false
-                        }, {
-                            "label": "No",
-                            "checked": false
-                        }],
-                        "include_other_option": true
-                    },
-                    "grid": {
-                        row: 0,
-                        col: 0
-                    },
-                    "cid": "c6"
-                },
-                {
-                    "field_type": "text",
-                    "required": true,
-                    "field_options": {},
-                    "grid": {
-                        row: 0,
-                        col: 1,
-                        cid: 'c5'
-                    },
-                    "cid": "c6"
-                }
-            ],
-            "cid": "c5"
+            "cid": "p5"
+          },
+          {
+            "field_type": "text",
+            "required": true,
+            "field_options": {},
+            "grid": {
+                row: 0,
+                col: 1,
+                cid: 'p5'
+            },
+            "cid": "p7"
           }
         ]
       });

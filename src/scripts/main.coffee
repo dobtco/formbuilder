@@ -82,7 +82,7 @@ class GridFieldView extends Backbone.View
 
   initialize: (options) ->
     {@parentView} = options
-    @listenTo @model, "change", @renderTable
+    @listenTo @model, "change", @redraw
     @listenTo @model, "destroy", @remove
     #bind models on subelement add instead of like this
     @parentView.collection.bind 'add', @addSubelement, @
@@ -90,12 +90,19 @@ class GridFieldView extends Backbone.View
     @render
 
   render: ->
+    @redraw()
+    @renderChildren()
+    return @
+
+  #boo
+  redraw: ->
+    table = @$el.find('.response-field-grid-table').detach()
     @$el.addClass('response-field-' + @model.get(Formbuilder.options.mappings.FIELD_TYPE))
         .data('cid', @model.cid)
         .html(Formbuilder.templates["view/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
+    if table.length == 1
+      @$el.find('.response-field-grid-table').replaceWith(table);
     @renderTable()
-    @renderChildren()
-    return @
 
   # make less gross
   renderTable: ->
@@ -209,7 +216,7 @@ class GridFieldView extends Backbone.View
     if _.isString(attrs)
         attrs = Formbuilder.helpers.defaultFieldAttrs(attrs)
     attrs.grid =
-        cid: @model.cid
+        cid: @model.get('cid')
         col: target.prop('cellIndex')
         row: target.parents('tr').prop('rowIndex')
     @parentView.createField attrs, { $appendEl: target }
@@ -369,7 +376,8 @@ class BuilderView extends Backbone.View
       @createAndShowEditView(first_model)
 
   addOne: (responseField, _, options) ->
-
+    appendEl = options.$appendEl || null
+    replaceEl = options.$replaceEl || null
     if responseField.attributes.field_type == 'grid'
         view = new GridFieldView
           model: responseField
@@ -381,24 +389,41 @@ class BuilderView extends Backbone.View
 
     grid = @gridAttr(responseField);
 
-    if options.$appendEl == undefined && grid?
-        appendEl = $('tr td:nth-child(' + (grid.col + 1) + '):has(.element-selector)').first()
-        if appendEl.length == 1
-            options.$appendEl = appendEl
-            grid.row = appendEl.parents('tr').prop('rowIndex')
+    if appendEl == null && grid?
+        if grid.col != undefined && grid.row != undefined && grid.cid != undefined
+            gridModel = @collection.find (model) ->
+                return model.get('cid') is grid.cid
+            wrapper = $('.fb-field-wrapper').filter (item) ->
+                $(@).data('cid') == gridModel.cid
+            append = wrapper.find('tr:nth-child(' + (grid.row + 1) + ') td:nth-child(' + (grid.col + 1) + ')')
+            retry = options.retry || 0
+            if append.length == 1
+                appendEl = append
+            # workaround for unsorted input.
+            else if retry < 5
+                options.retry = retry + 1
+                addOne = window._.bind @addOne, @
+                window._.delay addOne, 250, responseField, _, options
+                return
+
         else
-            options.position = null
-            delete responseField.attributes['grid']
+            append = $('tr td:nth-child(' + (grid.col + 1) + '):has(.element-selector)').first()
+            if append.length == 1
+                appendEl = append
+                grid.row = appendEl.parents('tr').prop('rowIndex')
+            else
+                options.position = null
+                delete responseField.attributes['grid']
     #####
     # Calculates where to place this new field.
     #
     # Are we replacing a temporarily drag placeholder?
 
-    if options.$appendEl?
-      options.$appendEl.html(view.render().el)
+    if appendEl?
+      appendEl.html(view.render().el)
 
-    else if options.$replaceEl?
-      options.$replaceEl.replaceWith(view.render().el)
+    else if replaceEl?
+      replaceEl.replaceWith(view.render().el)
 
     # Are we adding to the bottom?
     else if !options.position? || options.position == -1
