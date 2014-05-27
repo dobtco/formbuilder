@@ -454,10 +454,22 @@ $editing-border = darken($editing-bg, 7%)
   margin-bottom: 5px;
   table-layout: fixed;
   width: 100%;
+
   .response-field-grid-row {
     height: 100px;
     vertical-align: top;
   }
+
+  .element-selector {
+    width: 100%;
+    .dropdown-toggle {
+      width: 100%;
+      span {
+         font-size: 2em;
+      }
+    }
+  }
+
   .response-field-grid-cell {
     padding: 10px 10px 0 10px;
     border: 1px dashed #ddd

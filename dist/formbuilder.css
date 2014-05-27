@@ -96,6 +96,9 @@
 .response-field-grid .cover{display:none}
 .response-field-grid-table{border-collapse:collapse;border-spacing:0;margin-bottom:5px;table-layout:fixed;width:100%}
 .response-field-grid-table .response-field-grid-row{height:100px;vertical-align:top}
+.response-field-grid-table .element-selector{width:100%}
+.response-field-grid-table .element-selector .dropdown-toggle{width:100%}
+.response-field-grid-table .element-selector .dropdown-toggle span{font-size:2em}
 .response-field-grid-table .response-field-grid-cell{padding:10px 10px 0 10px;border:1px dashed #ddd;background-color:rgba(255,255,255,0.8)}
 .response-field-grid-table .response-field-grid-cell .cover{display:block}
 .response-field-grid-table .response-field-grid-cell .response-field-selector{margin:.5em}

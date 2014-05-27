@@ -162,6 +162,10 @@
       delete attrs['id'];
       delete attrs['cid'];
       attrs['label'] += ' Copy';
+      if (attrs.grid) {
+        attrs.grid = _.clone(attrs.grid);
+        attrs.grid.row = attrs.grid.row + 1;
+      }
       this.parentView.createField(attrs, {
         position: this.model.indexInDOM() + 1
       });
@@ -257,7 +261,7 @@
         _.each(this.subelements(), function(subelement) {
           var grid;
           grid = _this.parentView.gridAttr(subelement);
-          if (grid.row > numRows) {
+          if (grid.row > (numRows - 1)) {
             return subelement.destroy();
           }
         });
@@ -267,7 +271,7 @@
         _.each(this.subelements(), function(subelement) {
           var grid;
           grid = _this.parentView.gridAttr(subelement);
-          if (grid.col > numCols) {
+          if (grid.col > (numCols - 1)) {
             return subelement.destroy();
           }
         });
@@ -364,7 +368,7 @@
     };
 
     GridFieldView.prototype.belongsToMe = function(model) {
-      return this.parentView.inGrid(model) && this.parentView.gridAttr(model).cid === this.model.cid;
+      return this.parentView.inGrid(model) && this.parentView.gridAttr(model).cid === this.model.get('cid');
     };
 
     GridFieldView.prototype.inlineAdd = function(e) {
@@ -602,7 +606,7 @@
     };
 
     BuilderView.prototype.addOne = function(responseField, _, options) {
-      var $replacePosition, addOne, append, appendEl, grid, gridModel, replaceEl, retry, view, wrapper;
+      var $replacePosition, addOne, append, appendEl, grid, gridModel, isEmpty, replaceEl, retry, view, wrapper;
       appendEl = options.$appendEl || null;
       replaceEl = options.$replaceEl || null;
       if (responseField.attributes.field_type === 'grid') {
@@ -617,33 +621,29 @@
         });
       }
       grid = this.gridAttr(responseField);
-      if (appendEl === null && (grid != null)) {
-        if (grid.col !== void 0 && grid.row !== void 0 && grid.cid !== void 0) {
-          gridModel = this.collection.find(function(model) {
-            return model.get('cid') === grid.cid;
-          });
-          wrapper = $('.fb-field-wrapper').filter(function(item) {
-            return $(this).data('cid') === gridModel.cid;
-          });
-          append = wrapper.find('tr:nth-child(' + (grid.row + 1) + ') td:nth-child(' + (grid.col + 1) + ')');
-          retry = options.retry || 0;
-          if (append.length === 1) {
-            appendEl = append;
-          } else if (retry < 5) {
-            options.retry = retry + 1;
-            addOne = window._.bind(this.addOne, this);
-            window._.delay(addOne, 250, responseField, _, options);
-            return;
-          }
+      if (appendEl === null && (grid != null) && grid.col !== void 0 && grid.row !== void 0 && grid.cid !== void 0) {
+        gridModel = this.collection.find(function(model) {
+          return model.get('cid') === grid.cid;
+        });
+        wrapper = $('.fb-field-wrapper').filter(function(item) {
+          return $(this).data('cid') === gridModel.cid;
+        });
+        append = wrapper.find('tr:nth-child(' + (grid.row + 1) + ') td:nth-child(' + (grid.col + 1) + ')');
+        retry = options.retry || 0;
+        isEmpty = append.find('.element-selector').length === 1;
+        if (append.length === 1 && isEmpty) {
+          appendEl = append;
+        } else if (append.length === 1 && !isEmpty) {
+          responseField.set('grid.row', grid.row + 1);
+          return this.addOne(responseField, _, options);
+        } else if (wrapper.length === 0 && retry < 2) {
+          options.retry = retry + 1;
+          addOne = window._.bind(this.addOne, this);
+          window._.delay(addOne, 250, responseField, _, options);
+          return;
         } else {
-          append = $('tr td:nth-child(' + (grid.col + 1) + '):has(.element-selector)').first();
-          if (append.length === 1) {
-            appendEl = append;
-            grid.row = appendEl.parents('tr').prop('rowIndex');
-          } else {
-            options.position = null;
-            delete responseField.attributes['grid'];
-          }
+          options.position = null;
+          delete responseField.attributes['grid'];
         }
       }
       if (appendEl != null) {
@@ -730,7 +730,7 @@
     };
 
     BuilderView.prototype.createAndShowEditView = function(model) {
-      var $newEditEl, $responseFieldEl, fieldWrapper;
+      var $newEditEl, $responseFieldEl, attrs, fieldWrapper;
       $responseFieldEl = this.$el.find(".fb-field-wrapper").filter(function() {
         return $(this).data('cid') === model.cid;
       });
@@ -758,9 +758,11 @@
       }
       this.$el.find(".fb-tabs a[data-target=\"#editField\"]").click();
       this.scrollLeftWrapper($responseFieldEl);
-      if (model.get('definition.onEdit')) {
-        model.get('definition.onEdit')(model);
+      attrs = Formbuilder.helpers.defaultFieldAttrs(model.get('field_type'));
+      if (attrs.definition.onEdit !== void 0) {
+        attrs.definition.onEdit(model);
       }
+      this.$el.find("input, textarea, [contenteditable=true]").filter(':visible').first().focus();
       return this;
     };
 
@@ -1107,7 +1109,7 @@
     order: 0,
     type: 'non_input',
     view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>",
-    edit: "<div class=\"fb-edit-section-header\">Details</div>\n<div class=\"fb-common-wrapper\">\n  <div class=\"fb-label-description\">\n    <input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.LABEL %>\">\n  </div>\n  <textarea style=\"display:none;\" data-rv-input=\"model.<%= Formbuilder.options.mappings.DESCRIPTION %>\">\n  </textarea>\n  <div class=\"fb-info-editor\"></div>\n</div>",
+    edit: "<div class=\"fb-edit-section-header\">Details</div>\n<div class=\"fb-common-wrapper\">\n  <div class=\"fb-label-description\">\n    <input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.LABEL %>\">\n  </div>\n  <textarea class=\"fb-info-editor\" style=\"display:none;\" data-rv-input=\"model.<%= Formbuilder.options.mappings.DESCRIPTION %>\">\n  </textarea>\n</div>",
     addButton: "<span class=\"fb-icon-info\"></span> Info",
     onEdit: function(model) {
       var update;
@@ -1598,7 +1600,7 @@ this["Formbuilder"]["templates"]["view/element_selector"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class="element-selector btn-group">\n<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">\n    <span class="glyphicon glyphicon-plus"></span>\n    <span class="caret"></span>\n</button>\n<ul class="dropdown-menu" role="menu">\n    <li data-field-type="text"><span class="fb-icon-text"></span> Text</li>\n    <li data-field-type="paragraph"><span class="fb-icon-paragraph"></span> Paragraph</li>\n    <li data-field-type="dropdown"><span class="fb-icon-dropdown"></span> Dropdown</li>\n    <li data-field-type="checkboxes"><span class="fb-icon-checkboxes"></span> Checkboxes</li>\n    <li data-field-type="radio"><span class="fb-icon-radio"></span> Radio</li>\n    <li data-field-type="info"><span class="fb-icon-info"></span> Info</li>\n</ul>\n</div>';
+__p += '<div class="element-selector btn-group">\n<button type="button" class="btn btn-default dropdown-toggle btn-lg" data-toggle="dropdown">\n    <span class="glyphicon glyphicon-plus"></span>\n</button>\n<ul class="dropdown-menu" role="menu">\n    <li data-field-type="text"><span class="fb-icon-text"></span> Text</li>\n    <li data-field-type="paragraph"><span class="fb-icon-paragraph"></span> Paragraph</li>\n    <li data-field-type="info"><span class="fb-icon-info"></span> Info</li>\n    <li role="presentation" class="divider"></li>\n    <li data-field-type="dropdown"><span class="fb-icon-dropdown"></span> Dropdown</li>\n    <li data-field-type="radio"><span class="fb-icon-radio"></span> Radio</li>\n    <li data-field-type="checkboxes"><span class="fb-icon-checkboxes"></span> Multiple Choice</li>\n    <li role="presentation" class="divider"></li>\n    <li data-field-type="date"><span class="fb-icon-date"></span> Date</li>\n    <li data-field-type="signature"><span class="fb-icon-signature"></span> Signature</li>\n</ul>\n</div>';
 
 }
 return __p

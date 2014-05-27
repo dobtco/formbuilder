@@ -17,9 +17,8 @@ Formbuilder.registerField 'info',
     <div class="fb-label-description">
       <input type="text" data-rv-input="model.<%= Formbuilder.options.mappings.LABEL %>">
     </div>
-    <textarea style="display:none;" data-rv-input="model.<%= Formbuilder.options.mappings.DESCRIPTION %>">
+    <textarea class="fb-info-editor" style="display:none;" data-rv-input="model.<%= Formbuilder.options.mappings.DESCRIPTION %>">
     </textarea>
-    <div class="fb-info-editor"></div>
   </div>
   """
 

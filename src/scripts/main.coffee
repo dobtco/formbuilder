@@ -68,6 +68,9 @@ class ViewFieldView extends Backbone.View
     delete attrs['id']
     delete attrs['cid']
     attrs['label'] += ' Copy'
+    if attrs.grid
+        attrs.grid = _.clone(attrs.grid)
+        attrs.grid.row = attrs.grid.row + 1
     @parentView.createField attrs, { position: @model.indexInDOM() + 1 }
     @model.trigger "duplicate:viewfield"
 
@@ -129,13 +132,13 @@ class GridFieldView extends Backbone.View
     if currentRows > numRows
         _.each @subelements(), (subelement) =>
            grid = @parentView.gridAttr(subelement)
-           if (grid.row > numRows) then subelement.destroy()
+           if grid.row > (numRows - 1) then subelement.destroy()
         table.find('tr').slice(numRows - currentRows).remove()
 
     if currentCols > numCols
         _.each @subelements(), (subelement) =>
            grid = @parentView.gridAttr(subelement)
-           if (grid.col > numCols) then subelement.destroy()
+           if grid.col > (numCols - 1) then subelement.destroy()
         table.find('tr').find('td:gt('+(numCols - 1)+')').remove()
 
   renderChildren: ->
@@ -198,7 +201,7 @@ class GridFieldView extends Backbone.View
         return @belongsToMe(item)
 
   belongsToMe: (model) ->
-    @parentView.inGrid(model) && @parentView.gridAttr(model).cid == @model.cid
+    @parentView.inGrid(model) && @parentView.gridAttr(model).cid == @model.get('cid')
 
   inlineAdd: (e) ->
     e.preventDefault()
@@ -389,31 +392,30 @@ class BuilderView extends Backbone.View
 
     grid = @gridAttr(responseField);
 
-    if appendEl == null && grid?
-        if grid.col != undefined && grid.row != undefined && grid.cid != undefined
-            gridModel = @collection.find (model) ->
-                return model.get('cid') is grid.cid
-            wrapper = $('.fb-field-wrapper').filter (item) ->
-                $(@).data('cid') == gridModel.cid
-            append = wrapper.find('tr:nth-child(' + (grid.row + 1) + ') td:nth-child(' + (grid.col + 1) + ')')
-            retry = options.retry || 0
-            if append.length == 1
-                appendEl = append
-            # workaround for unsorted input.
-            else if retry < 5
-                options.retry = retry + 1
-                addOne = window._.bind @addOne, @
-                window._.delay addOne, 250, responseField, _, options
-                return
-
+    if appendEl == null && grid? && grid.col != undefined && grid.row != undefined && grid.cid != undefined
+        gridModel = @collection.find (model) ->
+            return model.get('cid') is grid.cid
+        wrapper = $('.fb-field-wrapper').filter (item) ->
+            $(@).data('cid') == gridModel.cid
+        append = wrapper.find('tr:nth-child(' + (grid.row + 1) + ') td:nth-child(' + (grid.col + 1) + ')')
+        retry = options.retry || 0
+        isEmpty = append.find('.element-selector').length == 1
+        if append.length == 1 && isEmpty
+            appendEl = append
+        else if append.length == 1 && !isEmpty
+            responseField.set('grid.row', grid.row + 1)
+            return @addOne responseField, _, options
+        # workaround for unsorted input.
+        else if wrapper.length == 0 && retry < 2
+            options.retry = retry + 1
+            addOne = window._.bind @addOne, @
+            window._.delay addOne, 250, responseField, _, options
+            return
         else
-            append = $('tr td:nth-child(' + (grid.col + 1) + '):has(.element-selector)').first()
-            if append.length == 1
-                appendEl = append
-                grid.row = appendEl.parents('tr').prop('rowIndex')
-            else
-                options.position = null
-                delete responseField.attributes['grid']
+            options.position = null
+            delete responseField.attributes['grid']
+
+
     #####
     # Calculates where to place this new field.
     #
@@ -511,8 +513,10 @@ class BuilderView extends Backbone.View
     if @inGrid(model) then fieldWrapper.addClass('fb-edit-field-grid') else fieldWrapper.removeClass('fb-edit-field-grid')
     @$el.find(".fb-tabs a[data-target=\"#editField\"]").click()
     @scrollLeftWrapper($responseFieldEl)
-    if model.get 'definition.onEdit'
-        model.get('definition.onEdit')(model)
+    attrs = Formbuilder.helpers.defaultFieldAttrs(model.get('field_type'))
+    if attrs.definition.onEdit != undefined
+        attrs.definition.onEdit model
+    @$el.find("input, textarea, [contenteditable=true]").filter(':visible').first().focus()
     return @
 
   inGrid: (model) ->
