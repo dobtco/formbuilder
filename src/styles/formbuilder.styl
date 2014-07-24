@@ -32,6 +32,7 @@ $editing-border = darken($editing-bg, 7%)
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
+
 .fb-icon-picture:before { content: '\e811'; } /* '' */
 .fb-icon-email:before { content: '\e805'; } /* '' */
 .fb-icon-add:before { content: '\e80f'; } /* '' */
@@ -448,6 +449,22 @@ $editing-border = darken($editing-bg, 7%)
   }
 }
 
+for row in (1..15)
+  .fb-options-per-row-{row}:before
+    content " "
+    display table
+  .fb-options-per-row-{row}:after
+    content " "
+    display table
+    clear both
+  .fb-options-per-row-{row}
+    clear both
+    .fb-option-wrapper
+      width (100% / row)
+      float left
+
+
+
 .response-field-grid-table {
   border-collapse: collapse;
   border-spacing: 0;
@@ -486,7 +503,7 @@ $editing-border = darken($editing-bg, 7%)
     .help-block {
       display:none;
     }
-    select, input[type=text], textarea {
+    select, input[type=text], textarea, .fb-signature {
       width: 100%;
     }
   }

@@ -158,12 +158,12 @@
       var attrs;
       e.preventDefault();
       e.stopPropagation();
-      attrs = _.clone(this.model.attributes);
+      attrs = Formbuilder.helpers.clone(this.model.attributes);
       delete attrs['id'];
       delete attrs['cid'];
       attrs['label'] += ' Copy';
       if (attrs.grid) {
-        attrs.grid = _.clone(attrs.grid);
+        attrs.grid = Formbuilder.helpers.clone(attrs.grid);
         attrs.grid.row = attrs.grid.row + 1;
       }
       this.parentView.createField(attrs, {
@@ -325,14 +325,14 @@
     GridFieldView.prototype.duplicate = function() {
       var attrs, children,
         _this = this;
-      attrs = _.clone(this.model.attributes);
+      attrs = Formbuilder.helpers.clone(this.model.attributes);
       delete attrs['id'];
       delete attrs['cid'];
       attrs['label'] += ' Copy';
       children = this.subelements();
       attrs['children'] = _.map(children, function(child) {
         var childattrs;
-        childattrs = _.clone(child.attributes);
+        childattrs = Formbuilder.helpers.clone(child.attributes);
         delete childattrs['id'];
         delete childattrs['cid'];
         return childattrs;
@@ -876,6 +876,9 @@
       },
       simple_format: function(x) {
         return x != null ? x.replace(/\n/g, '<br />') : void 0;
+      },
+      clone: function(obj) {
+        return JSON.parse(JSON.stringify(obj));
       }
     };
 
@@ -908,6 +911,7 @@
         },
         MIN: 'field_options.min',
         MAX: 'field_options.max',
+        OPTIONS_PER_ROW: 'field_options.options_per_row',
         MINLENGTH: 'field_options.minlength',
         MAXLENGTH: 'field_options.maxlength',
         LENGTH_UNITS: 'field_options.min_max_length_units'
@@ -1003,8 +1007,8 @@
   Formbuilder.registerField('checkboxes', {
     name: 'Checkboxes',
     order: 10,
-    view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='checkbox' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
-    edit: "<%= Formbuilder.templates['edit/options']({ rf: rf }) %>",
+    view: "<div class=\"fb-options-per-row-<%= rf.get(Formbuilder.options.mappings.OPTIONS_PER_ROW) %>\">\n    <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n      <div class=\"fb-option-wrapper\">\n        <label class='fb-option'>\n          <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n          <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n        </label>\n      </div>\n    <% } %>\n\n    <% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n      <div class='other-option'>\n        <label class='fb-option'>\n          <input type='checkbox' />\n          Other\n        </label>\n\n        <input type='text' />\n      </div>\n    <% } %>\n</div>",
+    edit: "<%= Formbuilder.templates['edit/options']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/options_per_row']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-checkboxes\"></span> Checkboxes",
     defaultAttributes: function(attrs) {
       attrs.field_options.options = [
@@ -1018,6 +1022,7 @@
           score: false
         }
       ];
+      attrs.field_options.options_per_row = 1;
       return attrs;
     }
   });
@@ -1173,8 +1178,8 @@
   Formbuilder.registerField('radio', {
     name: 'Radio Button',
     order: 15,
-    view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='radio' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
-    edit: "<%= Formbuilder.templates['edit/scoring']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/options']({ rf: rf }) %>",
+    view: "<div class=\"fb-options-per-row-<%= rf.get(Formbuilder.options.mappings.OPTIONS_PER_ROW) %>\">\n    <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n      <div class=\"fb-option-wrapper\">\n        <label class='fb-option'>\n          <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n          <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n        </label>\n      </div>\n    <% } %>\n\n    <% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n      <div class='fb-option-wrapper other-option'>\n        <label class='fb-option'>\n          <input type='radio' />\n          Other\n        </label>\n\n        <input type='text' />\n      </div>\n    <% } %>\n</div>",
+    edit: "<%= Formbuilder.templates['edit/scoring']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/options']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/options_per_row']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-radio\"></span> Multiple Choice",
     defaultAttributes: function(attrs) {
       attrs.field_options.options = [
@@ -1189,6 +1194,7 @@
         }
       ];
       attrs.field_options.include_scoring = false;
+      attrs.field_options.options_per_row = 1;
       return attrs;
     }
   });
@@ -1412,6 +1418,18 @@ __p += '\n  <label>\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
 __p += '\n\n<div class=\'fb-bottom-add\'>\n  <a class="js-add-option ' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
 '">Add option</a>\n</div>\n';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["edit/options_per_row"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class=\'fb-edit-section-header\'>Number of options per row</div>\n    <select data-rv-value="model.' +
+((__t = ( Formbuilder.options.mappings.OPTIONS_PER_ROW )) == null ? '' : __t) +
+'">\n        <option value="1">1</option>\n        <option value="2">2</option>\n        <option value="3">3</option>\n        <option value="4">4</option>\n        <option value="5">5</option>\n        <option value="6">6</option>\n        <option value="7">7</option>\n        <option value="8">8</option>\n        <option value="9">9</option>\n        <option value="10">10</option>\n        <option value="11">11</option>\n        <option value="12">12</option>\n        <option value="13">13</option>\n        <option value="14">14</option>\n        <option value="15">15</option>\n    </select>\n</div>';
 
 }
 return __p

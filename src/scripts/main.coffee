@@ -64,12 +64,12 @@ class ViewFieldView extends Backbone.View
   duplicate: (e) ->
     e.preventDefault();
     e.stopPropagation();
-    attrs = _.clone(@model.attributes)
+    attrs = Formbuilder.helpers.clone(@model.attributes);
     delete attrs['id']
     delete attrs['cid']
     attrs['label'] += ' Copy'
     if attrs.grid
-        attrs.grid = _.clone(attrs.grid)
+        attrs.grid = Formbuilder.helpers.clone(attrs.grid);
         attrs.grid.row = attrs.grid.row + 1
     @parentView.createField attrs, { position: @model.indexInDOM() + 1 }
     @model.trigger "duplicate:viewfield"
@@ -173,13 +173,13 @@ class GridFieldView extends Backbone.View
         cb()
 
   duplicate: ->
-    attrs = _.clone(@model.attributes)
+    attrs = Formbuilder.helpers.clone(@model.attributes);
     delete attrs['id']
     delete attrs['cid']
     attrs['label'] += ' Copy'
     children = @subelements()
     attrs['children'] = _.map children, (child) =>
-        childattrs = _.clone(child.attributes)
+        childattrs = Formbuilder.helpers.clone(child.attributes);
         delete childattrs['id']
         delete childattrs['cid']
         childattrs
@@ -592,6 +592,8 @@ class Formbuilder
 
     simple_format: (x) ->
       x?.replace(/\n/g, '<br />')
+    clone: (obj) ->
+      JSON.parse(JSON.stringify(obj))
 
   @options:
     BUTTON_CLASS: 'fb-button btn btn-default'
@@ -622,6 +624,7 @@ class Formbuilder
         NUMROWS: 'field_options.num_rows'
       MIN: 'field_options.min'
       MAX: 'field_options.max'
+      OPTIONS_PER_ROW: 'field_options.options_per_row'
       MINLENGTH: 'field_options.minlength'
       MAXLENGTH: 'field_options.maxlength'
       LENGTH_UNITS: 'field_options.min_max_length_units'

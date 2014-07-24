@@ -4,29 +4,32 @@ Formbuilder.registerField 'checkboxes',
   order: 10
 
   view: """
-    <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>
-      <div>
-        <label class='fb-option'>
-          <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick="javascript: return false;" />
-          <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>
-        </label>
-      </div>
-    <% } %>
+    <div class="fb-options-per-row-<%= rf.get(Formbuilder.options.mappings.OPTIONS_PER_ROW) %>">
+        <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>
+          <div class="fb-option-wrapper">
+            <label class='fb-option'>
+              <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick="javascript: return false;" />
+              <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>
+            </label>
+          </div>
+        <% } %>
 
-    <% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>
-      <div class='other-option'>
-        <label class='fb-option'>
-          <input type='checkbox' />
-          Other
-        </label>
+        <% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>
+          <div class='other-option'>
+            <label class='fb-option'>
+              <input type='checkbox' />
+              Other
+            </label>
 
-        <input type='text' />
-      </div>
-    <% } %>
+            <input type='text' />
+          </div>
+        <% } %>
+    </div>
   """
 
   edit: """
     <%= Formbuilder.templates['edit/options']({ rf: rf }) %>
+    <%= Formbuilder.templates['edit/options_per_row']({ rf: rf }) %>
   """
 
   addButton: """
@@ -43,5 +46,7 @@ Formbuilder.registerField 'checkboxes',
       checked: false,
       score: false
     ]
+
+    attrs.field_options.options_per_row = 1
 
     attrs

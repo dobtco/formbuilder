@@ -94,6 +94,66 @@
 .response-field-signature .fb-signature{width:300px;height:150px}
 .response-field-signature .fb-signature-placeholder{color:#aaa}
 .response-field-grid .cover{display:none}
+.fb-options-per-row-1:before{content:" ";display:table}
+.fb-options-per-row-1:after{content:" ";display:table;clear:both}
+.fb-options-per-row-1{clear:both}
+.fb-options-per-row-1 .fb-option-wrapper{width:100%;float:left}
+.fb-options-per-row-2:before{content:" ";display:table}
+.fb-options-per-row-2:after{content:" ";display:table;clear:both}
+.fb-options-per-row-2{clear:both}
+.fb-options-per-row-2 .fb-option-wrapper{width:50%;float:left}
+.fb-options-per-row-3:before{content:" ";display:table}
+.fb-options-per-row-3:after{content:" ";display:table;clear:both}
+.fb-options-per-row-3{clear:both}
+.fb-options-per-row-3 .fb-option-wrapper{width:33.333333333333336%;float:left}
+.fb-options-per-row-4:before{content:" ";display:table}
+.fb-options-per-row-4:after{content:" ";display:table;clear:both}
+.fb-options-per-row-4{clear:both}
+.fb-options-per-row-4 .fb-option-wrapper{width:25%;float:left}
+.fb-options-per-row-5:before{content:" ";display:table}
+.fb-options-per-row-5:after{content:" ";display:table;clear:both}
+.fb-options-per-row-5{clear:both}
+.fb-options-per-row-5 .fb-option-wrapper{width:20%;float:left}
+.fb-options-per-row-6:before{content:" ";display:table}
+.fb-options-per-row-6:after{content:" ";display:table;clear:both}
+.fb-options-per-row-6{clear:both}
+.fb-options-per-row-6 .fb-option-wrapper{width:16.666666666666668%;float:left}
+.fb-options-per-row-7:before{content:" ";display:table}
+.fb-options-per-row-7:after{content:" ";display:table;clear:both}
+.fb-options-per-row-7{clear:both}
+.fb-options-per-row-7 .fb-option-wrapper{width:14.285714285714286%;float:left}
+.fb-options-per-row-8:before{content:" ";display:table}
+.fb-options-per-row-8:after{content:" ";display:table;clear:both}
+.fb-options-per-row-8{clear:both}
+.fb-options-per-row-8 .fb-option-wrapper{width:12.5%;float:left}
+.fb-options-per-row-9:before{content:" ";display:table}
+.fb-options-per-row-9:after{content:" ";display:table;clear:both}
+.fb-options-per-row-9{clear:both}
+.fb-options-per-row-9 .fb-option-wrapper{width:11.11111111111111%;float:left}
+.fb-options-per-row-10:before{content:" ";display:table}
+.fb-options-per-row-10:after{content:" ";display:table;clear:both}
+.fb-options-per-row-10{clear:both}
+.fb-options-per-row-10 .fb-option-wrapper{width:10%;float:left}
+.fb-options-per-row-11:before{content:" ";display:table}
+.fb-options-per-row-11:after{content:" ";display:table;clear:both}
+.fb-options-per-row-11{clear:both}
+.fb-options-per-row-11 .fb-option-wrapper{width:9.090909090909092%;float:left}
+.fb-options-per-row-12:before{content:" ";display:table}
+.fb-options-per-row-12:after{content:" ";display:table;clear:both}
+.fb-options-per-row-12{clear:both}
+.fb-options-per-row-12 .fb-option-wrapper{width:8.333333333333334%;float:left}
+.fb-options-per-row-13:before{content:" ";display:table}
+.fb-options-per-row-13:after{content:" ";display:table;clear:both}
+.fb-options-per-row-13{clear:both}
+.fb-options-per-row-13 .fb-option-wrapper{width:7.6923076923076925%;float:left}
+.fb-options-per-row-14:before{content:" ";display:table}
+.fb-options-per-row-14:after{content:" ";display:table;clear:both}
+.fb-options-per-row-14{clear:both}
+.fb-options-per-row-14 .fb-option-wrapper{width:7.142857142857143%;float:left}
+.fb-options-per-row-15:before{content:" ";display:table}
+.fb-options-per-row-15:after{content:" ";display:table;clear:both}
+.fb-options-per-row-15{clear:both}
+.fb-options-per-row-15 .fb-option-wrapper{width:6.666666666666667%;float:left}
 .response-field-grid-table{border-collapse:collapse;border-spacing:0;margin-bottom:5px;table-layout:fixed;width:100%}
 .response-field-grid-table .response-field-grid-row{height:100px;vertical-align:top}
 .response-field-grid-table .element-selector{width:100%}
@@ -104,4 +164,4 @@
 .response-field-grid-table .response-field-grid-cell .response-field-selector{margin:.5em}
 .response-field-grid-table .response-field-grid-cell .subtemplate-wrapper > label{display:none}
 .response-field-grid-table .response-field-grid-cell .help-block{display:none}
-.response-field-grid-table .response-field-grid-cell select,.response-field-grid-table .response-field-grid-cell input[type=text],.response-field-grid-table .response-field-grid-cell textarea{width:100%}
+.response-field-grid-table .response-field-grid-cell select,.response-field-grid-table .response-field-grid-cell input[type=text],.response-field-grid-table .response-field-grid-cell textarea,.response-field-grid-table .response-field-grid-cell .fb-signature{width:100%}
