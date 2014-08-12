@@ -6,7 +6,10 @@
     "adamjacobbecker <ad@mbecker.cc>"
   ],
   "description": "Graphical form builder for the web.",
-  "main": "index.js",
+  "main": [
+    "dist/formbuilder.js",
+    "dist/formbuilder.css"
+  ],
   "license": "MIT",
   "ignore": [
     "**/.*",
