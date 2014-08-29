@@ -3,7 +3,7 @@ Formbuilder.registerField 'checkboxes',
   order: 10
 
   view: """
-    <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>
+    <% for (i = 0; i < (rf.get(Formbuilder.options.mappings.OPTIONS).length || []); i++) {%>
       <div>
         <label class='fb-option'>
           <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %>  />
