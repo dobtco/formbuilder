@@ -16,10 +16,11 @@
 
 <% if (typeof includeOther !== 'undefined'){ %>
   <label>
-    <input type='checkbox' rv-checked="model.<%= Formbuilder.options.mappings.INCLUDE_OTHER %>" />
+    <input type='checkbox' rv-checked="model:<%= Formbuilder.options.mappings.INCLUDE_OTHER %>" />
     Include "other"
   </label>
 <% } %>
+
 
 <div class='fb-bottom-add'>
   <a class="js-add-option <%= Formbuilder.options.BUTTON_CLASS %>">Add option</a>
