@@ -1,10 +1,15 @@
-class FormbuilderModel extends Backbone.DeepModel
+class FormbuilderModel extends Backbone.NestedModel
   sync: -> # noop
+  initialize: ->
+    @on 'change', @log
   indexInDOM: ->
     $wrapper = $(".fb-field-wrapper").filter ( (_, el) => $(el).data('cid') == @cid  )
     $(".fb-field-wrapper").index $wrapper
   is_input: ->
     Formbuilder.inputFields[@get(Formbuilder.options.mappings.FIELD_TYPE)]?
+
+  log: ->
+    console.log this
 
 
 class FormbuilderCollection extends Backbone.Collection

@@ -49,6 +49,10 @@
 
     FormbuilderModel.prototype.sync = function() {};
 
+    FormbuilderModel.prototype.initialize = function() {
+      return this.on('change', this.log);
+    };
+
     FormbuilderModel.prototype.indexInDOM = function() {
       var $wrapper,
         _this = this;
@@ -62,9 +66,13 @@
       return Formbuilder.inputFields[this.get(Formbuilder.options.mappings.FIELD_TYPE)] != null;
     };
 
+    FormbuilderModel.prototype.log = function() {
+      return console.log(this);
+    };
+
     return FormbuilderModel;
 
-  })(Backbone.DeepModel);
+  })(Backbone.NestedModel);
 
   FormbuilderCollection = (function(_super) {
     __extends(FormbuilderCollection, _super);
@@ -779,7 +787,7 @@
     order: 0,
     type: 'non_input',
     view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>",
-    edit: "<div class='fb-edit-section-header'>Label</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n<textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'\n  placeholder='Add a longer description to this field'></textarea>",
+    edit: "<div class='fb-edit-section-header'>Label</div>\n<input type='text' rv-input='model:<%= Formbuilder.options.mappings.LABEL %>' />\n<textarea rv-input='model:<%= Formbuilder.options.mappings.DESCRIPTION %>'\n  placeholder='Add a longer description to this field'></textarea>",
     addButton: "<span class='symbol'><span class='fa fa-minus'></span></span> Section Break"
   });
 
@@ -969,11 +977,11 @@ __p += '\n\n<div class=\'option\' rv-each-option=\'model:' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
 '" title="Remove Option"><i class=\'fa fa-minus-circle\'></i></a>\n</div>\n\n';
  if (typeof includeOther !== 'undefined'){ ;
-__p += '\n  <label>\n    <input type=\'checkbox\' rv-checked="model.' +
+__p += '\n  <label>\n    <input type=\'checkbox\' rv-checked="model:' +
 ((__t = ( Formbuilder.options.mappings.INCLUDE_OTHER )) == null ? '' : __t) +
 '" />\n    Include "other"\n  </label>\n';
  } ;
-__p += '\n\n<div class=\'fb-bottom-add\'>\n  <a class="js-add-option ' +
+__p += '\n\n\n<div class=\'fb-bottom-add\'>\n  <a class="js-add-option ' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
 '">Add option</a>\n</div>\n';
 
