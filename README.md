@@ -1,6 +1,14 @@
 Formbuilder.js
 ============
 
+#### Update 9/26/14
+
+I'm working on a new version of formbuilder that uses [formrenderer-base](/dobtco/formrenderer-base) as a dependency. This will make it so that rendering a form for a user to fill out is as simple as plugging in your data from the builder. It's a bit of a chore to extract this stuff from [Screendoor](http://www.dobt.co/screendoor), but I hope to make some progress in the next month.
+
+-- @ajb
+
+-----
+
 Formbuilder is a graphical interface for letting users build their own webforms. Think Wufoo or Google Forms, but a lightweight component that can be integrated into your application.
 
 *Formbuilder.js only handles the client-side logic of creating a form. It will output a structured JSON representation of your form, but saving the form, rendering it on the server, and storing users' responses is all up to you. If you're using Rails, there is also [Formbuilder.rb](https://github.com/dobtco/formbuilder-rb), a Rails engine that's designed to provide this server-side functionality.*
