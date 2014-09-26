@@ -1,12 +1,15 @@
 {
   "name": "formbuilder",
-  "version": "0.1.5",
+  "version": "0.2.1",
   "homepage": "https://github.com/dobtco/formbuilder",
   "authors": [
     "ajb <ad@mbecker.cc>"
   ],
   "description": "Graphical form builder for the web.",
-  "main": "index.js",
+  "main": [
+    "dist/formbuilder.js",
+    "dist/formbuilder.css"
+  ],
   "license": "MIT",
   "ignore": [
     "**/.*",
