@@ -58,19 +58,19 @@ module.exports = (grunt) ->
           '<%= distFolder %>/formbuilder.js': '<%= compiledFolder %>/*.js'
           '<%= vendorFolder %>/js/vendor.js': [
             'bower_components/ie8-node-enum/index.js'
-            'bower_components/jquery/jquery.js'
-            'bower_components/jquery-ui/ui/jquery.ui.core.js'
-            'bower_components/jquery-ui/ui/jquery.ui.widget.js'
-            'bower_components/jquery-ui/ui/jquery.ui.mouse.js'
-            'bower_components/jquery-ui/ui/jquery.ui.draggable.js'
-            'bower_components/jquery-ui/ui/jquery.ui.droppable.js'
-            'bower_components/jquery-ui/ui/jquery.ui.sortable.js'
+            'bower_components/jquery/dist/jquery.min.js'
+            'bower_components/jquery-ui/ui/core.js'
+            'bower_components/jquery-ui/ui/widget.js'
+            'bower_components/jquery-ui/ui/mouse.js'
+            'bower_components/jquery-ui/ui/draggable.js'
+            'bower_components/jquery-ui/ui/droppable.js'
+            'bower_components/jquery-ui/ui/sortable.js'
             'bower_components/jquery.scrollWindowTo/index.js'
-            'bower_components/underscore/underscore-min.js'
+            'bower_components/underscore/underscore.js'
             'bower_components/underscore.mixin.deepExtend/index.js'
             'bower_components/rivets/dist/rivets.js'
             'bower_components/backbone/backbone.js'
-            'bower_components/backbone-deep-model/src/deep-model.js'
+            'bower_components/backbone-nested-model/backbone-nested.js'
           ]
       mobile_friendly:
         files:
@@ -80,7 +80,7 @@ module.exports = (grunt) ->
             'bower_components/jquery.scrollWindowTo/index.js'
             'bower_components/underscore.mixin.deepExtend/index.js'
             'bower_components/rivets/dist/rivets.js'
-            'bower_components/backbone-deep-model/src/deep-model.js'
+            'bower_components/backbone-nested-model/backbone-nested.js'
           ]
 
     cssmin:

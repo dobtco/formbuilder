@@ -6,22 +6,19 @@ rivets.binders.input =
   unbind: (el) ->
     $(el).unbind('input.rivets')
 
-rivets.configure
-  prefix: "rv"
-  adapter:
-    subscribe: (obj, keypath, callback) ->
-      callback.wrapped = (m, v) -> callback(v)
-      obj.on('change:' + keypath, callback.wrapped)
+rivets.adapters[':'] =
+  subscribe: (obj, keypath, callback) ->
+    obj.on('change:' + keypath, callback)
 
-    unsubscribe: (obj, keypath, callback) ->
-      obj.off('change:' + keypath, callback.wrapped)
+  unsubscribe: (obj, keypath, callback) ->
+    obj.off('change:' + keypath, callback)
 
-    read: (obj, keypath) ->
-      if keypath is "cid" then return obj.cid
-      obj.get(keypath)
+  read: (obj, keypath) ->
+    if keypath is "cid" then return obj.cid
+    obj.get(keypath)
 
-    publish: (obj, keypath, value) ->
-      if obj.cid
-        obj.set(keypath, value);
-      else
-        obj[keypath] = value
+  publish: (obj, keypath, value) ->
+    if obj.cid
+      obj.set(keypath, value);
+    else
+      obj[keypath] = value
