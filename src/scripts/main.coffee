@@ -62,7 +62,11 @@ class ViewFieldView extends Backbone.View
         cb()
 
   duplicate: ->
-    attrs = _.clone(@model.attributes)
+    # attrs = _.clone(@model.attributes)
+    # underscore's clone won't do deep cloning, resulting in duplicated controls
+    # having same value on save.
+    # So, we use jquery's extend method
+    attrs = $.extend(true, {}, @model.attributes);
     delete attrs['id']
     attrs['label'] += ' Copy'
     @parentView.createField attrs, { position: @model.indexInDOM() + 1 }
