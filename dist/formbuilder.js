@@ -3,10 +3,10 @@
     publishes: true,
     routine: rivets.binders.value.routine,
     bind: function(el) {
-      return $(el).bind('input.rivets', this.publish);
+      return jQuery(el).bind('input.rivets', this.publish);
     },
     unbind: function(el) {
-      return $(el).unbind('input.rivets');
+      return jQuery(el).unbind('input.rivets');
     }
   };
 
@@ -58,10 +58,10 @@
     FormbuilderModel.prototype.indexInDOM = function() {
       var $wrapper,
         _this = this;
-      $wrapper = $(".fb-field-wrapper").filter((function(_, el) {
-        return $(el).data('cid') === _this.cid;
+      $wrapper = jQuery(".fb-field-wrapper").filter((function(_, el) {
+        return jQuery(el).data('cid') === _this.cid;
       }));
-      return $(".fb-field-wrapper").index($wrapper);
+      return jQuery(".fb-field-wrapper").index($wrapper);
     };
 
     FormbuilderModel.prototype.is_input = function() {
@@ -208,7 +208,7 @@
 
     EditFieldView.prototype.addOption = function(e) {
       var $el, i, newOption, options;
-      $el = $(e.currentTarget);
+      $el = jQuery(e.currentTarget);
       i = this.$el.find('.option').index($el.closest('.option'));
       options = this.model.get(Formbuilder.options.mappings.OPTIONS) || [];
       newOption = {
@@ -227,7 +227,7 @@
 
     EditFieldView.prototype.removeOption = function(e) {
       var $el, index, options;
-      $el = $(e.currentTarget);
+      $el = jQuery(e.currentTarget);
       index = this.$el.find(".js-remove-option").index($el);
       options = this.model.get(Formbuilder.options.mappings.OPTIONS);
       options.splice(index, 1);
@@ -238,7 +238,7 @@
 
     EditFieldView.prototype.defaultUpdated = function(e) {
       var $el;
-      $el = $(e.currentTarget);
+      $el = jQuery(e.currentTarget);
       if (this.model.get(Formbuilder.options.mappings.FIELD_TYPE) !== 'checkboxes') {
         this.$el.find(".js-default-updated").not($el).attr('checked', false).trigger('change');
       }
@@ -275,7 +275,7 @@
       var selector;
       selector = options.selector, this.formBuilder = options.formBuilder, this.bootstrapData = options.bootstrapData;
       if (selector != null) {
-        this.setElement($(selector));
+        this.setElement(jQuery(selector));
       }
       this.collection = new FormbuilderCollection;
       this.collection.bind('add', this.addOne, this);
@@ -298,7 +298,7 @@
           return _this.saveForm.call(_this);
         }, 5000);
       }
-      return $(window).bind('beforeunload', function() {
+      return jQuery(window).bind('beforeunload', function() {
         if (_this.formSaved) {
           return void 0;
         } else {
@@ -331,12 +331,12 @@
 
     BuilderView.prototype.bindWindowScrollEvent = function() {
       var _this = this;
-      return $(window).on('scroll', function() {
+      return jQuery(window).on('scroll', function() {
         var maxMargin, newMargin;
         if (_this.$fbLeft.data('locked') === true) {
           return;
         }
-        newMargin = Math.max(0, $(window).scrollTop() - _this.$el.offset().top);
+        newMargin = Math.max(0, jQuery(window).scrollTop() - _this.$el.offset().top);
         maxMargin = _this.$responseFields.height();
         return _this.$fbLeft.css({
           'margin-top': Math.min(maxMargin, newMargin)
@@ -346,10 +346,10 @@
 
     BuilderView.prototype.showTab = function(e) {
       var $el, first_model, target;
-      $el = $(e.currentTarget);
+      $el = jQuery(e.currentTarget);
       target = $el.data('target');
       $el.closest('li').addClass('active').siblings('li').removeClass('active');
-      $(target).addClass('active').siblings('.fb-tab-pane').removeClass('active');
+      jQuery(target).addClass('active').siblings('.fb-tab-pane').removeClass('active');
       if (target !== '#editField') {
         this.unlockLeftWrapper();
       }
@@ -413,7 +413,7 @@
         connectToSortable: this.$responseFields,
         helper: function() {
           var $helper;
-          $helper = $("<div class='response-field-draggable-helper' />");
+          $helper = jQuery("<div class='response-field-draggable-helper' />");
           $helper.css({
             width: _this.$responseFields.width(),
             height: '80px'
@@ -434,7 +434,7 @@
 
     BuilderView.prototype.addField = function(e) {
       var field_type;
-      field_type = $(e.currentTarget).data('field-type');
+      field_type = jQuery(e.currentTarget).data('field-type');
       return this.createField(Formbuilder.helpers.defaultFieldAttrs(field_type));
     };
 
@@ -448,7 +448,7 @@
     BuilderView.prototype.createAndShowEditView = function(model) {
       var $newEditEl, $responseFieldEl;
       $responseFieldEl = this.$el.find(".fb-field-wrapper").filter(function() {
-        return $(this).data('cid') === model.cid;
+        return jQuery(this).data('cid') === model.cid;
       });
       $responseFieldEl.addClass('editing').siblings('.fb-field-wrapper').removeClass('editing');
       if (this.editView) {
@@ -474,7 +474,7 @@
       if (!this.editView) {
         return;
       }
-      return this.scrollLeftWrapper($(".fb-field-wrapper.editing"));
+      return this.scrollLeftWrapper(jQuery(".fb-field-wrapper.editing"));
     };
 
     BuilderView.prototype.scrollLeftWrapper = function($responseFieldEl) {

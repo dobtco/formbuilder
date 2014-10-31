@@ -1,8 +1,8 @@
 class FormbuilderModel extends Backbone.DeepModel
   sync: -> # noop
   indexInDOM: ->
-    $wrapper = $(".fb-field-wrapper").filter ( (_, el) => $(el).data('cid') == @cid  )
-    $(".fb-field-wrapper").index $wrapper
+    $wrapper = jQuery(".fb-field-wrapper").filter ( (_, el) => jQuery(el).data('cid') == @cid  )
+    jQuery(".fb-field-wrapper").index $wrapper
   is_input: ->
     Formbuilder.inputFields[@get(Formbuilder.options.mappings.FIELD_TYPE)]?
 
@@ -93,7 +93,7 @@ class EditFieldView extends Backbone.View
 
   # @todo this should really be on the model, not the view
   addOption: (e) ->
-    $el = $(e.currentTarget)
+    $el = jQuery(e.currentTarget)
     i = @$el.find('.option').index($el.closest('.option'))
     options = @model.get(Formbuilder.options.mappings.OPTIONS) || []
     newOption = {label: "", checked: false}
@@ -108,7 +108,7 @@ class EditFieldView extends Backbone.View
     @forceRender()
 
   removeOption: (e) ->
-    $el = $(e.currentTarget)
+    $el = jQuery(e.currentTarget)
     index = @$el.find(".js-remove-option").index($el)
     options = @model.get Formbuilder.options.mappings.OPTIONS
     options.splice index, 1
@@ -117,7 +117,7 @@ class EditFieldView extends Backbone.View
     @forceRender()
 
   defaultUpdated: (e) ->
-    $el = $(e.currentTarget)
+    $el = jQuery(e.currentTarget)
 
     unless @model.get(Formbuilder.options.mappings.FIELD_TYPE) == 'checkboxes' # checkboxes can have multiple options selected
       @$el.find(".js-default-updated").not($el).attr('checked', false).trigger('change')
@@ -143,7 +143,7 @@ class BuilderView extends Backbone.View
 
     # This is a terrible idea because it's not scoped to this view.
     if selector?
-      @setElement $(selector)
+      @setElement jQuery(selector)
 
     # Create the collection, and bind the appropriate events
     @collection = new FormbuilderCollection
@@ -167,7 +167,7 @@ class BuilderView extends Backbone.View
         @saveForm.call(@)
       , 5000
 
-    $(window).bind 'beforeunload', =>
+    jQuery(window).bind 'beforeunload', =>
       if @formSaved then undefined else Formbuilder.options.dict.UNSAVED_CHANGES
 
   reset: ->
@@ -190,19 +190,19 @@ class BuilderView extends Backbone.View
     return @
 
   bindWindowScrollEvent: ->
-    $(window).on 'scroll', =>
+    jQuery(window).on 'scroll', =>
       return if @$fbLeft.data('locked') == true
-      newMargin = Math.max(0, $(window).scrollTop() - @$el.offset().top)
+      newMargin = Math.max(0, jQuery(window).scrollTop() - @$el.offset().top)
       maxMargin = @$responseFields.height()
 
       @$fbLeft.css
         'margin-top': Math.min(maxMargin, newMargin)
 
   showTab: (e) ->
-    $el = $(e.currentTarget)
+    $el = jQuery(e.currentTarget)
     target = $el.data('target')
     $el.closest('li').addClass('active').siblings('li').removeClass('active')
-    $(target).addClass('active').siblings('.fb-tab-pane').removeClass('active')
+    jQuery(target).addClass('active').siblings('.fb-tab-pane').removeClass('active')
 
     @unlockLeftWrapper() unless target == '#editField'
 
@@ -261,7 +261,7 @@ class BuilderView extends Backbone.View
     $addFieldButtons.draggable
       connectToSortable: @$responseFields
       helper: =>
-        $helper = $("<div class='response-field-draggable-helper' />")
+        $helper = jQuery("<div class='response-field-draggable-helper' />")
         $helper.css
           width: @$responseFields.width() # hacky, won't get set without inline style
           height: '80px'
@@ -276,7 +276,7 @@ class BuilderView extends Backbone.View
     @$el.find(".fb-no-response-fields")[if @collection.length > 0 then 'hide' else 'show']()
 
   addField: (e) ->
-    field_type = $(e.currentTarget).data('field-type')
+    field_type = jQuery(e.currentTarget).data('field-type')
     @createField Formbuilder.helpers.defaultFieldAttrs(field_type)
 
   createField: (attrs, options) ->
@@ -285,7 +285,7 @@ class BuilderView extends Backbone.View
     @handleFormUpdate()
 
   createAndShowEditView: (model) ->
-    $responseFieldEl = @$el.find(".fb-field-wrapper").filter( -> $(@).data('cid') == model.cid )
+    $responseFieldEl = @$el.find(".fb-field-wrapper").filter( -> jQuery(@).data('cid') == model.cid )
     $responseFieldEl.addClass('editing').siblings('.fb-field-wrapper').removeClass('editing')
 
     if @editView
@@ -308,7 +308,7 @@ class BuilderView extends Backbone.View
 
   ensureEditViewScrolled: ->
     return unless @editView
-    @scrollLeftWrapper $(".fb-field-wrapper.editing")
+    @scrollLeftWrapper jQuery(".fb-field-wrapper.editing")
 
   scrollLeftWrapper: ($responseFieldEl) ->
     @unlockLeftWrapper()
