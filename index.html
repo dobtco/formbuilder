@@ -3,7 +3,7 @@
 <head>
   <title>Form Builder</title>
   <meta name="description" content="">
-  <link rel="stylesheet" href="vendor/css/vendor.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
   <link rel="stylesheet" href="dist/formbuilder.css" />
   <style>
   @font-face {
@@ -17,30 +17,6 @@
     font-style: normal;
   }
 
-  * {
-    box-sizing: border-box;
-  }
-
-  body {
-    background-color: #444;
-    font-family: sans-serif;
-  }
-
-  .fb-main {
-    background-color: #fff;
-    border-radius: 5px;
-    min-height: 600px;
-  }
-
-  input[type=text] {
-    height: 26px;
-    margin-bottom: 3px;
-  }
-
-  select {
-    margin-bottom: 5px;
-    font-size: 40px;
-  }
   </style>
   <script src="vendor/js/gremlins.js"></script>
 
@@ -53,119 +29,145 @@
   <script src="dist/formbuilder.js"></script>
 
   <script>
-    $(function(){
+    $(function() {
+      Formbuilder.attr('sources', ['List 1', 'List 2']);
       window.fb = new Formbuilder({
         selector: '.fb-main',
         bootstrapData: [
           {
-            "label": "Do you have a website?",
-            "field_type": "website",
-            "required": false,
-            "field_options": {},
-            "cid": "p1"
+            "label": "Please enter your clearance number",
+            "type": "text",
+            "required": true,
+            "options": {},
+            "parent_uuid": "909cbdba-4431-4ed8-ab28-96006d356ad7",
+            "uuid": "d2ce1858-603a-4e31-8cce-ea51ef08ef13"
           },
           {
-            "label": "Please enter your clearance number",
-            "field_type": "text",
-            "required": true,
-            "field_options": {},
-            "cid": "p2"
+            "type": "table",
+            "label": "Table",
+            "options": {
+                "elements": ["d2ce1858-603a-4e31-8cce-ea51ef08ef13"]
+            },
+            "uuid": "909cbdba-4431-4ed8-ab28-96006d356ad7"
+          },
+         {
+            "type": "list",
+            "label": "List",
+            "options": {
+                "data_source": 'List 2',
+                "multiple_selections": true
+
+            },
+            "uuid": "188e4f03-4d5d-4234-9b1f-f916fee48691"
+          },
+          {
+            "label": "Do you have a website?",
+            "description" : "Include 'http://",
+            "type": "website",
+            "required": false,
+            "options": {},
+            "uuid": "31f9a5cf-b54f-40a8-89f0-ccc807f16140"
           },
           {
             "label": "Security personnel #82?",
-            "field_type": "radio",
-            "field_options": {
-                "options": [{
-                    "label": "Yes",
-                    "checked": false
-                }, {
-                    "label": "No",
-                    "checked": false
-                }],
+            "type": "radio",
+            "answers": [{
+                "label": "Yes",
+                "checked": false
+            }, {
+                "label": "No",
+                "checked": false
+            }],
+            "options": {
                 "include_other_option": true
             },
-            "cid": "p3"
+            "uuid": "33cfb242-80cd-428a-828e-344cdb5a6f2a"
           },
           {
             "label": "Medical history",
-            "field_type": "file",
+            "type": "file",
             "required": true,
-            "field_options": {},
-            "cid": "p4"
+            "options": {},
+            "uuid": "b7f79a79-8097-404b-9e43-4553d6cf106a"
           },
           {
-            "field_type": "radio",
-            "field_options": {
-                "options": [{
-                    "label": "Yes",
-                    "checked": false
-                }, {
-                    "label": "No",
-                    "checked": false
-                }],
-                "include_other_option": true
+            "type": "radio",
+            "answers": [{
+                "label": "Yes",
+                "checked": false
+            }, {
+                "label": "No",
+                "checked": false
+            }],
+            "options": {
+                "include_other_option": true,
+                "grid": {
+                    row: 0,
+                    col: 0
+                }
             },
-            "grid": {
-                row: 0,
-                col: 0,
-                cid: 'p5'
-            },
-            "cid": "p6"
+            "parent_uuid": '940cb41b-8440-4ff2-b699-a1dfa6cccebb',
+            "uuid": "d96ff75e-07c0-4219-9153-b6aca5704bec"
           },
           {
             "label": "Grid",
-            "field_type": "grid",
-            "field_options": {
+            "type": "grid",
+            "options": {
                 num_rows: 2,
                 num_cols: 2
             },
-            "cid": "p5"
+            "uuid": "940cb41b-8440-4ff2-b699-a1dfa6cccebb"
           },
           {
-            "field_type": "text",
+            "type": "text",
+            "label": "",
             "required": true,
-            "field_options": {},
-            "grid": {
-                row: 0,
-                col: 1,
-                cid: 'p5'
+            "options": {
+                "grid": {
+                    row: 1,
+                    col: 1,
+                }
             },
-            "cid": "p7"
+            "parent_uuid": '940cb41b-8440-4ff2-b699-a1dfa6cccebb',
+            "uuid": "3898b16a-8131-461f-bc6b-5d8d85c70903"
           },
           {
-            "field_type": "radio",
-            "field_options": {
-                "options": [{
-                    "label": "Yes",
-                    "checked": false
-                }],
-                "include_other_option": true
+            "type": "radio",
+            "answers": [{
+                "label": "Yes",
+                "checked": false
+            }],
+            "options": {
+                "include_other_option": true,
+                "grid": {
+                    row: 0,
+                    col: 1
+                }
             },
-            "grid": {
-                row: 0,
-                col: 1,
-                cid: 'p5'
-            },
-            "cid": "p8"
+            "parent_uuid": '940cb41b-8440-4ff2-b699-a1dfa6cccebb',
+            "uuid": "097fae5e-90ce-4f4e-bed5-7e86eb86a913"
           },
           {
-            "field_type": "radio",
-            "field_options": {
-                "options": [{
-                    "label": "Yes",
-                    "checked": false
-                }],
-                "include_other_option": true
+            "type": "radio",
+            "answers": [{
+                "label": "Yes",
+                "checked": false
+            }],
+            "options": {
+                "include_other_option": true,
+                "grid": {
+                    row: 0,
+                    col: 1
+                }
             },
-            "grid": {
-                row: 0,
-                col: 1,
-                cid: 'p5'
-            },
-            "cid": "p9"
-          }
+            "parent_uuid": '940cb41b-8440-4ff2-b699-a1dfa6cccebb',
+            "uuid": "ff9f46f8-bb47-4211-b690-d884285feaf9"
+          },
+
         ]
       });
+
+
 
     });
   </script>

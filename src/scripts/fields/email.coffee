@@ -1,27 +1,15 @@
-Formbuilder.registerField 'section_break',
+Formbuilder.registerField 'email',
 
-  name: 'Section break'
+  name: 'Email'
 
-  order: 0
-
-  type: 'non_input'
+  order: 40
 
   view: """
-    <label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>
-    <p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>
+    <input type='text' class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />
   """
 
-  edit: """
-  <div class="fb-edit-section-header">Details</div>
-  <div class="fb-common-wrapper">
-  <div class="fb-label-description">
-    <input type="text" data-rv-input="model.<%= Formbuilder.options.mappings.LABEL %>">
-    <textarea data-rv-input="model.<%= Formbuilder.options.mappings.DESCRIPTION %>" placeholder="Add a longer description to this field">
-    </textarea>
-  </div>
-  </div>
-  """
+  edit: ""
 
   addButton: """
-    <span class="fb-icon-section"></span> Section Break
+    <span class="icon-email"></span> Email
   """

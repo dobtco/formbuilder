@@ -41,7 +41,7 @@ Formbuilder.registerField 'radio',
 
   defaultAttributes: (attrs) ->
     # @todo
-    attrs.field_options.options = [
+    attrs.answers = [
       label: "",
       checked: false,
       score: ""
@@ -51,7 +51,7 @@ Formbuilder.registerField 'radio',
       score: ""
     ]
 
-    attrs.field_options.include_scoring = false
-    attrs.field_options.options_per_row = 1
+    attrs.is_scored = false
+    attrs.options.options_per_row = 1
 
     attrs

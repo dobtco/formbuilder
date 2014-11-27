@@ -27,7 +27,7 @@ Formbuilder.registerField 'dropdown',
   """
 
   defaultAttributes: (attrs) ->
-    attrs.field_options.options = [
+    attrs.answers = [
       label: "",
       checked: false,
       score: ""
@@ -37,7 +37,7 @@ Formbuilder.registerField 'dropdown',
       score: ""
     ]
 
-    attrs.field_options.include_scoring = false
-    attrs.field_options.include_blank_option = false
+    attrs.is_scored = false
+    attrs.options.include_blank_option = false
 
     attrs

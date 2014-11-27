@@ -1,4 +1,4 @@
-Formbuilder.registerField 'checkboxes',
+Formbuilder.registerField 'checkbox',
   name: 'Checkboxes'
 
   order: 10
@@ -33,11 +33,11 @@ Formbuilder.registerField 'checkboxes',
   """
 
   addButton: """
-    <span class="fb-icon-checkboxes"></span> Checkboxes
+    <span class="fb-icon-checkbox"></span> Checkboxes
   """
 
   defaultAttributes: (attrs) ->
-    attrs.field_options.options = [
+    attrs.answers = [
       label: "",
       checked: false,
       score: false
@@ -47,6 +47,6 @@ Formbuilder.registerField 'checkboxes',
       score: false
     ]
 
-    attrs.field_options.options_per_row = 1
+    attrs.options.options_per_row = 1
 
     attrs

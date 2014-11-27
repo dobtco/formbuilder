@@ -1,4 +1,4 @@
-Formbuilder.registerField 'paragraph',
+Formbuilder.registerField 'textarea',
 
   name: 'Paragraph'
 
@@ -11,9 +11,9 @@ Formbuilder.registerField 'paragraph',
   edit: ""
 
   addButton: """
-    <span class="fb-icon-paragraph"></span> Paragraph
+    <span class="fb-icon-textarea"></span> Paragraph
   """
 
   defaultAttributes: (attrs) ->
-    attrs.field_options.size = 'small'
+    attrs.options.size = 'small'
     attrs

@@ -11,8 +11,10 @@ Formbuilder.registerField 'number',
     <% } %>
   """
 
-  edit: ""
-
+  edit: """
+    <%= Formbuilder.templates['edit/integer_only']() %>
+    <%= Formbuilder.templates['edit/min_max']() %>
+  """
   addButton: """
-    <span class="fb-icon-number></span> Number
+    <span class="fb-icon-number"></span> Number
   """

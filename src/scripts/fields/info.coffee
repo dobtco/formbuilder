@@ -2,9 +2,9 @@ Formbuilder.registerField 'info',
 
   name: 'Info'
 
-  order: 0
+  order: 20
 
-  type: 'non_input'
+  element_type: 'non_input'
 
   view: """
     <label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>

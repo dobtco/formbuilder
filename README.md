@@ -38,22 +38,22 @@ Because of its modular nature, Formbuilder is easy to customize. Most of the con
 Keeping with the customizable nature of Formbuilder, you are also able to modify how Formbuilder structures its JSON output. The [default keypaths](https://github.com/dobtco/formbuilder/blob/master/coffee/main.coffee#L20) are:
 
 ```coffeescript
-SIZE: 'field_options.size'
-UNITS: 'field_options.units'
+SIZE: 'options.size'
+UNITS: 'options.units'
 LABEL: 'label'
-FIELD_TYPE: 'field_type'
+type: 'type'
 REQUIRED: 'required'
 ADMIN_ONLY: 'admin_only'
-OPTIONS: 'field_options.options'
-DESCRIPTION: 'field_options.description'
-INCLUDE_OTHER: 'field_options.include_other_option'
-INCLUDE_BLANK: 'field_options.include_blank_option'
-INTEGER_ONLY: 'field_options.integer_only'
-MIN: 'field_options.min'
-MAX: 'field_options.max'
-MINLENGTH: 'field_options.minlength'
-MAXLENGTH: 'field_options.maxlength'
-LENGTH_UNITS: 'field_options.min_max_length_units'
+OPTIONS: 'options.options'
+DESCRIPTION: 'options.description'
+INCLUDE_OTHER: 'options.include_other_option'
+INCLUDE_BLANK: 'options.include_blank_option'
+INTEGER_ONLY: 'options.integer_only'
+MIN: 'options.min'
+MAX: 'options.max'
+MINLENGTH: 'options.minlength'
+MAXLENGTH: 'options.maxlength'
+LENGTH_UNITS: 'options.min_max_length_units'
 ```
 
 Which outputs JSON that looks something like:
@@ -61,15 +61,15 @@ Which outputs JSON that looks something like:
 ```javascript
 [{
     "label": "Please enter your clearance number",
-    "field_type": "text",
+    "type": "text",
     "required": true,
-    "field_options": {},
+    "options": {},
     "cid": "c6"
 }, {
     "label": "Security personnel #82?",
-    "field_type": "radio",
+    "type": "radio",
     "required": true,
-    "field_options": {
+    "options": {
         "options": [{
             "label": "Yes",
             "checked": false
@@ -82,9 +82,9 @@ Which outputs JSON that looks something like:
     "cid": "c10"
 }, {
     "label": "Medical history",
-    "field_type": "file",
+    "type": "file",
     "required": true,
-    "field_options": {},
+    "options": {},
     "cid": "c14"
 }]
 ```

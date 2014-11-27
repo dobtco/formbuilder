@@ -20,13 +20,14 @@
     "jquery": "~1.11.1",
     "jquery-ui": "~1.10.3",
     "jquery.scrollWindowTo": "https://gist.github.com/adamjacobbecker/6519570/raw/cd741057495d0fb19e545a0f9a098efba3bef9c8/jquery.scrollWindowTo.js",
-    "underscore": "~1.5.2",
     "underscore.mixin.deepExtend": "https://gist.github.com/adamjacobbecker/6519561/raw/63682037af9b10200b05c1a3d5890903397b2103/underscore.mixin.deepExtend.js",
     "backbone": "~1.1.0",
     "backbone-deep-model": "~0.10.4",
     "rivets": "~0.5.13",
     "signature_pad": "~1.3.2",
     "bootstrap": "~3.1.1",
-    "summernote": "~0.5.1"
+    "summernote": "~0.5.1",
+    "node-uuid": "~1.4.1",
+    "underscore": "~1.7.0"
   }
 }

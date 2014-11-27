@@ -33,29 +33,18 @@ $editing-border = darken($editing-bg, 7%)
 }
 
 
-.fb-icon-picture:before { content: '\e811'; } /* '' */
-.fb-icon-email:before { content: '\e805'; } /* '' */
-.fb-icon-add:before { content: '\e80f'; } /* '' */
-.fb-icon-section:before { content: '\e80c'; } /* '' */
-.fb-icon-minus:before { content: '\e810'; } /* '' */
-.fb-icon-website:before { content: '\e802'; } /* '' */
-.fb-icon-dropdown:before { content: '\e803'; } /* '' */
-.fb-icon-text:before { content: '\e80a'; } /* '' */
-.fb-icon-checkboxes:before { content: '\e800'; } /* '' */
-.fb-icon-check-empty:before { content: '\e813'; } /* '' */
-.fb-icon-circle-empty:before { content: '\e814'; } /* '' */
-.fb-icon-grid:before { content: '\e816'; } /* '' */
-.fb-icon-graph:before { content: '\e812'; } /* '' */
-.fb-icon-price:before { content: '\e806'; } /* '' */
-.fb-icon-info:before { content: '\e815'; } /* '' */
-.fb-icon-file:before { content: '\e809'; } /* '' */
-.fb-icon-signature:before { content: '\e804'; } /* '' */
-.fb-icon-address:before { content: '\e80d'; } /* '' */
-.fb-icon-date:before { content: '\e807'; } /* '' */
-.fb-icon-time:before { content: '\e808'; } /* '' */
-.fb-icon-number:before { content: '\e80b'; } /* '' */
-.fb-icon-paragraph:before { content: '\e80e'; } /* '' */
+.fb-icon-date:before { content: '\e800'; } /* '' */
 .fb-icon-radio:before { content: '\e801'; } /* '' */
+.fb-icon-checkbox:before { content: '\e802'; } /* '' */
+.fb-icon-list:before { content: '\e803'; } /* '' */
+.fb-icon-dropdown:before { content: '\e804'; } /* '' */
+.fb-icon-signature:before { content: '\e805'; } /* '' */
+.fb-icon-info:before { content: '\e806'; } /* '' */
+.fb-icon-table:before { content: '\e807'; } /* '' */
+.fb-icon-textarea:before { content: '\e808'; } /* '' */
+.fb-icon-section:before { content: '\e809'; } /* '' */
+.fb-icon-text:before { content: '\e80a'; } /* '' */
+.fb-icon-number:before { content: '\e80b'; } /* '' */
 
 .fb-button {
   text-align: left;
@@ -132,17 +121,17 @@ $editing-border = darken($editing-bg, 7%)
   display: block;
 }
 
-.fb-add-field-types .section {
+.fb-add-types .section {
   padding-bottom: 5px;
   margin-bottom: 20px;
 }
 
-.fb-add-field-types {
+.fb-add-types {
   font-size: 0;
   /* Inline block fix */
 }
 
-.fb-add-field-types a {
+.fb-add-types a {
   font-size: 13px;
   display: inline-block;
   width: 48.5%;
@@ -240,15 +229,6 @@ $editing-border = darken($editing-bg, 7%)
   }
 }
 
-.fb-field-wrapper .actions-wrapper a.js-duplicate,
-.fb-edit-field-wrapper .js-add-option {
-  border: none;
-}
-
-.fb-field-wrapper .actions-wrapper a.js-clear,
-.fb-edit-field-wrapper .js-remove-option {
-  border: none;
-}
 
 .fb-field-wrapper .subtemplate-wrapper {
   border: 1px dashed transparent;
@@ -325,7 +305,7 @@ $editing-border = darken($editing-bg, 7%)
   color: #666;
   font-size: 1.25em;
 
-  .field-type {
+  .type {
     margin-top: .5em;
     display: block;
     font-family: 'Source Sans Pro', sans-serif;
@@ -394,17 +374,17 @@ $editing-border = darken($editing-bg, 7%)
   width: 100%;
 }
 
-.response-field-paragraph textarea.rf-size-small {
+.response-field-textarea textarea.rf-size-small {
   width: 200px;
   min-height: 60px;
 }
 
-.response-field-paragraph textarea.rf-size-medium {
+.response-field-textarea textarea.rf-size-medium {
   width: 400px;
   min-height: 100px;
 }
 
-.response-field-paragraph textarea.rf-size-large {
+.response-field-textarea textarea.rf-size-large {
   width: 100%;
   min-height: 200px;
 }

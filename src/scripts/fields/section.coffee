@@ -1,10 +1,10 @@
-Formbuilder.registerField 'section_break',
+Formbuilder.registerField 'section',
 
-  name: 'Section break'
+  name: 'Section'
 
-  order: 0
+  order: 10
 
-  type: 'non_input'
+  element_type: 'non_input'
 
   view: """
     <label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>
