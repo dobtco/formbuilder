@@ -35,7 +35,7 @@
         selector: '.fb-main',
         bootstrapData: [
           {
-            "label": "Please enter your clearance number",
+            "label": "Employee Name",
             "type": "text",
             "required": true,
             "options": {},
@@ -43,10 +43,34 @@
             "uuid": "d2ce1858-603a-4e31-8cce-ea51ef08ef13"
           },
           {
+            "label": "Hours worked",
+            "type": "number",
+            "required": true,
+            "options": {},
+            "parent_uuid": "909cbdba-4431-4ed8-ab28-96006d356ad7",
+            "uuid": "76b257ed-16fa-422d-a732-da6c6170c807"
+          },
+          {
+            "label": "Pay rate",
+            "type": "number",
+            "required": true,
+            "options": {},
+            "parent_uuid": "909cbdba-4431-4ed8-ab28-96006d356ad7",
+            "uuid": "a720d44f-e4da-4fa5-a7aa-567e82a5fe2a"
+          },
+          {
+            "label": "Total",
+            "type": "number",
+            "required": true,
+            "options": {},
+            "parent_uuid": "909cbdba-4431-4ed8-ab28-96006d356ad7",
+            "uuid": "c171bdb9-dffb-4bf7-84a9-fd6ae848dd79"
+          },
+          {
             "type": "table",
             "label": "Table",
             "options": {
-                "elements": ["d2ce1858-603a-4e31-8cce-ea51ef08ef13"]
+                "elements": [{"uuid":"d2ce1858-603a-4e31-8cce-ea51ef08ef13"},{"uuid":"76b257ed-16fa-422d-a732-da6c6170c807", "totalColumn": true},{"uuid":"a720d44f-e4da-4fa5-a7aa-567e82a5fe2a"},{"uuid":"c171bdb9-dffb-4bf7-84a9-fd6ae848dd79", "totalColumn": true}],
             },
             "uuid": "909cbdba-4431-4ed8-ab28-96006d356ad7"
           },

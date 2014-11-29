@@ -81,6 +81,15 @@
 .response-field-signature .fb-signature{width:300px;height:150px}
 .response-field-signature .fb-signature-placeholder{color:#aaa}
 .response-field-grid .cover{display:none}
+.response-field-table{width:100%}
+.response-field-table .cover{display:none}
+.response-field-table .section-name{display:inline-block}
+.response-field-table .element-selector{margin:0 5px;float:right;position:absolute;right:5px;top:5px}
+.response-field-table table{margin-bottom:30px}
+.response-field-table table td{padding:10px 10px 0 10px}
+.response-field-table table td label{border:none !important}
+.response-field-table table .calculated{font-style:italic;color:#ccc}
+.response-field-table table select,.response-field-table table input[type=text],.response-field-table table textarea,.response-field-table table .fb-signature{width:100%}
 .fb-options-per-row-1:before{content:" ";display:table}
 .fb-options-per-row-1:after{content:" ";display:table;clear:both}
 .fb-options-per-row-1{clear:both}
@@ -143,6 +152,7 @@
 .fb-options-per-row-15 .fb-option-wrapper{width:6.666666666666667%;float:left}
 .response-field-grid-table{border-collapse:collapse;border-spacing:0;margin-bottom:5px;table-layout:fixed;width:100%}
 .response-field-grid-table .response-field-grid-row{height:100px;vertical-align:top}
+.response-field-grid-table td{padding:10px 10px 0 10px}
 .response-field-grid-table .element-selector{width:100%}
 .response-field-grid-table .element-selector .dropdown-toggle{width:100%}
 .response-field-grid-table .element-selector .dropdown-toggle span{font-size:2em}

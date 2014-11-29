@@ -429,6 +429,46 @@ $editing-border = darken($editing-bg, 7%)
   }
 }
 
+.response-field-table {
+  width: 100%
+  .cover {
+    display: none;
+  }
+
+  .section-name {
+     display: inline-block;
+  }
+
+  .element-selector {
+    margin: 0 5px;
+    float: right;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+  }
+
+
+
+  table {
+      margin-bottom: 30px;
+      td {
+         padding: 10px 10px 0 10px
+         label {
+             border: none !important;
+         }
+      }
+
+      .calculated {
+        font-style: italic;
+        color: #ccc;
+      }
+
+      select, input[type=text], textarea, .fb-signature {
+        width: 100%;
+      }
+  }
+}
+
 for row in (1..15)
   .fb-options-per-row-{row}:before
     content " "
@@ -455,6 +495,10 @@ for row in (1..15)
   .response-field-grid-row {
     height: 100px;
     vertical-align: top;
+  }
+
+  td {
+      padding: 10px 10px 0 10px;
   }
 
   .element-selector {

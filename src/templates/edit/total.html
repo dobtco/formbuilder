@@ -1,0 +1,18 @@
+<% if (rf.canTotalColumn()) { %>
+<label class="checkbox">
+    Display column total?
+    <input type="checkbox" class='js-default-updated' data-rv-checked='model.<%= Formbuilder.options.mappings.NUMERIC.TOTAL_SEQUENCE %>' />
+</label>
+<% } %>
+<% if (rf.canAcceptCalculatedTotal()) { %>
+<div class='fb-edit-section-header'>Total</div>
+<label>
+    Calculated Value
+    <select data-rv-value="model.<%= Formbuilder.options.mappings.NUMERIC.CALCULATION_TYPE %>">
+        <option value="">No Calculation</option>
+        <option value="SUM">Sum</option>
+        <option value="PRODUCT">Product</option>
+    </select>
+</label>
+<% } %>
+

@@ -72,9 +72,35 @@
       if (this.attributes.uuid == null) {
         this.attributes.uuid = uuid.v4();
       }
-      if (this.attributes.parent_uuid == null) {
-        return this.attributes.parent_uuid = null;
+      if (!this.attributes.parent_uuid === void 0) {
+        this.attributes.parent_uuid = null;
       }
+      return this.attachMethods();
+    };
+
+    FormbuilderModel.prototype.parentModel = function() {
+      return this.collection.findWhereUuid(this.get('parent_uuid'));
+    };
+
+    FormbuilderModel.prototype.hasParent = function() {
+      return this.parentModel !== void 0;
+    };
+
+    FormbuilderModel.prototype.attachMethods = function() {
+      if (typeof this.attributes.initialize === 'function') {
+        this.attributes.initialize.call(this);
+        delete this.attributes['initialize'];
+      }
+      if (typeof this.attributes.insertion === 'function') {
+        this['insertion'] = this.attributes['insertion'];
+        delete this.attributes['insertion'];
+      }
+      return _.each(this.attributes, function(method, name) {
+        if (typeof method === 'function' && this[name] === void 0) {
+          this[name] = method;
+          return delete this.attributes[name];
+        }
+      }, this);
     };
 
     return FormbuilderModel;
@@ -95,6 +121,26 @@
       return model.indexInDOM();
     };
 
+    FormbuilderCollection.prototype.add = function(model) {
+      var models;
+      models = model = FormbuilderCollection.__super__.add.call(this, model);
+      if (!_.isArray(model)) {
+        models = [model];
+      }
+      _.each(models, function(model) {
+        if (typeof model.insertion === 'function') {
+          return model.insertion.call(model);
+        }
+      });
+      return model;
+    };
+
+    FormbuilderCollection.prototype.findWhereUuid = function(uuid) {
+      return this.findWhere({
+        'uuid': uuid
+      });
+    };
+
     return FormbuilderCollection;
 
   })(Backbone.Collection);
@@ -107,7 +153,7 @@
       return _ref2;
     }
 
-    ViewFieldView.insert = function(view, responseField, _, options) {
+    ViewFieldView.insert = function(builder, view, responseField, _, options) {
       var $replacePosition, appendEl, replaceEl;
       appendEl = options.$appendEl || null;
       replaceEl = options.$replaceEl || null;
@@ -116,13 +162,13 @@
       } else if (replaceEl != null) {
         return replaceEl.replaceWith(view.render().el);
       } else if ((options.position == null) || options.position === -1) {
-        return this.$responseFields.append(view.render().el);
+        return builder.$responseFields.append(view.render().el);
       } else if (options.position === 0) {
-        return this.$responseFields.prepend(view.render().el);
-      } else if (($replacePosition = this.$responseFields.find(".fb-field-wrapper").eq(options.position))[0]) {
+        return builder.$responseFields.prepend(view.render().el);
+      } else if (($replacePosition = builder.$responseFields.find(".fb-field-wrapper").eq(options.position))[0]) {
         return $replacePosition.before(view.render().el);
       } else {
-        return this.$responseFields.append(view.render().el);
+        return builder.$responseFields.append(view.render().el);
       }
     };
 
@@ -206,15 +252,123 @@
 
     TableFieldView.prototype.className = "fb-field-wrapper";
 
+    TableFieldView.prototype.initialize = function(options) {
+      this.parentView = options.parentView;
+      this.listenTo(this.model, "change", this.render);
+      this.listenTo(this.model, "destroy", this.remove);
+      return _.each(this.model.get('options.elements'), function(element) {
+        this.listenTo(this.parentView.modelByUuid(element.uuid), "change", this.render);
+        return this.listenTo(this.parentView.modelByUuid(element.uuid), "destroy", this.remove);
+      }, this);
+    };
+
     TableFieldView.prototype.events = {
-      'mouseenter': 'embiggen'
+      'mouseenter': 'showSelectors',
+      'mouseleave': 'removeSelectors',
+      'click .drop-area li': 'inlineAdd',
+      'click .subtemplate-wrapper': 'focusEditView',
+      'click .response-field-table td.header': 'focusSubelement',
+      'click .response-field-table td.element': 'focusSubelement',
+      'click .js-clear': 'clear'
     };
 
-    TableFieldView.prototype.embiggen = function(e) {
-      return console.log(e);
+    TableFieldView.prototype.showSelectors = function(e) {
+      return this.$el.find('.drop-area').html(Formbuilder.templates['view/element_selector']());
     };
 
-    TableFieldView.insert = function(view, responseField, _, options) {};
+    TableFieldView.prototype.removeSelectors = function(e) {
+      return this.$el.find('.drop-area').html('');
+    };
+
+    TableFieldView.prototype.inlineAdd = function(e) {
+      var childModel, elements;
+      e.preventDefault();
+      e.stopPropagation();
+      childModel = new FormbuilderModel(Formbuilder.helpers.defaultFieldAttrs($(e.currentTarget).data('type')));
+      childModel.set('parent_uuid', this.model.get('uuid'));
+      this.listenTo(childModel, "change", this.render);
+      elements = this.model.attributes.options.elements || [];
+      elements.push({
+        'uuid': childModel.get('uuid')
+      });
+      this.model.attributes.options.elements = elements;
+      childModel = this.parentView.collection.add(childModel);
+      return this.render();
+    };
+
+    TableFieldView.prototype.render = function() {
+      TableFieldView.__super__.render.call(this);
+      this.renderElements();
+      return this;
+    };
+
+    TableFieldView.prototype.focusEditView = function(e) {
+      return this.parentView.createAndShowEditView(this.model);
+    };
+
+    TableFieldView.prototype.focusSubelement = function(e) {
+      var childUuid;
+      e.preventDefault();
+      e.stopPropagation();
+      childUuid = $(e.currentTarget).data('uuid');
+      if (childUuid) {
+        return this.parentView.createAndShowEditView(this.parentView.modelByUuid(childUuid));
+      }
+    };
+
+    TableFieldView.prototype.renderElements = function() {
+      return _.each(this.model.get('options.elements'), function(element) {
+        var model;
+        model = this.parentView.modelByUuid(element.uuid);
+        this.$el.find('.header-' + element.uuid).html(Formbuilder.templates["view/table_header"]({
+          rf: model,
+          element: element
+        })).data('cid', model.cid);
+        this.$el.find('.element-' + element.uuid).html(Formbuilder.templates["view/table_element"]({
+          rf: model,
+          element: element
+        })).data('cid', model.cid);
+        return this.$el.find('.total-' + element.uuid).html(Formbuilder.templates["view/table_total"]({
+          rf: model,
+          element: element
+        })).data('cid', model.cid);
+      }, this);
+    };
+
+    TableFieldView.prototype.remove = function(e) {
+      return null;
+    };
+
+    TableFieldView.prototype.clear = function(e) {
+      var models, uuid;
+      e.preventDefault();
+      e.stopPropagation();
+      uuid = $(e.currentTarget).parents('.element').data('uuid');
+      if (uuid === void 0) {
+        models = _.each(this.model.get('options.elements'), function(element) {
+          return this.parentView.modelByUuid(element.uuid).destroy();
+        }, this);
+        this.model.destroy();
+        return this.$el.remove();
+      } else {
+        this.parentView.modelByUuid(uuid).destroy();
+        this.model.set('options.elements', _.filter(this.model.get('options.elements'), function(destroyedElement) {
+          return destroyedElement.uuid !== uuid;
+        }));
+        return this.render();
+      }
+    };
+
+    TableFieldView.insert = function(builder, view, responseField, _, options) {
+      var instanceView;
+      console.log('Insert element');
+      instanceView = builder.viewByUuid(responseField.get('parent_uuid'));
+      if (instanceView != null) {
+        return true;
+      } else {
+        return false;
+      }
+    };
 
     return TableFieldView;
 
@@ -449,17 +603,17 @@
       });
     };
 
-    GridFieldView.insert = function(view, responseField, _, options) {
+    GridFieldView.insert = function(builder, view, responseField, _, options) {
       var append, col, row;
-      if (options.$appendEl === null) {
+      if (!options.$appendEl) {
         row = responseField.get('options.grid.row');
         col = responseField.get('options.grid.col');
-        append = this.wrapperByUuid(responseField.get('parent_uuid')).find('tr:nth-child(' + (row + 1) + ') td:nth-child(' + (col + 1) + ')');
+        append = builder.wrapperByUuid(responseField.get('parent_uuid')).find('tr:nth-child(' + (row + 1) + ') td:nth-child(' + (col + 1) + ')');
         if (append.length === 1) {
           options.$appendEl = append;
         }
       }
-      return ViewFieldView.insert(view, responseField, _, options);
+      return ViewFieldView.insert(builder, view, responseField, _, options);
     };
 
     return GridFieldView;
@@ -689,27 +843,27 @@
     };
 
     BuilderView.prototype.insert = function(view, responseField, _, options) {
-      var inserted, parentModel;
+      var inserted, parentModel, parentType, type;
       inserted = false;
-      parentModel = this.collection.findWhere({
-        'uuid': responseField.get('parent_uuid')
-      });
-      if (parentModel) {
-        if (parentModel.get('type') === 'grid') {
-          inserted = GridFieldView.insert.call(this, view, responseField, _, options);
-        } else if (parentModel.get('type') === 'table') {
-          inserted = TableFieldView.insert.call(this, view, responseField, _, options);
-        }
+      parentModel = responseField.parentModel();
+      parentType = parentModel ? parentModel.get('type') : void 0;
+      type = parentType || responseField.get('type');
+      if (type === 'grid') {
+        inserted = GridFieldView.insert(this, view, responseField, _, options);
+      } else if (type === 'table') {
+        inserted = TableFieldView.insert(this, view, responseField, _, options);
       }
-      if (inserted != null) {
-        return ViewFieldView.insert.call(this, view, responseField, _, options);
+      if (!inserted) {
+        inserted = ViewFieldView.insert(this, view, responseField, _, options);
       }
+      return inserted;
     };
 
     BuilderView.prototype.addOne = function(responseField, _, options) {
       var view;
       view = this.createView(responseField);
-      return this.insert(view, responseField, _, options);
+      this.insert(view, responseField, _, options);
+      return this.views[responseField.get('uuid')] = view;
     };
 
     BuilderView.prototype.setSortable = function() {
@@ -759,7 +913,9 @@
     };
 
     BuilderView.prototype.addAll = function() {
-      this.collection.each(this.addOne, this);
+      this.collection.each(function(item, _, collection) {
+        return this.addOne.call(this, item, _, {});
+      }, this);
       return this.setSortable();
     };
 
@@ -836,6 +992,12 @@
         return $(this).data('uuid') === uuid;
       });
     };
+
+    BuilderView.prototype.viewByUuid = function(uuid) {
+      return this.views[uuid];
+    };
+
+    BuilderView.prototype.views = {};
 
     BuilderView.prototype.gridAttr = function(model) {
       if (this.inGrid(model)) {
@@ -984,6 +1146,13 @@
         INCLUDE_BLANK: 'options.include_blank_option',
         INCLUDE_SCORING: 'is_scored',
         INTEGER_ONLY: 'options.integer_only',
+        READ_ONLY: 'options.read_only',
+        NUMERIC: {
+          CALCULATION_TYPE: 'options.calculation_type',
+          CALCULATION_EXPRESSION: 'options.calculation_expression',
+          CALCULATION_DISPLAY: 'options.calculation_display',
+          TOTAL_SEQUENCE: 'options.total_sequence'
+        },
         GRID: {
           COLS: 'options.cols',
           NUMCOLS: 'options.num_cols',
@@ -1075,6 +1244,8 @@
         return i.parent_uuid === void 0;
       }).reduce(function(a, i) {
         return a.concat(i);
+      }).map(function(i) {
+        return _.extend({}, Formbuilder.helpers.defaultFieldAttrs(i.type), i);
       }).value();
       this.mainView = new BuilderView(args);
       this.mainView.collection;
@@ -1083,6 +1254,22 @@
     return Formbuilder;
 
   })();
+
+  _.mixin({
+    'nested': function(obj, key) {
+      if (obj) {
+        return obj[key] || _.reduce(key.split('.'), function(obj, key) {
+          if (obj) {
+            return obj[key];
+          } else {
+            return void 0;
+          }
+        }, obj);
+      } else {
+        return void 0;
+      }
+    }
+  });
 
   window.Formbuilder = Formbuilder;
 
@@ -1204,6 +1391,11 @@
       attrs.options.num_rows = 1;
       attrs.options.full_width = false;
       attrs.children = [];
+      attrs.childModels = function() {
+        return this.collection.filter(function(model) {
+          return _.indexOf(this.get('options.elements'), model.get('uuid')) !== -1;
+        }, this);
+      };
       return attrs;
     }
   });
@@ -1259,9 +1451,72 @@
   Formbuilder.registerField('number', {
     name: 'Number',
     order: 30,
-    view: "<input type='text' />\n<% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>\n  <%= units %>\n<% } %>",
-    edit: "<%= Formbuilder.templates['edit/integer_only']() %>\n<%= Formbuilder.templates['edit/min_max']() %>",
-    addButton: "<span class=\"fb-icon-number\"></span> Number"
+    view: "<input type='text' class=\"calculated\" value=\"<%= rf.get(Formbuilder.options.mappings.NUMERIC.CALCULATION_DISPLAY) %>\" />\n<% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>\n  <%= units %>\n<% } %>",
+    edit: "<%= Formbuilder.templates['edit/integer_only']({rf:rf}) %>\n<%= Formbuilder.templates['edit/total']({rf:rf}) %>\n<%= Formbuilder.templates['edit/min_max']({rf:rf}) %>",
+    addButton: "<span class=\"fb-icon-number\"></span> Number",
+    defaultAttributes: function(attrs, formbuilder) {
+      attrs.options.calculation_type = '';
+      attrs.options.calculation_expression = '';
+      attrs.options.calculation_display = '';
+      attrs.options.total_sequence = false;
+      attrs.insertion = function() {
+        var totalColumn;
+        if (this.parentModel()) {
+          totalColumn = this.parentModel().totalColumn(this.get('uuid'));
+          return this.attributes.options.total_sequence = totalColumn;
+        }
+      };
+      attrs.initialize = function() {
+        return this.on("change", function(model) {
+          var totalSequence;
+          if (_.nested(model, 'changed.options.calculation_type') !== void 0) {
+            model.expression();
+          }
+          if (_.nested(model, 'changed.options.total_sequence') !== void 0) {
+            totalSequence = _.nested(model, 'changed.options.total_sequence');
+            return this.parentModel().totalColumn(model.get('uuid'), totalSequence);
+          }
+        });
+      };
+      attrs.numericSiblings = function() {
+        var parentModel;
+        parentModel = this.parentModel();
+        if (parentModel) {
+          return _.filter(parentModel.childModels(), function(i) {
+            return i.get('type') === 'number' && i.get('uuid') !== this.get('uuid');
+          }, this);
+        } else {
+          return [];
+        }
+      };
+      attrs.expression = function() {
+        var calculation_type, numericSiblings, operator;
+        calculation_type = this.get('options.calculation_type');
+        if (calculation_type !== '') {
+          operator = calculation_type === 'SUM' ? '+' : '*';
+          numericSiblings = this.numericSiblings();
+          this.set('options.calculation_expression', _.map(numericSiblings, function(model) {
+            return model.get('uuid');
+          }).join(operator));
+          this.set('options.calculation_display', '= ' + _.map(numericSiblings, function(model) {
+            return model.get('label');
+          }).join(operator));
+          return console.log(this.get('options.calculation_expression'));
+        } else {
+          this.set('options.calculation_expression', '');
+          return this.set('options.calculation_display', '');
+        }
+      };
+      attrs.canTotalColumn = function() {
+        var parent;
+        parent = this.parentModel();
+        return parent && parent.get('type') === 'table';
+      };
+      attrs.canAcceptCalculatedTotal = function() {
+        return this.numericSiblings().length > 1;
+      };
+      return attrs;
+    }
   });
 
 }).call(this);
@@ -1329,19 +1584,40 @@
 
 (function() {
   Formbuilder.registerField('table', {
-    name: 'table',
+    name: 'Table',
     order: 0,
     element_type: 'non_input',
     view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<%= Formbuilder.templates[\"view/table_field\"]({rf: rf}) %>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>",
-    edit: "<div class='fb-edit-section-header'>Details</div>\n<div class='fb-common-wrapper'>\n  <div class='fb-label-description'>\n    <%= Formbuilder.templates['edit/label_description']({rf: rf}) %>\n  </div>\n  <div class='fb-clear'></div>\n</div>\n<%= Formbuilder.templates['edit/table_layout']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/table_totals']({ rf: rf }) %>",
+    edit: "<div class='fb-edit-section-header'>Details</div>\n<div class='fb-common-wrapper'>\n  <div class='fb-label-description'>\n    <%= Formbuilder.templates['edit/label_description']({rf: rf}) %>\n  </div>\n  <div class='fb-clear'></div>\n</div>",
     addButton: "<span class=\"fb-icon-table\"></span> Table",
     defaultAttributes: function(attrs) {
-      attrs.options.initial_rows = 1;
-      attrs.options.max_rows = null;
       attrs.options.full_width = false;
-      attrs.options.display_column_totals = false;
-      attrs.options.display_row_totals = false;
-      attrs.elements = [];
+      attrs.childModels = function() {
+        var elementsUuids;
+        elementsUuids = _.pluck(this.get('options.elements'), 'uuid');
+        return this.collection.filter(function(model) {
+          return _.indexOf(elementsUuids, model.get('uuid')) !== -1;
+        }, this);
+      };
+      attrs.elementOptions = function(elementUuid) {
+        return _.findWhere(this.get('options.elements'), {
+          uuid: elementUuid
+        });
+      };
+      attrs.totalColumn = function(elementUuid, value) {
+        var elements;
+        elements = this.get('options.elements');
+        if (value !== void 0) {
+          _.each(elements, function(element, index) {
+            if (element.uuid === elementUuid) {
+              return elements[index].totalColumn = value;
+            }
+          });
+          return this.set('options.elements', elements);
+        } else {
+          return this.elementOptions(elementUuid).totalColumn || false;
+        }
+      };
       return attrs;
     }
   });
@@ -1641,9 +1917,30 @@ var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<div class=\'fb-edit-section-header\'>Totals</div>\n    <label>\n      <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.TABLE.COLUMNTOTALS )) == null ? '' : __t) +
-'\' />\n      Display column totals?\n    </label>\n    <label>\n      <input type=\'checkbox\' data-rv-checked=\'model.' +
-((__t = ( Formbuilder.options.mappings.TABLE.ROWTOTALS )) == null ? '' : __t) +
-'\' />\n      Display row totals?\n    </label>\n</div>';
+'\' />\n      Display column totals?\n    </label>\n</div>';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["edit/total"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ if (rf.canTotalColumn()) { ;
+__p += '\n<label class="checkbox">\n    Display column total?\n    <input type="checkbox" class=\'js-default-updated\' data-rv-checked=\'model.' +
+((__t = ( Formbuilder.options.mappings.NUMERIC.TOTAL_SEQUENCE )) == null ? '' : __t) +
+'\' />\n</label>\n';
+ } ;
+__p += '\n';
+ if (rf.canAcceptCalculatedTotal()) { ;
+__p += '\n<div class=\'fb-edit-section-header\'>Total</div>\n<label>\n    Calculated Value\n    <select data-rv-value="model.' +
+((__t = ( Formbuilder.options.mappings.NUMERIC.CALCULATION_TYPE )) == null ? '' : __t) +
+'">\n        <option value="">No Calculation</option>\n        <option value="SUM">Sum</option>\n        <option value="PRODUCT">Product</option>\n    </select>\n</label>\n';
+ } ;
+__p += '\n\n';
 
 }
 return __p
@@ -1808,7 +2105,7 @@ this["Formbuilder"]["templates"]["view/element_selector"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class="element-selector btn-group">\n<button type="button" class="btn btn-default dropdown-toggle btn-lg" data-toggle="dropdown">\n    <span class="glyphicon glyphicon-plus"></span>\n</button>\n<ul class="dropdown-menu" role="menu">\n    <li data-type="text"><span class="fb-icon-text"></span> Text</li>\n    <li data-type="number"><span class="fb-icon-number"></span> Number</li>\n    <li data-type="textarea"><span class="fb-icon-textarea"></span> Paragraph</li>\n    <li data-type="info"><span class="fb-icon-info"></span> Info</li>\n    <li role="presentation" class="divider"></li>\n    <li data-type="dropdown"><span class="fb-icon-dropdown"></span> Dropdown</li>\n    <li data-type="radio"><span class="fb-icon-radio"></span> Radio</li>\n    <li data-type="checkbox"><span class="fb-icon-checkbox"></span> Multiple Choice</li>\n    <li role="presentation" class="divider"></li>\n    <li data-type="date"><span class="fb-icon-date"></span> Date</li>\n    <li data-type="signature"><span class="fb-icon-signature"></span> Signature</li>\n</ul>\n</div>';
+__p += '<div class="element-selector btn-group">\n<button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown">\n    <span class="glyphicon glyphicon-plus"></span>\n</button>\n<ul class="dropdown-menu pull-right" role="menu">\n    <li data-type="text"><span class="fb-icon-text"></span> Text</li>\n    <li data-type="number"><span class="fb-icon-number"></span> Number</li>\n    <li data-type="textarea"><span class="fb-icon-textarea"></span> Paragraph</li>\n    <li data-type="info"><span class="fb-icon-info"></span> Info</li>\n    <li role="presentation" class="divider"></li>\n    <li data-type="dropdown"><span class="fb-icon-dropdown"></span> Dropdown</li>\n    <li data-type="radio"><span class="fb-icon-radio"></span> Radio</li>\n    <li data-type="checkbox"><span class="fb-icon-checkbox"></span> Multiple Choice</li>\n    <li role="presentation" class="divider"></li>\n    <li data-type="date"><span class="fb-icon-date"></span> Date</li>\n    <li data-type="signature"><span class="fb-icon-signature"></span> Signature</li>\n</ul>\n</div>';
 
 }
 return __p
@@ -1831,11 +2128,91 @@ __p += '\n</label>\n';
 return __p
 };
 
-this["Formbuilder"]["templates"]["view/table_field"] = function(obj) {
+this["Formbuilder"]["templates"]["view/remove"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<table class="response-field-table">\n     <tbody>\n        <tr>\n\n            <td class="drop-area" rowspan="2"></td>\n            <td>\n\n            </td>\n            <td class="drop-area" rowspan="2"></td>\n        </tr>\n        <tr>\n\n        </tr>\n    </tbody>\n</table>';
+__p += '<div class=\'actions-wrapper\'>\n  <button class="js-clear ' +
+((__t = ( Formbuilder.options.BUTTON_CLASS_REMOVE )) == null ? '' : __t) +
+'" title="Remove Field"><span class="glyphicon glyphicon-minus"></span></button>\n</div>';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["view/table_element"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p +=
+((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.TYPE)].view({rf: rf}) )) == null ? '' : __t) +
+'\n' +
+((__t = ( Formbuilder.templates['view/description']({rf: rf}) )) == null ? '' : __t) +
+'\n' +
+((__t = ( Formbuilder.templates['view/remove']({rf: rf}) )) == null ? '' : __t);
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["view/table_field"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+__p += '<span class="drop-area" rowspan="2">\n' +
+((__t = ( Formbuilder.templates['view/element_selector']() )) == null ? '' : __t) +
+'\n</span>\n<table class="response-field-table">\n\n     <tbody>\n        <tr>\n            ';
+ for (i in (rf.get('options.elements') || [])) { ;
+__p += '\n            <td data-uuid="' +
+((__t = ( rf.get('options.elements')[i].uuid )) == null ? '' : __t) +
+'" class="fb-field-wrapper subtemplate-wrapper header header-' +
+((__t = ( rf.get('options.elements')[i].uuid )) == null ? '' : __t) +
+'"></td>\n            ';
+ } ;
+__p += '\n        </tr>\n        <tr>\n            ';
+ for (i in (rf.get('options.elements') || [])) { ;
+__p += '\n            <td data-uuid="' +
+((__t = ( rf.get('options.elements')[i].uuid )) == null ? '' : __t) +
+'" class="fb-field-wrapper subtemplate-wrapper element element-' +
+((__t = ( rf.get('options.elements')[i].uuid )) == null ? '' : __t) +
+'"></td>\n            ';
+ } ;
+__p += '\n        </tr>\n    </tbody>\n    <tfoot>\n        <tr>\n            ';
+ for (i in (rf.get('options.elements') || [])) { ;
+__p += '\n            <td data-uuid="' +
+((__t = ( rf.get('options.elements')[i].uuid )) == null ? '' : __t) +
+'" class="fb-field-wrapper subtemplate-wrapper total total-' +
+((__t = ( rf.get('options.elements')[i].uuid )) == null ? '' : __t) +
+'"></td>\n            ';
+ } ;
+__p += '\n        </tr>\n    </tfoot>\n</table>';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["view/table_header"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p +=
+((__t = ( Formbuilder.templates['view/label']({rf: rf}) )) == null ? '' : __t);
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["view/table_total"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ if (rf.get('options.total_sequence')) { ;
+__p += '\n<span class="calculated">(Column Total)</span>\n';
+ } ;
+
 
 }
 return __p

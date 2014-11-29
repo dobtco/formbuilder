@@ -1,6 +1,6 @@
 Formbuilder.registerField 'table',
 
-  name: 'table'
+  name: 'Table'
 
   order: 0
 
@@ -20,8 +20,6 @@ Formbuilder.registerField 'table',
       </div>
       <div class='fb-clear'></div>
     </div>
-    <%= Formbuilder.templates['edit/table_layout']({ rf: rf }) %>
-    <%= Formbuilder.templates['edit/table_totals']({ rf: rf }) %>
   """
 
   addButton: """
@@ -29,10 +27,24 @@ Formbuilder.registerField 'table',
   """
 
   defaultAttributes: (attrs) ->
-    attrs.options.initial_rows = 1
-    attrs.options.max_rows = null
     attrs.options.full_width = false
-    attrs.options.display_column_totals = false
-    attrs.options.display_row_totals = false
-    attrs.elements = []
+    attrs.childModels = () ->
+      elementsUuids = _.pluck @get('options.elements'), 'uuid'
+      @collection.filter (model) ->
+        _.indexOf(elementsUuids, model.get('uuid')) != -1
+      , @
+
+    attrs.elementOptions = (elementUuid) ->
+      _.findWhere @get('options.elements'), {uuid:elementUuid}
+
+    attrs.totalColumn = (elementUuid, value) ->
+      elements = @get('options.elements')
+      if value != undefined
+        _.each elements, (element, index) ->
+          if element.uuid is elementUuid
+            elements[index].totalColumn = value
+        @set 'options.elements', elements
+      else
+        @elementOptions(elementUuid).totalColumn || false
+
     attrs

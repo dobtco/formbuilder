@@ -74,4 +74,8 @@ Formbuilder.registerField 'grid',
     attrs.options.num_rows = 1
     attrs.options.full_width = false
     attrs.children = []
+    attrs.childModels = () ->
+      @collection.filter (model) ->
+        _.indexOf(@get('options.elements'), model.get('uuid')) != -1
+      , @
     attrs
