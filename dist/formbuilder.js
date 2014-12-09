@@ -483,7 +483,7 @@
       if (!$responseFieldEl[0]) {
         return;
       }
-      return $.scrollWindowTo((this.$el.offset().top + $responseFieldEl.offset().top) - this.$responseFields.offset().top, 200, function() {
+      return jQuery.scrollWindowTo((this.$el.offset().top + $responseFieldEl.offset().top) - this.$responseFields.offset().top, 200, function() {
         return _this.lockLeftWrapper();
       });
     };
@@ -523,7 +523,7 @@
 
     BuilderView.prototype.doAjaxSave = function(payload) {
       var _this = this;
-      return $.ajax({
+      return jQuery.ajax({
         url: Formbuilder.options.HTTP_ENDPOINT,
         type: Formbuilder.options.HTTP_METHOD,
         data: payload,

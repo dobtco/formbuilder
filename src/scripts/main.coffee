@@ -313,7 +313,7 @@ class BuilderView extends Backbone.View
   scrollLeftWrapper: ($responseFieldEl) ->
     @unlockLeftWrapper()
     return unless $responseFieldEl[0]
-    $.scrollWindowTo ((@$el.offset().top + $responseFieldEl.offset().top) - @$responseFields.offset().top), 200, =>
+    jQuery.scrollWindowTo ((@$el.offset().top + $responseFieldEl.offset().top) - @$responseFields.offset().top), 200, =>
       @lockLeftWrapper()
 
   lockLeftWrapper: ->
@@ -338,7 +338,7 @@ class BuilderView extends Backbone.View
     @formBuilder.trigger 'save', payload
 
   doAjaxSave: (payload) ->
-    $.ajax
+    jQuery.ajax
       url: Formbuilder.options.HTTP_ENDPOINT
       type: Formbuilder.options.HTTP_METHOD
       data: payload
