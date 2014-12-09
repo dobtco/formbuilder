@@ -2,9 +2,9 @@ rivets.binders.input =
   publishes: true
   routine: rivets.binders.value.routine
   bind: (el) ->
-    $(el).bind('input.rivets', this.publish)
+    jQuery(el).bind('input.rivets', this.publish)
   unbind: (el) ->
-    $(el).unbind('input.rivets')
+    jQuery(el).unbind('input.rivets')
 
 rivets.configure
   prefix: "rv"
