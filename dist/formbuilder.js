@@ -198,6 +198,9 @@
       rivets.bind(this.$el, {
         model: this.model
       });
+      if (this.model.attributes.sticky) {
+        this.$el.find('.fb-label-description').find('input').filter('[type=text]').attr('readonly', 'readonly');
+      }
       return this;
     };
 

@@ -85,6 +85,8 @@ class EditFieldView extends Backbone.View
   render: ->
     @$el.html(Formbuilder.templates["edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
     rivets.bind @$el, { model: @model }
+    if @model.attributes.sticky
+      @$el.find('.fb-label-description').find('input').filter('[type=text]').attr('readonly', 'readonly')
     return @
 
   remove: ->
