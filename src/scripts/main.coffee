@@ -64,6 +64,7 @@ class ViewFieldView extends Backbone.View
   duplicate: ->
     attrs = _.clone(@model.attributes)
     delete attrs['id']
+    delete attrs['sticky']
     attrs['label'] += ' Copy'
     @parentView.createField attrs, { position: @model.indexInDOM() + 1 }
 

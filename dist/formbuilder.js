@@ -158,6 +158,7 @@
       var attrs;
       attrs = _.clone(this.model.attributes);
       delete attrs['id'];
+      delete attrs['sticky'];
       attrs['label'] += ' Copy';
       return this.parentView.createField(attrs, {
         position: this.model.indexInDOM() + 1
