@@ -158,6 +158,7 @@
       var attrs;
       attrs = _.clone(this.model.attributes);
       delete attrs['id'];
+      delete attrs['sticky'];
       attrs['label'] += ' Copy';
       return this.parentView.createField(attrs, {
         position: this.model.indexInDOM() + 1
@@ -197,6 +198,9 @@
       rivets.bind(this.$el, {
         model: this.model
       });
+      if (this.model.attributes.sticky) {
+        this.$el.find('.fb-label-description').find('input').filter('[type=text]').attr('readonly', 'readonly');
+      }
       return this;
     };
 
@@ -587,7 +591,8 @@
         MAX: 'field_options.max',
         MINLENGTH: 'field_options.minlength',
         MAXLENGTH: 'field_options.maxlength',
-        LENGTH_UNITS: 'field_options.min_max_length_units'
+        LENGTH_UNITS: 'field_options.min_max_length_units',
+        STICKY: 'sticky'
       },
       dict: {
         ALL_CHANGES_SAVED: 'All changes saved',
@@ -1146,13 +1151,18 @@ return __p
 
 this["Formbuilder"]["templates"]["view/duplicate_remove"] = function(obj) {
 obj || (obj = {});
-var __t, __p = '', __e = _.escape;
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<div class=\'actions-wrapper\'>\n  <a class="js-duplicate ' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
-'" title="Duplicate Field"><i class=\'fa fa-plus-circle\'></i></a>\n  <a class="js-clear ' +
+'" title="Duplicate Field"><i class=\'fa fa-plus-circle\'></i></a>\n  ';
+ if(!rf.get(Formbuilder.options.mappings.STICKY)) { ;
+__p += '\n  <a class="js-clear ' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
-'" title="Remove Field"><i class=\'fa fa-minus-circle\'></i></a>\n</div>';
+'" title="Remove Field"><i class=\'fa fa-minus-circle\'></i></a>\n  ';
+ } ;
+__p += '\n</div>';
 
 }
 return __p
