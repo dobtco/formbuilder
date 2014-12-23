@@ -1034,13 +1034,17 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<div class=\'fb-tab-pane active\' id=\'addField\'>\n  <div class=\'fb-add-field-types\'>\n    <div class=\'section\'>\n      ';
  _.each(_.sortBy(Formbuilder.inputFields, 'order'), function(f){ ;
-__p += '\n        <a data-field-type="' +
+__p += '\n      ';
+ if (!Formbuilder.arguments[0].controls || (0 == Formbuilder.arguments[0].controls.length || -1 != Formbuilder.arguments[0].controls.indexOf(f.field_type))) { ;
+__p += '\n          <a data-field-type="' +
 ((__t = ( f.field_type )) == null ? '' : __t) +
 '" class="' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
-'">\n          ' +
+'">\n            ' +
 ((__t = ( f.addButton )) == null ? '' : __t) +
-'\n        </a>\n      ';
+'\n          </a>\n        ';
+ } ;
+__p += '\n      ';
  }); ;
 __p += '\n    </div>\n\n    <div class=\'section\'>\n      ';
  _.each(_.sortBy(Formbuilder.nonInputFields, 'order'), function(f){ ;
