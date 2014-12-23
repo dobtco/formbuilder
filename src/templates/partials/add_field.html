@@ -2,9 +2,11 @@
   <div class='fb-add-field-types'>
     <div class='section'>
       <% _.each(_.sortBy(Formbuilder.inputFields, 'order'), function(f){ %>
-        <a data-field-type="<%= f.field_type %>" class="<%= Formbuilder.options.BUTTON_CLASS %>">
-          <%= f.addButton %>
-        </a>
+      <% if (!Formbuilder.arguments[0].controls || (0 == Formbuilder.arguments[0].controls.length || -1 != Formbuilder.arguments[0].controls.indexOf(f.field_type))) { %>
+          <a data-field-type="<%= f.field_type %>" class="<%= Formbuilder.options.BUTTON_CLASS %>">
+            <%= f.addButton %>
+          </a>
+        <% } %>
       <% }); %>
     </div>
 
