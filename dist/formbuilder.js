@@ -41,7 +41,7 @@
 }).call(this);
 
 (function() {
-  var BuilderView, EditFieldView, Formbuilder, FormbuilderCollection, FormbuilderModel, ViewFieldView, _ref, _ref1, _ref2, _ref3, _ref4,
+  var BuilderView, EditFieldView, Formbuilder, FormbuilderCollection, FormbuilderModel, ViewFieldView,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -49,18 +49,18 @@
     __extends(FormbuilderModel, _super);
 
     function FormbuilderModel() {
-      _ref = FormbuilderModel.__super__.constructor.apply(this, arguments);
-      return _ref;
+      return FormbuilderModel.__super__.constructor.apply(this, arguments);
     }
 
     FormbuilderModel.prototype.sync = function() {};
 
     FormbuilderModel.prototype.indexInDOM = function() {
-      var $wrapper,
-        _this = this;
-      $wrapper = $(".fb-field-wrapper").filter((function(_, el) {
-        return $(el).data('cid') === _this.cid;
-      }));
+      var $wrapper;
+      $wrapper = $(".fb-field-wrapper").filter(((function(_this) {
+        return function(_, el) {
+          return $(el).data('cid') === _this.cid;
+        };
+      })(this)));
       return $(".fb-field-wrapper").index($wrapper);
     };
 
@@ -76,8 +76,7 @@
     __extends(FormbuilderCollection, _super);
 
     function FormbuilderCollection() {
-      _ref1 = FormbuilderCollection.__super__.constructor.apply(this, arguments);
-      return _ref1;
+      return FormbuilderCollection.__super__.constructor.apply(this, arguments);
     }
 
     FormbuilderCollection.prototype.initialize = function() {
@@ -102,8 +101,7 @@
     __extends(ViewFieldView, _super);
 
     function ViewFieldView() {
-      _ref2 = ViewFieldView.__super__.constructor.apply(this, arguments);
-      return _ref2;
+      return ViewFieldView.__super__.constructor.apply(this, arguments);
     }
 
     ViewFieldView.prototype.className = "fb-field-wrapper";
@@ -132,14 +130,15 @@
     };
 
     ViewFieldView.prototype.clear = function(e) {
-      var cb, x,
-        _this = this;
+      var cb, x;
       e.preventDefault();
       e.stopPropagation();
-      cb = function() {
-        _this.parentView.handleFormUpdate();
-        return _this.model.destroy();
-      };
+      cb = (function(_this) {
+        return function() {
+          _this.parentView.handleFormUpdate();
+          return _this.model.destroy();
+        };
+      })(this);
       x = Formbuilder.options.CLEAR_FIELD_CONFIRM;
       switch (typeof x) {
         case 'string':
@@ -172,8 +171,7 @@
     __extends(EditFieldView, _super);
 
     function EditFieldView() {
-      _ref3 = EditFieldView.__super__.constructor.apply(this, arguments);
-      return _ref3;
+      return EditFieldView.__super__.constructor.apply(this, arguments);
     }
 
     EditFieldView.prototype.className = "edit-response-field";
@@ -257,8 +255,7 @@
     __extends(BuilderView, _super);
 
     function BuilderView() {
-      _ref4 = BuilderView.__super__.constructor.apply(this, arguments);
-      return _ref4;
+      return BuilderView.__super__.constructor.apply(this, arguments);
     }
 
     BuilderView.prototype.SUBVIEWS = [];
@@ -289,22 +286,25 @@
     };
 
     BuilderView.prototype.bindSaveEvent = function() {
-      var _this = this;
       this.formSaved = true;
       this.saveFormButton = this.$el.find(".js-save-form");
       this.saveFormButton.attr('disabled', true).text(Formbuilder.options.dict.ALL_CHANGES_SAVED);
       if (!!Formbuilder.options.AUTOSAVE) {
-        setInterval(function() {
-          return _this.saveForm.call(_this);
-        }, 5000);
+        setInterval((function(_this) {
+          return function() {
+            return _this.saveForm.call(_this);
+          };
+        })(this), 5000);
       }
-      return $(window).bind('beforeunload', function() {
-        if (_this.formSaved) {
-          return void 0;
-        } else {
-          return Formbuilder.options.dict.UNSAVED_CHANGES;
-        }
-      });
+      return $(window).bind('beforeunload', (function(_this) {
+        return function() {
+          if (_this.formSaved) {
+            return void 0;
+          } else {
+            return Formbuilder.options.dict.UNSAVED_CHANGES;
+          }
+        };
+      })(this));
     };
 
     BuilderView.prototype.reset = function() {
@@ -313,15 +313,15 @@
     };
 
     BuilderView.prototype.render = function() {
-      var subview, _i, _len, _ref5;
+      var subview, _i, _len, _ref;
       this.$el.html(Formbuilder.templates['page']());
       this.$fbLeft = this.$el.find('.fb-left');
       this.$responseFields = this.$el.find('.fb-response-fields');
       this.bindWindowScrollEvent();
       this.hideShowNoResponseFields();
-      _ref5 = this.SUBVIEWS;
-      for (_i = 0, _len = _ref5.length; _i < _len; _i++) {
-        subview = _ref5[_i];
+      _ref = this.SUBVIEWS;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        subview = _ref[_i];
         new subview({
           parentView: this
         }).render();
@@ -330,18 +330,19 @@
     };
 
     BuilderView.prototype.bindWindowScrollEvent = function() {
-      var _this = this;
-      return $(window).on('scroll', function() {
-        var maxMargin, newMargin;
-        if (_this.$fbLeft.data('locked') === true) {
-          return;
-        }
-        newMargin = Math.max(0, $(window).scrollTop() - _this.$el.offset().top);
-        maxMargin = _this.$responseFields.height();
-        return _this.$fbLeft.css({
-          'margin-top': Math.min(maxMargin, newMargin)
-        });
-      });
+      return $(window).on('scroll', (function(_this) {
+        return function() {
+          var maxMargin, newMargin;
+          if (_this.$fbLeft.data('locked') === true) {
+            return;
+          }
+          newMargin = Math.max(0, $(window).scrollTop() - _this.$el.offset().top);
+          maxMargin = _this.$responseFields.height();
+          return _this.$fbLeft.css({
+            'margin-top': Math.min(maxMargin, newMargin)
+          });
+        };
+      })(this));
     };
 
     BuilderView.prototype.showTab = function(e) {
@@ -378,48 +379,52 @@
     };
 
     BuilderView.prototype.setSortable = function() {
-      var _this = this;
       if (this.$responseFields.hasClass('ui-sortable')) {
         this.$responseFields.sortable('destroy');
       }
       this.$responseFields.sortable({
         forcePlaceholderSize: true,
         placeholder: 'sortable-placeholder',
-        stop: function(e, ui) {
-          var rf;
-          if (ui.item.data('field-type')) {
-            rf = _this.collection.create(Formbuilder.helpers.defaultFieldAttrs(ui.item.data('field-type')), {
-              $replaceEl: ui.item
-            });
-            _this.createAndShowEditView(rf);
-          }
-          _this.handleFormUpdate();
-          return true;
-        },
-        update: function(e, ui) {
-          if (!ui.item.data('field-type')) {
-            return _this.ensureEditViewScrolled();
-          }
-        }
+        stop: (function(_this) {
+          return function(e, ui) {
+            var rf;
+            if (ui.item.data('field-type')) {
+              rf = _this.collection.create(Formbuilder.helpers.defaultFieldAttrs(ui.item.data('field-type')), {
+                $replaceEl: ui.item
+              });
+              _this.createAndShowEditView(rf);
+            }
+            _this.handleFormUpdate();
+            return true;
+          };
+        })(this),
+        update: (function(_this) {
+          return function(e, ui) {
+            if (!ui.item.data('field-type')) {
+              return _this.ensureEditViewScrolled();
+            }
+          };
+        })(this)
       });
       return this.setDraggable();
     };
 
     BuilderView.prototype.setDraggable = function() {
-      var $addFieldButtons,
-        _this = this;
+      var $addFieldButtons;
       $addFieldButtons = this.$el.find("[data-field-type]");
       return $addFieldButtons.draggable({
         connectToSortable: this.$responseFields,
-        helper: function() {
-          var $helper;
-          $helper = $("<div class='response-field-draggable-helper' />");
-          $helper.css({
-            width: _this.$responseFields.width(),
-            height: '80px'
-          });
-          return $helper;
-        }
+        helper: (function(_this) {
+          return function() {
+            var $helper;
+            $helper = $("<div class='response-field-draggable-helper' />");
+            $helper.css({
+              width: _this.$responseFields.width(),
+              height: '80px'
+            });
+            return $helper;
+          };
+        })(this)
       });
     };
 
@@ -478,14 +483,15 @@
     };
 
     BuilderView.prototype.scrollLeftWrapper = function($responseFieldEl) {
-      var _this = this;
       this.unlockLeftWrapper();
       if (!$responseFieldEl[0]) {
         return;
       }
-      return $.scrollWindowTo((this.$el.offset().top + $responseFieldEl.offset().top) - this.$responseFields.offset().top, 200, function() {
-        return _this.lockLeftWrapper();
-      });
+      return $.scrollWindowTo((this.$el.offset().top + $responseFieldEl.offset().top) - this.$responseFields.offset().top, 200, (function(_this) {
+        return function() {
+          return _this.lockLeftWrapper();
+        };
+      })(this));
     };
 
     BuilderView.prototype.lockLeftWrapper = function() {
@@ -522,26 +528,27 @@
     };
 
     BuilderView.prototype.doAjaxSave = function(payload) {
-      var _this = this;
       return $.ajax({
         url: Formbuilder.options.HTTP_ENDPOINT,
         type: Formbuilder.options.HTTP_METHOD,
         data: payload,
         contentType: "application/json",
-        success: function(data) {
-          var datum, _i, _len, _ref5;
-          _this.updatingBatch = true;
-          for (_i = 0, _len = data.length; _i < _len; _i++) {
-            datum = data[_i];
-            if ((_ref5 = _this.collection.get(datum.cid)) != null) {
-              _ref5.set({
-                id: datum.id
-              });
+        success: (function(_this) {
+          return function(data) {
+            var datum, _i, _len, _ref;
+            _this.updatingBatch = true;
+            for (_i = 0, _len = data.length; _i < _len; _i++) {
+              datum = data[_i];
+              if ((_ref = _this.collection.get(datum.cid)) != null) {
+                _ref.set({
+                  id: datum.id
+                });
+              }
+              _this.collection.trigger('sync');
             }
-            _this.collection.trigger('sync');
-          }
-          return _this.updatingBatch = void 0;
-        }
+            return _this.updatingBatch = void 0;
+          };
+        })(this)
       });
     };
 
@@ -603,10 +610,10 @@
     Formbuilder.nonInputFields = {};
 
     Formbuilder.registerField = function(name, opts) {
-      var x, _i, _len, _ref5;
-      _ref5 = ['view', 'edit'];
-      for (_i = 0, _len = _ref5.length; _i < _len; _i++) {
-        x = _ref5[_i];
+      var x, _i, _len, _ref;
+      _ref = ['view', 'edit'];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        x = _ref[_i];
         opts[x] = _.template(opts[x]);
       }
       opts.field_type = name;
