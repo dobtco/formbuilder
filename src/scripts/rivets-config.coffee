@@ -1,3 +1,25 @@
+rivets.binders.append =
+  routine: (el, value) ->
+    el.checked =  _.find(value, (item) -> String(item) == String(el.value)) != undefined
+  bind: (el) ->
+
+    @callback = () =>
+      currentValue = _.clone(@model.get(@keypath)) || []
+      if el.value and _.contains(currentValue, el.value)
+        newValue = _.without(currentValue, el.value)
+        @model.set(@keypath, currentValue)
+      else
+        currentValue.push(el.value)
+        @model.set(@keypath, currentValue)
+    $(el).on('change', @callback)
+  unbind: (el) ->
+    $(el).off('change', @callback)
+
+
+rivets.formatters.length = (value) ->
+  if value then value.length else 0
+
+
 rivets.binders.input =
   publishes: true
   routine: rivets.binders.value.routine

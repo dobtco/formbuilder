@@ -30,18 +30,31 @@
 
   <script>
     $(function() {
-      Formbuilder.attr('sources', ['List 1', 'List 2']);
+      Formbuilder.attr('sources', {
+        Person: {
+          title:'Employee',
+          properties: {'id': 'ID', 'payroll_number': 'Payroll Number'}
+        },
+        Contractor: {
+          title:'Contractor',
+          properties: {'id': 'ID', 'name': 'Name'},
+          filters: {
+            status : {
+              name: 'Status',
+              values: {
+               '1': 'Draft',
+               '2': 'In Progress',
+               '3': 'Current',
+               '4': 'Blocked'
+              }
+            }
+
+          }
+        }
+      });
       window.fb = new Formbuilder({
         selector: '.fb-main',
         bootstrapData: [
-          {
-            "label": "Employee Name",
-            "type": "text",
-            "required": true,
-            "options": {},
-            "parent_uuid": "909cbdba-4431-4ed8-ab28-96006d356ad7",
-            "uuid": "d2ce1858-603a-4e31-8cce-ea51ef08ef13"
-          },
           {
             "label": "Hours worked",
             "type": "number",
@@ -67,19 +80,43 @@
             "uuid": "c171bdb9-dffb-4bf7-84a9-fd6ae848dd79"
           },
           {
+            "label": "Total Column",
+            "type": "number",
+            "model_only": true,
+            "parent_uuid": "c171bdb9-dffb-4bf7-84a9-fd6ae848dd79",
+            "uuid": "b9a1b61f-fd1a-4df5-b8ba-9bed3aa41d7a",
+            "options": {
+               "calculation_type": "sum(column_uuid_c171bdb9_dffb_4bf7_84a9_fd6ae848dd79)"
+            }
+          },
+          {
+            "label": "Total Hours Worked",
+            "type": "number",
+            "model_only": true,
+            "parent_uuid": "76b257ed-16fa-422d-a732-da6c6170c807",
+            "uuid": "efc11190-a876-457a-9210-1d2ae8882ff5",
+            "options": {
+               "calculation_type": "sum(column_uuid_76b257ed_16fa_422d_a732_da6c6170c807)"
+            }
+          },
+          {
             "type": "table",
             "label": "Table",
             "options": {
-                "elements": [{"uuid":"d2ce1858-603a-4e31-8cce-ea51ef08ef13"},{"uuid":"76b257ed-16fa-422d-a732-da6c6170c807", "totalColumn": true},{"uuid":"a720d44f-e4da-4fa5-a7aa-567e82a5fe2a"},{"uuid":"c171bdb9-dffb-4bf7-84a9-fd6ae848dd79", "totalColumn": true}],
+                "elements": [{"uuid":"d2ce1858-603a-4e31-8cce-ea51ef08ef13"},{"uuid":"76b257ed-16fa-422d-a732-da6c6170c807", "totalColumn": true,  "totalColumnUuid": 'efc11190-a876-457a-9210-1d2ae8882ff5'},{"uuid":"a720d44f-e4da-4fa5-a7aa-567e82a5fe2a"},{"uuid":"c171bdb9-dffb-4bf7-84a9-fd6ae848dd79", "totalColumn": true, "totalColumnUuid": 'b9a1b61f-fd1a-4df5-b8ba-9bed3aa41d7a'}],
             },
             "uuid": "909cbdba-4431-4ed8-ab28-96006d356ad7"
           },
          {
-            "type": "list",
-            "label": "List",
+            "type": "datasource",
+            "label": "Work Contractor",
             "options": {
-                "data_source": 'List 2',
-                "multiple_selections": true
+                "data_source": 'Contractor',
+                "value_template": 'name',
+                "multiple_selections": true,
+                "is_filtered": true,
+                "filter": "Status",
+                "filter_values": [1, 2]
 
             },
             "uuid": "188e4f03-4d5d-4234-9b1f-f916fee48691"
@@ -172,6 +209,14 @@
             "uuid": "097fae5e-90ce-4f4e-bed5-7e86eb86a913"
           },
           {
+            "label": "Employee Name",
+            "type": "text",
+            "required": true,
+            "options": {},
+            "parent_uuid": "909cbdba-4431-4ed8-ab28-96006d356ad7",
+            "uuid": "d2ce1858-603a-4e31-8cce-ea51ef08ef13"
+          },
+          {
             "type": "radio",
             "answers": [{
                 "label": "Yes",
@@ -186,7 +231,7 @@
             },
             "parent_uuid": '940cb41b-8440-4ff2-b699-a1dfa6cccebb',
             "uuid": "ff9f46f8-bb47-4211-b690-d884285feaf9"
-          },
+          }
 
         ]
       });

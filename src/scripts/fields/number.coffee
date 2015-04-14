@@ -5,7 +5,7 @@ Formbuilder.registerField 'number',
   order: 30
 
   view: """
-    <input type='text' class="calculated" value="<%= rf.get(Formbuilder.options.mappings.NUMERIC.CALCULATION_DISPLAY) %>" />
+    <input type='text' class="calculated" value="<%= rf.get(Formbuilder.options.mappings.NUMERIC.CALCULATION_DISPLAY) %>" <%= rf.get(Formbuilder.options.mappings.NUMERIC.CALCULATION_DISPLAY) ? 'readonly="readonly"' : ''  %> />
     <% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>
       <%= units %>
     <% } %>
@@ -27,8 +27,9 @@ Formbuilder.registerField 'number',
     attrs.options.total_sequence = false
 
     attrs.insertion = () ->
-      if @parentModel()
-        totalColumn = @parentModel().totalColumn @get('uuid')
+      parentModel = @parentModel()
+      if parentModel and parentModel.get('type') == 'table'
+        totalColumn = parentModel.totalColumn @get('uuid')
         @attributes.options.total_sequence = totalColumn
 
     attrs.initialize = () ->
@@ -40,6 +41,7 @@ Formbuilder.registerField 'number',
         if _.nested(model, 'changed.options.total_sequence') != undefined
           totalSequence = _.nested model, 'changed.options.total_sequence'
           @parentModel().totalColumn model.get('uuid'), totalSequence
+        model
 
     attrs.numericSiblings = () ->
       parentModel = @parentModel()
@@ -55,7 +57,8 @@ Formbuilder.registerField 'number',
       if calculation_type != ''
         operator = if calculation_type is 'SUM' then '+' else '*'
         numericSiblings = @numericSiblings()
-        @set('options.calculation_expression', _.map(numericSiblings, (model) -> model.get('uuid')).join(operator))
+        #Prefix with uuid_ and underscore '-' to prevent illegal identifiers
+        @set('options.calculation_expression', _.map(numericSiblings, (model) -> 'uuid_' + model.get('uuid').replace(/-/g, '_')).join(operator))
         @set('options.calculation_display', '= ' + _.map(numericSiblings, (model) -> model.get('label')).join(operator))
         console.log(@get('options.calculation_expression'))
       else

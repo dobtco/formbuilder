@@ -49,38 +49,41 @@ class FormbuilderCollection extends Backbone.Collection
     model
 
   findWhereUuid: (uuid) -> @findWhere({'uuid':uuid})
+  findDataSourceFields: () -> @where({'type':'datasource'})
 
 
 class ViewFieldView extends Backbone.View
   @insert: (builder, view, responseField, _, options) ->
-    appendEl = options.$appendEl || null
-    replaceEl = options.$replaceEl || null
-    #####
-    # Calculates where to place this new field.
-    #
-    # Are we replacing a temporarily drag placeholder?
+    parentModel = responseField.parentModel()
+    if parentModel is undefined or parentModel.get('type') is 'grid' or parentModel.get('type') is 'table'
+      appendEl = options.$appendEl || null
+      replaceEl = options.$replaceEl || null
+      #####
+      # Calculates where to place this new field.
+      #
+      # Are we replacing a temporarily drag placeholder?
 
-    if appendEl?
-      appendEl.html(view.render().el)
+      if appendEl?
+        appendEl.html(view.render().el)
 
-    else if replaceEl?
-      replaceEl.replaceWith(view.render().el)
+      else if replaceEl?
+        replaceEl.replaceWith(view.render().el)
 
-    # Are we adding to the bottom?
-    else if !options.position? || options.position == -1
-      builder.$responseFields.append view.render().el
+      # Are we adding to the bottom?
+      else if !options.position? || options.position == -1
+        builder.$responseFields.append view.render().el
 
-    # Are we adding to the top?
-    else if options.position == 0
-      builder.$responseFields.prepend view.render().el
+      # Are we adding to the top?
+      else if options.position == 0
+        builder.$responseFields.prepend view.render().el
 
-    # Are we adding below an existing field?
-    else if ($replacePosition = builder.$responseFields.find(".fb-field-wrapper").eq(options.position))[0]
-      $replacePosition.before view.render().el
+      # Are we adding below an existing field?
+      else if ($replacePosition = builder.$responseFields.find(".fb-field-wrapper").eq(options.position))[0]
+        $replacePosition.before view.render().el
 
-    # Catch-all: add to bottom
-    else
-      builder.$responseFields.append view.render().el
+      # Catch-all: add to bottom
+      else
+        builder.$responseFields.append view.render().el
 
   className: "fb-field-wrapper"
 
@@ -140,11 +143,15 @@ class TableFieldView extends ViewFieldView
   className: "fb-field-wrapper"
   initialize: (options) ->
     @parentView = options.parentView
-    @listenTo @model, "change", @render
+    @listenTo @model, "change", @update
     @listenTo @model, "destroy", @remove
     _.each @model.get('options.elements'), (element) ->
-      @listenTo @parentView.modelByUuid(element.uuid), "change", @render
-      @listenTo @parentView.modelByUuid(element.uuid), "destroy", @remove
+      childModel = @model.collection.findWhereUuid(element.uuid)
+      if childModel
+        @listenTo childModel, "change", @update
+        @listenTo childModel, "destroy", (model) -> @update model
+      else
+        console.log(element.uuid)
     ,@
   events:
     'mouseenter': 'showSelectors',
@@ -154,6 +161,7 @@ class TableFieldView extends ViewFieldView
     'click .response-field-table td.header': 'focusSubelement'
     'click .response-field-table td.element': 'focusSubelement'
     'click .js-clear': 'clear'
+    'click .js-duplicate': 'duplicate'
 
 
   showSelectors: (e) ->
@@ -167,13 +175,19 @@ class TableFieldView extends ViewFieldView
     e.stopPropagation()
     childModel = new FormbuilderModel(Formbuilder.helpers.defaultFieldAttrs($(e.currentTarget).data('type')))
     childModel.set('parent_uuid', @model.get('uuid'))
-    @listenTo childModel, "change", @render
+    childModel.set('options.in_sequence', true)
+    @listenTo childModel, "change", @update
     elements = @model.attributes.options.elements || []
-    elements.push({'uuid':childModel.get('uuid')})
+    newElement = {'uuid':childModel.get('uuid')}
+    elements.push(newElement)
     @model.attributes.options.elements = elements
-    childModel = @parentView.collection.add childModel
-    @render()
+    @parentView.collection.add childModel
+    @update(childModel)
 
+  update: (model) ->
+    if model
+      @render()
+      @parentView.createAndShowEditView(model)
 
   render: () ->
      super()
@@ -201,8 +215,6 @@ class TableFieldView extends ViewFieldView
     ,@
 
 
-  remove: (e) ->  null
-
   clear: (e) ->
     e.preventDefault()
     e.stopPropagation()
@@ -212,6 +224,7 @@ class TableFieldView extends ViewFieldView
     if uuid is undefined
       models = _.each @model.get('options.elements'), (element) ->
         @parentView.modelByUuid(element.uuid).destroy()
+        true
       , @
       @model.destroy()
       @$el.remove()
@@ -220,8 +233,40 @@ class TableFieldView extends ViewFieldView
       @model.set('options.elements', _.filter @model.get('options.elements'), (destroyedElement) -> destroyedElement.uuid != uuid)
       @render()
 
+  duplicate: ->
+    attrs = Formbuilder.helpers.clone(@model.attributes);
+    delete attrs['id']
+    delete attrs['cid']
+    attrs['uuid'] = uuid.v4();
+    attrs['label'] += ' Copy'
+    elements = attrs['options']['elements']
+    attrs['options']['elements'] = []
+    attrs = _.extend({}, Formbuilder.helpers.defaultFieldAttrs('table'), attrs)
+    @parentView.createField attrs, { position: -1 }
+    clonedView = @parentView.viewByUuid(attrs['uuid'])
+    clonedTableModel = @parentView.modelByUuid(attrs['uuid'])
+    _.each elements, (child) =>
+      childModel = @parentView.modelByUuid(child.uuid)
+      childattrs = Formbuilder.helpers.clone(childModel);
+      delete childattrs['id']
+      delete childattrs['cid']
+      child.uuid = childattrs['uuid'] = uuid.v4()
+      childattrs['parent_uuid'] = attrs['uuid']
+      childattrs = _.extend({}, Formbuilder.helpers.defaultFieldAttrs(childattrs['type']), childattrs)
+      clonedModel = new FormbuilderModel(childattrs)
+
+
+      if child.totalColumn
+        totalColumnModel = clonedTableModel.createTotalColumnModel(childattrs['uuid'])
+        child.totalColumnUuid = totalColumnModel.get('uuid')
+      @parentView.collection.add(clonedModel)
+      if clonedModel.expression != undefined and clonedModel.get('options.calculation_type')
+        clonedModel.expression()
+      clonedView.listenTo clonedModel, "change", clonedView.update
+      attrs['options']['elements'].push(child)
+    clonedView.render()
+
   @insert: (builder, view, responseField, _, options) ->
-    console.log('Insert element')
     instanceView = builder.viewByUuid(responseField.get('parent_uuid'))
     if instanceView?
       true
@@ -315,11 +360,12 @@ class GridFieldView extends Backbone.View
     e.preventDefault()
     e.stopPropagation()
 
-    _.each @subelements(), (model) ->
-        model.destroy()
-
     cb = =>
       @parentView.handleFormUpdate()
+      subelements = @subelements()
+      _.each @subelements(), (model) ->
+        model.destroy()
+        true
       @model.destroy()
 
     x = Formbuilder.options.CLEAR_FIELD_CONFIRM
@@ -336,26 +382,36 @@ class GridFieldView extends Backbone.View
     attrs = Formbuilder.helpers.clone(@model.attributes);
     delete attrs['id']
     delete attrs['cid']
-    delete attrs['uuid']
+    attrs['uuid'] = uuid.v4();
     attrs['label'] += ' Copy'
     children = @subelements()
-    attrs['children'] = _.map children, (child) =>
-        childattrs = Formbuilder.helpers.clone(child.attributes);
-        delete childattrs['id']
-        delete childattrs['cid']
-        delete childattrs['uuid']
-        childattrs
+    delete attrs['children']
     @parentView.createField attrs, { position: -1 }
+
+    attrs['children'] = _.map children, (child) =>
+      childattrs = Formbuilder.helpers.clone(child.attributes);
+      delete childattrs['id']
+      delete childattrs['cid']
+      delete childattrs['uuid']
+      childattrs['parent_uuid'] = attrs['uuid']
+      childattrs
+      @parentView.createField childattrs, { position: -1 }
+
 
 
   addSubelement: (model) ->
-    if @belongsToMe(model)
+    if @belongsToMe(model) and model.get('label').match(/Copy/)
         grid = @parentView.gridAttr(model)
-        model.attributes.label = 'Row: ' + (grid.row + 1) + ', Col: ' + (grid.col + 1)
+        label = model.get('label').match(/(.+) Copy/)
+        if label != null
+          model.attributes.label = label[1] + ' ' + (grid.row + 1)
+        else
+          model.attributes.label = 'Row: ' + (grid.row + 1) + ', Col: ' + (grid.col + 1)
 
   removeSubelement: (model) ->
     grid = @parentView.gridAttr(model)
-    if @belongsToMe(model) && @getSubelement(grid.row, grid.col).html() == ''
+    belongsToMe = @belongsToMe(model)
+    if belongsToMe && @getSubelement(grid.row, grid.col).html() == ''
         @getSubelement(grid.row, grid.col).html(Formbuilder.templates["view/element_selector"]({rf: @model}))
 
   subelements: ->
@@ -363,7 +419,7 @@ class GridFieldView extends Backbone.View
         return @belongsToMe(item)
 
   belongsToMe: (model) ->
-    @parentView.inGrid(model) && @parentView.gridAttr(model).uuid == @model.get('uuid')
+    @parentView.inGrid(model) && model.get('parent_uuid') == @model.get('uuid')
 
   inlineAdd: (e) ->
     e.preventDefault()
@@ -381,16 +437,17 @@ class GridFieldView extends Backbone.View
     if _.isString(attrs)
         attrs = Formbuilder.helpers.defaultFieldAttrs(attrs)
     attrs.options.grid =
-        uuid: @model.get('uuid')
         col: target.prop('cellIndex')
         row: target.parents('tr').prop('rowIndex')
+    attrs.parent_uuid = @model.get('uuid')
     @parentView.createField attrs, { $appendEl: target }
 
   @insert: (builder, view, responseField, _, options) ->
     if not options.$appendEl
         row = responseField.get('options.grid.row')
         col = responseField.get('options.grid.col')
-        append = builder.wrapperByUuid(responseField.get('parent_uuid')).find('tr:nth-child(' + (row+ 1) + ') td:nth-child(' + (col + 1) + ')')
+        append = builder.wrapperByUuid(responseField.get('parent_uuid'))
+        append = append.find('tr:nth-child(' + (row+ 1) + ') td:nth-child(' + (col + 1) + ')')
         if append.length == 1
             options.$appendEl = append
     ViewFieldView.insert(builder, view, responseField, _, options)
@@ -410,12 +467,12 @@ class EditFieldView extends Backbone.View
     {@parentView} = options
     @listenTo @model, "destroy", @remove
     _.each Formbuilder.options.change, (callback, key) =>
-      eventName = 'change:' + Formbuilder.options.mappings[key]
+      eventName = 'change:' + _.nested(Formbuilder.options.mappings, key)
       @listenTo @model, eventName, callback
 
 
   render: ->
-    @$el.html(Formbuilder.templates["edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
+    @$el.html(Formbuilder.templates[ "edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
     rivets.bind @$el, { model: @model }
     return @
 
@@ -433,7 +490,7 @@ class EditFieldView extends Backbone.View
     $el = $(e.currentTarget)
     i = @$el.find('.option').index($el.closest('.option'))
     options = @model.get(Formbuilder.options.mappings.OPTIONS) || []
-    newOption = {label: "", checked: false}
+    newOption = {uuid:uuid.v4(), label: "", checked: false}
 
     if i > -1
       options.splice(i + 1, 0, newOption)
@@ -462,7 +519,7 @@ class EditFieldView extends Backbone.View
     @forceRender()
 
   forceRender: ->
-    @model.trigger('change')
+    @model.trigger 'change', @model
 
 
 
@@ -580,7 +637,9 @@ class BuilderView extends Backbone.View
 
   addOne: (responseField, _, options) ->
     view = @createView responseField
-    @insert(view, responseField, _, options)
+    @$responseFields.find('> .ui-draggable').remove();
+    if responseField.get('model_only') != true
+      @insert(view, responseField, _, options)
     @views[responseField.get('uuid')] = view
 
   setSortable: ->
@@ -733,10 +792,14 @@ class BuilderView extends Backbone.View
 
 class Formbuilder
   @attrs: {}
+  @instances: []
   @attr: (name, value) ->
     if value != undefined
       Formbuilder.attrs[name] = value
+      _.each @instances, (instance) ->
+        instance.mainView.reset()
     if Formbuilder.attrs[name] != undefined then Formbuilder.attrs[name] else undefined
+
 
   @helpers:
     defaultFieldAttrs: (type) ->
@@ -761,7 +824,7 @@ class Formbuilder
     HTTP_METHOD: 'POST'
     AUTOSAVE: false
     CLEAR_FIELD_CONFIRM: false
-    ENABLED_FIELDS: ['text','checkbox','dropdown', 'textarea', 'radio', 'date','section', 'signature', 'info', 'grid', 'number', 'table', 'list']
+    ENABLED_FIELDS: ['text','checkbox','dropdown', 'textarea', 'radio', 'date','section', 'signature', 'info', 'grid', 'number', 'table', 'datasource']
 
     mappings:
       SIZE: 'options.size'
@@ -771,6 +834,8 @@ class Formbuilder
       TYPE: 'type'
       REQUIRED: 'required'
       ADMIN_ONLY: 'admin_only'
+      POPULATE_FROM: 'options.populate_from'
+      POPULATE_UUID: 'options.populate_uuid'
       OPTIONS: 'answers'
       DESCRIPTION: 'description'
       INCLUDE_OTHER: 'options.include_other_option'
@@ -778,6 +843,7 @@ class Formbuilder
       INCLUDE_SCORING: 'is_scored'
       INTEGER_ONLY: 'options.integer_only'
       READ_ONLY: 'options.read_only'
+      COLUMN_WIDTH: 'options.column_width'
       NUMERIC:
         CALCULATION_TYPE: 'options.calculation_type'
         CALCULATION_EXPRESSION: 'options.calculation_expression'
@@ -798,9 +864,14 @@ class Formbuilder
         FULL_WIDTH: 'options.full_width'
         COLUMNTOTALS: 'options.display_column_totals'
         ROWTOTALS: 'options.display_row_totals'
-      LIST:
+      DATA_SOURCE:
         MULTIPLE: 'options.multiple_selections'
         DATA_SOURCE: 'options.data_source'
+        VALUE_TEMPLATE: 'options.value_template'
+        REQUIRED_PROPERTIES: 'options.required_properties'
+        FILTER: 'options.filter'
+        FILTER_VALUES: 'options.filter_values'
+        IS_FILTERED: 'options.is_filtered'
       MIN: 'options.min'
       MAX: 'options.max'
       OPTIONS_PER_ROW: 'options.options_per_row'
@@ -810,6 +881,14 @@ class Formbuilder
 
     change:
       INCLUDE_SCORING: ->
+        @reset()
+      POPULATE_UUID: ->
+        @reset()
+      'DATA_SOURCE.DATA_SOURCE': ->
+        @reset()
+      'DATA_SOURCE.IS_FILTERED': ->
+        @reset()
+      'DATA_SOURCE.FILTER': ->
         @reset()
 
     dict:
@@ -849,27 +928,32 @@ class Formbuilder
     args = _.extend opts, {formBuilder: @}
     @attrs = {}
     #Move child elements to end of collection to ensure parent are created first
-    args.bootstrapData = _.chain(args.bootstrapData || [])
-                          .partition((i) -> i.parent_uuid is undefined)
-                          .reduce((a, i) -> a.concat(i))
-                          .map((i) -> _.extend({}, Formbuilder.helpers.defaultFieldAttrs(i.type), i))
+    partionedData = _(args.bootstrapData || [])
+                          .groupBy((i) -> if i.parent_uuid is undefined then 0 else 1)
+                          .toArray()
                           .value()
+    partionedData = _.reduce(partionedData, (a, i) -> a.concat(i))
+    args.bootstrapData = _.map(partionedData, (i) -> _.extend({}, Formbuilder.helpers.defaultFieldAttrs(i.type), i))
+
 
     @mainView = new BuilderView args
     @mainView.collection
+    Formbuilder.instances.push(@)
 
 #nested mixin
-_.mixin {'nested': (obj, key) ->
-    if obj
-      obj[key] || _.reduce key.split('.'), (obj, key) ->
-          if obj then obj[key] else undefined;
-      , obj
-    else
-      undefined
-  }
+if _.nested is undefined
+  _.mixin {'nested': (obj, key) ->
+      if obj and key
+        obj[key] || _.reduce key.split('.'), (obj, key) ->
+            if obj then obj[key] else undefined;
+        , obj
+      else
+        undefined
+    }
 
 
 window.Formbuilder = Formbuilder
+window.FormbuilderModel = FormbuilderModel
 
 
 

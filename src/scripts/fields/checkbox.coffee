@@ -38,10 +38,12 @@ Formbuilder.registerField 'checkbox',
 
   defaultAttributes: (attrs) ->
     attrs.answers = [
+      uuid: uuid.v4()
       label: "",
       checked: false,
       score: false
     ,
+      uuid: uuid.v4()
       label: "",
       checked: false,
       score: false

@@ -36,7 +36,7 @@ $editing-border = darken($editing-bg, 7%)
 .fb-icon-date:before { content: '\e800'; } /* '' */
 .fb-icon-radio:before { content: '\e801'; } /* '' */
 .fb-icon-checkbox:before { content: '\e802'; } /* '' */
-.fb-icon-list:before { content: '\e803'; } /* '' */
+.fb-icon-data-source:before { content: '\e803'; } /* '' */
 .fb-icon-dropdown:before { content: '\e804'; } /* '' */
 .fb-icon-signature:before { content: '\e805'; } /* '' */
 .fb-icon-info:before { content: '\e806'; } /* '' */
@@ -229,6 +229,11 @@ $editing-border = darken($editing-bg, 7%)
   }
 }
 
+input[readonly] {
+  cursor: not-allowed;
+  background-color: #eeeeee;
+}
+
 
 .fb-field-wrapper .subtemplate-wrapper {
   border: 1px dashed transparent;
@@ -285,13 +290,6 @@ $editing-border = darken($editing-bg, 7%)
   display: block;
   font-size: 12px;
   margin-top: 5px;
-}
-
-.fb-edit-field-grid {
-    .fb-label-description
-    {
-        display: none;
-    }
 }
 
 .fb-edit-field-wrapper {
@@ -447,6 +445,10 @@ $editing-border = darken($editing-bg, 7%)
     top: 5px;
   }
 
+  tr {
+    vertical-align: top;
+  }
+
 
 
   table {
@@ -481,7 +483,6 @@ for row in (1..15)
     clear both
     .fb-option-wrapper
       width (100% / row)
-      float left
 
 
 

@@ -1,0 +1,28 @@
+<%  var list = rf.collection.findDataSourceFields();
+if (list.length) { %>
+    <div class='fb-edit-section-header'>Populate From</div>
+    <select data-rv-value="model.<%= Formbuilder.options.mappings.POPULATE_UUID %>">
+    <option>
+    <%
+        for (i in (list || [])) { %>
+        <option value="<%= list[i].get('uuid') %>">
+        <%= list[i].get('label') %>
+        </option>
+    <% } %>
+    </select>
+    <select data-rv-value="model.<%= Formbuilder.options.mappings.POPULATE_FROM %>">
+    <option>
+    <%
+        var populationUuid = rf.get('options.populate_uuid');
+        var populationModel = rf.collection.findWhereUuid(populationUuid) || {};
+        if (populationUuid && populationModel) {
+            var dataSource = populationModel.get('options.data_source');
+            var listProperties = Formbuilder.attr('sources')[dataSource].properties;
+            for (i in listProperties) { %>
+            <option value="<%= i %>">
+            <%= listProperties[i] %>
+            </option>
+    <%  }
+    } %>
+    </select>
+<% } %>

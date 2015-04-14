@@ -2,7 +2,7 @@
 .fb-icon-date:before{content:'\e800'}
 .fb-icon-radio:before{content:'\e801'}
 .fb-icon-checkbox:before{content:'\e802'}
-.fb-icon-list:before{content:'\e803'}
+.fb-icon-data-source:before{content:'\e803'}
 .fb-icon-dropdown:before{content:'\e804'}
 .fb-icon-signature:before{content:'\e805'}
 .fb-icon-info:before{content:'\e806'}
@@ -42,6 +42,7 @@
 .edit-response-field input,.edit-response-field textarea,.edit-response-field select{border:thin solid #ddd;border-radius:.25em;padding:.5em;display:inline-block;height:auto;vertical-align:middle}
 .edit-response-field input:focus,.edit-response-field textarea:focus,.edit-response-field select:focus{outline:none}
 .edit-response-field select{font-size:14px}
+input[readonly]{cursor:not-allowed;background-color:#eee}
 .fb-field-wrapper .subtemplate-wrapper{border:1px dashed transparent;margin-bottom:10px;padding:10px;position:relative}
 .fb-field-wrapper .subtemplate-wrapper .cover{position:absolute;top:0;left:0;height:100%;width:100%;z-index:2}
 .fb-field-wrapper .subtemplate-wrapper > label{display:block;border-bottom:thin solid #eee;padding-bottom:3px;margin-bottom:7px}
@@ -52,7 +53,6 @@
 .fb-field-wrapper .input-line > span input{width:100%}
 .fb-field-wrapper .input-line > span > label{display:block;font-size:13px;margin-left:3px}
 .fb-field-wrapper .help-block{display:block;font-size:12px;margin-top:5px}
-.fb-edit-field-grid .fb-label-description{display:none}
 .fb-edit-field-wrapper{font-size:13px}
 .fb-edit-field-wrapper .fb-field-label{font-weight:normal;background:#eee;padding:.75em;color:#666;font-size:1.25em}
 .fb-edit-field-wrapper .fb-field-label .type{margin-top:.5em;display:block;font-family:'Source Sans Pro',sans-serif;font-size:1em}
@@ -85,6 +85,7 @@
 .response-field-table .cover{display:none}
 .response-field-table .section-name{display:inline-block}
 .response-field-table .element-selector{margin:0 5px;float:right;position:absolute;right:5px;top:5px}
+.response-field-table tr{vertical-align:top}
 .response-field-table table{margin-bottom:30px}
 .response-field-table table td{padding:10px 10px 0 10px}
 .response-field-table table td label{border:none !important}
@@ -93,63 +94,63 @@
 .fb-options-per-row-1:before{content:" ";display:table}
 .fb-options-per-row-1:after{content:" ";display:table;clear:both}
 .fb-options-per-row-1{clear:both}
-.fb-options-per-row-1 .fb-option-wrapper{width:100%;float:left}
+.fb-options-per-row-1 .fb-option-wrapper{width:100%}
 .fb-options-per-row-2:before{content:" ";display:table}
 .fb-options-per-row-2:after{content:" ";display:table;clear:both}
 .fb-options-per-row-2{clear:both}
-.fb-options-per-row-2 .fb-option-wrapper{width:50%;float:left}
+.fb-options-per-row-2 .fb-option-wrapper{width:50%}
 .fb-options-per-row-3:before{content:" ";display:table}
 .fb-options-per-row-3:after{content:" ";display:table;clear:both}
 .fb-options-per-row-3{clear:both}
-.fb-options-per-row-3 .fb-option-wrapper{width:33.333333333333336%;float:left}
+.fb-options-per-row-3 .fb-option-wrapper{width:33.333333333333336%}
 .fb-options-per-row-4:before{content:" ";display:table}
 .fb-options-per-row-4:after{content:" ";display:table;clear:both}
 .fb-options-per-row-4{clear:both}
-.fb-options-per-row-4 .fb-option-wrapper{width:25%;float:left}
+.fb-options-per-row-4 .fb-option-wrapper{width:25%}
 .fb-options-per-row-5:before{content:" ";display:table}
 .fb-options-per-row-5:after{content:" ";display:table;clear:both}
 .fb-options-per-row-5{clear:both}
-.fb-options-per-row-5 .fb-option-wrapper{width:20%;float:left}
+.fb-options-per-row-5 .fb-option-wrapper{width:20%}
 .fb-options-per-row-6:before{content:" ";display:table}
 .fb-options-per-row-6:after{content:" ";display:table;clear:both}
 .fb-options-per-row-6{clear:both}
-.fb-options-per-row-6 .fb-option-wrapper{width:16.666666666666668%;float:left}
+.fb-options-per-row-6 .fb-option-wrapper{width:16.666666666666668%}
 .fb-options-per-row-7:before{content:" ";display:table}
 .fb-options-per-row-7:after{content:" ";display:table;clear:both}
 .fb-options-per-row-7{clear:both}
-.fb-options-per-row-7 .fb-option-wrapper{width:14.285714285714286%;float:left}
+.fb-options-per-row-7 .fb-option-wrapper{width:14.285714285714286%}
 .fb-options-per-row-8:before{content:" ";display:table}
 .fb-options-per-row-8:after{content:" ";display:table;clear:both}
 .fb-options-per-row-8{clear:both}
-.fb-options-per-row-8 .fb-option-wrapper{width:12.5%;float:left}
+.fb-options-per-row-8 .fb-option-wrapper{width:12.5%}
 .fb-options-per-row-9:before{content:" ";display:table}
 .fb-options-per-row-9:after{content:" ";display:table;clear:both}
 .fb-options-per-row-9{clear:both}
-.fb-options-per-row-9 .fb-option-wrapper{width:11.11111111111111%;float:left}
+.fb-options-per-row-9 .fb-option-wrapper{width:11.11111111111111%}
 .fb-options-per-row-10:before{content:" ";display:table}
 .fb-options-per-row-10:after{content:" ";display:table;clear:both}
 .fb-options-per-row-10{clear:both}
-.fb-options-per-row-10 .fb-option-wrapper{width:10%;float:left}
+.fb-options-per-row-10 .fb-option-wrapper{width:10%}
 .fb-options-per-row-11:before{content:" ";display:table}
 .fb-options-per-row-11:after{content:" ";display:table;clear:both}
 .fb-options-per-row-11{clear:both}
-.fb-options-per-row-11 .fb-option-wrapper{width:9.090909090909092%;float:left}
+.fb-options-per-row-11 .fb-option-wrapper{width:9.090909090909092%}
 .fb-options-per-row-12:before{content:" ";display:table}
 .fb-options-per-row-12:after{content:" ";display:table;clear:both}
 .fb-options-per-row-12{clear:both}
-.fb-options-per-row-12 .fb-option-wrapper{width:8.333333333333334%;float:left}
+.fb-options-per-row-12 .fb-option-wrapper{width:8.333333333333334%}
 .fb-options-per-row-13:before{content:" ";display:table}
 .fb-options-per-row-13:after{content:" ";display:table;clear:both}
 .fb-options-per-row-13{clear:both}
-.fb-options-per-row-13 .fb-option-wrapper{width:7.6923076923076925%;float:left}
+.fb-options-per-row-13 .fb-option-wrapper{width:7.6923076923076925%}
 .fb-options-per-row-14:before{content:" ";display:table}
 .fb-options-per-row-14:after{content:" ";display:table;clear:both}
 .fb-options-per-row-14{clear:both}
-.fb-options-per-row-14 .fb-option-wrapper{width:7.142857142857143%;float:left}
+.fb-options-per-row-14 .fb-option-wrapper{width:7.142857142857143%}
 .fb-options-per-row-15:before{content:" ";display:table}
 .fb-options-per-row-15:after{content:" ";display:table;clear:both}
 .fb-options-per-row-15{clear:both}
-.fb-options-per-row-15 .fb-option-wrapper{width:6.666666666666667%;float:left}
+.fb-options-per-row-15 .fb-option-wrapper{width:6.666666666666667%}
 .response-field-grid-table{border-collapse:collapse;border-spacing:0;margin-bottom:5px;table-layout:fixed;width:100%}
 .response-field-grid-table .response-field-grid-row{height:100px;vertical-align:top}
 .response-field-grid-table td{padding:10px 10px 0 10px}

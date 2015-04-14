@@ -8,7 +8,9 @@ Formbuilder.registerField 'textarea',
     <textarea class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>'></textarea>
   """
 
-  edit: ""
+  edit: """
+  <%= Formbuilder.templates['edit/populate_from']({ rf: rf }) %>
+  """
 
   addButton: """
     <span class="fb-icon-textarea"></span> Paragraph

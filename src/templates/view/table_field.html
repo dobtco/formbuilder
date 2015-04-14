@@ -1,4 +1,4 @@
-<span class="drop-area" rowspan="2">
+<span class="drop-area">
 <%= Formbuilder.templates['view/element_selector']() %>
 </span>
 <table class="response-field-table">
@@ -6,19 +6,19 @@
      <tbody>
         <tr>
             <% for (i in (rf.get('options.elements') || [])) { %>
-            <td data-uuid="<%= rf.get('options.elements')[i].uuid %>" class="fb-field-wrapper subtemplate-wrapper header header-<%= rf.get('options.elements')[i].uuid %>"></td>
+            <td width="<%= rf.get('options.elements')[i].width %>" data-uuid="<%= rf.get('options.elements')[i].uuid %>" class="fb-field-wrapper subtemplate-wrapper header header-<%= rf.get('options.elements')[i].uuid %>"></td>
             <% } %>
         </tr>
         <tr>
             <% for (i in (rf.get('options.elements') || [])) { %>
-            <td data-uuid="<%= rf.get('options.elements')[i].uuid %>" class="fb-field-wrapper subtemplate-wrapper element element-<%= rf.get('options.elements')[i].uuid %>"></td>
+            <td width="<%= rf.get('options.elements')[i].width %>" data-uuid="<%= rf.get('options.elements')[i].uuid %>" class="fb-field-wrapper subtemplate-wrapper element element-<%= rf.get('options.elements')[i].uuid %>"></td>
             <% } %>
         </tr>
     </tbody>
     <tfoot>
         <tr>
             <% for (i in (rf.get('options.elements') || [])) { %>
-            <td data-uuid="<%= rf.get('options.elements')[i].uuid %>" class="fb-field-wrapper subtemplate-wrapper total total-<%= rf.get('options.elements')[i].uuid %>"></td>
+            <td width="<%= rf.get('options.elements')[i].width %>" data-uuid="<%= rf.get('options.elements')[i].uuid %>" class="fb-field-wrapper subtemplate-wrapper total total-<%= rf.get('options.elements')[i].uuid %>"></td>
             <% } %>
         </tr>
     </tfoot>

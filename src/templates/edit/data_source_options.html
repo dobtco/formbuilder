@@ -1,0 +1,47 @@
+<label class="checkbox">
+  <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.DATA_SOURCE.MULTIPLE %>' />
+  Multiple selections
+</label>
+
+<div class='fb-edit-section-header'>Data Source</div>
+<select data-rv-value="model.<%= Formbuilder.options.mappings.DATA_SOURCE.DATA_SOURCE %>">
+<% for (i in (Formbuilder.attr('sources') || [])) { %>
+    <option value="<%= i %>">
+    <%= Formbuilder.attr('sources')[i].title %>
+    </option>
+<% } %>
+</select>
+<div class='fb-edit-section-header'>Display</div>
+<select data-rv-value="model.<%= Formbuilder.options.mappings.DATA_SOURCE.VALUE_TEMPLATE %>">
+<%
+    for (i in (rf.sourceProperties() || [])) { %>
+    <option value="<%= i %>">
+    <%= rf.sourceProperties()[i] %>
+    </option>
+<% } %>
+</select>
+<% if (rf.filters()) { %>
+    <div class='fb-edit-section-header'> Filter </div>
+    <label class="checkbox">
+      <input type='checkbox' class="js-scoring"  data-rv-checked='model.<%= Formbuilder.options.mappings.DATA_SOURCE.IS_FILTERED %>' />
+      Apply a filter?
+    </label>
+    <% if (rf.get(Formbuilder.options.mappings.DATA_SOURCE.IS_FILTERED)) { %>
+    <select data-rv-value="model.<%= Formbuilder.options.mappings.DATA_SOURCE.FILTER %>">
+        <option value="null">[ No Filter ]</option>
+    <%
+        for (i in (rf.filters() || [])) { %>
+        <option value="<%= i %>">
+        <%= rf.filters()[i].name %>
+        </option>
+    <% } %>
+    </select>
+    <%
+    for (i in rf.filterValues()) { %>
+        <label class="checkbox">
+          <input type='checkbox' data-rv-append='model.<%= Formbuilder.options.mappings.DATA_SOURCE.FILTER_VALUES %>' value="<%= i %>" />
+            <%= rf.filterValues()[i] %>
+        </label>
+    <% } %>
+<% } %>
+<% } %>

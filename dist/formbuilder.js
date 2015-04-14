@@ -1,4 +1,38 @@
 (function() {
+  rivets.binders.append = {
+    routine: function(el, value) {
+      return el.checked = _.find(value, function(item) {
+        return String(item) === String(el.value);
+      }) !== void 0;
+    },
+    bind: function(el) {
+      var _this = this;
+      this.callback = function() {
+        var currentValue, newValue;
+        currentValue = _.clone(_this.model.get(_this.keypath)) || [];
+        if (el.value && _.contains(currentValue, el.value)) {
+          newValue = _.without(currentValue, el.value);
+          return _this.model.set(_this.keypath, currentValue);
+        } else {
+          currentValue.push(el.value);
+          return _this.model.set(_this.keypath, currentValue);
+        }
+      };
+      return $(el).on('change', this.callback);
+    },
+    unbind: function(el) {
+      return $(el).off('change', this.callback);
+    }
+  };
+
+  rivets.formatters.length = function(value) {
+    if (value) {
+      return value.length;
+    } else {
+      return 0;
+    }
+  };
+
   rivets.binders.input = {
     publishes: true,
     routine: rivets.binders.value.routine,
@@ -141,6 +175,12 @@
       });
     };
 
+    FormbuilderCollection.prototype.findDataSourceFields = function() {
+      return this.where({
+        'type': 'datasource'
+      });
+    };
+
     return FormbuilderCollection;
 
   })(Backbone.Collection);
@@ -154,21 +194,24 @@
     }
 
     ViewFieldView.insert = function(builder, view, responseField, _, options) {
-      var $replacePosition, appendEl, replaceEl;
-      appendEl = options.$appendEl || null;
-      replaceEl = options.$replaceEl || null;
-      if (appendEl != null) {
-        return appendEl.html(view.render().el);
-      } else if (replaceEl != null) {
-        return replaceEl.replaceWith(view.render().el);
-      } else if ((options.position == null) || options.position === -1) {
-        return builder.$responseFields.append(view.render().el);
-      } else if (options.position === 0) {
-        return builder.$responseFields.prepend(view.render().el);
-      } else if (($replacePosition = builder.$responseFields.find(".fb-field-wrapper").eq(options.position))[0]) {
-        return $replacePosition.before(view.render().el);
-      } else {
-        return builder.$responseFields.append(view.render().el);
+      var $replacePosition, appendEl, parentModel, replaceEl;
+      parentModel = responseField.parentModel();
+      if (parentModel === void 0 || parentModel.get('type') === 'grid' || parentModel.get('type') === 'table') {
+        appendEl = options.$appendEl || null;
+        replaceEl = options.$replaceEl || null;
+        if (appendEl != null) {
+          return appendEl.html(view.render().el);
+        } else if (replaceEl != null) {
+          return replaceEl.replaceWith(view.render().el);
+        } else if ((options.position == null) || options.position === -1) {
+          return builder.$responseFields.append(view.render().el);
+        } else if (options.position === 0) {
+          return builder.$responseFields.prepend(view.render().el);
+        } else if (($replacePosition = builder.$responseFields.find(".fb-field-wrapper").eq(options.position))[0]) {
+          return $replacePosition.before(view.render().el);
+        } else {
+          return builder.$responseFields.append(view.render().el);
+        }
       }
     };
 
@@ -254,11 +297,19 @@
 
     TableFieldView.prototype.initialize = function(options) {
       this.parentView = options.parentView;
-      this.listenTo(this.model, "change", this.render);
+      this.listenTo(this.model, "change", this.update);
       this.listenTo(this.model, "destroy", this.remove);
       return _.each(this.model.get('options.elements'), function(element) {
-        this.listenTo(this.parentView.modelByUuid(element.uuid), "change", this.render);
-        return this.listenTo(this.parentView.modelByUuid(element.uuid), "destroy", this.remove);
+        var childModel;
+        childModel = this.model.collection.findWhereUuid(element.uuid);
+        if (childModel) {
+          this.listenTo(childModel, "change", this.update);
+          return this.listenTo(childModel, "destroy", function(model) {
+            return this.update(model);
+          });
+        } else {
+          return console.log(element.uuid);
+        }
       }, this);
     };
 
@@ -269,7 +320,8 @@
       'click .subtemplate-wrapper': 'focusEditView',
       'click .response-field-table td.header': 'focusSubelement',
       'click .response-field-table td.element': 'focusSubelement',
-      'click .js-clear': 'clear'
+      'click .js-clear': 'clear',
+      'click .js-duplicate': 'duplicate'
     };
 
     TableFieldView.prototype.showSelectors = function(e) {
@@ -281,19 +333,28 @@
     };
 
     TableFieldView.prototype.inlineAdd = function(e) {
-      var childModel, elements;
+      var childModel, elements, newElement;
       e.preventDefault();
       e.stopPropagation();
       childModel = new FormbuilderModel(Formbuilder.helpers.defaultFieldAttrs($(e.currentTarget).data('type')));
       childModel.set('parent_uuid', this.model.get('uuid'));
-      this.listenTo(childModel, "change", this.render);
+      childModel.set('options.in_sequence', true);
+      this.listenTo(childModel, "change", this.update);
       elements = this.model.attributes.options.elements || [];
-      elements.push({
+      newElement = {
         'uuid': childModel.get('uuid')
-      });
+      };
+      elements.push(newElement);
       this.model.attributes.options.elements = elements;
-      childModel = this.parentView.collection.add(childModel);
-      return this.render();
+      this.parentView.collection.add(childModel);
+      return this.update(childModel);
+    };
+
+    TableFieldView.prototype.update = function(model) {
+      if (model) {
+        this.render();
+        return this.parentView.createAndShowEditView(model);
+      }
     };
 
     TableFieldView.prototype.render = function() {
@@ -335,10 +396,6 @@
       }, this);
     };
 
-    TableFieldView.prototype.remove = function(e) {
-      return null;
-    };
-
     TableFieldView.prototype.clear = function(e) {
       var models, uuid;
       e.preventDefault();
@@ -346,7 +403,8 @@
       uuid = $(e.currentTarget).parents('.element').data('uuid');
       if (uuid === void 0) {
         models = _.each(this.model.get('options.elements'), function(element) {
-          return this.parentView.modelByUuid(element.uuid).destroy();
+          this.parentView.modelByUuid(element.uuid).destroy();
+          return true;
         }, this);
         this.model.destroy();
         return this.$el.remove();
@@ -359,9 +417,48 @@
       }
     };
 
+    TableFieldView.prototype.duplicate = function() {
+      var attrs, clonedTableModel, clonedView, elements,
+        _this = this;
+      attrs = Formbuilder.helpers.clone(this.model.attributes);
+      delete attrs['id'];
+      delete attrs['cid'];
+      attrs['uuid'] = uuid.v4();
+      attrs['label'] += ' Copy';
+      elements = attrs['options']['elements'];
+      attrs['options']['elements'] = [];
+      attrs = _.extend({}, Formbuilder.helpers.defaultFieldAttrs('table'), attrs);
+      this.parentView.createField(attrs, {
+        position: -1
+      });
+      clonedView = this.parentView.viewByUuid(attrs['uuid']);
+      clonedTableModel = this.parentView.modelByUuid(attrs['uuid']);
+      _.each(elements, function(child) {
+        var childModel, childattrs, clonedModel, totalColumnModel;
+        childModel = _this.parentView.modelByUuid(child.uuid);
+        childattrs = Formbuilder.helpers.clone(childModel);
+        delete childattrs['id'];
+        delete childattrs['cid'];
+        child.uuid = childattrs['uuid'] = uuid.v4();
+        childattrs['parent_uuid'] = attrs['uuid'];
+        childattrs = _.extend({}, Formbuilder.helpers.defaultFieldAttrs(childattrs['type']), childattrs);
+        clonedModel = new FormbuilderModel(childattrs);
+        if (child.totalColumn) {
+          totalColumnModel = clonedTableModel.createTotalColumnModel(childattrs['uuid']);
+          child.totalColumnUuid = totalColumnModel.get('uuid');
+        }
+        _this.parentView.collection.add(clonedModel);
+        if (clonedModel.expression !== void 0 && clonedModel.get('options.calculation_type')) {
+          clonedModel.expression();
+        }
+        clonedView.listenTo(clonedModel, "change", clonedView.update);
+        return attrs['options']['elements'].push(child);
+      });
+      return clonedView.render();
+    };
+
     TableFieldView.insert = function(builder, view, responseField, _, options) {
       var instanceView;
-      console.log('Insert element');
       instanceView = builder.viewByUuid(responseField.get('parent_uuid'));
       if (instanceView != null) {
         return true;
@@ -502,11 +599,14 @@
         _this = this;
       e.preventDefault();
       e.stopPropagation();
-      _.each(this.subelements(), function(model) {
-        return model.destroy();
-      });
       cb = function() {
+        var subelements;
         _this.parentView.handleFormUpdate();
+        subelements = _this.subelements();
+        _.each(_this.subelements(), function(model) {
+          model.destroy();
+          return true;
+        });
         return _this.model.destroy();
       };
       x = Formbuilder.options.CLEAR_FIELD_CONFIRM;
@@ -529,34 +629,45 @@
       attrs = Formbuilder.helpers.clone(this.model.attributes);
       delete attrs['id'];
       delete attrs['cid'];
-      delete attrs['uuid'];
+      attrs['uuid'] = uuid.v4();
       attrs['label'] += ' Copy';
       children = this.subelements();
-      attrs['children'] = _.map(children, function(child) {
+      delete attrs['children'];
+      this.parentView.createField(attrs, {
+        position: -1
+      });
+      return attrs['children'] = _.map(children, function(child) {
         var childattrs;
         childattrs = Formbuilder.helpers.clone(child.attributes);
         delete childattrs['id'];
         delete childattrs['cid'];
         delete childattrs['uuid'];
-        return childattrs;
-      });
-      return this.parentView.createField(attrs, {
-        position: -1
+        childattrs['parent_uuid'] = attrs['uuid'];
+        childattrs;
+        return _this.parentView.createField(childattrs, {
+          position: -1
+        });
       });
     };
 
     GridFieldView.prototype.addSubelement = function(model) {
-      var grid;
-      if (this.belongsToMe(model)) {
+      var grid, label;
+      if (this.belongsToMe(model) && model.get('label').match(/Copy/)) {
         grid = this.parentView.gridAttr(model);
-        return model.attributes.label = 'Row: ' + (grid.row + 1) + ', Col: ' + (grid.col + 1);
+        label = model.get('label').match(/(.+) Copy/);
+        if (label !== null) {
+          return model.attributes.label = label[1] + ' ' + (grid.row + 1);
+        } else {
+          return model.attributes.label = 'Row: ' + (grid.row + 1) + ', Col: ' + (grid.col + 1);
+        }
       }
     };
 
     GridFieldView.prototype.removeSubelement = function(model) {
-      var grid;
+      var belongsToMe, grid;
       grid = this.parentView.gridAttr(model);
-      if (this.belongsToMe(model) && this.getSubelement(grid.row, grid.col).html() === '') {
+      belongsToMe = this.belongsToMe(model);
+      if (belongsToMe && this.getSubelement(grid.row, grid.col).html() === '') {
         return this.getSubelement(grid.row, grid.col).html(Formbuilder.templates["view/element_selector"]({
           rf: this.model
         }));
@@ -571,7 +682,7 @@
     };
 
     GridFieldView.prototype.belongsToMe = function(model) {
-      return this.parentView.inGrid(model) && this.parentView.gridAttr(model).uuid === this.model.get('uuid');
+      return this.parentView.inGrid(model) && model.get('parent_uuid') === this.model.get('uuid');
     };
 
     GridFieldView.prototype.inlineAdd = function(e) {
@@ -594,10 +705,10 @@
         attrs = Formbuilder.helpers.defaultFieldAttrs(attrs);
       }
       attrs.options.grid = {
-        uuid: this.model.get('uuid'),
         col: target.prop('cellIndex'),
         row: target.parents('tr').prop('rowIndex')
       };
+      attrs.parent_uuid = this.model.get('uuid');
       return this.parentView.createField(attrs, {
         $appendEl: target
       });
@@ -608,7 +719,8 @@
       if (!options.$appendEl) {
         row = responseField.get('options.grid.row');
         col = responseField.get('options.grid.col');
-        append = builder.wrapperByUuid(responseField.get('parent_uuid')).find('tr:nth-child(' + (row + 1) + ') td:nth-child(' + (col + 1) + ')');
+        append = builder.wrapperByUuid(responseField.get('parent_uuid'));
+        append = append.find('tr:nth-child(' + (row + 1) + ') td:nth-child(' + (col + 1) + ')');
         if (append.length === 1) {
           options.$appendEl = append;
         }
@@ -643,7 +755,7 @@
       this.listenTo(this.model, "destroy", this.remove);
       return _.each(Formbuilder.options.change, function(callback, key) {
         var eventName;
-        eventName = 'change:' + Formbuilder.options.mappings[key];
+        eventName = 'change:' + _.nested(Formbuilder.options.mappings, key);
         return _this.listenTo(_this.model, eventName, callback);
       });
     };
@@ -675,6 +787,7 @@
       i = this.$el.find('.option').index($el.closest('.option'));
       options = this.model.get(Formbuilder.options.mappings.OPTIONS) || [];
       newOption = {
+        uuid: uuid.v4(),
         label: "",
         checked: false
       };
@@ -709,7 +822,7 @@
     };
 
     EditFieldView.prototype.forceRender = function() {
-      return this.model.trigger('change');
+      return this.model.trigger('change', this.model);
     };
 
     return EditFieldView;
@@ -862,7 +975,10 @@
     BuilderView.prototype.addOne = function(responseField, _, options) {
       var view;
       view = this.createView(responseField);
-      this.insert(view, responseField, _, options);
+      this.$responseFields.find('> .ui-draggable').remove();
+      if (responseField.get('model_only') !== true) {
+        this.insert(view, responseField, _, options);
+      }
       return this.views[responseField.get('uuid')] = view;
     };
 
@@ -1093,9 +1209,14 @@
   Formbuilder = (function() {
     Formbuilder.attrs = {};
 
+    Formbuilder.instances = [];
+
     Formbuilder.attr = function(name, value) {
       if (value !== void 0) {
         Formbuilder.attrs[name] = value;
+        _.each(this.instances, function(instance) {
+          return instance.mainView.reset();
+        });
       }
       if (Formbuilder.attrs[name] !== void 0) {
         return Formbuilder.attrs[name];
@@ -1131,7 +1252,7 @@
       HTTP_METHOD: 'POST',
       AUTOSAVE: false,
       CLEAR_FIELD_CONFIRM: false,
-      ENABLED_FIELDS: ['text', 'checkbox', 'dropdown', 'textarea', 'radio', 'date', 'section', 'signature', 'info', 'grid', 'number', 'table', 'list'],
+      ENABLED_FIELDS: ['text', 'checkbox', 'dropdown', 'textarea', 'radio', 'date', 'section', 'signature', 'info', 'grid', 'number', 'table', 'datasource'],
       mappings: {
         SIZE: 'options.size',
         UNITS: 'options.units',
@@ -1140,6 +1261,8 @@
         TYPE: 'type',
         REQUIRED: 'required',
         ADMIN_ONLY: 'admin_only',
+        POPULATE_FROM: 'options.populate_from',
+        POPULATE_UUID: 'options.populate_uuid',
         OPTIONS: 'answers',
         DESCRIPTION: 'description',
         INCLUDE_OTHER: 'options.include_other_option',
@@ -1147,6 +1270,7 @@
         INCLUDE_SCORING: 'is_scored',
         INTEGER_ONLY: 'options.integer_only',
         READ_ONLY: 'options.read_only',
+        COLUMN_WIDTH: 'options.column_width',
         NUMERIC: {
           CALCULATION_TYPE: 'options.calculation_type',
           CALCULATION_EXPRESSION: 'options.calculation_expression',
@@ -1170,9 +1294,14 @@
           COLUMNTOTALS: 'options.display_column_totals',
           ROWTOTALS: 'options.display_row_totals'
         },
-        LIST: {
+        DATA_SOURCE: {
           MULTIPLE: 'options.multiple_selections',
-          DATA_SOURCE: 'options.data_source'
+          DATA_SOURCE: 'options.data_source',
+          VALUE_TEMPLATE: 'options.value_template',
+          REQUIRED_PROPERTIES: 'options.required_properties',
+          FILTER: 'options.filter',
+          FILTER_VALUES: 'options.filter_values',
+          IS_FILTERED: 'options.is_filtered'
         },
         MIN: 'options.min',
         MAX: 'options.max',
@@ -1183,6 +1312,18 @@
       },
       change: {
         INCLUDE_SCORING: function() {
+          return this.reset();
+        },
+        POPULATE_UUID: function() {
+          return this.reset();
+        },
+        'DATA_SOURCE.DATA_SOURCE': function() {
+          return this.reset();
+        },
+        'DATA_SOURCE.IS_FILTERED': function() {
+          return this.reset();
+        },
+        'DATA_SOURCE.FILTER': function() {
           return this.reset();
         }
       },
@@ -1231,7 +1372,7 @@
     };
 
     function Formbuilder(opts) {
-      var args;
+      var args, partionedData;
       if (opts == null) {
         opts = {};
       }
@@ -1240,38 +1381,49 @@
         formBuilder: this
       });
       this.attrs = {};
-      args.bootstrapData = _.chain(args.bootstrapData || []).partition(function(i) {
-        return i.parent_uuid === void 0;
-      }).reduce(function(a, i) {
+      partionedData = _(args.bootstrapData || []).groupBy(function(i) {
+        if (i.parent_uuid === void 0) {
+          return 0;
+        } else {
+          return 1;
+        }
+      }).toArray().value();
+      partionedData = _.reduce(partionedData, function(a, i) {
         return a.concat(i);
-      }).map(function(i) {
+      });
+      args.bootstrapData = _.map(partionedData, function(i) {
         return _.extend({}, Formbuilder.helpers.defaultFieldAttrs(i.type), i);
-      }).value();
+      });
       this.mainView = new BuilderView(args);
       this.mainView.collection;
+      Formbuilder.instances.push(this);
     }
 
     return Formbuilder;
 
   })();
 
-  _.mixin({
-    'nested': function(obj, key) {
-      if (obj) {
-        return obj[key] || _.reduce(key.split('.'), function(obj, key) {
-          if (obj) {
-            return obj[key];
-          } else {
-            return void 0;
-          }
-        }, obj);
-      } else {
-        return void 0;
+  if (_.nested === void 0) {
+    _.mixin({
+      'nested': function(obj, key) {
+        if (obj && key) {
+          return obj[key] || _.reduce(key.split('.'), function(obj, key) {
+            if (obj) {
+              return obj[key];
+            } else {
+              return void 0;
+            }
+          }, obj);
+        } else {
+          return void 0;
+        }
       }
-    }
-  });
+    });
+  }
 
   window.Formbuilder = Formbuilder;
+
+  window.FormbuilderModel = FormbuilderModel;
 
   if (typeof module !== "undefined" && module !== null) {
     module.exports = Formbuilder;
@@ -1302,16 +1454,85 @@
     defaultAttributes: function(attrs) {
       attrs.answers = [
         {
+          uuid: uuid.v4(),
           label: "",
           checked: false,
           score: false
         }, {
+          uuid: uuid.v4(),
           label: "",
           checked: false,
           score: false
         }
       ];
       attrs.options.options_per_row = 1;
+      return attrs;
+    }
+  });
+
+}).call(this);
+
+(function() {
+  Formbuilder.registerField('datasource', {
+    name: 'List',
+    order: 70,
+    view: "<select>\n  <option>\n     <%= rf.source().title %>\n     (<%= rf.sourceProperty(rf.get(Formbuilder.options.mappings.DATA_SOURCE.VALUE_TEMPLATE)) %>)\n  </option>\n</select>",
+    edit: "<%= Formbuilder.templates['edit/data_source_options']({ rf: rf }) %>",
+    addButton: "<span class=\"fb-icon-data-source\"></span> Data Source",
+    defaultAttributes: function(attrs, formbuilder) {
+      attrs.initialize = function() {
+        this.on("change", function(model) {
+          var sourceProperties, valueTemplate;
+          if (_.nested(model, 'changed.options.data_source') !== void 0) {
+            sourceProperties = _.keys(model.sourceProperties());
+            model.set('options.required_properties', sourceProperties);
+            valueTemplate = _.first(sourceProperties);
+            return model.set('options.value_template', valueTemplate);
+          }
+        });
+        return this.on("destroy", function(model) {
+          return this.collection.each(function(collectionModel) {
+            if (collectionModel.get('options.populate_uuid') === model.get('uuid')) {
+              collectionModel.set('options.populate_uuid', null);
+              return collectionModel.set('options.populate_from', null);
+            }
+          });
+        });
+      };
+      attrs.source = function() {
+        var source, sources;
+        source = this.options ? this.options.data_source : this.get(Formbuilder.options.mappings.DATA_SOURCE.DATA_SOURCE);
+        sources = formbuilder.attr('sources');
+        return _.nested(sources, source) || null;
+      };
+      attrs.sourceProperties = function() {
+        var source;
+        source = this.source();
+        return _.nested(source, 'properties') || [];
+      };
+      attrs.filters = function() {
+        var source;
+        source = this.source();
+        return _.nested(source, 'filters') || null;
+      };
+      attrs.currentFilter = function() {
+        var source;
+        source = this.source();
+        return _.nested(source, 'filters.' + this.get('options.filter')) || {};
+      };
+      attrs.filterValues = function() {
+        return this.currentFilter().values || {};
+      };
+      attrs.sourceProperty = function(property) {
+        return this.sourceProperties()[property] || null;
+      };
+      attrs.options.multiple_selections = false;
+      attrs.options.is_filtered = false;
+      attrs.options.data_source = attrs.source() || _.keys(formbuilder.attr('sources') || {})[0];
+      attrs.options.required_properties = _.keys(attrs.sourceProperties(attrs.options.data_source));
+      attrs.options.filter = attrs.filters();
+      attrs.options.filter_values = [];
+      attrs.options.value_template = _.first(attrs.options.required_properties);
       return attrs;
     }
   });
@@ -1339,10 +1560,12 @@
     defaultAttributes: function(attrs) {
       attrs.answers = [
         {
+          uuid: uuid.v4(),
           label: "",
           checked: false,
           score: ""
         }, {
+          uuid: uuid.v4(),
           label: "",
           checked: false,
           score: ""
@@ -1432,26 +1655,10 @@
 }).call(this);
 
 (function() {
-  Formbuilder.registerField('list', {
-    name: 'List',
-    order: 70,
-    view: "<select>\n  <option>\n     <%= rf.get(Formbuilder.options.mappings.LIST.DATA_SOURCE) %>\n  </option>\n</select>",
-    edit: "<%= Formbuilder.templates['edit/list_options']({ rf: rf }) %>",
-    addButton: "<span class=\"fb-icon-list\"></span> List",
-    defaultAttributes: function(attrs, formbuilder) {
-      attrs.options.multiple_selections = false;
-      attrs.options.data_source = (formbuilder.attr('sources') || [null])[0];
-      return attrs;
-    }
-  });
-
-}).call(this);
-
-(function() {
   Formbuilder.registerField('number', {
     name: 'Number',
     order: 30,
-    view: "<input type='text' class=\"calculated\" value=\"<%= rf.get(Formbuilder.options.mappings.NUMERIC.CALCULATION_DISPLAY) %>\" />\n<% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>\n  <%= units %>\n<% } %>",
+    view: "<input type='text' class=\"calculated\" value=\"<%= rf.get(Formbuilder.options.mappings.NUMERIC.CALCULATION_DISPLAY) %>\" <%= rf.get(Formbuilder.options.mappings.NUMERIC.CALCULATION_DISPLAY) ? 'readonly=\"readonly\"' : ''  %> />\n<% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>\n  <%= units %>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/integer_only']({rf:rf}) %>\n<%= Formbuilder.templates['edit/total']({rf:rf}) %>\n<%= Formbuilder.templates['edit/min_max']({rf:rf}) %>",
     addButton: "<span class=\"fb-icon-number\"></span> Number",
     defaultAttributes: function(attrs, formbuilder) {
@@ -1460,9 +1667,10 @@
       attrs.options.calculation_display = '';
       attrs.options.total_sequence = false;
       attrs.insertion = function() {
-        var totalColumn;
-        if (this.parentModel()) {
-          totalColumn = this.parentModel().totalColumn(this.get('uuid'));
+        var parentModel, totalColumn;
+        parentModel = this.parentModel();
+        if (parentModel && parentModel.get('type') === 'table') {
+          totalColumn = parentModel.totalColumn(this.get('uuid'));
           return this.attributes.options.total_sequence = totalColumn;
         }
       };
@@ -1474,8 +1682,9 @@
           }
           if (_.nested(model, 'changed.options.total_sequence') !== void 0) {
             totalSequence = _.nested(model, 'changed.options.total_sequence');
-            return this.parentModel().totalColumn(model.get('uuid'), totalSequence);
+            this.parentModel().totalColumn(model.get('uuid'), totalSequence);
           }
+          return model;
         });
       };
       attrs.numericSiblings = function() {
@@ -1496,7 +1705,7 @@
           operator = calculation_type === 'SUM' ? '+' : '*';
           numericSiblings = this.numericSiblings();
           this.set('options.calculation_expression', _.map(numericSiblings, function(model) {
-            return model.get('uuid');
+            return 'uuid_' + model.get('uuid').replace(/-/g, '_');
           }).join(operator));
           this.set('options.calculation_display', '= ' + _.map(numericSiblings, function(model) {
             return model.get('label');
@@ -1542,10 +1751,12 @@
     defaultAttributes: function(attrs) {
       attrs.answers = [
         {
+          uuid: uuid.v4(),
           label: "",
           checked: false,
           score: ""
         }, {
+          uuid: uuid.v4(),
           label: "",
           checked: false,
           score: ""
@@ -1588,10 +1799,22 @@
     order: 0,
     element_type: 'non_input',
     view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<%= Formbuilder.templates[\"view/table_field\"]({rf: rf}) %>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>",
-    edit: "<div class='fb-edit-section-header'>Details</div>\n<div class='fb-common-wrapper'>\n  <div class='fb-label-description'>\n    <%= Formbuilder.templates['edit/label_description']({rf: rf}) %>\n  </div>\n  <div class='fb-clear'></div>\n</div>",
+    edit: "<div class='fb-edit-section-header'>Details</div>\n<div class='fb-common-wrapper'>\n  <div class='fb-label-description'>\n    <%= Formbuilder.templates['edit/label_description']({rf: rf}) %>\n  </div>\n  <div class='fb-clear'></div>\n</div>\n<label class=\"checkbox\">\n  <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.GRID.FULL_WIDTH %>' /> Display full width ?\n</label>",
     addButton: "<span class=\"fb-icon-table\"></span> Table",
     defaultAttributes: function(attrs) {
       attrs.options.full_width = false;
+      attrs.initialize = function() {
+        var parent;
+        parent = this;
+        return _.each(this.childModels, function(childModel) {
+          return childModel.on("change", function(model) {
+            if (_.nested(model, 'changed.options.column_width') !== void 0) {
+              parent.columnWidth(model.get('uuid'), model.get('options.column_width'));
+            }
+            return model;
+          });
+        });
+      };
       attrs.childModels = function() {
         var elementsUuids;
         elementsUuids = _.pluck(this.get('options.elements'), 'uuid');
@@ -1604,18 +1827,45 @@
           uuid: elementUuid
         });
       };
+      attrs.createTotalColumnModel = function(parentUuid) {
+        var totalColumnModel;
+        totalColumnModel = new FormbuilderModel(Formbuilder.helpers.defaultFieldAttrs('number'));
+        totalColumnModel.set('options.calculation_expression', 'sum(column_uuid_' + parentUuid.replace(/-/g, '_') + ')');
+        totalColumnModel.set('model_only', true);
+        totalColumnModel.set('parent_uuid', parentUuid);
+        this.collection.add(totalColumnModel);
+        return totalColumnModel;
+      };
+      attrs.columnWidth = function(elementUuid, width) {
+        var elements;
+        elements = this.get('options.elements');
+        return _.each(elements, function(element, index) {
+          if (element.uuid === elementUuid) {
+            return elements[index].columnWidth = width;
+          }
+        }, this);
+      };
       attrs.totalColumn = function(elementUuid, value) {
         var elements;
         elements = this.get('options.elements');
         if (value !== void 0) {
           _.each(elements, function(element, index) {
+            var totalColumnModel;
             if (element.uuid === elementUuid) {
+              if (element.totalColumnUuid === void 0) {
+                totalColumnModel = this.createTotalColumnModel(element.uuid);
+                elements[index].totalColumnUuid = totalColumnModel.get('uuid');
+              }
               return elements[index].totalColumn = value;
             }
-          });
+          }, this);
           return this.set('options.elements', elements);
         } else {
-          return this.elementOptions(elementUuid).totalColumn || false;
+          if (this.elementOptions(elementUuid)) {
+            return this.elementOptions(elementUuid).totalColumn || false;
+          } else {
+            return false;
+          }
         }
       };
       return attrs;
@@ -1629,7 +1879,7 @@
     name: 'Text',
     order: 0,
     view: "<input type='text' class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />",
-    edit: "",
+    edit: "<%= Formbuilder.templates['edit/populate_from']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-text\"></span> Text",
     defaultAttributes: function(attrs) {
       attrs.options.size = 'small';
@@ -1644,7 +1894,7 @@
     name: 'Paragraph',
     order: 5,
     view: "<textarea class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>'></textarea>",
-    edit: "",
+    edit: "<%= Formbuilder.templates['edit/populate_from']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-textarea\"></span> Paragraph",
     defaultAttributes: function(attrs) {
       attrs.options.size = 'small';
@@ -1689,6 +1939,8 @@ __p +=
 ((__t = ( Formbuilder.templates['edit/common']({rf: rf}) )) == null ? '' : __t) +
 '\n' +
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.TYPE)].edit({rf: rf}) )) == null ? '' : __t) +
+'\n' +
+((__t = ( Formbuilder.templates['edit/columnwidth']({rf: rf}) )) == null ? '' : __t) +
 '\n';
 
 }
@@ -1735,6 +1987,18 @@ __p += '<label class="checkbox">\n  <input type=\'checkbox\' data-rv-checked=\'m
 return __p
 };
 
+this["Formbuilder"]["templates"]["edit/columnwidth"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<!-- <div class=\'fb-edit-section-header\'>Column width</div>\n\nWidth in px\n<input class="form-control" type="number" data-rv-input="model.' +
+((__t = ( Formbuilder.options.mappings.COLUMN_WIDTH )) == null ? '' : __t) +
+'" style="width: 50px" />\n\n -->';
+
+}
+return __p
+};
+
 this["Formbuilder"]["templates"]["edit/common"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
@@ -1743,7 +2007,73 @@ __p += '<div class=\'fb-edit-section-header\'>Details</div>\n\n<div class=\'fb-c
 ((__t = ( Formbuilder.templates['edit/label_description']({rf: rf}) )) == null ? '' : __t) +
 '\n  </div>\n  <div class=\'fb-common-checkboxes\'>\n    ' +
 ((__t = ( Formbuilder.templates['edit/checkboxes']() )) == null ? '' : __t) +
-'\n  </div>\n  <div class=\'fb-clear\'></div>\n</div>\n';
+'\n  </div>\n  <div class=\'fb-clear\'></div>\n</div>';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["edit/data_source_options"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+__p += '<label class="checkbox">\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
+((__t = ( Formbuilder.options.mappings.DATA_SOURCE.MULTIPLE )) == null ? '' : __t) +
+'\' />\n  Multiple selections\n</label>\n\n<div class=\'fb-edit-section-header\'>Data Source</div>\n<select data-rv-value="model.' +
+((__t = ( Formbuilder.options.mappings.DATA_SOURCE.DATA_SOURCE )) == null ? '' : __t) +
+'">\n';
+ for (i in (Formbuilder.attr('sources') || [])) { ;
+__p += '\n    <option value="' +
+((__t = ( i )) == null ? '' : __t) +
+'">\n    ' +
+((__t = ( Formbuilder.attr('sources')[i].title )) == null ? '' : __t) +
+'\n    </option>\n';
+ } ;
+__p += '\n</select>\n<div class=\'fb-edit-section-header\'>Display</div>\n<select data-rv-value="model.' +
+((__t = ( Formbuilder.options.mappings.DATA_SOURCE.VALUE_TEMPLATE )) == null ? '' : __t) +
+'">\n';
+
+    for (i in (rf.sourceProperties() || [])) { ;
+__p += '\n    <option value="' +
+((__t = ( i )) == null ? '' : __t) +
+'">\n    ' +
+((__t = ( rf.sourceProperties()[i] )) == null ? '' : __t) +
+'\n    </option>\n';
+ } ;
+__p += '\n</select>\n';
+ if (rf.filters()) { ;
+__p += '\n    <div class=\'fb-edit-section-header\'> Filter </div>\n    <label class="checkbox">\n      <input type=\'checkbox\' class="js-scoring"  data-rv-checked=\'model.' +
+((__t = ( Formbuilder.options.mappings.DATA_SOURCE.IS_FILTERED )) == null ? '' : __t) +
+'\' />\n      Apply a filter?\n    </label>\n    ';
+ if (rf.get(Formbuilder.options.mappings.DATA_SOURCE.IS_FILTERED)) { ;
+__p += '\n    <select data-rv-value="model.' +
+((__t = ( Formbuilder.options.mappings.DATA_SOURCE.FILTER )) == null ? '' : __t) +
+'">\n        <option value="null">[ No Filter ]</option>\n    ';
+
+        for (i in (rf.filters() || [])) { ;
+__p += '\n        <option value="' +
+((__t = ( i )) == null ? '' : __t) +
+'">\n        ' +
+((__t = ( rf.filters()[i].name )) == null ? '' : __t) +
+'\n        </option>\n    ';
+ } ;
+__p += '\n    </select>\n    ';
+
+    for (i in rf.filterValues()) { ;
+__p += '\n        <label class="checkbox">\n          <input type=\'checkbox\' data-rv-append=\'model.' +
+((__t = ( Formbuilder.options.mappings.DATA_SOURCE.FILTER_VALUES )) == null ? '' : __t) +
+'\' value="' +
+((__t = ( i )) == null ? '' : __t) +
+'" />\n            ' +
+((__t = ( rf.filterValues()[i] )) == null ? '' : __t) +
+'\n        </label>\n    ';
+ } ;
+__p += '\n';
+ } ;
+__p += '\n';
+ } ;
+
 
 }
 return __p
@@ -1770,29 +2100,6 @@ __p += '<input type=\'text\' class="form-control" data-rv-input=\'model.' +
 '\' />\n<textarea class="form-control" data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.DESCRIPTION )) == null ? '' : __t) +
 '\'\n  placeholder=\'Add a longer description to this field\'></textarea>';
-
-}
-return __p
-};
-
-this["Formbuilder"]["templates"]["edit/list_options"] = function(obj) {
-obj || (obj = {});
-var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
-function print() { __p += __j.call(arguments, '') }
-with (obj) {
-__p += '<label class="checkbox">\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
-((__t = ( Formbuilder.options.mappings.LIST.MULTIPLE )) == null ? '' : __t) +
-'\' />\n  Multiple selections\n</label>\n\n<div class=\'fb-edit-section-header\'>Data Source</div>\n    <select data-rv-value="model.' +
-((__t = ( Formbuilder.options.mappings.LIST.DATA_SOURCE )) == null ? '' : __t) +
-'">\n    ';
- for (i in (Formbuilder.attr('sources') || [])) { ;
-__p += '\n        <option ' +
-((__t = ( Formbuilder.attr('sources')[i] && 'selected' )) == null ? '' : __t) +
-'>\n        ' +
-((__t = ( Formbuilder.attr('sources')[i] )) == null ? '' : __t) +
-'\n        </option>\n    ';
- } ;
-__p += '\n    </select>\n</div>';
 
 }
 return __p
@@ -1841,7 +2148,7 @@ __p += '\n  <label class="checkbox">\n    <input type=\'checkbox\' data-rv-check
  } ;
 __p += '\n\n<div class=\'option\' data-rv-each-option=\'model.' +
 ((__t = ( Formbuilder.options.mappings.OPTIONS )) == null ? '' : __t) +
-'\'>\n  <input type="checkbox" class=\'js-default-updated\' data-rv-checked="option:checked" />\n  <input type="text" data-rv-input="option:label" placeholder="Label" class=\'option-label-input\' />\n  ';
+'\'>\n<!--   <input type="checkbox" class=\'js-default-updated\' data-rv-checked="option:checked" /> -->\n  <input type="text" data-rv-input="option:label" placeholder="Label" class=\'option-label-input\' />\n  ';
  if (rf.get(Formbuilder.options.mappings.INCLUDE_SCORING)) { ;
 __p += '\n  <input type="text" data-rv-input="option:score" placeholder="Score" class=\'option-score-input\' />\n  ';
  } ;
@@ -1868,6 +2175,50 @@ with (obj) {
 __p += '<div class=\'fb-edit-section-header\'>Number of options per row</div>\n    <select data-rv-value="model.' +
 ((__t = ( Formbuilder.options.mappings.OPTIONS_PER_ROW )) == null ? '' : __t) +
 '">\n        <option value="1">1</option>\n        <option value="2">2</option>\n        <option value="3">3</option>\n        <option value="4">4</option>\n        <option value="5">5</option>\n        <option value="6">6</option>\n        <option value="7">7</option>\n        <option value="8">8</option>\n        <option value="9">9</option>\n        <option value="10">10</option>\n        <option value="11">11</option>\n        <option value="12">12</option>\n        <option value="13">13</option>\n        <option value="14">14</option>\n        <option value="15">15</option>\n    </select>\n</div>';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["edit/populate_from"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+  var list = rf.collection.findDataSourceFields();
+if (list.length) { ;
+__p += '\n    <div class=\'fb-edit-section-header\'>Populate From</div>\n    <select data-rv-value="model.' +
+((__t = ( Formbuilder.options.mappings.POPULATE_UUID )) == null ? '' : __t) +
+'">\n    <option>\n    ';
+
+        for (i in (list || [])) { ;
+__p += '\n        <option value="' +
+((__t = ( list[i].get('uuid') )) == null ? '' : __t) +
+'">\n        ' +
+((__t = ( list[i].get('label') )) == null ? '' : __t) +
+'\n        </option>\n    ';
+ } ;
+__p += '\n    </select>\n    <select data-rv-value="model.' +
+((__t = ( Formbuilder.options.mappings.POPULATE_FROM )) == null ? '' : __t) +
+'">\n    <option>\n    ';
+
+        var populationUuid = rf.get('options.populate_uuid');
+        var populationModel = rf.collection.findWhereUuid(populationUuid) || {};
+        if (populationUuid && populationModel) {
+            var dataSource = populationModel.get('options.data_source');
+            var listProperties = Formbuilder.attr('sources')[dataSource].properties;
+            for (i in listProperties) { ;
+__p += '\n            <option value="' +
+((__t = ( i )) == null ? '' : __t) +
+'">\n            ' +
+((__t = ( listProperties[i] )) == null ? '' : __t) +
+'\n            </option>\n    ';
+  }
+    } ;
+__p += '\n    </select>\n';
+ } ;
+__p += '\n';
 
 }
 return __p
@@ -2147,8 +2498,6 @@ with (obj) {
 __p +=
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.TYPE)].view({rf: rf}) )) == null ? '' : __t) +
 '\n' +
-((__t = ( Formbuilder.templates['view/description']({rf: rf}) )) == null ? '' : __t) +
-'\n' +
 ((__t = ( Formbuilder.templates['view/remove']({rf: rf}) )) == null ? '' : __t);
 
 }
@@ -2160,11 +2509,13 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<span class="drop-area" rowspan="2">\n' +
+__p += '<span class="drop-area">\n' +
 ((__t = ( Formbuilder.templates['view/element_selector']() )) == null ? '' : __t) +
 '\n</span>\n<table class="response-field-table">\n\n     <tbody>\n        <tr>\n            ';
  for (i in (rf.get('options.elements') || [])) { ;
-__p += '\n            <td data-uuid="' +
+__p += '\n            <td width="' +
+((__t = ( rf.get('options.elements')[i].width )) == null ? '' : __t) +
+'" data-uuid="' +
 ((__t = ( rf.get('options.elements')[i].uuid )) == null ? '' : __t) +
 '" class="fb-field-wrapper subtemplate-wrapper header header-' +
 ((__t = ( rf.get('options.elements')[i].uuid )) == null ? '' : __t) +
@@ -2172,7 +2523,9 @@ __p += '\n            <td data-uuid="' +
  } ;
 __p += '\n        </tr>\n        <tr>\n            ';
  for (i in (rf.get('options.elements') || [])) { ;
-__p += '\n            <td data-uuid="' +
+__p += '\n            <td width="' +
+((__t = ( rf.get('options.elements')[i].width )) == null ? '' : __t) +
+'" data-uuid="' +
 ((__t = ( rf.get('options.elements')[i].uuid )) == null ? '' : __t) +
 '" class="fb-field-wrapper subtemplate-wrapper element element-' +
 ((__t = ( rf.get('options.elements')[i].uuid )) == null ? '' : __t) +
@@ -2180,7 +2533,9 @@ __p += '\n            <td data-uuid="' +
  } ;
 __p += '\n        </tr>\n    </tbody>\n    <tfoot>\n        <tr>\n            ';
  for (i in (rf.get('options.elements') || [])) { ;
-__p += '\n            <td data-uuid="' +
+__p += '\n            <td width="' +
+((__t = ( rf.get('options.elements')[i].width )) == null ? '' : __t) +
+'" data-uuid="' +
 ((__t = ( rf.get('options.elements')[i].uuid )) == null ? '' : __t) +
 '" class="fb-field-wrapper subtemplate-wrapper total total-' +
 ((__t = ( rf.get('options.elements')[i].uuid )) == null ? '' : __t) +
@@ -2197,7 +2552,9 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
 __p +=
-((__t = ( Formbuilder.templates['view/label']({rf: rf}) )) == null ? '' : __t);
+((__t = ( Formbuilder.templates['view/label']({rf: rf}) )) == null ? '' : __t) +
+'\n' +
+((__t = ( Formbuilder.templates['view/description']({rf: rf}) )) == null ? '' : __t);
 
 }
 return __p

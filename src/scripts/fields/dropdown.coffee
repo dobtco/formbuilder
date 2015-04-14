@@ -28,10 +28,12 @@ Formbuilder.registerField 'dropdown',
 
   defaultAttributes: (attrs) ->
     attrs.answers = [
+      uuid: uuid.v4()
       label: "",
       checked: false,
       score: ""
     ,
+      uuid: uuid.v4()
       label: "",
       checked: false,
       score: ""

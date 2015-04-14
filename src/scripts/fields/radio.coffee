@@ -42,10 +42,12 @@ Formbuilder.registerField 'radio',
   defaultAttributes: (attrs) ->
     # @todo
     attrs.answers = [
+      uuid: uuid.v4()
       label: "",
       checked: false,
       score: ""
     ,
+      uuid: uuid.v4()
       label: "",
       checked: false,
       score: ""
