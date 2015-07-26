@@ -11,29 +11,29 @@
       <table class='border border_all'>
         <thead>
           <tr>
-            <% for (i in (rf.get(Formbuilder.mappings.COLUMNS) || [])) { %>
+            <% for i in (rf.get(Formbuilder.mappings.COLUMNS) || []): %>
               <th><%= rf.get(Formbuilder.mappings.COLUMNS)[i].label %></th>
-            <% } %>
+            <% end %>
           </tr>
         </thead>
         <tbody>
-          <% for (var j = 0; j < rf.numRows; j++) { %>
+          <% for j in rf.numRows: %>
             <tr>
-              <% for (i in (rf.get(Formbuilder.mappings.COLUMNS) || [])) { %>
+              <% for i in (rf.get(Formbuilder.mappings.COLUMNS) || []): %>
                 <td><input type='text' data-col='<%= i %>' value='<%= rf.getPresetValue(rf.get(Formbuilder.mappings.COLUMNS)[i].label, j) %>' /></th>
-              <% } %>
+              <% end %>
             </tr>
-          <% } %>
+          <% end %>
         </tbody>
-        <% if (rf.get(Formbuilder.mappings.COLUMN_TOTALS)) { %>
+        <% if (rf.get(Formbuilder.mappings.COLUMN_TOTALS)): %>
           <tfoot>
             <tr>
-              <% for (i in (rf.get(Formbuilder.mappings.COLUMNS) || [])) { %>
+              <% for i in (rf.get(Formbuilder.mappings.COLUMNS) || []): %>
                 <td>[total]</td>
-              <% } %>
+              <% end %>
             </tr>
           </tfoot>
-        <% } %>
+        <% end %>
       </table>
     </div>
     <div class='modal_footer'>

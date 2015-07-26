@@ -1,0 +1,6 @@
+<%- JST["formbuilder/edit/fields/#{@model.get(Formbuilder.mappings.FIELD_TYPE)}"]?(@) %>
+
+<% unless @model.field_type == 'page_break': %>
+  <%- JST['formbuilder/edit/conditional'](@) %>
+<% end %>
+

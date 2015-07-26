@@ -1,0 +1,2 @@
+<%- JST['formbuilder/edit/size']() %>
+<%- JST['formbuilder/edit/min_max_length']() %>

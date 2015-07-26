@@ -1,1 +1,0 @@
-<%- JST['form_builder/templates/edit/options'](_.extend(@, includeBlank: true)) %>

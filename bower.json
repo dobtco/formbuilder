@@ -19,6 +19,9 @@
     "tests"
   ],
   "dependencies": {
-    "formrenderer-base": "~0.6.7"
+    "formrenderer-base": "~0.6.7",
+    "autosaver": "~0.0.3",
+    "Sortable": "~1.2.1",
+    "jquery.scrollWindowTo": "https://gist.github.com/ajb/6519570/raw/cd741057495d0fb19e545a0f9a098efba3bef9c8/jquery.scrollWindowTo.js"
   }
 }

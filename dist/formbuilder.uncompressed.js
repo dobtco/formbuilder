@@ -5,6 +5,1289 @@ if(f.whitelist_nodes&&f.whitelist_nodes instanceof Array)for(e=0;e<f.whitelist_n
 },_onMove:function(){var a;if(!this.refreshing)return a=this.map.getCenter(),this.marker.setLatLng(a),this.model.set({value:{lat:a.lat.toFixed(7),lng:a.lng.toFixed(7)}})},enable:function(){return this.map.addLayer(this.marker),this.$cover.hide(),this._onMove()},disable:function(a){return a.preventDefault(),this.map.removeLayer(this.marker),this.$el.find(".fr_map_cover").show(),this.model.set({value:{lat:"",lng:""}})}}),FormRenderer.Views.ResponseFieldAddress=FormRenderer.Views.ResponseField.extend({field_type:"address",initialize:function(){return FormRenderer.Views.ResponseField.prototype.initialize.apply(this,arguments),this.listenTo(this.model,"change:value.country",this.render)}}),FormRenderer.Views.ResponseFieldPhone=FormRenderer.Views.ResponseField.extend({field_type:"phone",phonePlaceholder:function(){return"us"===this.model.get("field_options.phone_format")?"(xxx) xxx-xxxx":void 0}}),h=_.without(FormRenderer.INPUT_FIELD_TYPES,"address","table","file","map_marker","price","phone"),b=0,d=h.length;d>b;b++)a=h[b],FormRenderer.Views["ResponseField"+f.classify(a)]=FormRenderer.Views.ResponseField.extend({field_type:a});for(i=FormRenderer.NON_INPUT_FIELD_TYPES,c=0,g=i.length;g>c;c++)a=i[c],FormRenderer.Views["ResponseField"+f.classify(a)]=FormRenderer.Views.NonInputResponseField.extend({field_type:a})}.call(this),a.JST||(a.JST={}),a.JST["fields/address"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,e=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){var a,c,f,g,h,i,j,k,l;if(a=this.model.get("field_options.address_format"),e(b("\n\n")),"city_state"!==a&&"city_state_zip"!==a&&"country"!==a&&(e(b('\n  <div class=\'fr_grid\'>\n    <div class=\'fr_full has_sub_label\'>\n      <label class="fr_sub_label">Address</label>\n      <input type="text"\n             id="')),e(this.getDomId()),e(b("\"\n             data-rv-input='model.value.street' />\n    </div>\n  </div>\n"))),e(b("\n\n")),"country"!==a){if(e(b("\n  <div class='fr_grid'>\n    <div class='fr_half has_sub_label'>\n      <label class=\"fr_sub_label\">City</label>\n      <input type=\"text\"\n             data-rv-input='model.value.city' />\n    </div>\n\n    <div class='fr_half has_sub_label'>\n      <label class=\"fr_sub_label\">\n        ")),e("US"===this.model.get("value.country")?b("\n          State\n        "):"CA"===this.model.get("value.country")?b("\n          Province\n        "):b("\n          State / Province / Region\n        ")),e(b("\n      </label>\n\n      ")),"US"===(j=this.model.get("value.country"))||"CA"===j){for(e(b("\n        <select data-rv-value='model.value.state' data-width='100%'>\n          <option></option>\n          ")),k=FormRenderer["PROVINCES_"+this.model.get("value.country")],f=0,h=k.length;h>f;f++)c=k[f],e(b("\n            <option value='")),e(c),e(b("'>")),e(c),e(b("</option>\n          "));e(b("\n        </select>\n      "))}else e(b("\n        <input type=\"text\" data-rv-input='model.value.state' />\n      "));e(b("\n    </div>\n  </div>\n"))}if(e(b("\n\n<div class='fr_grid'>\n  ")),"city_state"!==a&&"country"!==a&&(e(b("\n    <div class='fr_half has_sub_label'>\n      <label class=\"fr_sub_label\">\n        ")),e("US"===this.model.get("value.country")?b("ZIP"):b("Postal")),e(b(" Code\n      </label>\n      <input type=\"text\"\n             data-rv-input='model.value.zipcode' />\n    </div>\n  "))),e(b("\n\n  ")),"city_state"!==a&&"city_state_zip"!==a){for(e(b("\n    <div class='fr_half has_sub_label'>\n      <label class=\"fr_sub_label\">Country</label>\n      <select data-rv-value='model.value.country' data-width='100%'>\n        ")),l=FormRenderer.ORDERED_COUNTRIES,g=0,i=l.length;i>g;g++)c=l[g],e(b("\n          <option value='")),e(c),e(b("'>")),e(d[c]||"---"),e(b("</option>\n        "));e(b("\n      </select>\n    </div>\n  "))}e(b("\n</div>\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["fields/block_of_text"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){d(b("<div class='fr_text size_")),d(this.model.getSize()),d(b("'>\n  ")),d(b(FormRenderer.formatHTML(this.model.get("field_options.description")))),d(b("\n</div>\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["fields/checkboxes"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){var a,c,e,f,g;for(g=this.model.getOptions(),a=e=0,f=g.length;f>e;a=++e)c=g[a],d(b("\n  <label class='fr_option control'>\n    <input type='checkbox' data-rv-checked='model.value.")),d(a),d(b("' />\n    ")),d(c.label),d(b("\n  </label>\n"));d(b("\n\n")),this.model.get("field_options.include_other_option")&&d(b("\n  <div class='fr_option fr_other_option'>\n    <label class='control'>\n      <input type='checkbox' data-rv-checked='model.value.other_checkbox' />\n      Other\n    </label>\n\n    <input type='text' data-rv-show='model.showOther' data-rv-input='model.value.other' placeholder='Write your answer here' />\n  </div>\n")),d(b("\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["fields/date"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){d(b('<div class=\'fr_grid\'>\n  <div class=\'has_sub_label\'>\n    <label class="fr_sub_label">MM</label>\n    <input type="text"\n           id="')),d(this.getDomId()),d(b("\"\n           data-rv-input='model.value.month'\n           maxlength='2'\n           size='2' />\n  </div>\n\n  <div class='fr_spacer'>/</div>\n\n  <div class='has_sub_label'>\n    <label class=\"fr_sub_label\">DD</label>\n    <input type=\"text\"\n           data-rv-input='model.value.day'\n           maxlength='2'\n           size='2' />\n  </div>\n\n  <div class='fr_spacer'>/</div>\n\n  <div class='has_sub_label'>\n    <label class=\"fr_sub_label\">YYYY</label>\n    <input type=\"text\"\n           data-rv-input='model.value.year'\n           maxlength='4'\n           size='4' />\n  </div>\n</div>\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["fields/dropdown"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){var a,c,e,f;for(d(b('<select id="')),d(this.getDomId()),d(b("\" data-rv-value='model.value'>\n  ")),this.model.get("field_options.include_blank_option")&&d(b("\n    <option></option>\n  ")),d(b("\n\n  ")),f=this.model.getOptions(),c=0,e=f.length;e>c;c++)a=f[c],d(b('\n    <option value="')),d(a.label),d(b('">')),d(a.label),d(b("</option>\n  "));d(b("\n</select>\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["fields/email"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){d(b('<input type="text" inputmode="email"\n       id="')),d(this.getDomId()),d(b("\"\n       data-rv-input='model.value' />\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["fields/file"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){var a;this.model.hasValue()?(d(b("\n  <span class='js-filename'>")),d(this.model.get("value.filename")),d(b("</span>\n  <button data-fr-remove-file class='")),d(FormRenderer.BUTTON_CLASS),d(b("'>Remove</button>\n"))):(d(b("\n  <input type='file'\n         id='")),d(this.getDomId()),d(b("'\n         name='file'\n         ")),(a=this.model.getAcceptedExtensions())&&(d(b("\n          accept='")),d(a.join(",")),d(b("'\n         "))),d(b("\n         />\n  <span class='js-upload-status'></span>\n\n  ")),(a=this.model.getAcceptedExtensions())&&(d(b("\n    <div class='fr_description'>\n      We'll accept ")),d(f.toSentence(a)),d(b("\n    </div>\n  "))),d(b("\n"))),d(b("\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["fields/identification"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){d(b("<div class='fr_grid'>\n  <div class='fr_half'>\n    <label for='")),d(this.getDomId()),d(b("-name'>Name <abbr class='fr_required' title='required'>*</abbr></label>\n    <input type='text'\n           id='")),d(this.getDomId()),d(b("-name'\n           data-rv-input='model.value.name' />\n  </div>\n\n  <div class='fr_half'>\n    <label for='")),d(this.getDomId()),d(b("-email'>Email <abbr class='fr_required' title='required'>*</abbr></label>\n    <input type=\"text\"\n           id='")),d(this.getDomId()),d(b("-email'\n           data-rv-input='model.value.email' />\n  </div>\n</div>\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["fields/map_marker"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){d(b("<div class='fr_map_wrapper'>\n  <div class='fr_map_map' />\n\n  <div class='fr_map_cover'>\n    Click to set location\n  </div>\n\n  <div class='fr_map_toolbar'>\n    <div class='fr_map_coord'>\n      <strong>Coordinates:</strong>\n      <span data-rv-show='model.value.lat'>\n        <span data-rv-text='model.value.lat' />,\n        <span data-rv-text='model.value.lng' />\n      </span>\n      <span data-rv-hide='model.value.lat' class='fr_map_no_location'>N/A</span>\n    </div>\n    <a class='fr_map_clear' data-fr-clear-map data-rv-show='model.value.lat' href='#'>Clear</a>\n  </div>\n</div>\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["fields/number"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){d(b('<input type="text"\n       id="')),d(this.getDomId()),d(b("\"\n       data-rv-input='model.value' />\n\n")),this.model.get("field_options.units")&&(d(b("\n  <span class='fr_units'>\n    ")),d(this.model.get("field_options.units")),d(b("\n  </span>\n"))),d(b("\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["fields/page_break"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){d(b("<div class='fr_page_break_inner'>\n  Page break\n</div>\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["fields/paragraph"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){d(b('<textarea\n   id="')),d(this.getDomId()),d(b('"\n   class="size_')),d(this.model.getSize()),d(b("\"\n   data-rv-input='model.value' />\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["fields/phone"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){d(b('<input type="text"\n       inputmode="tel"\n       id="')),d(this.getDomId()),d(b("\"\n       data-rv-input='model.value'\n       placeholder=\"")),d(this.phonePlaceholder()),d(b('" />\n'))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["fields/price"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){d(b("<div class='fr_grid'>\n  <div class='fr_spacer'>$</div>\n\n  <div class='has_sub_label'>\n    <label class=\"fr_sub_label\">Dollars</label>\n    <input type=\"text\"\n           id=\"")),d(this.getDomId()),d(b("\"\n           data-rv-input='model.value.dollars'\n           size='6' />\n  </div>\n\n  ")),this.model.get("field_options.disable_cents")||d(b("\n    <div class='fr_spacer'>.</div>\n    <div class='has_sub_label'>\n      <label class=\"fr_sub_label\">Cents</label>\n      <input type=\"text\"\n             data-rv-input='model.value.cents'\n             maxlength='2'\n             size='2' />\n    </div>\n  ")),d(b("\n</div>\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["fields/radio"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){var a,c,e,f,g;for(g=this.model.getOptions(),a=e=0,f=g.length;f>e;a=++e)c=g[a],d(b("\n  <label class='fr_option control'>\n    <input type='radio'\n           data-rv-checked='model.value.selected'\n           id=\"")),d(this.getDomId()),d(b('"\n           name="')),d(this.getDomId()),d(b('"\n           value="')),d(c.label),d(b('" />\n    ')),d(c.label),d(b("\n  </label>\n"));d(b("\n\n")),this.model.get("field_options.include_other_option")&&(d(b("\n  <div class='fr_option fr_other_option'>\n    <label class='control'>\n      <input type='radio'\n             data-rv-checked='model.value.selected'\n             id=\"")),d(this.getDomId()),d(b('"\n             name="')),d(this.getDomId()),d(b("\"\n             value=\"Other\" />\n      Other\n    </label>\n\n    <input type='text' data-rv-show='model.showOther' data-rv-input='model.value.other' placeholder='Write your answer here' />\n  </div>\n"))),d(b("\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["fields/section_break"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){var a;a=FormRenderer.formatHTML(this.model.get("field_options.description")),d(b("\n<")),d(this.model.sizeToHeaderTag()),d(b(">")),d(this.model.get("label")),d(b("</")),d(this.model.sizeToHeaderTag()),d(b(">\n")),a&&(d(b("\n  <div class='fr_text size_")),d(this.model.getSize()),d(b("'>\n    ")),d(b(a)),d(b("\n  </div>\n"))),d(b("\n\n<hr />\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["fields/table"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){var a,c,e,f,g,h,i,j,k,l,m,n,o,p;for(d(b("<table class='fr_table'>\n  <thead>\n    <tr>\n      ")),m=this.model.getColumns(),f=0,j=m.length;j>f;f++)a=m[f],d(b("\n        <th>")),d(a.label),d(b("</th>\n      "));for(d(b("\n\n      <th class='fr_table_col_remove'></th>\n    </tr>\n  </thead>\n\n  <tbody>\n    ")),c=g=0,n=this.model.numRows-1;n>=0?n>=g:g>=n;c=n>=0?++g:--g){for(d(b('\n      <tr data-row-index="')),d(c),d(b('">\n        ')),o=this.model.getColumns(),e=h=0,k=o.length;k>h;e=++h)a=o[e],d(b("\n          ")),this.model.getPresetValue(a.label,c)?(d(b("\n            <td class='fr_table_preset'>\n              <span data-rv-text='model.value.")),d(e),d(b(".")),d(c),d(b("'></span>\n          "))):(d(b("\n            <td>\n              <textarea data-col='")),d(e),d(b("'\n                        data-row='")),d(c),d(b("'\n                        data-rv-input='model.value.")),d(e),d(b(".")),d(c),d(b("'\n                        rows='1' />\n          "))),d(b("\n          </td>\n        "));d(b("\n\n        <td class='fr_table_col_remove'>\n          ")),this.canRemoveRow(c)&&(d(b("\n            <a class='js-remove-row' href='#'>\n              ")),d(b(FormRenderer.REMOVE_ROW_LINK)),d(b("\n            </a>\n          "))),d(b("\n        </td>\n      </tr>\n    "))}if(d(b("\n  </tbody>\n\n  ")),this.model.get("field_options.column_totals")){for(d(b("\n    <tfoot>\n      <tr>\n        ")),p=this.model.getColumns(),e=i=0,l=p.length;l>i;e=++i)a=p[e],d(b("\n          <td data-rv-text='model.columnTotals.")),d(e),d(b("'></td>\n        "));d(b('\n        <td class="fr_table_col_remove"></td>\n      </tr>\n    </tfoot>\n  '))}d(b("\n</table>\n\n<div class='fr_table_add_row_wrapper'>\n  ")),this.model.canAddRows()&&(d(b("\n    <a class='js-add-row' href='#'>\n      ")),d(b(FormRenderer.ADD_ROW_LINK)),d(b("\n    </a>\n  "))),d(b("\n</div>\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["fields/text"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){d(b('<input type="text"\n       id="')),d(this.getDomId()),d(b('"\n       class="size_')),d(this.model.getSize()),d(b("\"\n       data-rv-input='model.value' />\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["fields/time"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){d(b('<div class=\'fr_grid\'>\n  <div class=\'has_sub_label\'>\n    <label class="fr_sub_label">HH</label>\n    <input type="text"\n           id="')),d(this.getDomId()),d(b("\"\n           data-rv-input='model.value.hours'\n           maxlength='2'\n           size='2' />\n  </div>\n\n  <div class='fr_spacer'>:</div>\n\n  <div class='has_sub_label'>\n    <label class=\"fr_sub_label\">MM</label>\n    <input type=\"text\"\n           data-rv-input='model.value.minutes'\n           maxlength='2'\n           size='2' />\n  </div>\n\n  ")),this.model.get("field_options.disable_seconds")||d(b("\n    <div class='fr_spacer'>:</div>\n\n    <div class='has_sub_label'>\n      <label class=\"fr_sub_label\">SS</label>\n      <input type=\"text\"\n             data-rv-input='model.value.seconds'\n             maxlength='2'\n             size='2' />\n    </div>\n  ")),d(b("\n\n  <div class='has_sub_label'>\n    <select data-rv-value='model.value.am_pm' data-width='auto'>\n      <option value='AM'>AM</option>\n      <option value='PM'>PM</option>\n    </select>\n  </div>\n</div>\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["fields/website"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){d(b('<input type="text" inputmode="url"\n       id="')),d(this.getDomId()),d(b("\"\n       data-rv-input='model.value'\n       placeholder='http://' />\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST.main=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){d(b("<div class='fr_loading'>\n  Loading form...\n</div>"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["partials/description"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){this.model.get("field_options.description")&&(d(b("\n  <div class='fr_description'>\n    ")),d(b(FormRenderer.formatHTML(this.model.get("field_options.description")))),d(b("\n  </div>\n"))),d(b("\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["partials/error"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){d(b("<div class='fr_error' data-rv-show='model.error' data-rv-text='model.error'></div>\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["partials/label"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){d(b('<label for="')),d(this.getDomId()),d(b('">\n  ')),d(this.model.get("label")),d(b("\n  ")),this.model.get("required")&&d(b("<abbr class='fr_required' title='required'>*</abbr>")),d(b("\n\n  ")),this.showLabels&&(d(b("\n    ")),this.model.get("blind")&&d(b("\n      <span class='label'>Blind</span>\n    ")),d(b("\n    ")),this.model.get("admin_only")&&d(b("\n      <span class='label'>Hidden</span>\n    ")),d(b("\n    ")),this.model.isConditional()&&d(b("\n      <span class='label'>Hidden until rules are met</span>\n    ")),d(b("\n  "))),d(b("\n</label>\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["partials/length_counter"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){d(b("<span class='fr_length_counter' data-rv-text='model.currentLength'></span>\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["partials/length_validations"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){this.model.hasLengthValidations()&&(d(b("\n  <div class='fr_min_max'>\n    <span class='fr_min_max_guide'>\n      ")),this.model.get("field_options.minlength")&&this.model.get("field_options.maxlength")?(d(b("\n        Enter between ")),d(this.model.get("field_options.minlength")),d(b(" and ")),d(this.model.get("field_options.maxlength")),d(b(" ")),d(this.model.getLengthValidationUnits()),d(b(".\n      "))):this.model.get("field_options.minlength")?(d(b("\n        Enter at least ")),d(this.model.get("field_options.minlength")),d(b(" ")),d(this.model.getLengthValidationUnits()),d(b(".\n      "))):this.model.get("field_options.maxlength")&&(d(b("\n        Enter up to ")),d(this.model.get("field_options.maxlength")),d(b(" ")),d(this.model.getLengthValidationUnits()),d(b(".\n      "))),d(b("\n    </span>\n\n    ")),d(b(JST["partials/length_counter"](this))),d(b("\n  </div>\n"))),d(b("\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["partials/min_max_validations"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){this.model.hasMinMaxValidations()&&(d(b("\n  <div class='fr_min_max'>\n    ")),this.model.get("field_options.min")&&this.model.get("field_options.max")?(d(b("\n      Between ")),d(this.model.get("field_options.min")),d(b(" and ")),d(this.model.get("field_options.max")),d(b(".\n    "))):this.model.get("field_options.min")?(d(b("\n      Enter a number that is at least ")),d(this.model.get("field_options.min")),d(b(".\n    "))):this.model.get("field_options.max")&&(d(b("\n      Enter a number up to ")),d(this.model.get("field_options.max")),d(b(".\n    "))),d(b("\n  </div>\n"))),d(b("\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["partials/non_input_response_field"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){d(b(JST["fields/"+this.field_type](this))),d(b("\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["partials/pagination"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){var a,c,e,f,g;if(this.form_renderer.visiblePages().length>1){for(d(b("\n  <ul class='fr_pagination'>\n    ")),g=this.form_renderer.visiblePages(),c=e=0,f=g.length;f>e;c=++e)a=g[c],d(b("\n      <li class='")),this.form_renderer.isPageValid(a)||d(b("has_errors")),d(b("'>\n        ")),a===this.form_renderer.state.get("activePage")?(d(b("\n          <span>")),d(c+1),d(b("</span>\n        </li>\n        "))):(d(b('\n          <a data-activate-page="')),d(a),d(b("\" href='#'>\n            ")),d(c+1),d(b("\n          </a>\n        "))),d(b("\n      </li>\n    "));d(b("\n  </ul>\n"))}d(b("\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["partials/response_field"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){d(b(JST["partials/label"](this))),d(b("\n<div class='fr_field_wrapper'>\n  ")),d(b(JST["fields/"+this.field_type](this))),d(b("\n</div>\n\n")),d(b(JST["partials/length_validations"](this))),d(b("\n")),d(b(JST["partials/min_max_validations"](this))),d(b("\n")),d(b(JST["partials/error"](this))),d(b("\n")),d(b(JST["partials/description"](this))),d(b("\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d
 }())},a.JST||(a.JST={}),a.JST["plugins/bottom_bar"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){var a=[].indexOf||function(a){for(var b=0,c=this.length;c>b;b++)if(b in this&&this[b]===a)return b;return-1};d(b("<div class='fr_bottom'>\n  ")),a.call(this.form_renderer.options.plugins,"Autosave")>=0&&(d(b("\n    <div class='fr_bottom_l'>\n      ")),d(this.form_renderer.state.get("hasServerErrors")?b("\n        Error saving\n      "):this.form_renderer.state.get("hasChanges")?b("\n        Saving...\n      "):b("\n        Saved\n      ")),d(b("\n    </div>\n  "))),d(b("\n\n  <div class='fr_bottom_r'>\n    ")),this.form_renderer.isFirstPage()||(d(b("\n      <button data-fr-previous-page class='")),d(FormRenderer.BUTTON_CLASS),d(b("'>\n        Back to page ")),d(this.form_renderer.previousPage()),d(b("\n      </button>\n    "))),d(b("\n\n    ")),this.form_renderer.state.get("submitting")?(d(b("\n      <button disabled class='")),d(FormRenderer.BUTTON_CLASS),d(b("'>\n        Submitting...\n      </button>\n    "))):(d(b("\n      <button data-fr-next-page class='")),d(FormRenderer.BUTTON_CLASS),d(b("'>\n        ")),d(this.form_renderer.isLastPage()||!this.form_renderer.options.enablePages?b("Submit"):b("Next page")),d(b("\n      </button>\n    "))),d(b("\n  </div>\n</div>\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())},a.JST||(a.JST={}),a.JST["plugins/error_bar"]=function(a){var b=function(a){"undefined"==typeof a&&null==a&&(a="");var b=new String(a);return b.ecoSafe=!0,b};return function(){var a=[],c=this,d=function(b){"undefined"!=typeof b&&null!=b&&a.push(b.ecoSafe?b:c.escape(b))};return function(){this.form_renderer.areAllPagesValid()||d(b("\n  <div class='fr_error_alert_bar'>\n    Your response has validation errors.\n    <a href='#'>Fix errors</a>\n  </div>\n")),d(b("\n"))}.call(this),a.join("")}.call(function(){var c,d={escape:function(a){return(""+a).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")},safe:b};for(c in a)d[c]=a[c];return d}())}}(window);
 (function() {
+  var Autosaver;
+
+  Autosaver = (function() {
+    Autosaver.prototype.defaults = {
+      ms: 2000,
+      max: 8000
+    };
+
+    function Autosaver(options) {
+      if (options == null) {
+        options = {};
+      }
+      this.options = _.extend({}, this.defaults, options);
+    }
+
+    Autosaver.prototype.saveLater = function() {
+      this.queuedAt || (this.queuedAt = _.now());
+      if (this.options.max && ((_.now() - this.queuedAt) > this.options.max)) {
+        return this.saveNow();
+      } else {
+        this._clearTimeout();
+        return this.timeout = setTimeout((function(_this) {
+          return function() {
+            _this._clearTimeout();
+            return _this.saveNow();
+          };
+        })(this), this.options.ms);
+      }
+    };
+
+    Autosaver.prototype.saveNow = function(done) {
+      this.clear();
+      if (this.inFlight) {
+        this.afterFlight = function() {
+          return this.saveNow(done);
+        };
+        return;
+      }
+      this.inFlight = true;
+      return this.options.fn((function(_this) {
+        return function() {
+          _this.inFlight = false;
+          if (typeof done === "function") {
+            done();
+          }
+          if (_this.afterFlight) {
+            _this.afterFlight();
+            return _this.afterFlight = void 0;
+          }
+        };
+      })(this));
+    };
+
+    Autosaver.prototype.ensure = function(cb) {
+      if (this.isPending()) {
+        return this.saveNow(cb);
+      } else if (this.inFlight) {
+        if (this.afterFlight) {
+          return this.saveNow(cb);
+        } else {
+          return this.afterFlight = cb;
+        }
+      } else {
+        return cb();
+      }
+    };
+
+    Autosaver.prototype.isPending = function() {
+      return !!this.timeout;
+    };
+
+    Autosaver.prototype.clear = function() {
+      this.queuedAt = void 0;
+      return this._clearTimeout();
+    };
+
+    Autosaver.prototype.backoff = function() {
+      this.preBackoffOptions || (this.preBackoffOptions = {
+        max: this.options.max,
+        ms: this.options.ms
+      });
+      this.options.ms = Math.min(this.options.ms * 2, this._maxBackoffTo());
+      this.options.max = this.options.ms;
+      return this._resetTimeout();
+    };
+
+    Autosaver.prototype.resetBackoff = function() {
+      _.extend(this.options, this.preBackoffOptions);
+      this.preBackoffOptions = void 0;
+      return this._resetTimeout();
+    };
+
+    Autosaver.prototype._maxBackoffTo = function() {
+      return this.preBackoffOptions.ms * Math.pow(2, 4);
+    };
+
+    Autosaver.prototype._clearTimeout = function() {
+      clearTimeout(this.timeout);
+      return this.timeout = void 0;
+    };
+
+    Autosaver.prototype._resetTimeout = function() {
+      if (this.isPending()) {
+        this._clearTimeout();
+        return this.saveLater();
+      }
+    };
+
+    return Autosaver;
+
+  })();
+
+  if (typeof module !== "undefined" && module !== null ? module.exports : void 0) {
+    module.exports = Autosaver;
+  } else {
+    window.Autosaver = Autosaver;
+  }
+
+}).call(this);
+
+/**!
+ * Sortable
+ * @author	RubaXa   <trash@rubaxa.org>
+ * @license MIT
+ */
+
+
+(function (factory) {
+	"use strict";
+
+	if (typeof define === "function" && define.amd) {
+		define(factory);
+	}
+	else if (typeof module != "undefined" && typeof module.exports != "undefined") {
+		module.exports = factory();
+	}
+	else if (typeof Package !== "undefined") {
+		Sortable = factory();  // export for Meteor.js
+	}
+	else {
+		/* jshint sub:true */
+		window["Sortable"] = factory();
+	}
+})(function () {
+	"use strict";
+
+	var dragEl,
+		ghostEl,
+		cloneEl,
+		rootEl,
+		nextEl,
+
+		scrollEl,
+		scrollParentEl,
+
+		lastEl,
+		lastCSS,
+
+		oldIndex,
+		newIndex,
+
+		activeGroup,
+		autoScroll = {},
+
+		tapEvt,
+		touchEvt,
+
+		/** @const */
+		RSPACE = /\s+/g,
+
+		expando = 'Sortable' + (new Date).getTime(),
+
+		win = window,
+		document = win.document,
+		parseInt = win.parseInt,
+
+		supportDraggable = !!('draggable' in document.createElement('div')),
+
+		_silent = false,
+
+		abs = Math.abs,
+		slice = [].slice,
+
+		touchDragOverListeners = [],
+
+		_autoScroll = _throttle(function (/**Event*/evt, /**Object*/options, /**HTMLElement*/rootEl) {
+			// Bug: https://bugzilla.mozilla.org/show_bug.cgi?id=505521
+			if (rootEl && options.scroll) {
+				var el,
+					rect,
+					sens = options.scrollSensitivity,
+					speed = options.scrollSpeed,
+
+					x = evt.clientX,
+					y = evt.clientY,
+
+					winWidth = window.innerWidth,
+					winHeight = window.innerHeight,
+
+					vx,
+					vy
+				;
+
+				// Delect scrollEl
+				if (scrollParentEl !== rootEl) {
+					scrollEl = options.scroll;
+					scrollParentEl = rootEl;
+
+					if (scrollEl === true) {
+						scrollEl = rootEl;
+
+						do {
+							if ((scrollEl.offsetWidth < scrollEl.scrollWidth) ||
+								(scrollEl.offsetHeight < scrollEl.scrollHeight)
+							) {
+								break;
+							}
+							/* jshint boss:true */
+						} while (scrollEl = scrollEl.parentNode);
+					}
+				}
+
+				if (scrollEl) {
+					el = scrollEl;
+					rect = scrollEl.getBoundingClientRect();
+					vx = (abs(rect.right - x) <= sens) - (abs(rect.left - x) <= sens);
+					vy = (abs(rect.bottom - y) <= sens) - (abs(rect.top - y) <= sens);
+				}
+
+
+				if (!(vx || vy)) {
+					vx = (winWidth - x <= sens) - (x <= sens);
+					vy = (winHeight - y <= sens) - (y <= sens);
+
+					/* jshint expr:true */
+					(vx || vy) && (el = win);
+				}
+
+
+				if (autoScroll.vx !== vx || autoScroll.vy !== vy || autoScroll.el !== el) {
+					autoScroll.el = el;
+					autoScroll.vx = vx;
+					autoScroll.vy = vy;
+
+					clearInterval(autoScroll.pid);
+
+					if (el) {
+						autoScroll.pid = setInterval(function () {
+							if (el === win) {
+								win.scrollTo(win.pageXOffset + vx * speed, win.pageYOffset + vy * speed);
+							} else {
+								vy && (el.scrollTop += vy * speed);
+								vx && (el.scrollLeft += vx * speed);
+							}
+						}, 24);
+					}
+				}
+			}
+		}, 30)
+	;
+
+
+
+	/**
+	 * @class  Sortable
+	 * @param  {HTMLElement}  el
+	 * @param  {Object}       [options]
+	 */
+	function Sortable(el, options) {
+		this.el = el; // root element
+		this.options = options = _extend({}, options);
+
+
+		// Export instance
+		el[expando] = this;
+
+
+		// Default options
+		var defaults = {
+			group: Math.random(),
+			sort: true,
+			disabled: false,
+			store: null,
+			handle: null,
+			scroll: true,
+			scrollSensitivity: 30,
+			scrollSpeed: 10,
+			draggable: /[uo]l/i.test(el.nodeName) ? 'li' : '>*',
+			ghostClass: 'sortable-ghost',
+			ignore: 'a, img',
+			filter: null,
+			animation: 0,
+			setData: function (dataTransfer, dragEl) {
+				dataTransfer.setData('Text', dragEl.textContent);
+			},
+			dropBubble: false,
+			dragoverBubble: false,
+			dataIdAttr: 'data-id',
+			delay: 0
+		};
+
+
+		// Set default options
+		for (var name in defaults) {
+			!(name in options) && (options[name] = defaults[name]);
+		}
+
+
+		var group = options.group;
+
+		if (!group || typeof group != 'object') {
+			group = options.group = { name: group };
+		}
+
+
+		['pull', 'put'].forEach(function (key) {
+			if (!(key in group)) {
+				group[key] = true;
+			}
+		});
+
+
+		options.groups = ' ' + group.name + (group.put.join ? ' ' + group.put.join(' ') : '') + ' ';
+
+
+		// Bind all private methods
+		for (var fn in this) {
+			if (fn.charAt(0) === '_') {
+				this[fn] = _bind(this, this[fn]);
+			}
+		}
+
+
+		// Bind events
+		_on(el, 'mousedown', this._onTapStart);
+		_on(el, 'touchstart', this._onTapStart);
+
+		_on(el, 'dragover', this);
+		_on(el, 'dragenter', this);
+
+		touchDragOverListeners.push(this._onDragOver);
+
+		// Restore sorting
+		options.store && this.sort(options.store.get(this));
+	}
+
+
+	Sortable.prototype = /** @lends Sortable.prototype */ {
+		constructor: Sortable,
+
+		_onTapStart: function (/** Event|TouchEvent */evt) {
+			var _this = this,
+				el = this.el,
+				options = this.options,
+				type = evt.type,
+				touch = evt.touches && evt.touches[0],
+				target = (touch || evt).target,
+				originalTarget = target,
+				filter = options.filter;
+
+
+			if (type === 'mousedown' && evt.button !== 0 || options.disabled) {
+				return; // only left button or enabled
+			}
+
+			target = _closest(target, options.draggable, el);
+
+			if (!target) {
+				return;
+			}
+
+			// get the index of the dragged element within its parent
+			oldIndex = _index(target);
+
+			// Check filter
+			if (typeof filter === 'function') {
+				if (filter.call(this, evt, target, this)) {
+					_dispatchEvent(_this, originalTarget, 'filter', target, el, oldIndex);
+					evt.preventDefault();
+					return; // cancel dnd
+				}
+			}
+			else if (filter) {
+				filter = filter.split(',').some(function (criteria) {
+					criteria = _closest(originalTarget, criteria.trim(), el);
+
+					if (criteria) {
+						_dispatchEvent(_this, criteria, 'filter', target, el, oldIndex);
+						return true;
+					}
+				});
+
+				if (filter) {
+					evt.preventDefault();
+					return; // cancel dnd
+				}
+			}
+
+
+			if (options.handle && !_closest(originalTarget, options.handle, el)) {
+				return;
+			}
+
+
+			// Prepare `dragstart`
+			this._prepareDragStart(evt, touch, target);
+		},
+
+		_prepareDragStart: function (/** Event */evt, /** Touch */touch, /** HTMLElement */target) {
+			var _this = this,
+				el = _this.el,
+				options = _this.options,
+				ownerDocument = el.ownerDocument,
+				dragStartFn;
+
+			if (target && !dragEl && (target.parentNode === el)) {
+				tapEvt = evt;
+
+				rootEl = el;
+				dragEl = target;
+				nextEl = dragEl.nextSibling;
+				activeGroup = options.group;
+
+				dragStartFn = function () {
+					// Delayed drag has been triggered
+					// we can re-enable the events: touchmove/mousemove
+					_this._disableDelayedDrag();
+
+					// Make the element draggable
+					dragEl.draggable = true;
+
+					// Disable "draggable"
+					options.ignore.split(',').forEach(function (criteria) {
+						_find(dragEl, criteria.trim(), _disableDraggable);
+					});
+
+					// Bind the events: dragstart/dragend
+					_this._triggerDragStart(touch);
+				};
+
+				_on(ownerDocument, 'mouseup', _this._onDrop);
+				_on(ownerDocument, 'touchend', _this._onDrop);
+				_on(ownerDocument, 'touchcancel', _this._onDrop);
+
+				if (options.delay) {
+					// If the user moves the pointer before the delay has been reached:
+					// disable the delayed drag
+					_on(ownerDocument, 'mousemove', _this._disableDelayedDrag);
+					_on(ownerDocument, 'touchmove', _this._disableDelayedDrag);
+
+					_this._dragStartTimer = setTimeout(dragStartFn, options.delay);
+				} else {
+					dragStartFn();
+				}
+			}
+		},
+
+		_disableDelayedDrag: function () {
+			var ownerDocument = this.el.ownerDocument;
+
+			clearTimeout(this._dragStartTimer);
+
+			_off(ownerDocument, 'mousemove', this._disableDelayedDrag);
+			_off(ownerDocument, 'touchmove', this._disableDelayedDrag);
+		},
+
+		_triggerDragStart: function (/** Touch */touch) {
+			if (touch) {
+				// Touch device support
+				tapEvt = {
+					target: dragEl,
+					clientX: touch.clientX,
+					clientY: touch.clientY
+				};
+
+				this._onDragStart(tapEvt, 'touch');
+			}
+			else if (!supportDraggable) {
+				this._onDragStart(tapEvt, true);
+			}
+			else {
+				_on(dragEl, 'dragend', this);
+				_on(rootEl, 'dragstart', this._onDragStart);
+			}
+
+			try {
+				if (document.selection) {
+					document.selection.empty();
+				} else {
+					window.getSelection().removeAllRanges();
+				}
+			} catch (err) {
+			}
+		},
+
+		_dragStarted: function () {
+			if (rootEl && dragEl) {
+				// Apply effect
+				_toggleClass(dragEl, this.options.ghostClass, true);
+
+				Sortable.active = this;
+
+				// Drag start event
+				_dispatchEvent(this, rootEl, 'start', dragEl, rootEl, oldIndex);
+			}
+		},
+
+		_emulateDragOver: function () {
+			if (touchEvt) {
+				_css(ghostEl, 'display', 'none');
+
+				var target = document.elementFromPoint(touchEvt.clientX, touchEvt.clientY),
+					parent = target,
+					groupName = ' ' + this.options.group.name + '',
+					i = touchDragOverListeners.length;
+
+				if (parent) {
+					do {
+						if (parent[expando] && parent[expando].options.groups.indexOf(groupName) > -1) {
+							while (i--) {
+								touchDragOverListeners[i]({
+									clientX: touchEvt.clientX,
+									clientY: touchEvt.clientY,
+									target: target,
+									rootEl: parent
+								});
+							}
+
+							break;
+						}
+
+						target = parent; // store last element
+					}
+					/* jshint boss:true */
+					while (parent = parent.parentNode);
+				}
+
+				_css(ghostEl, 'display', '');
+			}
+		},
+
+
+		_onTouchMove: function (/**TouchEvent*/evt) {
+			if (tapEvt) {
+				var touch = evt.touches ? evt.touches[0] : evt,
+					dx = touch.clientX - tapEvt.clientX,
+					dy = touch.clientY - tapEvt.clientY,
+					translate3d = evt.touches ? 'translate3d(' + dx + 'px,' + dy + 'px,0)' : 'translate(' + dx + 'px,' + dy + 'px)';
+
+				touchEvt = touch;
+
+				_css(ghostEl, 'webkitTransform', translate3d);
+				_css(ghostEl, 'mozTransform', translate3d);
+				_css(ghostEl, 'msTransform', translate3d);
+				_css(ghostEl, 'transform', translate3d);
+
+				evt.preventDefault();
+			}
+		},
+
+
+		_onDragStart: function (/**Event*/evt, /**boolean*/useFallback) {
+			var dataTransfer = evt.dataTransfer,
+				options = this.options;
+
+			this._offUpEvents();
+
+			if (activeGroup.pull == 'clone') {
+				cloneEl = dragEl.cloneNode(true);
+				_css(cloneEl, 'display', 'none');
+				rootEl.insertBefore(cloneEl, dragEl);
+			}
+
+			if (useFallback) {
+				var rect = dragEl.getBoundingClientRect(),
+					css = _css(dragEl),
+					ghostRect;
+
+				ghostEl = dragEl.cloneNode(true);
+
+				_css(ghostEl, 'top', rect.top - parseInt(css.marginTop, 10));
+				_css(ghostEl, 'left', rect.left - parseInt(css.marginLeft, 10));
+				_css(ghostEl, 'width', rect.width);
+				_css(ghostEl, 'height', rect.height);
+				_css(ghostEl, 'opacity', '0.8');
+				_css(ghostEl, 'position', 'fixed');
+				_css(ghostEl, 'zIndex', '100000');
+
+				rootEl.appendChild(ghostEl);
+
+				// Fixing dimensions.
+				ghostRect = ghostEl.getBoundingClientRect();
+				_css(ghostEl, 'width', rect.width * 2 - ghostRect.width);
+				_css(ghostEl, 'height', rect.height * 2 - ghostRect.height);
+
+				if (useFallback === 'touch') {
+					// Bind touch events
+					_on(document, 'touchmove', this._onTouchMove);
+					_on(document, 'touchend', this._onDrop);
+					_on(document, 'touchcancel', this._onDrop);
+				} else {
+					// Old brwoser
+					_on(document, 'mousemove', this._onTouchMove);
+					_on(document, 'mouseup', this._onDrop);
+				}
+
+				this._loopId = setInterval(this._emulateDragOver, 150);
+			}
+			else {
+				if (dataTransfer) {
+					dataTransfer.effectAllowed = 'move';
+					options.setData && options.setData.call(this, dataTransfer, dragEl);
+				}
+
+				_on(document, 'drop', this);
+			}
+
+			setTimeout(this._dragStarted, 0);
+		},
+
+		_onDragOver: function (/**Event*/evt) {
+			var el = this.el,
+				target,
+				dragRect,
+				revert,
+				options = this.options,
+				group = options.group,
+				groupPut = group.put,
+				isOwner = (activeGroup === group),
+				canSort = options.sort;
+
+			if (evt.preventDefault !== void 0) {
+				evt.preventDefault();
+				!options.dragoverBubble && evt.stopPropagation();
+			}
+
+			if (activeGroup && !options.disabled &&
+				(isOwner
+					? canSort || (revert = !rootEl.contains(dragEl)) // Reverting item into the original list
+					: activeGroup.pull && groupPut && (
+						(activeGroup.name === group.name) || // by Name
+						(groupPut.indexOf && ~groupPut.indexOf(activeGroup.name)) // by Array
+					)
+				) &&
+				(evt.rootEl === void 0 || evt.rootEl === this.el) // touch fallback
+			) {
+				// Smart auto-scrolling
+				_autoScroll(evt, options, this.el);
+
+				if (_silent) {
+					return;
+				}
+
+				target = _closest(evt.target, options.draggable, el);
+				dragRect = dragEl.getBoundingClientRect();
+
+
+				if (revert) {
+					_cloneHide(true);
+
+					if (cloneEl || nextEl) {
+						rootEl.insertBefore(dragEl, cloneEl || nextEl);
+					}
+					else if (!canSort) {
+						rootEl.appendChild(dragEl);
+					}
+
+					return;
+				}
+
+
+				if ((el.children.length === 0) || (el.children[0] === ghostEl) ||
+					(el === evt.target) && (target = _ghostInBottom(el, evt))
+				) {
+					if (target) {
+						if (target.animated) {
+							return;
+						}
+						targetRect = target.getBoundingClientRect();
+					}
+
+					_cloneHide(isOwner);
+
+					if (_onMove(rootEl, el, dragEl, dragRect, target, targetRect) !== false) {
+						el.appendChild(dragEl);
+						this._animate(dragRect, dragEl);
+						target && this._animate(targetRect, target);
+					}
+				}
+				else if (target && !target.animated && target !== dragEl && (target.parentNode[expando] !== void 0)) {
+					if (lastEl !== target) {
+						lastEl = target;
+						lastCSS = _css(target);
+					}
+
+
+					var targetRect = target.getBoundingClientRect(),
+						width = targetRect.right - targetRect.left,
+						height = targetRect.bottom - targetRect.top,
+						floating = /left|right|inline/.test(lastCSS.cssFloat + lastCSS.display),
+						isWide = (target.offsetWidth > dragEl.offsetWidth),
+						isLong = (target.offsetHeight > dragEl.offsetHeight),
+						halfway = (floating ? (evt.clientX - targetRect.left) / width : (evt.clientY - targetRect.top) / height) > 0.5,
+						nextSibling = target.nextElementSibling,
+						moveVector = _onMove(rootEl, el, dragEl, dragRect, target, targetRect),
+						after
+					;
+
+					if (moveVector !== false) {
+						_silent = true;
+						setTimeout(_unsilent, 30);
+
+						_cloneHide(isOwner);
+
+						if (moveVector === 1 || moveVector === -1) {
+							after = (moveVector === 1);
+						}
+						else if (floating) {
+							after = (target.previousElementSibling === dragEl) && !isWide || halfway && isWide;
+						} else {
+							after = (nextSibling !== dragEl) && !isLong || halfway && isLong;
+						}
+
+						if (after && !nextSibling) {
+							el.appendChild(dragEl);
+						} else {
+							target.parentNode.insertBefore(dragEl, after ? nextSibling : target);
+						}
+
+						this._animate(dragRect, dragEl);
+						this._animate(targetRect, target);
+					}
+				}
+			}
+		},
+
+		_animate: function (prevRect, target) {
+			var ms = this.options.animation;
+
+			if (ms) {
+				var currentRect = target.getBoundingClientRect();
+
+				_css(target, 'transition', 'none');
+				_css(target, 'transform', 'translate3d('
+					+ (prevRect.left - currentRect.left) + 'px,'
+					+ (prevRect.top - currentRect.top) + 'px,0)'
+				);
+
+				target.offsetWidth; // repaint
+
+				_css(target, 'transition', 'all ' + ms + 'ms');
+				_css(target, 'transform', 'translate3d(0,0,0)');
+
+				clearTimeout(target.animated);
+				target.animated = setTimeout(function () {
+					_css(target, 'transition', '');
+					_css(target, 'transform', '');
+					target.animated = false;
+				}, ms);
+			}
+		},
+
+		_offUpEvents: function () {
+			var ownerDocument = this.el.ownerDocument;
+
+			_off(document, 'touchmove', this._onTouchMove);
+			_off(ownerDocument, 'mouseup', this._onDrop);
+			_off(ownerDocument, 'touchend', this._onDrop);
+			_off(ownerDocument, 'touchcancel', this._onDrop);
+		},
+
+		_onDrop: function (/**Event*/evt) {
+			var el = this.el,
+				options = this.options;
+
+			clearInterval(this._loopId);
+			clearInterval(autoScroll.pid);
+			clearTimeout(this._dragStartTimer);
+
+			// Unbind events
+			_off(document, 'drop', this);
+			_off(document, 'mousemove', this._onTouchMove);
+			_off(el, 'dragstart', this._onDragStart);
+
+			this._offUpEvents();
+
+			if (evt) {
+				evt.preventDefault();
+				!options.dropBubble && evt.stopPropagation();
+
+				ghostEl && ghostEl.parentNode.removeChild(ghostEl);
+
+				if (dragEl) {
+					_off(dragEl, 'dragend', this);
+
+					_disableDraggable(dragEl);
+					_toggleClass(dragEl, this.options.ghostClass, false);
+
+					if (rootEl !== dragEl.parentNode) {
+						newIndex = _index(dragEl);
+
+						// drag from one list and drop into another
+						_dispatchEvent(null, dragEl.parentNode, 'sort', dragEl, rootEl, oldIndex, newIndex);
+						_dispatchEvent(this, rootEl, 'sort', dragEl, rootEl, oldIndex, newIndex);
+
+						// Add event
+						_dispatchEvent(null, dragEl.parentNode, 'add', dragEl, rootEl, oldIndex, newIndex);
+
+						// Remove event
+						_dispatchEvent(this, rootEl, 'remove', dragEl, rootEl, oldIndex, newIndex);
+					}
+					else {
+						// Remove clone
+						cloneEl && cloneEl.parentNode.removeChild(cloneEl);
+
+						if (dragEl.nextSibling !== nextEl) {
+							// Get the index of the dragged element within its parent
+							newIndex = _index(dragEl);
+
+							// drag & drop within the same list
+							_dispatchEvent(this, rootEl, 'update', dragEl, rootEl, oldIndex, newIndex);
+							_dispatchEvent(this, rootEl, 'sort', dragEl, rootEl, oldIndex, newIndex);
+						}
+					}
+
+					if (Sortable.active) {
+						// Drag end event
+						_dispatchEvent(this, rootEl, 'end', dragEl, rootEl, oldIndex, newIndex);
+
+						// Save sorting
+						this.save();
+					}
+				}
+
+				// Nulling
+				rootEl =
+				dragEl =
+				ghostEl =
+				nextEl =
+				cloneEl =
+
+				scrollEl =
+				scrollParentEl =
+
+				tapEvt =
+				touchEvt =
+
+				lastEl =
+				lastCSS =
+
+				activeGroup =
+				Sortable.active = null;
+			}
+		},
+
+
+		handleEvent: function (/**Event*/evt) {
+			var type = evt.type;
+
+			if (type === 'dragover' || type === 'dragenter') {
+				if (dragEl) {
+					this._onDragOver(evt);
+					_globalDragOver(evt);
+				}
+			}
+			else if (type === 'drop' || type === 'dragend') {
+				this._onDrop(evt);
+			}
+		},
+
+
+		/**
+		 * Serializes the item into an array of string.
+		 * @returns {String[]}
+		 */
+		toArray: function () {
+			var order = [],
+				el,
+				children = this.el.children,
+				i = 0,
+				n = children.length,
+				options = this.options;
+
+			for (; i < n; i++) {
+				el = children[i];
+				if (_closest(el, options.draggable, this.el)) {
+					order.push(el.getAttribute(options.dataIdAttr) || _generateId(el));
+				}
+			}
+
+			return order;
+		},
+
+
+		/**
+		 * Sorts the elements according to the array.
+		 * @param  {String[]}  order  order of the items
+		 */
+		sort: function (order) {
+			var items = {}, rootEl = this.el;
+
+			this.toArray().forEach(function (id, i) {
+				var el = rootEl.children[i];
+
+				if (_closest(el, this.options.draggable, rootEl)) {
+					items[id] = el;
+				}
+			}, this);
+
+			order.forEach(function (id) {
+				if (items[id]) {
+					rootEl.removeChild(items[id]);
+					rootEl.appendChild(items[id]);
+				}
+			});
+		},
+
+
+		/**
+		 * Save the current sorting
+		 */
+		save: function () {
+			var store = this.options.store;
+			store && store.set(this);
+		},
+
+
+		/**
+		 * For each element in the set, get the first element that matches the selector by testing the element itself and traversing up through its ancestors in the DOM tree.
+		 * @param   {HTMLElement}  el
+		 * @param   {String}       [selector]  default: `options.draggable`
+		 * @returns {HTMLElement|null}
+		 */
+		closest: function (el, selector) {
+			return _closest(el, selector || this.options.draggable, this.el);
+		},
+
+
+		/**
+		 * Set/get option
+		 * @param   {string} name
+		 * @param   {*}      [value]
+		 * @returns {*}
+		 */
+		option: function (name, value) {
+			var options = this.options;
+
+			if (value === void 0) {
+				return options[name];
+			} else {
+				options[name] = value;
+			}
+		},
+
+
+		/**
+		 * Destroy
+		 */
+		destroy: function () {
+			var el = this.el;
+
+			el[expando] = null;
+
+			_off(el, 'mousedown', this._onTapStart);
+			_off(el, 'touchstart', this._onTapStart);
+
+			_off(el, 'dragover', this);
+			_off(el, 'dragenter', this);
+
+			// Remove draggable attributes
+			Array.prototype.forEach.call(el.querySelectorAll('[draggable]'), function (el) {
+				el.removeAttribute('draggable');
+			});
+
+			touchDragOverListeners.splice(touchDragOverListeners.indexOf(this._onDragOver), 1);
+
+			this._onDrop();
+
+			this.el = el = null;
+		}
+	};
+
+
+	function _cloneHide(state) {
+		if (cloneEl && (cloneEl.state !== state)) {
+			_css(cloneEl, 'display', state ? 'none' : '');
+			!state && cloneEl.state && rootEl.insertBefore(cloneEl, dragEl);
+			cloneEl.state = state;
+		}
+	}
+
+
+	function _bind(ctx, fn) {
+		var args = slice.call(arguments, 2);
+		return	fn.bind ? fn.bind.apply(fn, [ctx].concat(args)) : function () {
+			return fn.apply(ctx, args.concat(slice.call(arguments)));
+		};
+	}
+
+
+	function _closest(/**HTMLElement*/el, /**String*/selector, /**HTMLElement*/ctx) {
+		if (el) {
+			ctx = ctx || document;
+			selector = selector.split('.');
+
+			var tag = selector.shift().toUpperCase(),
+				re = new RegExp('\\s(' + selector.join('|') + ')(?=\\s)', 'g');
+
+			do {
+				if (
+					(tag === '>*' && el.parentNode === ctx) || (
+						(tag === '' || el.nodeName.toUpperCase() == tag) &&
+						(!selector.length || ((' ' + el.className + ' ').match(re) || []).length == selector.length)
+					)
+				) {
+					return el;
+				}
+			}
+			while (el !== ctx && (el = el.parentNode));
+		}
+
+		return null;
+	}
+
+
+	function _globalDragOver(/**Event*/evt) {
+		evt.dataTransfer.dropEffect = 'move';
+		evt.preventDefault();
+	}
+
+
+	function _on(el, event, fn) {
+		el.addEventListener(event, fn, false);
+	}
+
+
+	function _off(el, event, fn) {
+		el.removeEventListener(event, fn, false);
+	}
+
+
+	function _toggleClass(el, name, state) {
+		if (el) {
+			if (el.classList) {
+				el.classList[state ? 'add' : 'remove'](name);
+			}
+			else {
+				var className = (' ' + el.className + ' ').replace(RSPACE, ' ').replace(' ' + name + ' ', ' ');
+				el.className = (className + (state ? ' ' + name : '')).replace(RSPACE, ' ');
+			}
+		}
+	}
+
+
+	function _css(el, prop, val) {
+		var style = el && el.style;
+
+		if (style) {
+			if (val === void 0) {
+				if (document.defaultView && document.defaultView.getComputedStyle) {
+					val = document.defaultView.getComputedStyle(el, '');
+				}
+				else if (el.currentStyle) {
+					val = el.currentStyle;
+				}
+
+				return prop === void 0 ? val : val[prop];
+			}
+			else {
+				if (!(prop in style)) {
+					prop = '-webkit-' + prop;
+				}
+
+				style[prop] = val + (typeof val === 'string' ? '' : 'px');
+			}
+		}
+	}
+
+
+	function _find(ctx, tagName, iterator) {
+		if (ctx) {
+			var list = ctx.getElementsByTagName(tagName), i = 0, n = list.length;
+
+			if (iterator) {
+				for (; i < n; i++) {
+					iterator(list[i], i);
+				}
+			}
+
+			return list;
+		}
+
+		return [];
+	}
+
+
+
+	function _dispatchEvent(sortable, rootEl, name, targetEl, fromEl, startIndex, newIndex) {
+		var evt = document.createEvent('Event'),
+			options = (sortable || rootEl[expando]).options,
+			onName = 'on' + name.charAt(0).toUpperCase() + name.substr(1);
+
+		evt.initEvent(name, true, true);
+
+		evt.to = rootEl;
+		evt.from = fromEl || rootEl;
+		evt.item = targetEl || rootEl;
+		evt.clone = cloneEl;
+
+		evt.oldIndex = startIndex;
+		evt.newIndex = newIndex;
+
+		rootEl.dispatchEvent(evt);
+
+		if (options[onName]) {
+			options[onName].call(sortable, evt);
+		}
+	}
+
+
+	function _onMove(fromEl, toEl, dragEl, dragRect, targetEl, targetRect) {
+		var evt,
+			sortable = fromEl[expando],
+			onMoveFn = sortable.options.onMove,
+			retVal;
+
+		if (onMoveFn) {
+			evt = document.createEvent('Event');
+			evt.initEvent('move', true, true);
+
+			evt.to = toEl;
+			evt.from = fromEl;
+			evt.dragged = dragEl;
+			evt.draggedRect = dragRect;
+			evt.related = targetEl || toEl;
+			evt.relatedRect = targetRect || toEl.getBoundingClientRect();
+
+			retVal = onMoveFn.call(sortable, evt);
+		}
+
+		return retVal;
+	}
+
+
+	function _disableDraggable(el) {
+		el.draggable = false;
+	}
+
+
+	function _unsilent() {
+		_silent = false;
+	}
+
+
+	/** @returns {HTMLElement|false} */
+	function _ghostInBottom(el, evt) {
+		var lastEl = el.lastElementChild,
+			rect = lastEl.getBoundingClientRect();
+
+		return (evt.clientY - (rect.top + rect.height) > 5) && lastEl; // min delta
+	}
+
+
+	/**
+	 * Generate id
+	 * @param   {HTMLElement} el
+	 * @returns {String}
+	 * @private
+	 */
+	function _generateId(el) {
+		var str = el.tagName + el.className + el.src + el.href + el.textContent,
+			i = str.length,
+			sum = 0;
+
+		while (i--) {
+			sum += str.charCodeAt(i);
+		}
+
+		return sum.toString(36);
+	}
+
+	/**
+	 * Returns the index of an element within its parent
+	 * @param el
+	 * @returns {number}
+	 * @private
+	 */
+	function _index(/**HTMLElement*/el) {
+		var index = 0;
+		while (el && (el = el.previousElementSibling)) {
+			if (el.nodeName.toUpperCase() !== 'TEMPLATE') {
+				index++;
+			}
+		}
+		return index;
+	}
+
+	function _throttle(callback, ms) {
+		var args, _this;
+
+		return function () {
+			if (args === void 0) {
+				args = arguments;
+				_this = this;
+
+				setTimeout(function () {
+					if (args.length === 1) {
+						callback.call(_this, args[0]);
+					} else {
+						callback.apply(_this, args);
+					}
+
+					args = void 0;
+				}, ms);
+			}
+		};
+	}
+
+	function _extend(dst, src) {
+		if (dst && src) {
+			for (var key in src) {
+				if (src.hasOwnProperty(key)) {
+					dst[key] = src[key];
+				}
+			}
+		}
+
+		return dst;
+	}
+
+
+	// Export utils
+	Sortable.utils = {
+		on: _on,
+		off: _off,
+		css: _css,
+		find: _find,
+		bind: _bind,
+		is: function (el, selector) {
+			return !!_closest(el, selector, el);
+		},
+		extend: _extend,
+		throttle: _throttle,
+		closest: _closest,
+		toggleClass: _toggleClass,
+		index: _index
+	};
+
+
+	Sortable.version = '1.2.1';
+
+
+	/**
+	 * Create sortable instance
+	 * @param {HTMLElement}  el
+	 * @param {Object}      [options]
+	 */
+	Sortable.create = function (el, options) {
+		return new Sortable(el, options);
+	};
+
+	// Export
+	return Sortable;
+});
+
+$.scrollWindowTo = function(pos, duration, cb) {
+  if (duration == null) {
+    duration = 0;
+  }
+  if (pos === $(window).scrollTop()) {
+    $(window).trigger('scroll');
+    if (typeof cb === "function") {
+      cb();
+    }
+    return;
+  }
+  return $('html, body').animate({
+    scrollTop: pos
+  }, duration, function() {
+    return typeof cb === "function" ? cb() : void 0;
+  });
+};
+(function() {
   var Formbuilder, buildModel, classify, optionsForResponseField, sizeMed, validators,
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
@@ -137,7 +1420,7 @@ if(f.whitelist_nodes&&f.whitelist_nodes instanceof Array)for(e=0;e<f.whitelist_n
     },
     render: function() {
       var idView;
-      this.$el.html(JST['form_builder/templates/page']({
+      this.$el.html(JST['formbuilder/page']({
         view: this
       }));
       if (this.options.identificationFields) {
@@ -151,7 +1434,6 @@ if(f.whitelist_nodes&&f.whitelist_nodes instanceof Array)for(e=0;e<f.whitelist_n
       this.$leftAdd = this.$el.find('.fb_add_field_wrapper');
       this.$leftEdit = this.$el.find('.fb_edit_field_wrapper');
       this.$responseFields = this.$el.find('.fb_response_fields');
-      this.$el.initialize();
       return this;
     },
     initLeftScroll: function() {
@@ -726,7 +2008,7 @@ if(f.whitelist_nodes&&f.whitelist_nodes instanceof Array)for(e=0;e<f.whitelist_n
       if (typeof (base = this.model).setExistingValue === "function") {
         base.setExistingValue(null);
       }
-      this.$el.data('cid', this.model.cid).html(JST["form_builder/templates/view/base"]({
+      this.$el.data('cid', this.model.cid).html(JST["formbuilder/view/base"]({
         hasResponses: this.parentView.options.hasResponses,
         model: this.model
       }));
@@ -737,7 +2019,6 @@ if(f.whitelist_nodes&&f.whitelist_nodes instanceof Array)for(e=0;e<f.whitelist_n
       this.toggleErrorClass();
       this.$el.append(this.rendererView.render().el);
       Formbuilder.disableTabbing(this.$el);
-      this.$el.initialize();
       this.rendererView.trigger('shown');
       return this;
     },
@@ -841,11 +2122,10 @@ if(f.whitelist_nodes&&f.whitelist_nodes instanceof Array)for(e=0;e<f.whitelist_n
     render: function() {
       var templateName;
       templateName = this.model.input_field ? 'base' : 'base_non_input';
-      this.$el.html(JST["form_builder/templates/edit/" + templateName](this));
+      this.$el.html(JST["formbuilder/edit/" + templateName](this));
       rivets.bind(this.$el, {
         model: this.model
       });
-      this.$el.initialize();
       if (this.model.hasColumnsOrOptions()) {
         new Sortable(this.$el.find('.fb_options')[0], {
           handle: '.fa-reorder',
@@ -1151,10 +2431,9 @@ if(f.whitelist_nodes&&f.whitelist_nodes instanceof Array)for(e=0;e<f.whitelist_n
 
   Formbuilder.Views.PresetValuesModal = Formbuilder.Views.BaseModal.extend({
     render: function() {
-      this.$el.html(JST["form_builder/templates/edit/preset_values_modal"]({
+      this.$el.html(JST["formbuilder/edit/preset_values_modal"]({
         rf: this.model
       }));
-      this.$el.initialize();
       return this;
     },
     save: function() {
@@ -1180,11 +2459,10 @@ if(f.whitelist_nodes&&f.whitelist_nodes instanceof Array)for(e=0;e<f.whitelist_n
 
   Formbuilder.Views.DefaultLocationModal = Formbuilder.Views.BaseModal.extend({
     render: function() {
-      this.$el.html(JST["form_builder/templates/edit/default_location_modal"]({
+      this.$el.html(JST["formbuilder/edit/default_location_modal"]({
         rf: this.model
       }));
       this.initMap();
-      this.$el.initialize();
       return this;
     },
     initMap: function() {
@@ -1205,10 +2483,9 @@ if(f.whitelist_nodes&&f.whitelist_nodes instanceof Array)for(e=0;e<f.whitelist_n
 
   Formbuilder.Views.BulkAddOptionsModal = Formbuilder.Views.BaseModal.extend({
     render: function() {
-      this.$el.html(JST["form_builder/templates/edit/bulk_add_options_modal"]({
+      this.$el.html(JST["formbuilder/edit/bulk_add_options_modal"]({
         rf: this.model
       }));
-      this.$el.initialize();
       return this;
     },
     save: function() {
@@ -1271,7 +2548,7 @@ if(f.whitelist_nodes&&f.whitelist_nodes instanceof Array)for(e=0;e<f.whitelist_n
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/base.jst"] = function(__obj) {
+window.JST["formbuilder/edit/base"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -1294,19 +2571,19 @@ window.JST["edit/base.jst"] = function(__obj) {
     (function() {
       var name;
     
-      _print(_safe(JST['form_builder/templates/edit/common'](this)));
+      _print(_safe(JST['formbuilder/edit/common'](this)));
     
       _print(_safe('\n'));
     
-      _print(_safe(JST['form_builder/templates/edit/checkboxes'](this)));
+      _print(_safe(JST['formbuilder/edit/checkboxes'](this)));
     
       _print(_safe('\n'));
     
-      _print(_safe(typeof JST[name = "form_builder/templates/edit/fields/" + (this.model.get(Formbuilder.mappings.FIELD_TYPE))] === "function" ? JST[name](this) : void 0));
+      _print(_safe(typeof JST[name = "formbuilder/edit/fields/" + (this.model.get(Formbuilder.mappings.FIELD_TYPE))] === "function" ? JST[name](this) : void 0));
     
       _print(_safe('\n'));
     
-      _print(_safe(JST['form_builder/templates/edit/conditional'](this)));
+      _print(_safe(JST['formbuilder/edit/conditional'](this)));
     
       _print(_safe('\n'));
     
@@ -1332,7 +2609,7 @@ window.JST["edit/base.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/base_non_input.jst"] = function(__obj) {
+window.JST["formbuilder/edit/base_non_input"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -1355,13 +2632,13 @@ window.JST["edit/base_non_input.jst"] = function(__obj) {
     (function() {
       var name;
     
-      _print(_safe(typeof JST[name = "form_builder/templates/edit/fields/" + (this.model.get(Formbuilder.mappings.FIELD_TYPE))] === "function" ? JST[name](this) : void 0));
+      _print(_safe(typeof JST[name = "formbuilder/edit/fields/" + (this.model.get(Formbuilder.mappings.FIELD_TYPE))] === "function" ? JST[name](this) : void 0));
     
       _print(_safe('\n\n'));
     
       if (this.model.field_type !== 'page_break') {
         _print(_safe('\n  '));
-        _print(_safe(JST['form_builder/templates/edit/conditional'](this)));
+        _print(_safe(JST['formbuilder/edit/conditional'](this)));
         _print(_safe('\n'));
       }
     
@@ -1389,7 +2666,109 @@ window.JST["edit/base_non_input.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/columns.jst"] = function(__obj) {
+window.JST["formbuilder/edit/bulk_add_options_modal"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<div class=\'modal_dialog\'>\n  <div class=\'modal_content\'>\n    <div class=\'modal_header\'>\n      <a class=\'close\' data-dismiss=\'modal\'>&times;</a>\n      <h3>Add options in bulk</h3>\n    </div>\n    <div class=\'modal_body\'>\n      <textarea rows=\'10\'></textarea>\n      <div class=\'form_hint\'>\n        One option per line\n      </div>\n    </div>\n    <div class=\'modal_footer\'>\n      <div class=\'modal_footer_primary\'>\n        <button class=\'button info\'>Add options</button>\n      </div>\n    </div>\n  </div>\n</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/checkboxes"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<div class=\'fb_edit_section fb_edit_section_boxes\'>\n  <label class=\'control\'>\n    <input type=\'checkbox\' data-rv-checked=\'model.'));
+    
+      _print(Formbuilder.mappings.REQUIRED);
+    
+      _print(_safe('\' />\n    Required\n  </label>\n\n  <label class=\'control\'>\n    <input type=\'checkbox\' data-rv-checked=\'model.'));
+    
+      _print(Formbuilder.mappings.ADMIN_ONLY);
+    
+      _print(_safe('\' />\n    Hidden\n  </label>\n\n  <label class=\'control\'>\n    <input type=\'checkbox\' data-rv-checked=\'model.'));
+    
+      _print(Formbuilder.mappings.BLIND);
+    
+      _print(_safe('\' />\n    Blind\n  </label>\n</div>\n\n<p class=\'fb_edit_help\'>\n  <strong>Hidden</strong> fields aren\'t shown to respondents.\n</p>\n\n<p class=\'fb_edit_help\'>\n  <strong>Blind</strong> fields will be hidden during review.\n</p>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/columns"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -1472,7 +2851,7 @@ window.JST["edit/columns.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/common.jst"] = function(__obj) {
+window.JST["formbuilder/edit/common"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -1493,15 +2872,15 @@ window.JST["edit/common.jst"] = function(__obj) {
       return _safe(result);
     };
     (function() {
-      _print(_safe(JST['form_builder/templates/edit/label'](this)));
+      _print(_safe(JST['formbuilder/edit/label'](this)));
     
       _print(_safe('\n'));
     
-      _print(_safe(JST['form_builder/templates/edit/field_type'](this)));
+      _print(_safe(JST['formbuilder/edit/field_type'](this)));
     
       _print(_safe('\n'));
     
-      _print(_safe(JST['form_builder/templates/edit/description'](this)));
+      _print(_safe(JST['formbuilder/edit/description'](this)));
     
       _print(_safe('\n'));
     
@@ -1527,7 +2906,7 @@ window.JST["edit/common.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/conditional.jst"] = function(__obj) {
+window.JST["formbuilder/edit/conditional"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -1670,7 +3049,101 @@ window.JST["edit/conditional.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/description.jst"] = function(__obj) {
+window.JST["formbuilder/edit/default_location"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<hr />\n\n<div class=\'fb_edit_section\'>\n  <a class=\''));
+    
+      _print(Formbuilder.options.BUTTON_CLASS);
+    
+      _print(_safe('\' data-show-modal=\'DefaultLocation\'>Set default location</a>\n</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/default_location_modal"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<div class=\'modal_dialog\'>\n  <div class=\'modal_content\'>\n    <div class=\'modal_header\'>\n      <a class=\'close\' data-dismiss=\'modal\'>&times;</a>\n      <h3>Set default location</h3>\n    </div>\n    <div class=\'modal_body\'>\n      <div class=\'fb_default_location_modal_map\'></div>\n      <p class=\'margin_th\'>Drag the map to set your new default location.</p>\n    </div>\n    <div class=\'modal_footer\'>\n      <div class=\'modal_footer_primary\'>\n        <button class=\'button info\'>Save and close</button>\n      </div>\n    </div>\n  </div>\n</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/description"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -1719,7 +3192,105 @@ window.JST["edit/description.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/field_type.jst"] = function(__obj) {
+window.JST["formbuilder/edit/disable_cents"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<hr />\n\n<div class=\'fb_edit_section\'>\n  <label class=\'control\'>\n    <input type="checkbox" data-rv-checked="model.'));
+    
+      _print(Formbuilder.mappings.DISABLE_CENTS);
+    
+      _print(_safe('" />\n    Hide the \'cents\' field\n  </label>\n</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/disable_seconds"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<hr />\n\n<div class=\'fb_edit_section\'>\n  <label class=\'control\'>\n    <input type="checkbox" data-rv-checked="model.'));
+    
+      _print(Formbuilder.mappings.DISABLE_SECONDS);
+    
+      _print(_safe('" />\n    Hide the \'seconds\' field\n  </label>\n</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/field_type"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -1790,7 +3361,7 @@ window.JST["edit/field_type.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/address.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/address"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -1839,7 +3410,7 @@ window.JST["edit/fields/address.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/block_of_text.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/block_of_text"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -1866,11 +3437,11 @@ window.JST["edit/fields/block_of_text.jst"] = function(__obj) {
     
       _print(_safe('\'></textarea>\n</div>\n\n'));
     
-      _print(_safe(JST['form_builder/templates/edit/field_type'](this)));
+      _print(_safe(JST['formbuilder/edit/field_type'](this)));
     
       _print(_safe('\n'));
     
-      _print(_safe(JST['form_builder/templates/edit/size'](this)));
+      _print(_safe(JST['formbuilder/edit/size'](this)));
     
       _print(_safe('\n'));
     
@@ -1896,7 +3467,7 @@ window.JST["edit/fields/block_of_text.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/checkboxes.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/checkboxes"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -1917,10 +3488,12 @@ window.JST["edit/fields/checkboxes.jst"] = function(__obj) {
       return _safe(result);
     };
     (function() {
-      _print(_safe(JST['form_builder/templates/edit/options'](_.extend(this, {
+      _print(_safe(JST['formbuilder/edit/options'](_.extend(this, {
         includeOther: true
       }))));
     
+      _print(_safe('\n'));
+    
     }).call(this);
     
     return __out.join('');
@@ -1943,7 +3516,7 @@ window.JST["edit/fields/checkboxes.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/dropdown.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/dropdown"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -1964,7 +3537,7 @@ window.JST["edit/fields/dropdown.jst"] = function(__obj) {
       return _safe(result);
     };
     (function() {
-      _print(_safe(JST['form_builder/templates/edit/options'](_.extend(this, {
+      _print(_safe(JST['formbuilder/edit/options'](_.extend(this, {
         includeBlank: true
       }))));
     
@@ -1992,7 +3565,7 @@ window.JST["edit/fields/dropdown.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/file.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/file"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2041,7 +3614,7 @@ window.JST["edit/fields/file.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/map_marker.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/map_marker"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2062,60 +3635,7 @@ window.JST["edit/fields/map_marker.jst"] = function(__obj) {
       return _safe(result);
     };
     (function() {
-      _print(_safe(JST['form_builder/templates/edit/default_location']()));
-    
-    }).call(this);
-    
-    return __out.join('');
-  }).call((function() {
-    var obj = {
-      escape: function(value) {
-        return ('' + value)
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;');
-      },
-      safe: _safe
-    }, key;
-    for (key in __obj) obj[key] = __obj[key];
-    return obj;
-  })());
-};
-
-if (!window.JST) {
-  window.JST = {};
-}
-window.JST["edit/fields/number.jst"] = function(__obj) {
-  var _safe = function(value) {
-    if (typeof value === 'undefined' && value == null)
-      value = '';
-    var result = new String(value);
-    result.ecoSafe = true;
-    return result;
-  };
-  return (function() {
-    var __out = [], __self = this, _print = function(value) {
-      if (typeof value !== 'undefined' && value != null)
-        __out.push(value.ecoSafe ? value : __self.escape(value));
-    }, _capture = function(callback) {
-      var out = __out, result;
-      __out = [];
-      callback.call(this);
-      result = __out.join('');
-      __out = out;
-      return _safe(result);
-    };
-    (function() {
-      _print(_safe(JST['form_builder/templates/edit/min_max']()));
-    
-      _print(_safe('\n'));
-    
-      _print(_safe(JST['form_builder/templates/edit/units']()));
-    
-      _print(_safe('\n'));
-    
-      _print(_safe(JST['form_builder/templates/edit/integer_only']()));
+      _print(_safe(JST['formbuilder/edit/default_location']()));
     
       _print(_safe('\n'));
     
@@ -2141,7 +3661,62 @@ window.JST["edit/fields/number.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/page_break.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/number"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe(JST['formbuilder/edit/min_max']()));
+    
+      _print(_safe('\n'));
+    
+      _print(_safe(JST['formbuilder/edit/units']()));
+    
+      _print(_safe('\n'));
+    
+      _print(_safe(JST['formbuilder/edit/integer_only']()));
+    
+      _print(_safe('\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/fields/page_break"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2164,7 +3739,7 @@ window.JST["edit/fields/page_break.jst"] = function(__obj) {
     (function() {
       if (this.model.typeUnlocked) {
         _print(_safe('\n  '));
-        _print(_safe(JST['form_builder/templates/edit/field_type'](this)));
+        _print(_safe(JST['formbuilder/edit/field_type'](this)));
         _print(_safe('\n'));
       } else {
         _print(_safe('\n  <p class=\'fb_edit_help\'>No options available</p>\n'));
@@ -2194,7 +3769,7 @@ window.JST["edit/fields/page_break.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/paragraph.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/paragraph"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2215,11 +3790,11 @@ window.JST["edit/fields/paragraph.jst"] = function(__obj) {
       return _safe(result);
     };
     (function() {
-      _print(_safe(JST['form_builder/templates/edit/size']()));
+      _print(_safe(JST['formbuilder/edit/size']()));
     
       _print(_safe('\n'));
     
-      _print(_safe(JST['form_builder/templates/edit/min_max_length']()));
+      _print(_safe(JST['formbuilder/edit/min_max_length']()));
     
       _print(_safe('\n'));
     
@@ -2245,7 +3820,7 @@ window.JST["edit/fields/paragraph.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/phone.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/phone"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2294,7 +3869,7 @@ window.JST["edit/fields/phone.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/price.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/price"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2315,7 +3890,7 @@ window.JST["edit/fields/price.jst"] = function(__obj) {
       return _safe(result);
     };
     (function() {
-      _print(_safe(JST['form_builder/templates/edit/disable_cents']()));
+      _print(_safe(JST['formbuilder/edit/disable_cents']()));
     
       _print(_safe('\n'));
     
@@ -2341,7 +3916,7 @@ window.JST["edit/fields/price.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/radio.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/radio"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2362,7 +3937,7 @@ window.JST["edit/fields/radio.jst"] = function(__obj) {
       return _safe(result);
     };
     (function() {
-      _print(_safe(JST['form_builder/templates/edit/options'](_.extend(this, {
+      _print(_safe(JST['formbuilder/edit/options'](_.extend(this, {
         includeOther: true
       }))));
     
@@ -2390,7 +3965,7 @@ window.JST["edit/fields/radio.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/section_break.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/section_break"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2411,11 +3986,11 @@ window.JST["edit/fields/section_break.jst"] = function(__obj) {
       return _safe(result);
     };
     (function() {
-      _print(_safe(JST['form_builder/templates/edit/common'](this)));
+      _print(_safe(JST['formbuilder/edit/common'](this)));
     
       _print(_safe('\n'));
     
-      _print(_safe(JST['form_builder/templates/edit/size'](this)));
+      _print(_safe(JST['formbuilder/edit/size'](this)));
     
       _print(_safe('\n'));
     
@@ -2441,7 +4016,7 @@ window.JST["edit/fields/section_break.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/table.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/table"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2462,7 +4037,7 @@ window.JST["edit/fields/table.jst"] = function(__obj) {
       return _safe(result);
     };
     (function() {
-      _print(_safe(JST['form_builder/templates/edit/columns'](this)));
+      _print(_safe(JST['formbuilder/edit/columns'](this)));
     
       _print(_safe('\n'));
     
@@ -2488,7 +4063,7 @@ window.JST["edit/fields/table.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/text.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/text"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2509,11 +4084,11 @@ window.JST["edit/fields/text.jst"] = function(__obj) {
       return _safe(result);
     };
     (function() {
-      _print(_safe(JST['form_builder/templates/edit/size']()));
+      _print(_safe(JST['formbuilder/edit/size']()));
     
       _print(_safe('\n'));
     
-      _print(_safe(JST['form_builder/templates/edit/min_max_length']()));
+      _print(_safe(JST['formbuilder/edit/min_max_length']()));
     
       _print(_safe('\n'));
     
@@ -2539,7 +4114,7 @@ window.JST["edit/fields/text.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/time.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/time"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2560,7 +4135,7 @@ window.JST["edit/fields/time.jst"] = function(__obj) {
       return _safe(result);
     };
     (function() {
-      _print(_safe(JST['form_builder/templates/edit/disable_seconds']()));
+      _print(_safe(JST['formbuilder/edit/disable_seconds']()));
     
       _print(_safe('\n'));
     
@@ -2586,7 +4161,56 @@ window.JST["edit/fields/time.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/label.jst"] = function(__obj) {
+window.JST["formbuilder/edit/integer_only"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<hr />\n\n<div class=\'fb_edit_section\'>\n  <label class=\'control\'>\n    <input type=\'checkbox\' data-rv-checked=\'model.'));
+    
+      _print(Formbuilder.mappings.INTEGER_ONLY);
+    
+      _print(_safe('\' />\n    Only accept integers\n  </label>\n</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/label"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2635,7 +4259,117 @@ window.JST["edit/label.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/options.jst"] = function(__obj) {
+window.JST["formbuilder/edit/min_max"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<hr />\n\n<div class=\'fb_edit_section fb_edit_section_horiz fb_edit_section_min_max fb_edit_section_between\'>\n  <label>Min / Max</label>\n  <div class=\'fb_edit_section_horiz_content\'>\n    <span>Between</span>\n    <input type="text" data-rv-input="model.'));
+    
+      _print(Formbuilder.mappings.MIN);
+    
+      _print(_safe('" />\n    <span>and</span>\n    <input type="text" data-rv-input="model.'));
+    
+      _print(Formbuilder.mappings.MAX);
+    
+      _print(_safe('" />\n  </div>\n</div>\n\n<div class=\'form_error\' data-rv-show=\'model.errors.minMaxMismatch\'>Please enter a maximum larger than the minimum.</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/min_max_length"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<hr />\n\n<div class=\'fb_edit_section fb_edit_section_horiz fb_edit_section_min_max_length fb_edit_section_between\'>\n  <label>Min / Max Length</label>\n  <div class=\'fb_edit_section_horiz_content\'>\n    <span>Between</span>\n    <input type="text" data-rv-input="model.'));
+    
+      _print(Formbuilder.mappings.MINLENGTH);
+    
+      _print(_safe('" />\n    <span>and</span>\n    <input type="text" data-rv-input="model.'));
+    
+      _print(Formbuilder.mappings.MAXLENGTH);
+    
+      _print(_safe('" />\n    <select data-rv-value="model.'));
+    
+      _print(Formbuilder.mappings.LENGTH_UNITS);
+    
+      _print(_safe('" data-width="100%">\n      <option value="characters">characters</option>\n      <option value="words">words</option>\n    </select>\n  </div>\n</div>\n\n<div class=\'form_error\' data-rv-show=\'model.errors.minMaxLengthMismatch\'>Please enter a maximum length larger than the minimum.</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/options"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2720,7 +4454,243 @@ window.JST["edit/options.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["partials/left_side.jst"] = function(__obj) {
+window.JST["formbuilder/edit/preset_values_modal"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      var i, j, k, l, len, len1, len2, len3, m, n, ref, ref1, ref2, ref3;
+    
+      _print(_safe('<div class=\'modal_dialog\'>\n  <div class=\'modal_content\'>\n    <div class=\'modal_header\'>\n      <a class=\'close\' data-dismiss=\'modal\'>&times;</a>\n      <h3>Preset values</h3>\n    </div>\n    <div class=\'modal_body\'>\n      <p>\n      These cells will be pre-populated when displaying the form, and will not be editable by the user.\n      </p>\n      <table class=\'border border_all\'>\n        <thead>\n          <tr>\n            '));
+    
+      ref = rf.get(Formbuilder.mappings.COLUMNS) || [];
+      for (k = 0, len = ref.length; k < len; k++) {
+        i = ref[k];
+        _print(_safe('\n              <th>'));
+        _print(rf.get(Formbuilder.mappings.COLUMNS)[i].label);
+        _print(_safe('</th>\n            '));
+      }
+    
+      _print(_safe('\n          </tr>\n        </thead>\n        <tbody>\n          '));
+    
+      ref1 = rf.numRows;
+      for (l = 0, len1 = ref1.length; l < len1; l++) {
+        j = ref1[l];
+        _print(_safe('\n            <tr>\n              '));
+        ref2 = rf.get(Formbuilder.mappings.COLUMNS) || [];
+        for (m = 0, len2 = ref2.length; m < len2; m++) {
+          i = ref2[m];
+          _print(_safe('\n                <td><input type=\'text\' data-col=\''));
+          _print(i);
+          _print(_safe('\' value=\''));
+          _print(rf.getPresetValue(rf.get(Formbuilder.mappings.COLUMNS)[i].label, j));
+          _print(_safe('\' /></th>\n              '));
+        }
+        _print(_safe('\n            </tr>\n          '));
+      }
+    
+      _print(_safe('\n        </tbody>\n        '));
+    
+      if (rf.get(Formbuilder.mappings.COLUMN_TOTALS)) {
+        _print(_safe('\n          <tfoot>\n            <tr>\n              '));
+        ref3 = rf.get(Formbuilder.mappings.COLUMNS) || [];
+        for (n = 0, len3 = ref3.length; n < len3; n++) {
+          i = ref3[n];
+          _print(_safe('\n                <td>[total]</td>\n              '));
+        }
+        _print(_safe('\n            </tr>\n          </tfoot>\n        '));
+      }
+    
+      _print(_safe('\n      </table>\n    </div>\n    <div class=\'modal_footer\'>\n      <div class=\'modal-footer-actions\'>\n        <button class=\'button info\'>Save and close</button>\n      </div>\n    </div>\n  </div>\n</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/size"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<hr />\n\n<div class=\'fb_edit_section fb_edit_section_horiz\'>\n  <label>Size</label>\n  <div class=\'fb_edit_section_horiz_content\'>\n    <select data-width="100%" data-rv-value="model.'));
+    
+      _print(Formbuilder.mappings.SIZE);
+    
+      _print(_safe('">\n      <option value="small">Small</option>\n      <option value="medium">Medium</option>\n      <option value="large">Large</option>\n    </select>\n  </div>\n</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/units"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<hr />\n\n<div class=\'fb_edit_section fb_edit_section_horiz fb_edit_section_units\'>\n  <label>Units</label>\n  <div class=\'fb_edit_section_horiz_content\'>\n    <input type="text" data-rv-input="model.'));
+    
+      _print(Formbuilder.mappings.UNITS);
+    
+      _print(_safe('" />\n  </div>\n</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/page"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe(JST['formbuilder/partials/left_side'](this)));
+    
+      _print(_safe('\n'));
+    
+      _print(_safe(JST['formbuilder/partials/right_side'](this)));
+    
+      _print(_safe('\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/partials/left_side"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2798,7 +4768,60 @@ window.JST["partials/left_side.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["view/base.jst"] = function(__obj) {
+window.JST["formbuilder/partials/right_side"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<div class=\'fb_right\'>\n  <div class=\'fb_identification_field_wrapper\'>\n    <div class=\'fb_identification_cover\'></div>\n    <div class=\'fb_identification_hint\'>\n      '));
+    
+      if (this.view.options.identificationFields) {
+        _print(_safe('\n        Automatically collected for signed-in users.\n      '));
+      } else {
+        _print(_safe('\n        Since this form doesn\'t collect names or email addresses, responses will be anonymous.\n        You won\'t be able to collect signatures or follow up with respondents.\n      '));
+      }
+    
+      _print(_safe('\n      <a data-change-id-level>Change identification level?</a>\n    </div>\n  </div>\n  <div class=\'fb_response_fields\'></div>\n</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/view/base"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2821,7 +4844,7 @@ window.JST["view/base.jst"] = function(__obj) {
     (function() {
       _print(_safe('<div class=\'cover\'></div>\n'));
     
-      _print(_safe(JST['form_builder/templates/view/duplicate_remove'](this)));
+      _print(_safe(JST['formbuilder/view/duplicate_remove'](this)));
     
       _print(_safe('\n'));
     
@@ -2847,7 +4870,7 @@ window.JST["view/base.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["view/duplicate_remove.jst"] = function(__obj) {
+window.JST["formbuilder/view/duplicate_remove"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';

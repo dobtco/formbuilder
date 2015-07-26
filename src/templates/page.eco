@@ -1,0 +1,2 @@
+<%- JST['formbuilder/partials/left_side'](@) %>
+<%- JST['formbuilder/partials/right_side'](@) %>

@@ -1,5 +1,5 @@
 <% if @model.typeUnlocked: %>
-  <%- JST['form_builder/templates/edit/field_type'](@) %>
+  <%- JST['formbuilder/edit/field_type'](@) %>
 <% else: %>
   <p class='fb_edit_help'>No options available</p>
 <% end %>

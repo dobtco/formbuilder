@@ -1,0 +1,2 @@
+<%- JST['formbuilder/edit/common'](@) %>
+<%- JST['formbuilder/edit/size'](@) %>

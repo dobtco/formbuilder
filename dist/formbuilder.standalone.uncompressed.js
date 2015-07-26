@@ -131,7 +131,7 @@
     },
     render: function() {
       var idView;
-      this.$el.html(JST['form_builder/templates/page']({
+      this.$el.html(JST['formbuilder/page']({
         view: this
       }));
       if (this.options.identificationFields) {
@@ -145,7 +145,6 @@
       this.$leftAdd = this.$el.find('.fb_add_field_wrapper');
       this.$leftEdit = this.$el.find('.fb_edit_field_wrapper');
       this.$responseFields = this.$el.find('.fb_response_fields');
-      this.$el.initialize();
       return this;
     },
     initLeftScroll: function() {
@@ -720,7 +719,7 @@
       if (typeof (base = this.model).setExistingValue === "function") {
         base.setExistingValue(null);
       }
-      this.$el.data('cid', this.model.cid).html(JST["form_builder/templates/view/base"]({
+      this.$el.data('cid', this.model.cid).html(JST["formbuilder/view/base"]({
         hasResponses: this.parentView.options.hasResponses,
         model: this.model
       }));
@@ -731,7 +730,6 @@
       this.toggleErrorClass();
       this.$el.append(this.rendererView.render().el);
       Formbuilder.disableTabbing(this.$el);
-      this.$el.initialize();
       this.rendererView.trigger('shown');
       return this;
     },
@@ -835,11 +833,10 @@
     render: function() {
       var templateName;
       templateName = this.model.input_field ? 'base' : 'base_non_input';
-      this.$el.html(JST["form_builder/templates/edit/" + templateName](this));
+      this.$el.html(JST["formbuilder/edit/" + templateName](this));
       rivets.bind(this.$el, {
         model: this.model
       });
-      this.$el.initialize();
       if (this.model.hasColumnsOrOptions()) {
         new Sortable(this.$el.find('.fb_options')[0], {
           handle: '.fa-reorder',
@@ -1145,10 +1142,9 @@
 
   Formbuilder.Views.PresetValuesModal = Formbuilder.Views.BaseModal.extend({
     render: function() {
-      this.$el.html(JST["form_builder/templates/edit/preset_values_modal"]({
+      this.$el.html(JST["formbuilder/edit/preset_values_modal"]({
         rf: this.model
       }));
-      this.$el.initialize();
       return this;
     },
     save: function() {
@@ -1174,11 +1170,10 @@
 
   Formbuilder.Views.DefaultLocationModal = Formbuilder.Views.BaseModal.extend({
     render: function() {
-      this.$el.html(JST["form_builder/templates/edit/default_location_modal"]({
+      this.$el.html(JST["formbuilder/edit/default_location_modal"]({
         rf: this.model
       }));
       this.initMap();
-      this.$el.initialize();
       return this;
     },
     initMap: function() {
@@ -1199,10 +1194,9 @@
 
   Formbuilder.Views.BulkAddOptionsModal = Formbuilder.Views.BaseModal.extend({
     render: function() {
-      this.$el.html(JST["form_builder/templates/edit/bulk_add_options_modal"]({
+      this.$el.html(JST["formbuilder/edit/bulk_add_options_modal"]({
         rf: this.model
       }));
-      this.$el.initialize();
       return this;
     },
     save: function() {
@@ -1265,7 +1259,7 @@
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/base.jst"] = function(__obj) {
+window.JST["formbuilder/edit/base"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -1288,19 +1282,19 @@ window.JST["edit/base.jst"] = function(__obj) {
     (function() {
       var name;
     
-      _print(_safe(JST['form_builder/templates/edit/common'](this)));
+      _print(_safe(JST['formbuilder/edit/common'](this)));
     
       _print(_safe('\n'));
     
-      _print(_safe(JST['form_builder/templates/edit/checkboxes'](this)));
+      _print(_safe(JST['formbuilder/edit/checkboxes'](this)));
     
       _print(_safe('\n'));
     
-      _print(_safe(typeof JST[name = "form_builder/templates/edit/fields/" + (this.model.get(Formbuilder.mappings.FIELD_TYPE))] === "function" ? JST[name](this) : void 0));
+      _print(_safe(typeof JST[name = "formbuilder/edit/fields/" + (this.model.get(Formbuilder.mappings.FIELD_TYPE))] === "function" ? JST[name](this) : void 0));
     
       _print(_safe('\n'));
     
-      _print(_safe(JST['form_builder/templates/edit/conditional'](this)));
+      _print(_safe(JST['formbuilder/edit/conditional'](this)));
     
       _print(_safe('\n'));
     
@@ -1326,7 +1320,7 @@ window.JST["edit/base.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/base_non_input.jst"] = function(__obj) {
+window.JST["formbuilder/edit/base_non_input"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -1349,13 +1343,13 @@ window.JST["edit/base_non_input.jst"] = function(__obj) {
     (function() {
       var name;
     
-      _print(_safe(typeof JST[name = "form_builder/templates/edit/fields/" + (this.model.get(Formbuilder.mappings.FIELD_TYPE))] === "function" ? JST[name](this) : void 0));
+      _print(_safe(typeof JST[name = "formbuilder/edit/fields/" + (this.model.get(Formbuilder.mappings.FIELD_TYPE))] === "function" ? JST[name](this) : void 0));
     
       _print(_safe('\n\n'));
     
       if (this.model.field_type !== 'page_break') {
         _print(_safe('\n  '));
-        _print(_safe(JST['form_builder/templates/edit/conditional'](this)));
+        _print(_safe(JST['formbuilder/edit/conditional'](this)));
         _print(_safe('\n'));
       }
     
@@ -1383,7 +1377,109 @@ window.JST["edit/base_non_input.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/columns.jst"] = function(__obj) {
+window.JST["formbuilder/edit/bulk_add_options_modal"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<div class=\'modal_dialog\'>\n  <div class=\'modal_content\'>\n    <div class=\'modal_header\'>\n      <a class=\'close\' data-dismiss=\'modal\'>&times;</a>\n      <h3>Add options in bulk</h3>\n    </div>\n    <div class=\'modal_body\'>\n      <textarea rows=\'10\'></textarea>\n      <div class=\'form_hint\'>\n        One option per line\n      </div>\n    </div>\n    <div class=\'modal_footer\'>\n      <div class=\'modal_footer_primary\'>\n        <button class=\'button info\'>Add options</button>\n      </div>\n    </div>\n  </div>\n</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/checkboxes"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<div class=\'fb_edit_section fb_edit_section_boxes\'>\n  <label class=\'control\'>\n    <input type=\'checkbox\' data-rv-checked=\'model.'));
+    
+      _print(Formbuilder.mappings.REQUIRED);
+    
+      _print(_safe('\' />\n    Required\n  </label>\n\n  <label class=\'control\'>\n    <input type=\'checkbox\' data-rv-checked=\'model.'));
+    
+      _print(Formbuilder.mappings.ADMIN_ONLY);
+    
+      _print(_safe('\' />\n    Hidden\n  </label>\n\n  <label class=\'control\'>\n    <input type=\'checkbox\' data-rv-checked=\'model.'));
+    
+      _print(Formbuilder.mappings.BLIND);
+    
+      _print(_safe('\' />\n    Blind\n  </label>\n</div>\n\n<p class=\'fb_edit_help\'>\n  <strong>Hidden</strong> fields aren\'t shown to respondents.\n</p>\n\n<p class=\'fb_edit_help\'>\n  <strong>Blind</strong> fields will be hidden during review.\n</p>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/columns"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -1466,7 +1562,7 @@ window.JST["edit/columns.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/common.jst"] = function(__obj) {
+window.JST["formbuilder/edit/common"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -1487,15 +1583,15 @@ window.JST["edit/common.jst"] = function(__obj) {
       return _safe(result);
     };
     (function() {
-      _print(_safe(JST['form_builder/templates/edit/label'](this)));
+      _print(_safe(JST['formbuilder/edit/label'](this)));
     
       _print(_safe('\n'));
     
-      _print(_safe(JST['form_builder/templates/edit/field_type'](this)));
+      _print(_safe(JST['formbuilder/edit/field_type'](this)));
     
       _print(_safe('\n'));
     
-      _print(_safe(JST['form_builder/templates/edit/description'](this)));
+      _print(_safe(JST['formbuilder/edit/description'](this)));
     
       _print(_safe('\n'));
     
@@ -1521,7 +1617,7 @@ window.JST["edit/common.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/conditional.jst"] = function(__obj) {
+window.JST["formbuilder/edit/conditional"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -1664,7 +1760,101 @@ window.JST["edit/conditional.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/description.jst"] = function(__obj) {
+window.JST["formbuilder/edit/default_location"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<hr />\n\n<div class=\'fb_edit_section\'>\n  <a class=\''));
+    
+      _print(Formbuilder.options.BUTTON_CLASS);
+    
+      _print(_safe('\' data-show-modal=\'DefaultLocation\'>Set default location</a>\n</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/default_location_modal"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<div class=\'modal_dialog\'>\n  <div class=\'modal_content\'>\n    <div class=\'modal_header\'>\n      <a class=\'close\' data-dismiss=\'modal\'>&times;</a>\n      <h3>Set default location</h3>\n    </div>\n    <div class=\'modal_body\'>\n      <div class=\'fb_default_location_modal_map\'></div>\n      <p class=\'margin_th\'>Drag the map to set your new default location.</p>\n    </div>\n    <div class=\'modal_footer\'>\n      <div class=\'modal_footer_primary\'>\n        <button class=\'button info\'>Save and close</button>\n      </div>\n    </div>\n  </div>\n</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/description"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -1713,7 +1903,105 @@ window.JST["edit/description.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/field_type.jst"] = function(__obj) {
+window.JST["formbuilder/edit/disable_cents"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<hr />\n\n<div class=\'fb_edit_section\'>\n  <label class=\'control\'>\n    <input type="checkbox" data-rv-checked="model.'));
+    
+      _print(Formbuilder.mappings.DISABLE_CENTS);
+    
+      _print(_safe('" />\n    Hide the \'cents\' field\n  </label>\n</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/disable_seconds"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<hr />\n\n<div class=\'fb_edit_section\'>\n  <label class=\'control\'>\n    <input type="checkbox" data-rv-checked="model.'));
+    
+      _print(Formbuilder.mappings.DISABLE_SECONDS);
+    
+      _print(_safe('" />\n    Hide the \'seconds\' field\n  </label>\n</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/field_type"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -1784,7 +2072,7 @@ window.JST["edit/field_type.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/address.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/address"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -1833,7 +2121,7 @@ window.JST["edit/fields/address.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/block_of_text.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/block_of_text"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -1860,11 +2148,11 @@ window.JST["edit/fields/block_of_text.jst"] = function(__obj) {
     
       _print(_safe('\'></textarea>\n</div>\n\n'));
     
-      _print(_safe(JST['form_builder/templates/edit/field_type'](this)));
+      _print(_safe(JST['formbuilder/edit/field_type'](this)));
     
       _print(_safe('\n'));
     
-      _print(_safe(JST['form_builder/templates/edit/size'](this)));
+      _print(_safe(JST['formbuilder/edit/size'](this)));
     
       _print(_safe('\n'));
     
@@ -1890,7 +2178,7 @@ window.JST["edit/fields/block_of_text.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/checkboxes.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/checkboxes"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -1911,10 +2199,12 @@ window.JST["edit/fields/checkboxes.jst"] = function(__obj) {
       return _safe(result);
     };
     (function() {
-      _print(_safe(JST['form_builder/templates/edit/options'](_.extend(this, {
+      _print(_safe(JST['formbuilder/edit/options'](_.extend(this, {
         includeOther: true
       }))));
     
+      _print(_safe('\n'));
+    
     }).call(this);
     
     return __out.join('');
@@ -1937,7 +2227,7 @@ window.JST["edit/fields/checkboxes.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/dropdown.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/dropdown"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -1958,7 +2248,7 @@ window.JST["edit/fields/dropdown.jst"] = function(__obj) {
       return _safe(result);
     };
     (function() {
-      _print(_safe(JST['form_builder/templates/edit/options'](_.extend(this, {
+      _print(_safe(JST['formbuilder/edit/options'](_.extend(this, {
         includeBlank: true
       }))));
     
@@ -1986,7 +2276,7 @@ window.JST["edit/fields/dropdown.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/file.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/file"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2035,7 +2325,7 @@ window.JST["edit/fields/file.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/map_marker.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/map_marker"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2056,60 +2346,7 @@ window.JST["edit/fields/map_marker.jst"] = function(__obj) {
       return _safe(result);
     };
     (function() {
-      _print(_safe(JST['form_builder/templates/edit/default_location']()));
-    
-    }).call(this);
-    
-    return __out.join('');
-  }).call((function() {
-    var obj = {
-      escape: function(value) {
-        return ('' + value)
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;');
-      },
-      safe: _safe
-    }, key;
-    for (key in __obj) obj[key] = __obj[key];
-    return obj;
-  })());
-};
-
-if (!window.JST) {
-  window.JST = {};
-}
-window.JST["edit/fields/number.jst"] = function(__obj) {
-  var _safe = function(value) {
-    if (typeof value === 'undefined' && value == null)
-      value = '';
-    var result = new String(value);
-    result.ecoSafe = true;
-    return result;
-  };
-  return (function() {
-    var __out = [], __self = this, _print = function(value) {
-      if (typeof value !== 'undefined' && value != null)
-        __out.push(value.ecoSafe ? value : __self.escape(value));
-    }, _capture = function(callback) {
-      var out = __out, result;
-      __out = [];
-      callback.call(this);
-      result = __out.join('');
-      __out = out;
-      return _safe(result);
-    };
-    (function() {
-      _print(_safe(JST['form_builder/templates/edit/min_max']()));
-    
-      _print(_safe('\n'));
-    
-      _print(_safe(JST['form_builder/templates/edit/units']()));
-    
-      _print(_safe('\n'));
-    
-      _print(_safe(JST['form_builder/templates/edit/integer_only']()));
+      _print(_safe(JST['formbuilder/edit/default_location']()));
     
       _print(_safe('\n'));
     
@@ -2135,7 +2372,62 @@ window.JST["edit/fields/number.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/page_break.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/number"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe(JST['formbuilder/edit/min_max']()));
+    
+      _print(_safe('\n'));
+    
+      _print(_safe(JST['formbuilder/edit/units']()));
+    
+      _print(_safe('\n'));
+    
+      _print(_safe(JST['formbuilder/edit/integer_only']()));
+    
+      _print(_safe('\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/fields/page_break"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2158,7 +2450,7 @@ window.JST["edit/fields/page_break.jst"] = function(__obj) {
     (function() {
       if (this.model.typeUnlocked) {
         _print(_safe('\n  '));
-        _print(_safe(JST['form_builder/templates/edit/field_type'](this)));
+        _print(_safe(JST['formbuilder/edit/field_type'](this)));
         _print(_safe('\n'));
       } else {
         _print(_safe('\n  <p class=\'fb_edit_help\'>No options available</p>\n'));
@@ -2188,7 +2480,7 @@ window.JST["edit/fields/page_break.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/paragraph.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/paragraph"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2209,11 +2501,11 @@ window.JST["edit/fields/paragraph.jst"] = function(__obj) {
       return _safe(result);
     };
     (function() {
-      _print(_safe(JST['form_builder/templates/edit/size']()));
+      _print(_safe(JST['formbuilder/edit/size']()));
     
       _print(_safe('\n'));
     
-      _print(_safe(JST['form_builder/templates/edit/min_max_length']()));
+      _print(_safe(JST['formbuilder/edit/min_max_length']()));
     
       _print(_safe('\n'));
     
@@ -2239,7 +2531,7 @@ window.JST["edit/fields/paragraph.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/phone.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/phone"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2288,7 +2580,7 @@ window.JST["edit/fields/phone.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/price.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/price"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2309,7 +2601,7 @@ window.JST["edit/fields/price.jst"] = function(__obj) {
       return _safe(result);
     };
     (function() {
-      _print(_safe(JST['form_builder/templates/edit/disable_cents']()));
+      _print(_safe(JST['formbuilder/edit/disable_cents']()));
     
       _print(_safe('\n'));
     
@@ -2335,7 +2627,7 @@ window.JST["edit/fields/price.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/radio.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/radio"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2356,7 +2648,7 @@ window.JST["edit/fields/radio.jst"] = function(__obj) {
       return _safe(result);
     };
     (function() {
-      _print(_safe(JST['form_builder/templates/edit/options'](_.extend(this, {
+      _print(_safe(JST['formbuilder/edit/options'](_.extend(this, {
         includeOther: true
       }))));
     
@@ -2384,7 +2676,7 @@ window.JST["edit/fields/radio.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/section_break.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/section_break"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2405,11 +2697,11 @@ window.JST["edit/fields/section_break.jst"] = function(__obj) {
       return _safe(result);
     };
     (function() {
-      _print(_safe(JST['form_builder/templates/edit/common'](this)));
+      _print(_safe(JST['formbuilder/edit/common'](this)));
     
       _print(_safe('\n'));
     
-      _print(_safe(JST['form_builder/templates/edit/size'](this)));
+      _print(_safe(JST['formbuilder/edit/size'](this)));
     
       _print(_safe('\n'));
     
@@ -2435,7 +2727,7 @@ window.JST["edit/fields/section_break.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/table.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/table"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2456,7 +2748,7 @@ window.JST["edit/fields/table.jst"] = function(__obj) {
       return _safe(result);
     };
     (function() {
-      _print(_safe(JST['form_builder/templates/edit/columns'](this)));
+      _print(_safe(JST['formbuilder/edit/columns'](this)));
     
       _print(_safe('\n'));
     
@@ -2482,7 +2774,7 @@ window.JST["edit/fields/table.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/text.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/text"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2503,11 +2795,11 @@ window.JST["edit/fields/text.jst"] = function(__obj) {
       return _safe(result);
     };
     (function() {
-      _print(_safe(JST['form_builder/templates/edit/size']()));
+      _print(_safe(JST['formbuilder/edit/size']()));
     
       _print(_safe('\n'));
     
-      _print(_safe(JST['form_builder/templates/edit/min_max_length']()));
+      _print(_safe(JST['formbuilder/edit/min_max_length']()));
     
       _print(_safe('\n'));
     
@@ -2533,7 +2825,7 @@ window.JST["edit/fields/text.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/fields/time.jst"] = function(__obj) {
+window.JST["formbuilder/edit/fields/time"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2554,7 +2846,7 @@ window.JST["edit/fields/time.jst"] = function(__obj) {
       return _safe(result);
     };
     (function() {
-      _print(_safe(JST['form_builder/templates/edit/disable_seconds']()));
+      _print(_safe(JST['formbuilder/edit/disable_seconds']()));
     
       _print(_safe('\n'));
     
@@ -2580,7 +2872,56 @@ window.JST["edit/fields/time.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/label.jst"] = function(__obj) {
+window.JST["formbuilder/edit/integer_only"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<hr />\n\n<div class=\'fb_edit_section\'>\n  <label class=\'control\'>\n    <input type=\'checkbox\' data-rv-checked=\'model.'));
+    
+      _print(Formbuilder.mappings.INTEGER_ONLY);
+    
+      _print(_safe('\' />\n    Only accept integers\n  </label>\n</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/label"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2629,7 +2970,117 @@ window.JST["edit/label.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["edit/options.jst"] = function(__obj) {
+window.JST["formbuilder/edit/min_max"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<hr />\n\n<div class=\'fb_edit_section fb_edit_section_horiz fb_edit_section_min_max fb_edit_section_between\'>\n  <label>Min / Max</label>\n  <div class=\'fb_edit_section_horiz_content\'>\n    <span>Between</span>\n    <input type="text" data-rv-input="model.'));
+    
+      _print(Formbuilder.mappings.MIN);
+    
+      _print(_safe('" />\n    <span>and</span>\n    <input type="text" data-rv-input="model.'));
+    
+      _print(Formbuilder.mappings.MAX);
+    
+      _print(_safe('" />\n  </div>\n</div>\n\n<div class=\'form_error\' data-rv-show=\'model.errors.minMaxMismatch\'>Please enter a maximum larger than the minimum.</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/min_max_length"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<hr />\n\n<div class=\'fb_edit_section fb_edit_section_horiz fb_edit_section_min_max_length fb_edit_section_between\'>\n  <label>Min / Max Length</label>\n  <div class=\'fb_edit_section_horiz_content\'>\n    <span>Between</span>\n    <input type="text" data-rv-input="model.'));
+    
+      _print(Formbuilder.mappings.MINLENGTH);
+    
+      _print(_safe('" />\n    <span>and</span>\n    <input type="text" data-rv-input="model.'));
+    
+      _print(Formbuilder.mappings.MAXLENGTH);
+    
+      _print(_safe('" />\n    <select data-rv-value="model.'));
+    
+      _print(Formbuilder.mappings.LENGTH_UNITS);
+    
+      _print(_safe('" data-width="100%">\n      <option value="characters">characters</option>\n      <option value="words">words</option>\n    </select>\n  </div>\n</div>\n\n<div class=\'form_error\' data-rv-show=\'model.errors.minMaxLengthMismatch\'>Please enter a maximum length larger than the minimum.</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/options"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2714,7 +3165,243 @@ window.JST["edit/options.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["partials/left_side.jst"] = function(__obj) {
+window.JST["formbuilder/edit/preset_values_modal"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      var i, j, k, l, len, len1, len2, len3, m, n, ref, ref1, ref2, ref3;
+    
+      _print(_safe('<div class=\'modal_dialog\'>\n  <div class=\'modal_content\'>\n    <div class=\'modal_header\'>\n      <a class=\'close\' data-dismiss=\'modal\'>&times;</a>\n      <h3>Preset values</h3>\n    </div>\n    <div class=\'modal_body\'>\n      <p>\n      These cells will be pre-populated when displaying the form, and will not be editable by the user.\n      </p>\n      <table class=\'border border_all\'>\n        <thead>\n          <tr>\n            '));
+    
+      ref = rf.get(Formbuilder.mappings.COLUMNS) || [];
+      for (k = 0, len = ref.length; k < len; k++) {
+        i = ref[k];
+        _print(_safe('\n              <th>'));
+        _print(rf.get(Formbuilder.mappings.COLUMNS)[i].label);
+        _print(_safe('</th>\n            '));
+      }
+    
+      _print(_safe('\n          </tr>\n        </thead>\n        <tbody>\n          '));
+    
+      ref1 = rf.numRows;
+      for (l = 0, len1 = ref1.length; l < len1; l++) {
+        j = ref1[l];
+        _print(_safe('\n            <tr>\n              '));
+        ref2 = rf.get(Formbuilder.mappings.COLUMNS) || [];
+        for (m = 0, len2 = ref2.length; m < len2; m++) {
+          i = ref2[m];
+          _print(_safe('\n                <td><input type=\'text\' data-col=\''));
+          _print(i);
+          _print(_safe('\' value=\''));
+          _print(rf.getPresetValue(rf.get(Formbuilder.mappings.COLUMNS)[i].label, j));
+          _print(_safe('\' /></th>\n              '));
+        }
+        _print(_safe('\n            </tr>\n          '));
+      }
+    
+      _print(_safe('\n        </tbody>\n        '));
+    
+      if (rf.get(Formbuilder.mappings.COLUMN_TOTALS)) {
+        _print(_safe('\n          <tfoot>\n            <tr>\n              '));
+        ref3 = rf.get(Formbuilder.mappings.COLUMNS) || [];
+        for (n = 0, len3 = ref3.length; n < len3; n++) {
+          i = ref3[n];
+          _print(_safe('\n                <td>[total]</td>\n              '));
+        }
+        _print(_safe('\n            </tr>\n          </tfoot>\n        '));
+      }
+    
+      _print(_safe('\n      </table>\n    </div>\n    <div class=\'modal_footer\'>\n      <div class=\'modal-footer-actions\'>\n        <button class=\'button info\'>Save and close</button>\n      </div>\n    </div>\n  </div>\n</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/size"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<hr />\n\n<div class=\'fb_edit_section fb_edit_section_horiz\'>\n  <label>Size</label>\n  <div class=\'fb_edit_section_horiz_content\'>\n    <select data-width="100%" data-rv-value="model.'));
+    
+      _print(Formbuilder.mappings.SIZE);
+    
+      _print(_safe('">\n      <option value="small">Small</option>\n      <option value="medium">Medium</option>\n      <option value="large">Large</option>\n    </select>\n  </div>\n</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/edit/units"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<hr />\n\n<div class=\'fb_edit_section fb_edit_section_horiz fb_edit_section_units\'>\n  <label>Units</label>\n  <div class=\'fb_edit_section_horiz_content\'>\n    <input type="text" data-rv-input="model.'));
+    
+      _print(Formbuilder.mappings.UNITS);
+    
+      _print(_safe('" />\n  </div>\n</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/page"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe(JST['formbuilder/partials/left_side'](this)));
+    
+      _print(_safe('\n'));
+    
+      _print(_safe(JST['formbuilder/partials/right_side'](this)));
+    
+      _print(_safe('\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/partials/left_side"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2792,7 +3479,60 @@ window.JST["partials/left_side.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["view/base.jst"] = function(__obj) {
+window.JST["formbuilder/partials/right_side"] = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<div class=\'fb_right\'>\n  <div class=\'fb_identification_field_wrapper\'>\n    <div class=\'fb_identification_cover\'></div>\n    <div class=\'fb_identification_hint\'>\n      '));
+    
+      if (this.view.options.identificationFields) {
+        _print(_safe('\n        Automatically collected for signed-in users.\n      '));
+      } else {
+        _print(_safe('\n        Since this form doesn\'t collect names or email addresses, responses will be anonymous.\n        You won\'t be able to collect signatures or follow up with respondents.\n      '));
+      }
+    
+      _print(_safe('\n      <a data-change-id-level>Change identification level?</a>\n    </div>\n  </div>\n  <div class=\'fb_response_fields\'></div>\n</div>\n'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+
+if (!window.JST) {
+  window.JST = {};
+}
+window.JST["formbuilder/view/base"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';
@@ -2815,7 +3555,7 @@ window.JST["view/base.jst"] = function(__obj) {
     (function() {
       _print(_safe('<div class=\'cover\'></div>\n'));
     
-      _print(_safe(JST['form_builder/templates/view/duplicate_remove'](this)));
+      _print(_safe(JST['formbuilder/view/duplicate_remove'](this)));
     
       _print(_safe('\n'));
     
@@ -2841,7 +3581,7 @@ window.JST["view/base.jst"] = function(__obj) {
 if (!window.JST) {
   window.JST = {};
 }
-window.JST["view/duplicate_remove.jst"] = function(__obj) {
+window.JST["formbuilder/view/duplicate_remove"] = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
       value = '';

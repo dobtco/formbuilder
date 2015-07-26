@@ -1,0 +1,2 @@
+<div class='cover'></div>
+<%- JST['formbuilder/view/duplicate_remove'](@) %>

@@ -21,7 +21,8 @@ module.exports = (grunt) ->
     eco:
       all:
         options:
-          basePath: '<%= srcFolder %>/templates'
+          basePath: (path) ->
+            path.replace('src/templates', 'formbuilder')
         files:
           '<%= compiledFolder %>/templates.js': '<%= srcFolder %>/templates/**/*.eco'
 
@@ -31,12 +32,16 @@ module.exports = (grunt) ->
           '<%= compiledFolder %>/scripts.js': [
             '<%= srcFolder %>/scripts/main.coffee'
           ]
+          '<%= compiledFolder %>/autosaver.js': 'bower_components/autosaver/index.coffee'
 
     concat:
       all:
         files:
           '<%= compiledFolder %>/vendor.js': [
             'bower_components/formrenderer-base/dist/formrenderer.js'
+            '<%= compiledFolder %>/autosaver.js'
+            'bower_components/Sortable/Sortable.js'
+            'bower_components/jquery.scrollWindowTo/index.js'
           ]
           '<%= compiledFolder %>/formbuilder.js': [
             '<%= compiledFolder %>/scripts.js'

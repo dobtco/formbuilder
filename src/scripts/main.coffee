@@ -118,7 +118,7 @@ window.Formbuilder = Formbuilder = Backbone.View.extend
     @initLeftScroll()
 
   render: ->
-    @$el.html JST['form_builder/templates/page'](view: @)
+    @$el.html JST['formbuilder/page'](view: @)
 
     if @options.identificationFields
       idView = new FormRenderer.Views.ResponseFieldIdentification(
@@ -137,7 +137,7 @@ window.Formbuilder = Formbuilder = Backbone.View.extend
     @$leftEdit = @$el.find('.fb_edit_field_wrapper')
     @$responseFields = @$el.find('.fb_response_fields')
 
-    @$el.initialize()
+    # @$el.initialize()
     return @
 
   ## Initialization logic
@@ -599,7 +599,7 @@ Formbuilder.Views.ViewField = Backbone.View.extend
   render: ->
     @model.setExistingValue?(null)
 
-    @$el.data('cid', @model.cid).html JST["form_builder/templates/view/base"](
+    @$el.data('cid', @model.cid).html JST["formbuilder/view/base"](
       hasResponses: @parentView.options.hasResponses,
       model: @model
     )
@@ -612,7 +612,7 @@ Formbuilder.Views.ViewField = Backbone.View.extend
     @toggleErrorClass()
     @$el.append @rendererView.render().el
     Formbuilder.disableTabbing(@$el)
-    @$el.initialize()
+    # @$el.initialize()
     @rendererView.trigger('shown')
     return @
 
@@ -700,9 +700,9 @@ Formbuilder.Views.EditField = Backbone.View.extend
 
   render: ->
     templateName = if @model.input_field then 'base' else 'base_non_input'
-    @$el.html JST["form_builder/templates/edit/#{templateName}"](@)
+    @$el.html JST["formbuilder/edit/#{templateName}"](@)
     rivets.bind @$el, model: @model
-    @$el.initialize()
+    # @$el.initialize()
 
     if @model.hasColumnsOrOptions()
       new Sortable @$el.find('.fb_options')[0],
@@ -997,8 +997,8 @@ Formbuilder.Views.BaseModal = Backbone.View.extend
 
 Formbuilder.Views.PresetValuesModal = Formbuilder.Views.BaseModal.extend
   render: ->
-    @$el.html(JST["form_builder/templates/edit/preset_values_modal"](rf: @model))
-    @$el.initialize()
+    @$el.html(JST["formbuilder/edit/preset_values_modal"](rf: @model))
+    # @$el.initialize()
     return @
 
   save: ->
@@ -1011,9 +1011,9 @@ Formbuilder.Views.PresetValuesModal = Formbuilder.Views.BaseModal.extend
 
 Formbuilder.Views.DefaultLocationModal = Formbuilder.Views.BaseModal.extend
   render: ->
-    @$el.html(JST["form_builder/templates/edit/default_location_modal"](rf: @model))
+    @$el.html(JST["formbuilder/edit/default_location_modal"](rf: @model))
     @initMap()
-    @$el.initialize()
+    # @$el.initialize()
     return @
 
   # map.js is already required, since we've already rendered the field
@@ -1033,8 +1033,8 @@ Formbuilder.Views.DefaultLocationModal = Formbuilder.Views.BaseModal.extend
 
 Formbuilder.Views.BulkAddOptionsModal = Formbuilder.Views.BaseModal.extend
   render: ->
-    @$el.html(JST["form_builder/templates/edit/bulk_add_options_modal"]({rf: @model}))
-    @$el.initialize()
+    @$el.html(JST["formbuilder/edit/bulk_add_options_modal"]({rf: @model}))
+    # @$el.initialize()
     return @
 
   save: ->

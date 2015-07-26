@@ -1,0 +1,4 @@
+<%- JST['formbuilder/edit/common'](@) %>
+<%- JST['formbuilder/edit/checkboxes'](@) %>
+<%- JST["formbuilder/edit/fields/#{@model.get(Formbuilder.mappings.FIELD_TYPE)}"]?(@) %>
+<%- JST['formbuilder/edit/conditional'](@) %>

@@ -1,0 +1,3 @@
+<%- JST['formbuilder/edit/min_max']() %>
+<%- JST['formbuilder/edit/units']() %>
+<%- JST['formbuilder/edit/integer_only']() %>

@@ -1,0 +1,3 @@
+<%- JST['formbuilder/edit/label'](@) %>
+<%- JST['formbuilder/edit/field_type'](@) %>
+<%- JST['formbuilder/edit/description'](@) %>
