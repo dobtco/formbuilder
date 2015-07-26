@@ -1,0 +1,45 @@
+<div class='modal_dialog'>
+  <div class='modal_content'>
+    <div class='modal_header'>
+      <a class='close' data-dismiss='modal'>&times;</a>
+      <h3>Preset values</h3>
+    </div>
+    <div class='modal_body'>
+      <p>
+      These cells will be pre-populated when displaying the form, and will not be editable by the user.
+      </p>
+      <table class='border border_all'>
+        <thead>
+          <tr>
+            <% for (i in (rf.get(Formbuilder.mappings.COLUMNS) || [])) { %>
+              <th><%= rf.get(Formbuilder.mappings.COLUMNS)[i].label %></th>
+            <% } %>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (var j = 0; j < rf.numRows; j++) { %>
+            <tr>
+              <% for (i in (rf.get(Formbuilder.mappings.COLUMNS) || [])) { %>
+                <td><input type='text' data-col='<%= i %>' value='<%= rf.getPresetValue(rf.get(Formbuilder.mappings.COLUMNS)[i].label, j) %>' /></th>
+              <% } %>
+            </tr>
+          <% } %>
+        </tbody>
+        <% if (rf.get(Formbuilder.mappings.COLUMN_TOTALS)) { %>
+          <tfoot>
+            <tr>
+              <% for (i in (rf.get(Formbuilder.mappings.COLUMNS) || [])) { %>
+                <td>[total]</td>
+              <% } %>
+            </tr>
+          </tfoot>
+        <% } %>
+      </table>
+    </div>
+    <div class='modal_footer'>
+      <div class='modal-footer-actions'>
+        <button class='button info'>Save and close</button>
+      </div>
+    </div>
+  </div>
+</div>

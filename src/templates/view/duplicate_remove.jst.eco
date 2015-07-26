@@ -1,0 +1,23 @@
+<div class='actions_wrapper'>
+  <button class="js-duplicate fb_button_success <%= Formbuilder.options.BUTTON_CLASS %>" title="Duplicate Field"><i class='fa fa-plus-circle'></i></button>
+
+  <% if @hasResponses && @model.input_field: %>
+    <span class='dropdown'>
+      <a class="js-clear fb_button_warn <%= Formbuilder.options.BUTTON_CLASS %>" data-toggle="dropdown" title="Remove field...">
+        <i class='fa fa-minus-circle'></i>
+      </a>
+      <div class='dropdown_menu dropdown_right'>
+        <ul class='dropdown_body'>
+          <% unless @model.get('admin_only'): %>
+            <li><a data-soft-remove>Hide this field</a></li>
+          <% end %>
+          <li><a data-hard-remove>Delete this field and its answers</a></li>
+        </ul>
+      </div>
+    </span>
+  <% else: %>
+    <a class="js-clear fb_button_warn <%= Formbuilder.options.BUTTON_CLASS %>" data-hard-remove title="Remove field...">
+      <i class='fa fa-minus-circle'></i>
+    </a>
+  <% end %>
+</div>

@@ -1,0 +1,73 @@
+<hr />
+
+<% if @canAddConditions() || @model.isConditional(): %>
+  <div class='fb_edit_section fb_edit_section_conditions'>
+    <label>Rules</label>
+
+    <% for condition, i in @model.getConditions(): %>
+      <div class='fb_edit_section_horiz'>
+        <label>
+          <% if i == 0: %>
+            Only show this field if...
+          <% else: %>
+            And...
+          <% end %>
+        </label>
+
+        <div class='fb_edit_section_horiz_content'>
+          <div class='fb_conditional_opt'>
+            <select data-width="100%" data-rv-value='model.<%= Formbuilder.mappings.CONDITIONS %>.<%= i %>.response_field_id'>
+              <% for model in @conditionFieldOptions(): %>
+                <option value="<%= model.id %>"><%= model.get(Formbuilder.mappings.LABEL) %></option>
+              <% end %>
+            </select>
+          </div>
+
+          <div class='fb_conditional_opt'>
+            <% if @conditionField(i): %>
+              <select data-width="100%" data-rv-value='model.<%= Formbuilder.mappings.CONDITIONS %>.<%= i %>.method'>
+                <% for method in @conditionMethodsAtIndex(i): %>
+                  <option value="<%= method.key %>"><%= method.label %></option>
+                <% end %>
+              </select>
+            <% end %>
+          </div>
+
+          <div class='fb_conditional_opt'>
+            <% if @conditionMethod(i): %>
+              <% if @conditionField(i).field_type in ['dropdown', 'checkboxes', 'radio']: %>
+                <select data-width='100%' data-rv-value="model.<%= Formbuilder.mappings.CONDITIONS %>.<%= i %>.value">
+                  <% for optionLabel in @conditionValueOptions(i): %>
+                    <option value='<%= optionLabel %>'><%= optionLabel %></option>
+                  <% end %>
+                </select>
+              <% else if @conditionMethod(i) in ['shorter', 'longer']: %>
+                <div class='input_group'>
+                  <input type='text' data-rv-input="model.<%= Formbuilder.mappings.CONDITIONS %>.<%= i %>.value">
+                  <span class='input_group_text'><%= @conditionField(i).getLengthValidationUnits() %></span>
+                </div>
+              <% else: %>
+                <input type='text' data-rv-input="model.<%= Formbuilder.mappings.CONDITIONS %>.<%= i %>.value">
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class='fb_condition_remove'>
+        <a class='js-remove-condition' data-index="<%= i %>">Remove this rule</a>
+      </div>
+
+      <hr />
+    <% end %>
+
+    <% if @canAddConditions(): %>
+      <a class='<%= Formbuilder.options.BUTTON_CLASS %> info js-add-condition'>Add a rule</a>
+    <% end %>
+  </div>
+<% else: %>
+  <div class='fb_edit_section'>
+    <label>Want to add a rule?</label>
+    <p class='fb_edit_help'>Select another field to show and hide it based on the answer to this one.</p>
+  </div>
+<% end %>

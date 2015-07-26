@@ -1,0 +1,11 @@
+<hr />
+
+<div class='fb_edit_section fb_edit_section_horiz'>
+  <label>Format</label>
+  <div class='fb_edit_section_horiz_content'>
+    <select data-width="100%" data-rv-value="model.<%= Formbuilder.mappings.PHONE_FORMAT %>">
+      <option value="us">US (10-digit)</option>
+      <option value="intl">International</option>
+    </select>
+  </div>
+</div>

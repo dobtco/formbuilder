@@ -1,0 +1,346 @@
+@mixin cf() {
+  &:before, &:after {
+    display: table;
+    content: " ";
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+$rhythm: 0.5rem;
+$lineHeight: 1.5rem;
+$successColor: green;
+$errorColor: red;
+$fontSmaller: 0.875rem;
+$radius: 3px;
+$z_formBuilderCover: 500;
+$z_formBuilderTextOverlay: 580;
+$z_formBuilderActions: 580;
+$fbLeftWidth: 22rem;
+
+.fb_main {
+  position: relative;
+  @include cf;
+
+  // Override hr margins
+  hr {
+    margin: 1rem 0;
+  }
+
+  .fb_button_success,
+  .fb_button_warn {
+    padding: 0 $rhythm;
+    height: $lineHeight;
+    i {
+      line-height: $lineHeight;
+    }
+    float: left;
+    border: 0;
+    margin-left: $rhythm;
+    color: #fff;
+  }
+
+  // Maintain 2 levels of specificity to override button styles
+  .fb_button_success {
+    background-color: $successColor;
+    &:hover {
+      background-color: darken($successColor,5%);
+    }
+  }
+
+  .fb_button_warn {
+    background-color: $errorColor;
+    &:hover {
+      background-color: darken($errorColor,5%);
+    }
+  }
+}
+
+.fb_default_location_modal_map {
+  width: 100%;
+  max-width: 500px;
+  height: 220px;
+}
+
+.fb_edit_section {
+  margin-bottom: 0.75rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  input[type=text],
+  textarea {
+    width: 100%;
+  }
+}
+
+.fb_edit_section_label {
+  position: relative;
+
+  .styled_select_wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  textarea {
+    height: 9rem;
+  }
+}
+
+.fb_edit_section_boxes {
+  @include cf;
+  .control {
+    font-size: $fontSmaller;
+    width: 33.333%;
+    line-height: $lineHeight;
+    float: left;
+  }
+}
+
+.fb_edit_help {
+  color: #999;
+  font-size: $fontSmaller;
+  margin-bottom: 0.5rem;
+}
+
+// Horizontal formbuilder sections
+
+.fb_edit_section_horiz {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.fb_edit_section_units label {
+  vertical-align: middle;
+}
+
+.fb_edit_section_horiz label,
+.fb_edit_section_horiz_content {
+  display: table-cell;
+}
+
+.fb_edit_section_horiz label {
+  width: 31%;
+  padding-right: 2%;
+}
+
+.fb_edit_section_horiz_content {
+  width: 67%;
+}
+
+.fb_edit_section_between {
+  input[type=text] {
+    width: 3rem;
+    display: inline;
+  }
+  span {
+    font-size: $fontSmaller;
+  }
+  .fb_edit_help {
+    margin-top: 0.5rem;
+  }
+}
+
+.fb_edit_section_min_max_length {
+  .styled_select_wrapper {
+    margin-top: 0.5rem;
+  }
+}
+
+.fb_edit_section_conditions {
+  .button {
+    display: block;
+  }
+
+  .fb_edit_section_horiz {
+    padding-top: 0.75rem;
+    label {
+      font-weight: normal;
+    }
+  }
+
+  input[type=text] {
+    display: inline;
+  }
+}
+
+.fb_conditional_opt {
+  margin-bottom: 0.5rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.fb_condition_remove {
+  text-align: right;
+  margin-top: 0.25rem;
+  font-size: $fontSmaller;
+}
+
+.fb_add_field_wrapper {
+  .sortable-ghost {
+    opacity: 1;
+  }
+}
+
+.fb_add_field_section {
+  font-size: 0;
+  margin-bottom: 1rem;
+
+  .button {
+    display: inline-block;
+    width: 48%;
+    margin: 0 1% 0.5rem;
+    font-size: $fontSmaller;
+  }
+
+  .symbol {
+    opacity: 0.6;
+    margin-right: 0.15em;
+  }
+}
+
+.fb_left {
+  width: $fbLeftWidth;
+  float: left;
+  padding-right: $rhythm * 2;
+}
+
+.fb_left_header {
+  @include cf;
+  margin-bottom: $rhythm / 2;
+
+  h4 {
+    float: left;
+    margin-bottom: 0;
+    line-height: $lineHeight + 0.5rem;
+  }
+
+  .button {
+    float: right;
+  }
+}
+
+.fb_right {
+  border-radius: $radius;
+  margin-left: $fbLeftWidth;
+  padding: 50px 0 0 20px;
+  border-left: 1px solid #ddd;
+  min-height: 100%;
+  overflow: hidden;
+}
+
+.fb_response_fields {
+  padding-bottom: 150px;
+  .button.sortable-ghost {
+    opacity: 1;
+    display: block;
+    border: 1px dashed #ddd;
+    background: #fff;
+    color: #fff;
+    min-height: 80px;
+    height: 80px;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+.fb_identification_field_wrapper {
+  padding: 10px;
+  margin-bottom: 10px;
+  position: relative;
+  background-color: rgba(#000,0.03);
+  border-radius: $radius;
+}
+
+.fb_identification_cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: $z_formBuilderCover;
+  background: rgba(255,255,255,0.3);
+}
+
+.fb_main {
+  .fr_response_field_identification {
+    padding-bottom: 0;
+    border-bottom: 0;
+    margin-bottom: 5px;
+  }
+}
+
+.fb_identification_hint {
+  position: relative;
+  font-size: $fontSmaller;
+  z-index: $z_formBuilderTextOverlay;
+  margin-bottom: 10px;
+}
+
+.fb_field_wrapper {
+  cursor: pointer;
+  border: 1px dashed transparent;
+  margin-bottom: 10px;
+  padding: 10px;
+  position: relative;
+  .cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: $z_formBuilderCover;
+  }
+  &:hover,
+  &.editing {
+    .actions_wrapper {
+      display: block;
+    }
+  }
+  &:hover {
+    border-color: #ddd;
+    border-radius: $radius;
+  }
+  &.editing {
+    background-color: rgba(#000,0.03);
+    border-color: rgba(#000,0.2);
+    border-style: solid;
+    border-radius: $radius;
+  }
+  &.has_errors {
+    background-color: rgba($errorColor,0.1);
+  }
+  .actions_wrapper {
+    display: none;
+    position: absolute;
+    bottom: $rhythm * -2;
+    right: $rhythm;
+    z-index: $z_formBuilderActions;
+  }
+}
+
+.fb_bottom_add {
+  @include cf;
+  margin: 0.75rem 0;
+}
+
+.fb_option_blank {
+  margin-bottom: 0.5rem;
+}
+
+// This is what a page break looks like inside of formbuilder
+.fr_page_break_inner {
+  text-align: center;
+  padding: 0 50px 5px 50px;
+  border-bottom: 3px dashed #ccc;
+  color: #999;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+}

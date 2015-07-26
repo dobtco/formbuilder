@@ -1,0 +1,32 @@
+<div class='fb_left'>
+  <div class='fb_add_field_wrapper'>
+    <div class='fb_left_header'>
+      <h4>Add a new field</h4>
+    </div>
+
+    <% for sectionName, fields of Formbuilder.FIELD_CATEGORIES: %>
+      <h5><%= sectionName %></h5>
+      <div class='fb_add_field_section'>
+        <% for key, field of fields: %>
+          <a data-field-type="<%= key %>" class="<%= Formbuilder.options.BUTTON_CLASS %>">
+            <% if field.buttonHtml: %>
+              <%- field.buttonHtml %>
+            <% else: %>
+              <span class="symbol"><span class="fa fa-<%= field.icon %>"></span></span>
+              <%= field.name %>
+            <% end %>
+          </a>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class='fb_edit_field_wrapper' style='display:none;'>
+    <div class='fb_left_header'>
+      <h4>Edit field</h4>
+      <a class='js-add-field button small info'>Add a new field</a>
+    </div>
+
+    <div class='fb_edit_field_inner'></div>
+  </div>
+</div>

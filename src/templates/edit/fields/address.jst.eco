@@ -1,0 +1,13 @@
+<hr />
+
+<div class='fb_edit_section fb_edit_section_horiz'>
+  <label>Format</label>
+  <div class='fb_edit_section_horiz_content'>
+    <select data-width='auto' data-rv-value="model.<%= Formbuilder.mappings.ADDRESS_FORMAT %>">
+      <option value=''>All fields</option>
+      <option value='city_state'>City and State only</option>
+      <option value='city_state_zip'>City, State and ZIP Code only</option>
+      <option value='country'>Country only</option>
+    </select>
+  </div>
+</div>

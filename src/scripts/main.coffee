@@ -1,427 +1,1076 @@
-class FormbuilderModel extends Backbone.DeepModel
-  sync: -> # noop
-  indexInDOM: ->
-    $wrapper = $(".fb-field-wrapper").filter ( (_, el) => $(el).data('cid') == @cid  )
-    $(".fb-field-wrapper").index $wrapper
-  is_input: ->
-    Formbuilder.inputFields[@get(Formbuilder.options.mappings.FIELD_TYPE)]?
+# helpers...
+classify = (field_type) ->
+  "ResponseField#{_.str.classify(field_type)}"
 
+buildModel = (attrs) ->
+  new FormRenderer.Models[classify(attrs.field_type)](attrs)
 
-class FormbuilderCollection extends Backbone.Collection
-  initialize: ->
-    @on 'add', @copyCidToModel
+optionsForResponseField = (model) ->
+  if model.field_type in ['dropdown', 'checkboxes', 'radio']
+    _.map model.getOptions(), (opt) ->
+      opt.label
 
-  model: FormbuilderModel
-
-  comparator: (model) ->
-    model.indexInDOM()
-
-  copyCidToModel: (model) ->
-    model.attributes.cid = model.cid
-
-
-class ViewFieldView extends Backbone.View
-  className: "fb-field-wrapper"
-
+window.Formbuilder = Formbuilder = Backbone.View.extend
   events:
-    'click .subtemplate-wrapper': 'focusEditView'
-    'click .js-duplicate': 'duplicate'
-    'click .js-clear': 'clear'
+    'click .js-add-field': -> @setLeft('add')
+
+    # Lock/unlock scroll position when adding/editing a field, otherwise short
+    # viewports won't be able to add fields from the bottom of the list:
+    # http://take.ms/tXHaW
+    'mouseover .fb_left': 'lockLeftWrapper'
+    'mouseout .fb_left': 'unlockLeftWrapper'
+    'click .fb_add_field_wrapper a': '_addFieldViaClick'
+
+    # Change identification level -- pretty hacky
+    'click [data-change-id-level]': ->
+      Turbolinks.visit(
+        window.location.pathname.replace('/response_form', '/responses')
+      )
+
+  defaults:
+    selector: '[data-formbuilder]'
 
   initialize: (options) ->
-    {@parentView} = options
-    @listenTo @model, "change", @render
-    @listenTo @model, "destroy", @remove
+    @options = $.extend({}, @defaults, options)
+    @state = new Backbone.Model
+    new Formbuilder.StatusIndicatorController(fb: @)
 
-  render: ->
-    @$el.addClass('response-field-' + @model.get(Formbuilder.options.mappings.FIELD_TYPE))
-        .data('cid', @model.cid)
-        .html(Formbuilder.templates["view/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
+    # Set element, store instance in data
+    @setElement $(@options.selector)
+    @$el.data('formbuilder-instance', @)
 
-    return @
-
-  focusEditView: ->
-    @parentView.createAndShowEditView(@model)
-
-  clear: (e) ->
-    e.preventDefault()
-    e.stopPropagation()
-
-    cb = =>
-      @parentView.handleFormUpdate()
-      @model.destroy()
-
-    x = Formbuilder.options.CLEAR_FIELD_CONFIRM
-
-    switch typeof x
-      when 'string'
-        if confirm(x) then cb()
-      when 'function'
-        x(cb)
-      else
-        cb()
-
-  duplicate: ->
-    attrs = _.clone(@model.attributes)
-    delete attrs['id']
-    attrs['label'] += ' Copy'
-    @parentView.createField attrs, { position: @model.indexInDOM() + 1 }
-
-
-class EditFieldView extends Backbone.View
-  className: "edit-response-field"
-
-  events:
-    'click .js-add-option': 'addOption'
-    'click .js-remove-option': 'removeOption'
-    'click .js-default-updated': 'defaultUpdated'
-    'input .option-label-input': 'forceRender'
-
-  initialize: (options) ->
-    {@parentView} = options
-    @listenTo @model, "destroy", @remove
-
-  render: ->
-    @$el.html(Formbuilder.templates["edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
-    rivets.bind @$el, { model: @model }
-    return @
-
-  remove: ->
-    @parentView.editView = undefined
-    @parentView.$el.find("[data-target=\"#addField\"]").click()
-    super
-
-  # @todo this should really be on the model, not the view
-  addOption: (e) ->
-    $el = $(e.currentTarget)
-    i = @$el.find('.option').index($el.closest('.option'))
-    options = @model.get(Formbuilder.options.mappings.OPTIONS) || []
-    newOption = {label: "", checked: false}
-
-    if i > -1
-      options.splice(i + 1, 0, newOption)
-    else
-      options.push newOption
-
-    @model.set Formbuilder.options.mappings.OPTIONS, options
-    @model.trigger "change:#{Formbuilder.options.mappings.OPTIONS}"
-    @forceRender()
-
-  removeOption: (e) ->
-    $el = $(e.currentTarget)
-    index = @$el.find(".js-remove-option").index($el)
-    options = @model.get Formbuilder.options.mappings.OPTIONS
-    options.splice index, 1
-    @model.set Formbuilder.options.mappings.OPTIONS, options
-    @model.trigger "change:#{Formbuilder.options.mappings.OPTIONS}"
-    @forceRender()
-
-  defaultUpdated: (e) ->
-    $el = $(e.currentTarget)
-
-    unless @model.get(Formbuilder.options.mappings.FIELD_TYPE) == 'checkboxes' # checkboxes can have multiple options selected
-      @$el.find(".js-default-updated").not($el).attr('checked', false).trigger('change')
-
-    @forceRender()
-
-  forceRender: ->
-    @model.trigger('change')
-
-
-class BuilderView extends Backbone.View
-  SUBVIEWS: []
-
-  events:
-    'click .js-save-form': 'saveForm'
-    'click .fb-tabs a': 'showTab'
-    'click .fb-add-field-types a': 'addField'
-    'mouseover .fb-add-field-types': 'lockLeftWrapper'
-    'mouseout .fb-add-field-types': 'unlockLeftWrapper'
-
-  initialize: (options) ->
-    {selector, @formBuilder, @bootstrapData} = options
-
-    # This is a terrible idea because it's not scoped to this view.
-    if selector?
-      @setElement $(selector)
+    # We use this for explicitly deleting fields
+    @fieldsForDeletion = []
 
     # Create the collection, and bind the appropriate events
-    @collection = new FormbuilderCollection
-    @collection.bind 'add', @addOne, @
-    @collection.bind 'reset', @reset, @
-    @collection.bind 'change', @handleFormUpdate, @
-    @collection.bind 'destroy add reset', @hideShowNoResponseFields, @
-    @collection.bind 'destroy', @ensureEditViewScrolled, @
+    @collection = new Formbuilder.Collection(null, parentView: @)
+    @collection.bind 'add', @_onCollectionAdd, @
+
+    # When a model is destroyed, push its id onto the fieldsForDeletion
+    # array so that we can tell the server to destroy it too.
+    @listenTo @collection, 'destroy', (model) ->
+      @fieldsForDeletion.push(model.get('id')) if model.get('id')
+      @ensureEditPaneScrolled()
+      @_onChange()
 
     @render()
-    @collection.reset(@bootstrapData)
-    @bindSaveEvent()
 
-  bindSaveEvent: ->
-    @formSaved = true
-    @saveFormButton = @$el.find(".js-save-form")
-    @saveFormButton.attr('disabled', true).text(Formbuilder.options.dict.ALL_CHANGES_SAVED)
+    # Populate collection with bootstrapData
+    for rf in @options.bootstrapData
+      model = buildModel(rf)
+      @collection.add model, sort: false
 
-    unless !Formbuilder.options.AUTOSAVE
-      setInterval =>
-        @saveForm.call(@)
-      , 5000
+    @collection.bind 'change add', @_onChange, @
 
-    $(window).bind 'beforeunload', =>
-      if @formSaved then undefined else Formbuilder.options.dict.UNSAVED_CHANGES
+    @autosaver = new Autosaver
+      fn: (done) =>
+        return done() unless @isValid()
 
-  reset: ->
-    @$responseFields.html('')
-    @addAll()
+        @collection.sort()
+        initFieldsForDeletion = _.clone(@fieldsForDeletion)
+
+        $.ajax
+          url: @options.endpoint
+          type: 'put'
+          data: JSON.stringify(
+            fields: @collection.toJSON()
+            fields_marked_for_deletion: initFieldsForDeletion
+            last_updated: @options.last_updated
+          )
+          contentType: 'application/json'
+          complete: ->
+            done()
+          error: (xhr) =>
+            @state.set(hasServerErrors: true)
+            @trigger('refreshStatus')
+
+            conflict = xhr.status == 409
+
+            DvlFlash(
+              'error',
+              xhr.responseJSON?.error || t('flash.error.generic'),
+              if conflict then 100000000 # Need to refactor dvl-core, lol
+            )
+
+            if conflict
+              @saveDisabled = true
+              @autosaver.clear()
+              BeforeUnload.disable()
+
+          success: (data) =>
+            @options.last_updated = data.last_updated
+
+            @state.set(hasServerErrors: false)
+            @trigger('refreshStatus')
+
+            @fieldsForDeletion = _.difference(
+              @fieldsForDeletion,
+              initFieldsForDeletion
+            )
+
+            # set the IDs of new response fields, returned from the server
+            for datum in data.response_fields
+              @collection.get(datum.cid)?.set { id: datum.id }, { silent: true }
+
+    @initSortable()
+    @initDraggable()
+    @initBeforeUnload()
+    @initLeftScroll()
 
   render: ->
-    @$el.html Formbuilder.templates['page']()
+    @$el.html JST['form_builder/templates/page'](view: @)
+
+    if @options.identificationFields
+      idView = new FormRenderer.Views.ResponseFieldIdentification(
+        model: new FormRenderer.Models.ResponseFieldIdentification
+      )
+
+      @$el.find('.fb_identification_cover').after(
+        idView.render().$el
+      )
+
+      Formbuilder.disableTabbing(idView.$el)
 
     # Save jQuery objects for easy use
-    @$fbLeft = @$el.find('.fb-left')
-    @$responseFields = @$el.find('.fb-response-fields')
+    @$fbLeft = @$el.find('.fb_left')
+    @$leftAdd = @$el.find('.fb_add_field_wrapper')
+    @$leftEdit = @$el.find('.fb_edit_field_wrapper')
+    @$responseFields = @$el.find('.fb_response_fields')
 
-    @bindWindowScrollEvent()
-    @hideShowNoResponseFields()
-
-    # Render any subviews (this is an easy way of extending the Formbuilder)
-    new subview({parentView: @}).render() for subview in @SUBVIEWS
-
+    @$el.initialize()
     return @
 
-  bindWindowScrollEvent: ->
-    $(window).on 'scroll', =>
-      return if @$fbLeft.data('locked') == true
-      newMargin = Math.max(0, $(window).scrollTop() - @$el.offset().top)
+  ## Initialization logic
+
+  initLeftScroll: ->
+    scrollHandler = _.debounce =>
+      # Don't run the scroll handler while the entire page is scrolling
+      return if @scrollingPage
+
+      oldMargin = parseFloat(@$fbLeft.css('margin-top'))
+      desiredMargin = $(window).scrollTop() - @$el.offset().top + 60
       maxMargin = @$responseFields.height()
+      newMargin = Math.max(0, Math.min(maxMargin, desiredMargin))
+      difference = Math.abs(oldMargin - newMargin)
+      transitionLength = Math.min(
+        difference * 1.5, # 1.5ms per pixel
+        250 # maximum transition length
+      )
 
-      @$fbLeft.css
-        'margin-top': Math.min(maxMargin, newMargin)
+      @$fbLeft.animate { 'margin-top': newMargin }, transitionLength
+    , 100
 
-  showTab: (e) ->
-    $el = $(e.currentTarget)
-    target = $el.data('target')
-    $el.closest('li').addClass('active').siblings('li').removeClass('active')
-    $(target).addClass('active').siblings('.fb-tab-pane').removeClass('active')
+    $(window).on 'scroll', =>
+      scrollHandler() unless @leftWrapperLocked
 
-    @unlockLeftWrapper() unless target == '#editField'
+  initBeforeUnload: ->
+    BeforeUnload.enable
+      if: => @autosaver.isPending() || !@isValid()
+      cb: (url) =>
+        return false unless @isValid()
+        @autosaver.ensure -> Turbolinks.visit url
 
-    if target == '#editField' && !@editView && (first_model = @collection.models[0])
-      @createAndShowEditView(first_model)
+  initSortable: ->
+    new Sortable @$responseFields[0],
+      group:
+        name: 'responseFields'
+        pull: false
+        put: true
+      onUpdate: (_e) =>
+        @_onChange()
+        @ensureEditPaneScrolled()
+      onAdd: (e) =>
+        @addField $(e.item).data('field-type'), { $replaceEl: $(e.item) }
+        @_onChange()
 
-  addOne: (responseField, _, options) ->
-    view = new ViewFieldView
-      model: responseField
+  initDraggable: ->
+    opts = {
+      group:
+        name: 'responseFields'
+        pull: 'clone'
+        put: false
+      sort: false
+    }
+
+    $('.fb_add_field_section').each ->
+      new Sortable @, opts
+
+  ## Left pane
+
+  setLeft: (addOrEdit) ->
+    if addOrEdit == 'edit'
+      @$leftEdit.show()
+      @$leftAdd.hide()
+    else # add
+      @removeEditPane()
+      @$leftAdd.show()
+      @$leftEdit.hide()
+
+  ## Scroll logic
+
+  lockLeftWrapper: ->
+    @leftWrapperLocked = true
+
+  unlockLeftWrapper: ->
+    @leftWrapperLocked = false
+
+  ensureEditPaneScrolled: ->
+    @scrollToField($(".fb_field_wrapper.editing")) if @editView
+
+  scrollToField: ($responseFieldEl) ->
+    if $responseFieldEl[0]
+      @scrollingPage = true
+      scrollPos = @$el.offset().top +
+                  $responseFieldEl.offset().top -
+                  @$responseFields.offset().top
+
+      $.scrollWindowTo scrollPos, 200, =>
+        @scrollingPage = false
+
+  ## Utility
+
+  allFields: ->
+    @$el.find('.fb_field_wrapper')
+
+  modelEl: (model) ->
+    @allFields().filter (_, el) ->
+      $(el).data('cid') == model.cid
+
+  modelDOMIndex: (model) ->
+    @allFields().index @modelEl(model)
+
+  ## Adding fields and things....
+
+  _onCollectionAdd: (rf, _, options) ->
+    # Always show the "other" field
+    rf.set 'showOther', true
+
+    view = new Formbuilder.Views.ViewField
+      model: rf
       parentView: @
 
-    #####
-    # Calculates where to place this new field.
-    #
     # Are we replacing a temporarily drag placeholder?
     if options.$replaceEl?
       options.$replaceEl.replaceWith(view.render().el)
 
-    # Are we adding to the bottom?
-    else if !options.position? || options.position == -1
-      @$responseFields.append view.render().el
-
-    # Are we adding to the top?
-    else if options.position == 0
-      @$responseFields.prepend view.render().el
-
     # Are we adding below an existing field?
-    else if ($replacePosition = @$responseFields.find(".fb-field-wrapper").eq(options.position))[0]
+    else if options.position? &&
+            ($replacePosition = @$responseFields.
+                                    find(".fb_field_wrapper").
+                                    eq(options.position))[0]
       $replacePosition.before view.render().el
 
-    # Catch-all: add to bottom
     else
       @$responseFields.append view.render().el
 
-  setSortable: ->
-    @$responseFields.sortable('destroy') if @$responseFields.hasClass('ui-sortable')
-    @$responseFields.sortable
-      forcePlaceholderSize: true
-      placeholder: 'sortable-placeholder'
-      stop: (e, ui) =>
-        if ui.item.data('field-type')
-          rf = @collection.create Formbuilder.helpers.defaultFieldAttrs(ui.item.data('field-type')), {$replaceEl: ui.item}
-          @createAndShowEditView(rf)
+  _addFieldViaClick: (e) ->
+    position = if ($editing = @$el.find(".fb_field_wrapper.editing"))[0]
+                 @$el.find('.fb_field_wrapper').index($editing) + 1
 
-        @handleFormUpdate()
-        return true
-      update: (e, ui) =>
-        # ensureEditViewScrolled, unless we're updating from the draggable
-        @ensureEditViewScrolled() unless ui.item.data('field-type')
+    @addField(
+      $(e.currentTarget).data('field-type'),
+      position: position
+    )
 
-    @setDraggable()
+  # Adds a new response field.
+  # @param attrs [String or Object] Either a string representing the field type,
+  # or a hash of attributes.
+  addField: (attrs, options) ->
+    if typeof attrs == 'string'
+      attrs = Formbuilder.DEFAULT_FIELD_ATTRS(attrs)
 
-  setDraggable: ->
-    $addFieldButtons = @$el.find("[data-field-type]")
+    model = buildModel(attrs)
+    model.typeUnlocked = true
+    @collection.add model, _.extend(options || {}, sort: false)
+    @collection.sort()
+    @collection.validateField(model)
+    @showEditPane(model)
 
-    $addFieldButtons.draggable
-      connectToSortable: @$responseFields
-      helper: =>
-        $helper = $("<div class='response-field-draggable-helper' />")
-        $helper.css
-          width: @$responseFields.width() # hacky, won't get set without inline style
-          height: '80px'
+  ## Edit pane
 
-        $helper
+  removeEditPane: ->
+    @editView?.remove()
+    @editView = undefined
 
-  addAll: ->
-    @collection.each @addOne, @
-    @setSortable()
-
-  hideShowNoResponseFields: ->
-    @$el.find(".fb-no-response-fields")[if @collection.length > 0 then 'hide' else 'show']()
-
-  addField: (e) ->
-    field_type = $(e.currentTarget).data('field-type')
-    @createField Formbuilder.helpers.defaultFieldAttrs(field_type)
-
-  createField: (attrs, options) ->
-    rf = @collection.create attrs, options
-    @createAndShowEditView(rf)
-    @handleFormUpdate()
-
-  createAndShowEditView: (model) ->
-    $responseFieldEl = @$el.find(".fb-field-wrapper").filter( -> $(@).data('cid') == model.cid )
-    $responseFieldEl.addClass('editing').siblings('.fb-field-wrapper').removeClass('editing')
+  showEditPane: (model) ->
+    @unlockLeftWrapper()
+    $responseFieldEl = @modelEl(model)
+    $responseFieldEl.
+      addClass('editing').
+      siblings('.fb_field_wrapper').
+      removeClass('editing')
 
     if @editView
       if @editView.model.cid is model.cid
-        @$el.find(".fb-tabs a[data-target=\"#editField\"]").click()
-        @scrollLeftWrapper($responseFieldEl)
+        @setLeft('edit')
+        @scrollToField($responseFieldEl)
         return
+      else
+        @editView.remove()
 
-      @editView.remove()
-
-    @editView = new EditFieldView
+    @editView = new Formbuilder.Views.EditField
       model: model
       parentView: @
 
-    $newEditEl = @editView.render().$el
-    @$el.find(".fb-edit-field-wrapper").html $newEditEl
-    @$el.find(".fb-tabs a[data-target=\"#editField\"]").click()
-    @scrollLeftWrapper($responseFieldEl)
+    @$el.find(".fb_edit_field_inner").html @editView.render().$el
+    @setLeft('edit')
+    @$el.find('[data-rv-input="model.label"]').focus()
+    @scrollToField($responseFieldEl)
     return @
 
-  ensureEditViewScrolled: ->
-    return unless @editView
-    @scrollLeftWrapper $(".fb-field-wrapper.editing")
+  ## Save logic
 
-  scrollLeftWrapper: ($responseFieldEl) ->
-    @unlockLeftWrapper()
-    return unless $responseFieldEl[0]
-    $.scrollWindowTo ((@$el.offset().top + $responseFieldEl.offset().top) - @$responseFields.offset().top), 200, =>
-      @lockLeftWrapper()
+  isValid: ->
+    @collection.all (m) ->
+      m.isValid
 
-  lockLeftWrapper: ->
-    @$fbLeft.data('locked', true)
+  calculateValidation: ->
+    @state.set('hasValidationErrors', !@isValid())
+    @trigger('refreshStatus')
 
-  unlockLeftWrapper: ->
-    @$fbLeft.data('locked', false)
+  _onChange: ->
+    @autosaver.saveLater()
+    @trigger('refreshStatus')
 
-  handleFormUpdate: ->
-    return if @updatingBatch
-    @formSaved = false
-    @saveFormButton.removeAttr('disabled').text(Formbuilder.options.dict.SAVE_FORM)
+Formbuilder.Views = {}
 
-  saveForm: (e) ->
-    return if @formSaved
-    @formSaved = true
-    @saveFormButton.attr('disabled', true).text(Formbuilder.options.dict.ALL_CHANGES_SAVED)
-    @collection.sort()
-    payload = JSON.stringify fields: @collection.toJSON()
+# Default attributes for all fields
+Formbuilder.DEFAULT_FIELD_ATTRS = (field_type) ->
+  _.extend({
+    label: 'Untitled',
+    field_type: field_type,
+    required: true,
+    field_options: {}
+  }, Formbuilder.FIELD_TYPES[field_type].defaultAttributes?() || {})
 
-    if Formbuilder.options.HTTP_ENDPOINT then @doAjaxSave(payload)
-    @formBuilder.trigger 'save', payload
+# Default options for checkbox/radio/dropdown fields
+Formbuilder.DEFAULT_OPTIONS = ->
+  [
+    label: 'Option 1',
+    checked: false
+  ,
+    label: 'Option 2',
+    checked: false
+  ]
 
-  doAjaxSave: (payload) ->
-    $.ajax
-      url: Formbuilder.options.HTTP_ENDPOINT
-      type: Formbuilder.options.HTTP_METHOD
-      data: payload
-      contentType: "application/json"
-      success: (data) =>
-        @updatingBatch = true
+Formbuilder.options =
+  BUTTON_CLASS: 'button small'
 
-        for datum in data
-          # set the IDs of new response fields, returned from the server
-          @collection.get(datum.cid)?.set({id: datum.id})
-          @collection.trigger 'sync'
+Formbuilder.mappings =
+  SIZE: 'field_options.size'
+  UNITS: 'field_options.units'
+  LABEL: 'label'
+  FIELD_TYPE: 'field_type'
+  REQUIRED: 'required'
+  ADMIN_ONLY: 'admin_only'
+  BLIND: 'blind'
+  OPTIONS: 'field_options.options'
+  COLUMNS: 'field_options.columns'
+  COLUMN_TOTALS: 'field_options.column_totals'
+  PRESET_VALUES: 'field_options.preset_values'
+  DESCRIPTION: 'field_options.description'
+  INCLUDE_OTHER: 'field_options.include_other_option'
+  INCLUDE_BLANK: 'field_options.include_blank_option'
+  INTEGER_ONLY: 'field_options.integer_only'
+  MIN: 'field_options.min'
+  MAX: 'field_options.max'
+  MINLENGTH: 'field_options.minlength'
+  MAXLENGTH: 'field_options.maxlength'
+  MINROWS: 'field_options.minrows'
+  MAXROWS: 'field_options.maxrows'
+  LENGTH_UNITS: 'field_options.min_max_length_units'
+  DISABLE_CENTS: 'field_options.disable_cents'
+  DISABLE_SECONDS: 'field_options.disable_seconds'
+  DEFAULT_LAT: 'field_options.default_lat'
+  DEFAULT_LNG: 'field_options.default_lng'
+  ADDRESS_FORMAT: 'field_options.address_format'
+  FILE_TYPES: 'field_options.file_types'
+  CONDITIONS: 'field_options.conditions'
+  PHONE_FORMAT: 'field_options.phone_format'
 
-        @updatingBatch = undefined
+sizeMed = ->
+  field_options:
+    size: 'medium'
 
+# All fields, categorized
+Formbuilder.FIELD_CATEGORIES =
+  'Inputs':
+    text:
+      name: 'Text'
+      icon: 'font'
+      defaultAttributes: sizeMed
+    paragraph:
+      name: 'Paragraph'
+      buttonHtml: """<span class="symbol">&#182;</span> Paragraph"""
+      defaultAttributes: sizeMed
+    checkboxes:
+      name: 'Checkboxes'
+      icon: 'check'
+      defaultAttributes: ->
+        field_options:
+          options: Formbuilder.DEFAULT_OPTIONS()
+    radio:
+      name: 'Multiple Choice'
+      icon: 'circle-o'
+      defaultAttributes: ->
+        field_options:
+          options: Formbuilder.DEFAULT_OPTIONS()
+    date:
+      name: 'Date'
+      icon: 'calendar'
+    dropdown:
+      name: 'Dropdown'
+      icon: 'caret-down'
+      defaultAttributes: ->
+        field_options:
+          options: Formbuilder.DEFAULT_OPTIONS()
+          include_blank_option: false
+    time:
+      name: 'Time'
+      icon: 'clock-o'
+      defaultAttributes: ->
+        field_options:
+          disable_seconds: true
+    number:
+      name: 'Numeric'
+      buttonHtml: """<span class="symbol">123</span> Numeric"""
+    phone:
+      name: 'Phone'
+      icon: 'phone'
+      defaultAttributes: ->
+        field_options:
+          phone_format: 'us'
+    website:
+      name: 'Website'
+      icon: 'link'
+    email:
+      name: 'Email'
+      icon: 'envelope'
+    price:
+      name: 'Price'
+      icon: 'usd'
+    address:
+      name: 'Address'
+      icon: 'home'
+    file:
+      name: 'File'
+      icon: 'cloud-upload'
+    table:
+      name: 'Table'
+      icon: 'table'
+      defaultAttributes: ->
+        field_options:
+          columns: [
+            label: 'Column 1'
+          ,
+            label: 'Column 2'
+          ]
+  'Geographic':
+    map_marker:
+      name: 'Map Marker'
+      icon: 'map-marker'
+  'Non-input':
+    section_break:
+      name: 'Section Break'
+      icon: 'minus'
+      defaultAttributes: sizeMed
+    page_break:
+      name: 'Page Break'
+      icon: 'file'
+    block_of_text:
+      name: 'Block of Text'
+      icon: 'font'
+      defaultAttributes: sizeMed
 
-class Formbuilder
-  @helpers:
-    defaultFieldAttrs: (field_type) ->
-      attrs = {}
-      attrs[Formbuilder.options.mappings.LABEL] = 'Untitled'
-      attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type
-      attrs[Formbuilder.options.mappings.REQUIRED] = true
-      attrs['field_options'] = {}
-      Formbuilder.fields[field_type].defaultAttributes?(attrs) || attrs
+# Flatten fields from above
+Formbuilder.FIELD_TYPES = _.extend.apply(@,
+  _.union({}, _.values(Formbuilder.FIELD_CATEGORIES))
+)
 
-    simple_format: (x) ->
-      x?.replace(/\n/g, '<br />')
+validators =
+  duplicateColumns: (model) ->
+    return false unless model.field_type == 'table'
+    colNames = _.map model.getColumns(), (col) -> col.label
+    _.uniq(colNames).length != colNames.length
 
-  @options:
-    BUTTON_CLASS: 'fb-button'
-    HTTP_ENDPOINT: ''
-    HTTP_METHOD: 'POST'
-    AUTOSAVE: true
-    CLEAR_FIELD_CONFIRM: false
+  minMaxMismatch: (model) ->
+    return false unless model.field_type == 'number'
+    min = parseFloat(model.get('field_options.min'))
+    max = parseFloat(model.get('field_options.max'))
+    if min && max && min > max
+      true
 
-    mappings:
-      SIZE: 'field_options.size'
-      UNITS: 'field_options.units'
-      LABEL: 'label'
-      FIELD_TYPE: 'field_type'
-      REQUIRED: 'required'
-      ADMIN_ONLY: 'admin_only'
-      OPTIONS: 'field_options.options'
-      DESCRIPTION: 'field_options.description'
-      INCLUDE_OTHER: 'field_options.include_other_option'
-      INCLUDE_BLANK: 'field_options.include_blank_option'
-      INTEGER_ONLY: 'field_options.integer_only'
-      MIN: 'field_options.min'
-      MAX: 'field_options.max'
-      MINLENGTH: 'field_options.minlength'
-      MAXLENGTH: 'field_options.maxlength'
-      LENGTH_UNITS: 'field_options.min_max_length_units'
+  minMaxLengthMismatch: (model) ->
+    return false unless model.field_type == 'paragraph' || model.field_type == 'text'
+    min = parseInt(model.get('field_options.minlength'), 10)
+    max = parseInt(model.get('field_options.maxlength'), 10)
+    if min && max && min > max
+      true
 
-    dict:
-      ALL_CHANGES_SAVED: 'All changes saved'
-      SAVE_FORM: 'Save form'
-      UNSAVED_CHANGES: 'You have unsaved changes. If you leave this page, you will lose those changes!'
+  minMaxRowsMismatch: (model) ->
+    return false unless model.field_type == 'table'
+    min = parseInt(model.get('field_options.minrows'), 10)
+    max = parseInt(model.get('field_options.maxrows'), 10)
+    if min && max && min > max
+      true
 
-  @fields: {}
-  @inputFields: {}
-  @nonInputFields: {}
+  blankOption: (model) ->
+    return false unless model.field_type in ['radio', 'checkboxes', 'dropdown']
+    _.any model.getOptions(), (opt) ->
+      !opt.label
 
-  @registerField: (name, opts) ->
-    for x in ['view', 'edit']
-      opts[x] = _.template(opts[x])
+  blankColumn: (model) ->
+    return false unless model.field_type == 'table'
+    _.any model.getColumns(), (col) ->
+      !col.label
 
-    opts.field_type = name
+Formbuilder.Collection = Backbone.Collection.extend
+  initialize: (_, options) ->
+    { @parentView } = options
+    @on 'add', @copyCidToModel
+    @on 'remove', @removeConditionals
+    @on 'remove change:isValid', => @parentView.calculateValidation()
 
-    Formbuilder.fields[name] = opts
+    @on 'change', (model) =>
+      # If the model is valid, validate silently. If there are already
+      # errors, we want to clear them ASAP.
+      @validateField(model, undefined, model.isValid)
 
-    if opts.type == 'non_input'
-      Formbuilder.nonInputFields[name] = opts
+    # Otherwise, be careful about _when_ we validate
+    @on 'change:field_options.columns change:field_options.columns.*', (model) =>
+      @validateField(model, 'duplicateColumns')
+
+  validateField: (model, useValidator, silent) ->
+    errs = $.extend {}, model.get('errors')
+
+    # If useValidator is passed, only use that specific validator
+    if useValidator
+      errs[useValidator] = validators[useValidator](model)
     else
-      Formbuilder.inputFields[name] = opts
+      for k, validator of validators
+        errs[k] = validator(model)
 
-  constructor: (opts={}) ->
+    model.validationErrors = errs
+
+    unless silent
+      model.set 'errors', errs
+
+    model.isValid = !_.any( _.values(errs), ((v) -> v) )
+
+    unless silent
+      model.set 'isValid', model.isValid
+
+  comparator: (model) ->
+    @parentView.modelDOMIndex(model)
+
+  copyCidToModel: (model) ->
+    model.attributes.cid = model.cid
+
+  input_fields: ->
+    @models.filter (m) -> m.input_field
+
+  removeConditionals: (removing) ->
+    @models.forEach (m) =>
+      if (oldConditions = m.get(Formbuilder.mappings.CONDITIONS))
+        newConditions = _.reject oldConditions, (condition) ->
+          "#{condition.response_field_id}" == "#{removing.id}"
+
+        if !_.isEqual(oldConditions, newConditions)
+          m.set Formbuilder.mappings.CONDITIONS, newConditions
+
+          # Re-render edit view in case the affected field is being edited
+          @parentView.editView?.render()
+
+Formbuilder.Views.ViewField = Backbone.View.extend
+  className: "fb_field_wrapper"
+
+  events:
+    'click .cover': 'focusEditView'
+    'click .js-duplicate': 'duplicate'
+    'click [data-hard-remove]': 'hardRemove'
+    'click [data-soft-remove]': 'softRemove'
+    'click [data-toggle="dropdown"]': 'setEditing'
+
+  initialize: (options) ->
+    {@parentView} = options
+    @listenTo @model, 'change', @render
+    @listenTo @model, 'destroy', @remove
+
+  render: ->
+    @model.setExistingValue?(null)
+
+    @$el.data('cid', @model.cid).html JST["form_builder/templates/view/base"](
+      hasResponses: @parentView.options.hasResponses,
+      model: @model
+    )
+
+    @rendererView ||= new FormRenderer.Views[classify(@model.field_type)](
+      model: @model
+      showLabels: true
+    )
+
+    @toggleErrorClass()
+    @$el.append @rendererView.render().el
+    Formbuilder.disableTabbing(@$el)
+    @$el.initialize()
+    @rendererView.trigger('shown')
+    return @
+
+  toggleErrorClass: ->
+    if @model.get('isValid') == false
+      @$el.addClass('has_errors')
+    else
+      @$el.removeClass('has_errors')
+
+  focusEditView: ->
+    @parentView.showEditPane(@model)
+
+  clearConfirmMsg: ->
+    if @model.input_field
+      "Are you sure you want to delete this field? " +
+      "You'll also lose access to any submitted answers to this field."
+
+  setEditing: ->
+    unless @$el.hasClass('editing')
+      @parentView.showEditPane(@model)
+
+  hardRemove: ->
+    if @parentView.options.hasResponses
+      $.rails.showConfirmDialog @clearConfirmMsg(), $.proxy(@clear, @)
+    else
+      @clear()
+
+  softRemove: ->
+    @model.set Formbuilder.mappings.ADMIN_ONLY, true
+    @model.set Formbuilder.mappings.REQUIRED, false
+    @$el.appendTo(@$el.closest('.fb_response_fields'))
+    @parentView._onChange()
+    @parentView.ensureEditPaneScrolled()
+
+  clear: ->
+    @model.destroy()
+
+  duplicate: ->
+    attrs = _.deepClone(@model.attributes)
+    delete attrs['id']
+    attrs['label'] += ' Copy'
+    newModel = @parentView.addField(
+      attrs,
+      position: @parentView.modelDOMIndex(@model) + 1
+    )
+
+Formbuilder.Views.EditField = Backbone.View.extend
+  className: "fb_edit_inner"
+
+  events:
+    'click .js-add-option': 'addOption'
+    'click .js-remove-option': 'removeOption'
+    'change .js-change-field-type': 'changeFieldType'
+    'click [data-show-modal]': 'showModal'
+    'blur [data-rv-input="model.field_options.minlength"]': 'auditMinLength'
+    'blur [data-rv-input="model.field_options.maxlength"]': 'auditMaxLength'
+    'blur [data-rv-input="model.field_options.min"]': 'auditMin'
+    'blur [data-rv-input="model.field_options.max"]': 'auditMax'
+    'blur [data-rv-input="model.field_options.minrows"]': 'auditMinRows'
+    'blur [data-rv-input="model.field_options.maxrows"]': 'auditMaxRows'
+    'blur [data-rv-input^="model.field_options.options."]': 'validateField'
+    'blur [data-rv-input^="model.field_options.columns."]': 'validateField'
+    'change [data-rv-value="model.field_options.min_max_length_units"]': 'setSizeToRecommendedSize'
+    'click .js-add-condition': 'addCondition'
+    'click .js-remove-condition': 'removeCondition'
+    'click .js-set-checked': 'setChecked'
+
+  initialize: (options) ->
+    {@parentView} = options
+
+    @listenTo @model, 'destroy', ->
+      @parentView.removeEditPane()
+      @parentView.setLeft('add')
+
+    # 1. When condition field changed, reset method & value
+    # 2. When condition method changed, reset value
+    @listenTo @model, 'change:field_options.conditions.*', (m) =>
+      for i in [0..(@model.getConditions().length - 1)]
+        newVal = @conditionValueOptions(i)?[0]
+
+        if m.hasChanged("field_options.conditions.#{i}.response_field_id")
+          @setCondition(i, method: @conditionMethodsAtIndex(i)[0].key, value: newVal)
+        else if m.hasChanged("field_options.conditions.#{i}.method")
+          @setCondition(i, value: newVal)
+
+  render: ->
+    templateName = if @model.input_field then 'base' else 'base_non_input'
+    @$el.html JST["form_builder/templates/edit/#{templateName}"](@)
+    rivets.bind @$el, model: @model
+    @$el.initialize()
+
+    if @model.hasColumnsOrOptions()
+      new Sortable @$el.find('.fb_options')[0],
+        handle: '.fa-reorder'
+        onUpdate: $.proxy(@_optionsSorted, @)
+
+    return @
+
+  _optionsSorted: ->
+    newOrder = @$el.find('.fb_options [data-index]').map ->
+      $(@).data('index')
+    .get()
+
+    @model.orderOptions(newOrder)
+    @render()
+
+  addOption: (e) ->
+    @model.addOptionOrColumn()
+    @render()
+
+  removeOption: (e) ->
+    i = @$el.find(".js-remove-option").index($(e.currentTarget))
+    @model.removeOptionOrColumn(i)
+    @render()
+
+  showModal: (e) ->
+    modal = new Formbuilder.Views["#{$(e.currentTarget).data('show-modal')}Modal"]
+      model: @model
+      parentView: @
+
+    $el = modal.render().$el
+
+    $el.
+      appendTo('body').
+      modal('show')
+
+    modal.shown?()
+
+  changeFieldType: (e) ->
+    newAttrs = Formbuilder.DEFAULT_FIELD_ATTRS($(e.currentTarget).val())
+
+    # Clone everything *except* field_type and field_options
+    _.extend(
+      newAttrs,
+      _.omit(@model.attributes, 'field_type', 'field_options')
+    )
+
+    # Clone field_options
+    newAttrs.field_options = _.extend(
+      {},
+      newAttrs.field_options,
+      @model.attributes.field_options
+    )
+
+    delete newAttrs.value
+
+    newIdx = @parentView.modelDOMIndex(@model)
+
+    # Remove ID and "destroy"
+    @model.set 'id', null
+    @model.destroy()
+
+    @parentView.addField(
+      newAttrs,
+      position: newIdx
+    )
+
+  isChecked: (i) ->
+    @model.getOptions()[i].checked
+
+  setChecked: (e) ->
+    idx = $(e.currentTarget).closest('[data-index]').data('index')
+    newVal = if @isChecked(idx) then false else true
+    newOpts = $.extend(true, [], @model.getOptions()) # deep clone
+
+    # Multiple can be checked
+    if @model.field_type == 'checkboxes'
+      newOpts[idx].checked = newVal
+    else
+      _.each newOpts, (o, i) ->
+        o.checked = if i == idx then newVal else false
+
+    @model.set @model.columnOrOptionKeypath(), newOpts.slice(0)
+    @render()
+
+  validateField: ->
+    @parentView.collection.validateField(@model)
+
+  auditMinLength: ->
+    @normalizePositiveInteger(Formbuilder.mappings.MINLENGTH)
+    @setSizeToRecommendedSize()
+    @validateField()
+
+  auditMaxLength: ->
+    @normalizePositiveInteger(Formbuilder.mappings.MAXLENGTH)
+    @validateField()
+
+  auditMin: ->
+    @normalizeFloat(Formbuilder.mappings.MIN)
+    @validateField()
+
+  auditMax: ->
+    @normalizeFloat(Formbuilder.mappings.MAX)
+    @validateField()
+
+  auditMinRows: ->
+    @normalizePositiveInteger(Formbuilder.mappings.MINROWS)
+    @validateField()
+
+  auditMaxRows: ->
+    @normalizePositiveInteger(Formbuilder.mappings.MAXROWS)
+    @validateField()
+
+  normalizePositiveInteger: (map) ->
+    val = @model.get(map)
+    parsed = parseInt(val, 10)
+
+    if _.isNaN(parsed) || parsed < 1
+      @model.unset map
+    else
+      @model.set map, "#{parsed}"
+
+  normalizeFloat: (map) ->
+    val = @model.get(map)
+    parsed = parseFloat(val)
+
+    if _.isNaN(parsed)
+      @model.unset map
+    else
+      @model.set map, "#{parsed}"
+
+  setSizeToRecommendedSize: ->
+    if (rec = @recommendedParagraphSize())
+      @model.set Formbuilder.mappings.SIZE, rec
+      @render()
+
+  recommendedParagraphSize: ->
+    parsed = parseInt(@model.get(Formbuilder.mappings.MINLENGTH))
+    words = @model.get(Formbuilder.mappings.LENGTH_UNITS) == 'words'
+
+    if (words && parsed > 60) || (!words && parsed > 1000)
+      'large'
+    else if (words && parsed > 30) || (!words && parsed > 350)
+      'medium'
+
+  ## Conditions
+
+  blankCondition: ->
+    rf = @conditionFieldOptions()[0]
+
+    {
+      action: 'show'
+      response_field_id: rf.id,
+      method: _.first(@conditionMethodsForType(rf.field_type)).key
+      value: optionsForResponseField(rf)?[0]
+    }
+
+  addCondition: ->
+    conditions = @model.getConditions().slice(0)
+    conditions.push(@blankCondition())
+    @model.set Formbuilder.mappings.CONDITIONS, conditions
+    @render()
+
+  removeCondition: (e) ->
+    i = $(e.currentTarget).data('index')
+    conditions = @model.getConditions().slice(0)
+    conditions.splice i, 1
+    @model.set Formbuilder.mappings.CONDITIONS, conditions
+    @render()
+
+  conditionField: (i) ->
+    if (id = @model.getConditionAt(i).response_field_id)
+      # Can't use .get on newly-created models
+      @parentView.collection.find (m) -> "#{m.id}" == "#{id}"
+
+  conditionMethod: (i) ->
+    @model.getConditionAt(i).method
+
+  conditionFieldOptions: ->
+    thisIdx = @parentView.collection.indexOf(@model)
+
+    # Only allow setting conditions on fields that come *before*
+    # this one.
+    @parentView.collection.filter (field, index) =>
+      field.input_field &&
+      @conditionMethodsForType(field.field_type).length &&
+      index < thisIdx
+
+  conditionMethodsForType: (field_type) ->
+    _.filter Formbuilder.CONDITION_METHODS, (method) ->
+      field_type in method.field_types
+
+  conditionMethodsAtIndex: (i) ->
+    if (field_type = @conditionField(i)?.field_type)
+      @conditionMethodsForType(field_type)
+    else
+      []
+
+  conditionValueOptions: (i) ->
+    optionsForResponseField(@conditionField(i))
+
+  canAddConditions: ->
+    @conditionFieldOptions().length > 0
+
+  setCondition: (i, attrs) ->
+    conditions = @model.getConditions().slice(0)
+    _.extend conditions[i], attrs
+    @model.set Formbuilder.mappings.CONDITIONS, conditions, silent: true
+    @render()
+
+FormRenderer.Models.ResponseField::getConditionAt = (i) ->
+  @getConditions()[i] || {}
+
+FormRenderer.Models.ResponseField::columnOrOptionKeypath = ->
+  switch @field_type
+    when 'table'
+      'field_options.columns'
+    when 'checkboxes', 'radio', 'dropdown'
+      'field_options.options'
+
+FormRenderer.Models.ResponseField::hasColumnsOrOptions = ->
+  !!@columnOrOptionKeypath()
+
+FormRenderer.Models.ResponseField::addOptionOrColumn = (i) ->
+  opts = if @field_type == 'table' then @getColumns() else @getOptions()
+  newOpts = opts.slice(0)
+  newOpt =
+    label: "#{if @field_type == 'table' then 'Column' else 'Option'} #{opts.length + 1}"
+  newOpt.checked = false unless @field_type == 'table'
+  newOpts.push newOpt
+  @set @columnOrOptionKeypath(), newOpts
+
+FormRenderer.Models.ResponseField::removeOptionOrColumn = (i) ->
+  opts = @get(@columnOrOptionKeypath())
+  newOpts = opts.slice(0)
+  newOpts.splice i, 1
+  @set @columnOrOptionKeypath(), newOpts
+
+FormRenderer.Models.ResponseField::orderOptions = (newOrder) ->
+  opts = @get(@columnOrOptionKeypath())
+  newOpts = _.sortBy opts.slice(0), (_opt, i) ->
+    _.indexOf(newOrder, i)
+  @set @columnOrOptionKeypath(), newOpts
+
+Formbuilder.CONDITION_METHODS = [
+  key: 'eq'
+  label: 'is'
+  field_types: [
+    'date', 'dropdown', 'email', 'number', 'paragraph', 'price',
+    'radio', 'text', 'time', 'website'
+  ]
+,
+  key: 'contains'
+  label: 'contains'
+  field_types: [
+    'checkboxes', 'text', 'paragraph', 'website', 'email',
+    'address', 'table'
+  ]
+,
+  key: 'lt'
+  label: 'is less than'
+  field_types: ['number', 'price']
+,
+  key: 'gt'
+  label: 'is greater than'
+  field_types: ['number', 'price']
+,
+  key: 'shorter'
+  label: 'is shorter than'
+  field_types: ['text', 'paragraph']
+,
+  key: 'longer'
+  label: 'is longer than'
+  field_types: ['text', 'paragraph']
+]
+
+Formbuilder.Views.BaseModal = Backbone.View.extend
+  className: 'modal'
+
+  events:
+    'click button': ->
+      @save()
+      @hideAndRemove()
+    'hidden.bs.modal': 'remove'
+
+  initialize: (options) ->
+    { @parentView } = options
+
+  hideAndRemove: ->
+    @$el.modal('hide')
+    @remove()
+
+Formbuilder.Views.PresetValuesModal = Formbuilder.Views.BaseModal.extend
+  render: ->
+    @$el.html(JST["form_builder/templates/edit/preset_values_modal"](rf: @model))
+    @$el.initialize()
+    return @
+
+  save: ->
+    @model.set Formbuilder.mappings.PRESET_VALUES, @getValues()
+
+  getValues: ->
+    _.tap {}, (h) =>
+      for k, column of @model.getColumns()
+        h[column.label] = @$el.find("[data-col=#{k}]").map( -> $(@).val() ).get()
+
+Formbuilder.Views.DefaultLocationModal = Formbuilder.Views.BaseModal.extend
+  render: ->
+    @$el.html(JST["form_builder/templates/edit/default_location_modal"](rf: @model))
+    @initMap()
+    @$el.initialize()
+    return @
+
+  # map.js is already required, since we've already rendered the field
+  initMap: ->
+    @$mapEl = @$el.find('.fb_default_location_modal_map')
+
+    @map = L.mapbox.map @$mapEl[0], App.MAPBOX_TILE_ID,
+      center: @model.defaultLatLng() || App.DEFAULT_LAT_LNG
+      zoom: 13
+
+  save: ->
+    @model.set Formbuilder.mappings.DEFAULT_LAT, @map.getCenter().lat.toFixed(7)
+    @model.set Formbuilder.mappings.DEFAULT_LNG, @map.getCenter().lng.toFixed(7)
+
+  shown: ->
+    @map._onResize()
+
+Formbuilder.Views.BulkAddOptionsModal = Formbuilder.Views.BaseModal.extend
+  render: ->
+    @$el.html(JST["form_builder/templates/edit/bulk_add_options_modal"]({rf: @model}))
+    @$el.initialize()
+    return @
+
+  save: ->
+    @addOptions()
+
+  addOptions: ->
+    val = @$el.find('textarea').val()
+    return unless val
+
+    options = _.reject @model.getOptions(), (o) -> !o.label
+
+    for opt in val.split("\n")
+      options.push(label: opt, checked: false)
+
+    @model.set Formbuilder.mappings.OPTIONS, options
+    @parentView.render()
+
+class Formbuilder.StatusIndicatorController
+  constructor: (options) ->
     _.extend @, Backbone.Events
-    args = _.extend opts, {formBuilder: @}
-    @mainView = new BuilderView args
+    { @fb } = options
+    @$el = $('.save_status')
+    @$btn = $('.bottom_status_bar_buttons .continue_button')
+    @listenTo @fb, 'refreshStatus', @updateClass
 
-window.Formbuilder = Formbuilder
+  updateClass: ->
+    @$el.removeClass('is_error is_saving is_invalid')
+    @$btn.removeClass('disabled')
 
-if module?
-  module.exports = Formbuilder
-else
-  window.Formbuilder = Formbuilder
+    if @fb.state.get('hasServerErrors')
+      @$el.addClass('is_error')
+    else if @fb.state.get('hasValidationErrors')
+      @$btn.addClass('disabled')
+      @$el.addClass('is_invalid')
+    else if @fb.autosaver.isPending()
+      @$el.addClass('is_saving')
+
+Formbuilder.disableTabbing = ($el) ->
+  $el.find('a, button, :input').attr('tabindex', '-1')

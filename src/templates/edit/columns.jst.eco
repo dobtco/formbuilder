@@ -1,0 +1,57 @@
+<hr />
+
+<div class='fb_edit_section'>
+  <label>Columns</label>
+
+  <div class='fb_options'>
+    <% for option, i in @model.getColumns(): %>
+      <fieldset class='option drag_list_item' data-index="<%= i %>">
+        <span class='drag_list_item_box'>
+          <i class='fa fa-reorder drag_list_reorder'></i>
+          <span class='drag_list_item_input'>
+            <input type="text" data-rv-input="model.field_options.columns.<%= i %>.label" />
+          </span>
+        </span>
+        <% unless @model.getColumns().length < 2: %>
+          <a class="js-remove-option drag_list_remove" title="Remove Column"><i class='fa fa-minus-circle'></i></a>
+        <% end %>
+      </fieldset>
+    <% end %>
+  </div>
+
+  <div class='form_error' data-rv-show='model.errors.duplicateColumns'>You can't have columns with duplicate names.</div>
+  <div class='form_error' data-rv-show='model.errors.blankColumn'>Please enter a label for each column.</div>
+
+  <div class='fb_bottom_add'>
+    <a class="js-add-option <%= Formbuilder.options.BUTTON_CLASS %>">Add column</a>
+  </div>
+
+  <label class='control'>
+    <input type="checkbox" data-rv-checked="model.<%= Formbuilder.mappings.COLUMN_TOTALS %>" />
+    Display column totals for numeric fields
+  </label>
+</div>
+
+<hr />
+
+<div class='fb_edit_section fb_edit_section_horiz fb_edit_section_num_rows fb_edit_section_between'>
+  <label># of rows</label>
+  <div class='fb_edit_section_horiz_content'>
+    <span>Between</span>
+    <input type="text" data-rv-input="model.<%= Formbuilder.mappings.MINROWS %>" />
+    <span>and</span>
+    <input type="text" data-rv-input="model.<%= Formbuilder.mappings.MAXROWS %>" />
+  </div>
+</div>
+
+<div class='form_error' data-rv-show='model.errors.minMaxRowsMismatch'>Please enter a maximum larger than the minimum.</div>
+
+<p class='fb_edit_help'>
+  Respondents will be able to add/remove rows within these contraints.
+  You can leave these blank for no limits.
+</p>
+</div>
+
+<hr />
+
+<a class='<%= Formbuilder.options.BUTTON_CLASS %>' data-show-modal='PresetValues'>Define preset values</a>

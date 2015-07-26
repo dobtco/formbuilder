@@ -1,0 +1,15 @@
+<div class='fb_right'>
+  <div class='fb_identification_field_wrapper'>
+    <div class='fb_identification_cover'></div>
+    <div class='fb_identification_hint'>
+      <% if (view.options.identificationFields) { %>
+        Automatically collected for signed-in users.
+      <% } else { %>
+        Since this form doesn't collect names or email addresses, responses will be anonymous.
+        You won't be able to collect signatures or follow up with respondents.
+      <% } %>
+      <a data-change-id-level>Change identification level?</a>
+    </div>
+  </div>
+  <div class='fb_response_fields'></div>
+</div>

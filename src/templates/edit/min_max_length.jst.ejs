@@ -1,0 +1,17 @@
+<hr />
+
+<div class='fb_edit_section fb_edit_section_horiz fb_edit_section_min_max_length fb_edit_section_between'>
+  <label>Min / Max Length</label>
+  <div class='fb_edit_section_horiz_content'>
+    <span>Between</span>
+    <input type="text" data-rv-input="model.<%= Formbuilder.mappings.MINLENGTH %>" />
+    <span>and</span>
+    <input type="text" data-rv-input="model.<%= Formbuilder.mappings.MAXLENGTH %>" />
+    <select data-rv-value="model.<%= Formbuilder.mappings.LENGTH_UNITS %>" data-width="100%">
+      <option value="characters">characters</option>
+      <option value="words">words</option>
+    </select>
+  </div>
+</div>
+
+<div class='form_error' data-rv-show='model.errors.minMaxLengthMismatch'>Please enter a maximum length larger than the minimum.</div>

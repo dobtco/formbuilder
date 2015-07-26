@@ -1,0 +1,4 @@
+<div class='fb_edit_section fb_edit_section_label'>
+  <label>Label</label>
+  <input type='text' data-rv-input='model.<%= Formbuilder.mappings.LABEL %>' />
+</div>

@@ -1,0 +1,1 @@
+<%- JST['form_builder/templates/edit/default_location']() %>

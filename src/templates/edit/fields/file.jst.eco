@@ -1,0 +1,14 @@
+<hr />
+
+<div class='fb_edit_section fb_edit_section_horiz'>
+  <label>Allow users to upload...</label>
+  <div class='fb_edit_section_horiz_content'>
+    <select data-rv-value="model.<%= Formbuilder.mappings.FILE_TYPES %>" data-width="70%">
+      <option value=''>Any type of file</option>
+      <option value='images'>Images only</option>
+      <option value='audio'>Audio files only</option>
+      <option value='videos'>Videos only</option>
+      <option value='docs'>Documents only</option>
+    </select>
+  </div>
+</div>

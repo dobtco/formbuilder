@@ -1,0 +1,16 @@
+<div class='fb_edit_section'>
+  <% if @model.typeUnlocked: %>
+    <label>Type</label>
+    <select data-width='100%' class='js-change-field-type'>
+      <% for k, field of Formbuilder.FIELD_TYPES: %>
+        <option value='<%= k %>' <% if @model.field_type == k: %>selected<% end %>>
+          <%= field.name %>
+        </option>
+      <% end %>
+    </select>
+  <% else: %>
+    <div class='label'>
+      <%= Formbuilder.FIELD_TYPES[@model.field_type].name %>
+    </div>
+  <% end %>
+</div>

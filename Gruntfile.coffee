@@ -1,21 +1,9 @@
-ALL_TASKS = ['jst:all', 'coffee:all', 'concat:all', 'stylus:all', 'clean:compiled']
-
-# formbuilder.js must be compiled in this order:
-# 1. rivets-config
-# 2. main
-# 3. fields js
-# 4. fields templates
-
 module.exports = (grunt) ->
-
-  path = require('path')
-  exec = require('child_process').exec
-
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-contrib-concat')
   grunt.loadNpmTasks('grunt-contrib-cssmin')
-  grunt.loadNpmTasks('grunt-contrib-jst')
-  grunt.loadNpmTasks('grunt-contrib-stylus')
+  grunt.loadNpmTasks('grunt-eco')
+  grunt.loadNpmTasks('grunt-contrib-sass')
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-contrib-clean')
@@ -23,77 +11,58 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-karma')
 
   grunt.initConfig
-
+    bower: grunt.file.readJSON("bower.json")
     pkg: '<json:package.json>'
     srcFolder: 'src'
-    compiledFolder: 'compiled'  # Temporary holding area.
+    compiledFolder: 'compiled' # Temporary holding area.
     distFolder: 'dist'
-    vendorFolder: 'vendor'
     testFolder: 'test'
 
-    jst:
+    eco:
       all:
         options:
-          namespace: 'Formbuilder.templates'
-          processName: (filename) ->
-            signalStr = "templates/" #strip extra filepath and extensions
-            filename.slice(filename.indexOf(signalStr)+signalStr.length, filename.indexOf(".html"))
-
+          basePath: '<%= srcFolder %>/templates'
         files:
-          '<%= compiledFolder %>/templates.js': '<%= srcFolder %>/templates/**/*.html'
+          '<%= compiledFolder %>/templates.js': '<%= srcFolder %>/templates/**/*.eco'
 
     coffee:
       all:
         files:
           '<%= compiledFolder %>/scripts.js': [
-            '<%= srcFolder %>/scripts/underscore_mixins.coffee'
-            '<%= srcFolder %>/scripts/rivets-config.coffee'
             '<%= srcFolder %>/scripts/main.coffee'
-            '<%= srcFolder %>/scripts/fields/*.coffee'
           ]
 
     concat:
       all:
         files:
-          '<%= distFolder %>/formbuilder.js': '<%= compiledFolder %>/*.js'
-          '<%= vendorFolder %>/js/vendor.js': [
-            'bower_components/ie8-node-enum/index.js'
-            'bower_components/jquery/jquery.js'
-            'bower_components/jquery-ui/ui/jquery.ui.core.js'
-            'bower_components/jquery-ui/ui/jquery.ui.widget.js'
-            'bower_components/jquery-ui/ui/jquery.ui.mouse.js'
-            'bower_components/jquery-ui/ui/jquery.ui.draggable.js'
-            'bower_components/jquery-ui/ui/jquery.ui.droppable.js'
-            'bower_components/jquery-ui/ui/jquery.ui.sortable.js'
-            'bower_components/jquery.scrollWindowTo/index.js'
-            'bower_components/underscore/underscore-min.js'
-            'bower_components/underscore.mixin.deepExtend/index.js'
-            'bower_components/rivets/dist/rivets.js'
-            'bower_components/backbone/backbone.js'
-            'bower_components/backbone-deep-model/src/deep-model.js'
+          '<%= compiledFolder %>/vendor.js': [
+            'bower_components/formrenderer-base/dist/formrenderer.js'
           ]
-      mobile_friendly:
+          '<%= compiledFolder %>/formbuilder.js': [
+            '<%= compiledFolder %>/scripts.js'
+            '<%= compiledFolder %>/templates.js'
+          ]
+      dist:
         files:
-          '<%= distFolder %>/formbuilder.js': '<%= compiledFolder %>/*.js'
-          '<%= vendorFolder %>/js/vendor_mobile_friendly.js': [
-            'bower_components/ie8-node-enum/index.js'
-            'bower_components/jquery.scrollWindowTo/index.js'
-            'bower_components/underscore.mixin.deepExtend/index.js'
-            'bower_components/rivets/dist/rivets.js'
-            'bower_components/backbone-deep-model/src/deep-model.js'
+          '<%= distFolder %>/formbuilder.standalone.uncompressed.js': [
+            '<%= compiledFolder %>/formbuilder.js'
           ]
+          '<%= distFolder %>/formbuilder.uncompressed.js': [
+            '<%= compiledFolder %>/vendor.js'
+            '<%= compiledFolder %>/formbuilder.js'
+          ]
+
+    sass:
+      all:
+        options:
+          sourcemap: 'none'
+        files:
+          '<%= distFolder %>/formbuilder.uncompressed.css': '<%= srcFolder %>/styles/main.scss'
 
     cssmin:
       dist:
         files:
-          '<%= distFolder %>/formbuilder-min.css': '<%= distFolder %>/formbuilder.css'
-          '<%= vendorFolder %>/css/vendor.css': 'bower_components/font-awesome/css/font-awesome.css'
-
-    stylus:
-      all:
-        files:
-          '<%= compiledFolder %>/formbuilder.css': '<%= srcFolder %>/styles/**.styl'
-          '<%= distFolder %>/formbuilder.css': '<%= compiledFolder %>/**/*.css'
+          '<%= distFolder %>/formbuilder.css': '<%= distFolder %>/formbuilder.uncompressed.css'
 
     clean:
       compiled:
@@ -102,23 +71,33 @@ module.exports = (grunt) ->
     uglify:
       dist:
         files:
-          '<%= distFolder %>/formbuilder-min.js': '<%= distFolder %>/formbuilder.js'
+          '<%= distFolder %>/formbuilder.standalone.js': '<%= distFolder %>/formbuilder.standalone.uncompressed.js'
+          '<%= distFolder %>/formbuilder.js': '<%= distFolder %>/formbuilder.uncompressed.js'
 
     watch:
-      all:
-        files: ['<%= srcFolder %>/**/*.{coffee,styl,html}']
-        tasks: ALL_TASKS
+      build:
+        files: [
+          '<%= srcFolder %>/**/*.{coffee,eco}'
+        ]
+        tasks: 'default'
+      test:
+        files: ['<%= testFolder %>/**/*_test.{coffee,js}']
+        tasks: 'test'
 
-    # To test, run `grunt --no-write -v release`
+    # To test, run `grunt --no-write -v releaseTask`
     release:
-      npm: false
+      options:
+        file: 'bower.json'
+        npm: false
 
     karma:
-      unit:
-        configFile: '<%= testFolder %>/karma.conf.coffee'
+      main:
+        options:
+          configFile: '<%= testFolder %>/karma.conf.coffee'
+          singleRun: true
+          reporters: 'dots'
 
-
-  grunt.registerTask 'default', ALL_TASKS
-  grunt.registerTask 'mobile_friendly', ['jst:all', 'coffee:all', 'concat:mobile_friendly', 'stylus:all', 'clean:compiled']
+  grunt.registerTask 'default', ['eco:all', 'coffee:all', 'concat:all', 'concat:dist', 'sass:all', 'clean:compiled']
   grunt.registerTask 'dist', ['cssmin:dist', 'uglify:dist']
-  grunt.registerTask 'test', ['dist', 'karma']
+  grunt.registerTask 'all', ['default', 'dist']
+  grunt.registerTask 'test', ['karma:main']

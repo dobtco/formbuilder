@@ -1,0 +1,13 @@
+<hr />
+
+<div class='fb_edit_section fb_edit_section_horiz fb_edit_section_min_max fb_edit_section_between'>
+  <label>Min / Max</label>
+  <div class='fb_edit_section_horiz_content'>
+    <span>Between</span>
+    <input type="text" data-rv-input="model.<%= Formbuilder.mappings.MIN %>" />
+    <span>and</span>
+    <input type="text" data-rv-input="model.<%= Formbuilder.mappings.MAX %>" />
+  </div>
+</div>
+
+<div class='form_error' data-rv-show='model.errors.minMaxMismatch'>Please enter a maximum larger than the minimum.</div>
