@@ -1636,18 +1636,17 @@
     onEdit: function(model) {
       var update;
       update = function() {
-        model.set(Formbuilder.options.mappings.DESCRIPTION, $(this).html());
+        model.set(Formbuilder.options.mappings.DESCRIPTION, $(this).code());
         return model.trigger('change:' + Formbuilder.options.mappings.DESCRIPTION);
       };
       return $('.fb-info-editor').summernote({
-        airmode: true,
-        onchange: function() {
+        onChange: function() {
           return update.call(this);
         },
-        onkeyup: function() {
+        onKeyup: function() {
           return update.call(this);
         },
-        toolbar: [['style', ['bold', 'italic', 'underline']], ['table', ['table']]]
+        toolbar: [['style', ['bold', 'italic', 'underline']], ['fontsize', ['fontsize']], ['color', ['color']], ['insert', ['link']], ['table', ['table']], ['misc', ['codeview']]]
       });
     }
   });

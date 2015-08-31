@@ -31,11 +31,14 @@ Formbuilder.registerField 'info',
         model.set(Formbuilder.options.mappings.DESCRIPTION, $(@).code())
         model.trigger('change:' + Formbuilder.options.mappings.DESCRIPTION)
     $('.fb-info-editor').summernote(
-        airmode: true
         onChange: -> update.call(@)
         onKeyup: -> update.call(@)
         toolbar: [
-            ['style', ['bold', 'italic', 'underline']],
-            ['table',['table']]],
-            ['insert', ['link']]
+          ['style', ['bold', 'italic', 'underline']],
+          ['fontsize', ['fontsize']],
+          ['color', ['color']],
+          ['insert', ['link']],
+          ['table', ['table']],
+          ['misc', ['codeview']]
+        ]
     )
