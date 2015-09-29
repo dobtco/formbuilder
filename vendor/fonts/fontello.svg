@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg">
-<metadata>Copyright (C) 2014 by original authors @ fontello.com</metadata>
+<metadata>Copyright (C) 2015 by original authors @ fontello.com</metadata>
 <defs>
 <font id="fontello" horiz-adv-x="1000" >
 <font-face font-family="fontello" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
@@ -18,6 +18,7 @@
 <glyph glyph-name="section" unicode="&#xe809;" d="m786 439v-107q0-22-16-38t-38-15h-678q-23 0-38 15t-16 38v107q0 23 16 38t38 16h678q22 0 38-16t16-38z" horiz-adv-x="785.7" />
 <glyph glyph-name="text" unicode="&#xe80a;" d="m405 538l-95-251q18 0 76-1t89-1q11 0 32 1-48 141-102 252z m-405-617l1 44q13 4 31 7t32 6 28 8 25 17 17 28l132 344 156 404h72q4-8 6-12l114-268q19-44 60-144t63-153q9-19 33-81t40-94q11-25 19-31 11-9 49-17t47-11q4-22 4-32 0-2-1-7t0-8q-35 0-106 5t-107 4q-42 0-120-4t-99-4q0 24 2 43l73 16q1 0 7 1t9 2 8 3 9 4 6 4 5 6 1 8q0 9-17 54t-40 99-24 56l-251 1q-14-33-43-109t-28-91q0-12 8-21t24-14 27-7 32-5 23-2q1-11 1-32 0-5-2-16-32 0-97 6t-97 6q-5 0-15-3t-12-2q-45-8-105-8z" horiz-adv-x="928.6" />
 <glyph glyph-name="number" unicode="&#xe80b;" d="m157 89q-21 0-37 16t-15 37l0 332-29-15q-20-10-41-3t-29 27q-10 20-3 41t27 29l103 51q28 14 52-3t25-43l0-416q0-21-16-37t-37-16z m469 0l-260 0q-33 0-48 32t10 57l209 209q20 20 20 49 0 30-20 50t-49 20-50-20q-21-19-21-50 0-22-15-37t-36-15-37 15-16 37q0 72 52 123 50 50 123 50t123-50q51-51 51-123 0-72-51-123l-120-120 135 0q21 0 37-15t15-36-15-37-37-16z m414 293q55-51 55-124 0-70-50-119t-119-50-120 50-50 119q0 21 16 37t36 16 37-16 16-37q0-27 19-46t46-19 46 19 19 46-19 47-46 19q-21 0-37 15t-16 37 16 36 37 16q16 0 27 11t12 28-12 27-27 12q-25 0-35-22-10-18-31-25t-39 4-26 31 3 39q42 78 128 78 59 0 101-43t41-101q0-46-28-85z" horiz-adv-x="1095" />
+<glyph glyph-name="time" unicode="&#xe80c;" d="m460 810q190 0 325-135t135-325-135-325-325-135-325 135-135 325 135 325 325 135z m0-820q150 0 255 106t105 254q0 150-105 255t-255 105q-148 0-254-105t-106-255q0-148 106-254t254-106z m36 620l0-244 150-150-50-50-170 170 0 274 70 0z" horiz-adv-x="920" />
 </font>
 </defs>
 </svg>

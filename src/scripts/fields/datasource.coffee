@@ -25,11 +25,15 @@ Formbuilder.registerField 'datasource',
     attrs.initialize = () ->
 
       @on "change", (model) ->
+        filters = model.filters()
         if _.nested(model, 'changed.options.data_source') != undefined
           sourceProperties = _.keys(model.sourceProperties())
           model.set('options.required_properties', sourceProperties)
           valueTemplate = _.first(sourceProperties)
           model.set('options.value_template', valueTemplate)
+        if filters
+          model.set('options.filter', _.first(_.keys(filters)))
+
 
       @on "destroy", (model) ->
         @collection.each (collectionModel) ->
@@ -42,7 +46,7 @@ Formbuilder.registerField 'datasource',
     attrs.source = () ->
       source = if @options then @options.data_source else @get(Formbuilder.options.mappings.DATA_SOURCE.DATA_SOURCE)
       sources = formbuilder.attr('sources')
-      _.nested(sources, source) || null
+      _.nested(sources, source) || {}
 
     attrs.sourceProperties = () ->
       source = @source()
@@ -66,9 +70,10 @@ Formbuilder.registerField 'datasource',
 
     attrs.options.multiple_selections = false
     attrs.options.is_filtered = false
-    attrs.options.data_source = attrs.source() || _.keys(formbuilder.attr('sources') || {})[0];
+    datasources = formbuilder.attr('sources') || {}
+    attrs.options.data_source = _.keys(datasources)[0];
     attrs.options.required_properties = _.keys(attrs.sourceProperties(attrs.options.data_source))
-    attrs.options.filter = attrs.filters()
+    attrs.options.filter = null
     attrs.options.filter_values = []
     attrs.options.value_template = _.first(attrs.options.required_properties)
     attrs

@@ -364,7 +364,9 @@
     };
 
     TableFieldView.prototype.focusEditView = function(e) {
-      return this.parentView.createAndShowEditView(this.model);
+      if (!$(e.target).parents('.dropdown-toggle').length && !$(e.target).hasClass('dropdown-toggle')) {
+        return this.parentView.createAndShowEditView(this.model);
+      }
     };
 
     TableFieldView.prototype.focusSubelement = function(e) {
@@ -1252,7 +1254,7 @@
       HTTP_METHOD: 'POST',
       AUTOSAVE: false,
       CLEAR_FIELD_CONFIRM: false,
-      ENABLED_FIELDS: ['text', 'checkbox', 'dropdown', 'textarea', 'radio', 'date', 'section', 'signature', 'info', 'grid', 'number', 'table', 'datasource'],
+      ENABLED_FIELDS: ['text', 'checkbox', 'dropdown', 'textarea', 'radio', 'date', 'section', 'signature', 'info', 'grid', 'number', 'table', 'datasource', 'time'],
       mappings: {
         SIZE: 'options.size',
         UNITS: 'options.units',
@@ -1480,14 +1482,19 @@
     edit: "<%= Formbuilder.templates['edit/data_source_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-data-source\"></span> Data Source",
     defaultAttributes: function(attrs, formbuilder) {
+      var datasources;
       attrs.initialize = function() {
         this.on("change", function(model) {
-          var sourceProperties, valueTemplate;
+          var filters, sourceProperties, valueTemplate;
+          filters = model.filters();
           if (_.nested(model, 'changed.options.data_source') !== void 0) {
             sourceProperties = _.keys(model.sourceProperties());
             model.set('options.required_properties', sourceProperties);
             valueTemplate = _.first(sourceProperties);
-            return model.set('options.value_template', valueTemplate);
+            model.set('options.value_template', valueTemplate);
+          }
+          if (filters) {
+            return model.set('options.filter', _.first(_.keys(filters)));
           }
         });
         return this.on("destroy", function(model) {
@@ -1503,7 +1510,7 @@
         var source, sources;
         source = this.options ? this.options.data_source : this.get(Formbuilder.options.mappings.DATA_SOURCE.DATA_SOURCE);
         sources = formbuilder.attr('sources');
-        return _.nested(sources, source) || null;
+        return _.nested(sources, source) || {};
       };
       attrs.sourceProperties = function() {
         var source;
@@ -1528,9 +1535,10 @@
       };
       attrs.options.multiple_selections = false;
       attrs.options.is_filtered = false;
-      attrs.options.data_source = attrs.source() || _.keys(formbuilder.attr('sources') || {})[0];
+      datasources = formbuilder.attr('sources') || {};
+      attrs.options.data_source = _.keys(datasources)[0];
       attrs.options.required_properties = _.keys(attrs.sourceProperties(attrs.options.data_source));
-      attrs.options.filter = attrs.filters();
+      attrs.options.filter = null;
       attrs.options.filter_values = [];
       attrs.options.value_template = _.first(attrs.options.required_properties);
       return attrs;
@@ -1908,7 +1916,7 @@
   Formbuilder.registerField('time', {
     name: 'Time',
     order: 25,
-    view: "<div class='input-line'>\n  <span class='hours'>\n    <input type=\"text\" />\n    <label>HH</label>\n  </span>\n\n  <span class='above-line'>:</span>\n\n  <span class='minutes'>\n    <input type=\"text\" />\n    <label>MM</label>\n  </span>\n\n  <span class='above-line'>:</span>\n\n  <span class='seconds'>\n    <input type=\"text\" />\n    <label>SS</label>\n  </span>\n\n  <span class='am_pm'>\n    <select>\n      <option>AM</option>\n      <option>PM</option>\n    </select>\n  </span>\n</div>",
+    view: "<div class=\"form-group\">\n  <div class=\"input-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"12:00 PM\">\n    <div class=\"input-group-addon glyphicon glyphicon-time\"></div>\n  </div>\n</div>",
     edit: "",
     addButton: "<span class=\"fb-icon-time\"></span> Time"
   });
@@ -2018,9 +2026,7 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<label class="checkbox">\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
-((__t = ( Formbuilder.options.mappings.DATA_SOURCE.MULTIPLE )) == null ? '' : __t) +
-'\' />\n  Multiple selections\n</label>\n\n<div class=\'fb-edit-section-header\'>Data Source</div>\n<select data-rv-value="model.' +
+__p += '<div class=\'fb-edit-section-header\'>Data Source</div>\n<select data-rv-value="model.' +
 ((__t = ( Formbuilder.options.mappings.DATA_SOURCE.DATA_SOURCE )) == null ? '' : __t) +
 '">\n';
  for (i in (Formbuilder.attr('sources') || [])) { ;
@@ -2049,7 +2055,7 @@ __p += '\n    <div class=\'fb-edit-section-header\'> Filter </div>\n    <label c
  if (rf.get(Formbuilder.options.mappings.DATA_SOURCE.IS_FILTERED)) { ;
 __p += '\n    <select data-rv-value="model.' +
 ((__t = ( Formbuilder.options.mappings.DATA_SOURCE.FILTER )) == null ? '' : __t) +
-'">\n        <option value="null">[ No Filter ]</option>\n    ';
+'">\n    ';
 
         for (i in (rf.filters() || [])) { ;
 __p += '\n        <option value="' +
@@ -2456,7 +2462,7 @@ this["Formbuilder"]["templates"]["view/element_selector"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class="element-selector btn-group">\n<button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown">\n    <span class="glyphicon glyphicon-plus"></span>\n</button>\n<ul class="dropdown-menu pull-right" role="menu">\n    <li data-type="text"><span class="fb-icon-text"></span> Text</li>\n    <li data-type="number"><span class="fb-icon-number"></span> Number</li>\n    <li data-type="textarea"><span class="fb-icon-textarea"></span> Paragraph</li>\n    <li data-type="info"><span class="fb-icon-info"></span> Info</li>\n    <li role="presentation" class="divider"></li>\n    <li data-type="dropdown"><span class="fb-icon-dropdown"></span> Dropdown</li>\n    <li data-type="radio"><span class="fb-icon-radio"></span> Radio</li>\n    <li data-type="checkbox"><span class="fb-icon-checkbox"></span> Multiple Choice</li>\n    <li role="presentation" class="divider"></li>\n    <li data-type="date"><span class="fb-icon-date"></span> Date</li>\n    <li data-type="signature"><span class="fb-icon-signature"></span> Signature</li>\n</ul>\n</div>';
+__p += '<div class="element-selector btn-group">\n<button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown">\n    <span class="glyphicon glyphicon-plus"></span>\n</button>\n<ul class="dropdown-menu pull-right" role="menu">\n    <li data-type="text"><span class="fb-icon-text"></span> Text</li>\n    <li data-type="number"><span class="fb-icon-number"></span> Number</li>\n    <li data-type="textarea"><span class="fb-icon-textarea"></span> Paragraph</li>\n    <li data-type="info"><span class="fb-icon-info"></span> Info</li>\n    <li role="presentation" class="divider"></li>\n    <li data-type="dropdown"><span class="fb-icon-dropdown"></span> Dropdown</li>\n    <li data-type="radio"><span class="fb-icon-radio"></span> Radio</li>\n    <li data-type="checkbox"><span class="fb-icon-checkbox"></span> Multiple Choice</li>\n    <li data-type="datasource"><span class="fb-icon-data-source"></span> Data Source</li>\n    <li role="presentation" class="divider"></li>\n    <li data-type="date"><span class="fb-icon-date"></span> Date</li>\n    <li data-type="time"><span class="fb-icon-time"></span> Time</li>\n    <li data-type="signature"><span class="fb-icon-signature"></span> Signature</li>\n</ul>\n</div>';
 
 }
 return __p
