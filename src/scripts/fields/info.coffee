@@ -28,13 +28,17 @@ Formbuilder.registerField 'info',
 
   onEdit: (model) ->
     update = ->
-        model.set(Formbuilder.options.mappings.DESCRIPTION, $(@).html())
+        model.set(Formbuilder.options.mappings.DESCRIPTION, $(@).code())
         model.trigger('change:' + Formbuilder.options.mappings.DESCRIPTION)
     $('.fb-info-editor').summernote(
-        airmode: true
-        onchange: -> update.call(@)
-        onkeyup: -> update.call(@)
+        onChange: -> update.call(@)
+        onKeyup: -> update.call(@)
         toolbar: [
-            ['style', ['bold', 'italic', 'underline']],
-            ['table',['table']]]
+          ['style', ['bold', 'italic', 'underline']],
+          ['fontsize', ['fontsize']],
+          ['color', ['color']],
+          ['insert', ['link']],
+          ['table', ['table']],
+          ['misc', ['codeview']]
+        ]
     )
