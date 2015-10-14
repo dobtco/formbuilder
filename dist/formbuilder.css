@@ -11,6 +11,7 @@
 .fb-icon-section:before{content:'\e809'}
 .fb-icon-text:before{content:'\e80a'}
 .fb-icon-number:before{content:'\e80b'}
+.fb-icon-time:before{content:'\e80c'}
 .fb-button{text-align:left}
 .fb-clear{clear:both}
 .fb-main{padding:0 20px 0 0;position:relative}
@@ -75,7 +76,7 @@ input[readonly]{cursor:not-allowed;background-color:#eee}
 .response-field-address .street{width:400px}
 .response-field-address .city,.response-field-address .state,.response-field-address .zip,.response-field-address .country{width:198px}
 .response-field-date .month,.response-field-date .day,.response-field-date .year{width:50px}
-.response-field-time .hours,.response-field-time .minutes,.response-field-time .seconds{width:50px}
+.response-field-time .input-group{width:145px}
 .response-field-checkboxes .fb-option,.response-field-radio .fb-option{margin-bottom:5px;display:inline-block}
 .response-field-website input{width:200px}
 .response-field-signature .fb-signature{width:300px;height:150px}

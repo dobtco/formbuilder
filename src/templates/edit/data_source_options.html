@@ -1,8 +1,3 @@
-<label class="checkbox">
-  <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.DATA_SOURCE.MULTIPLE %>' />
-  Multiple selections
-</label>
-
 <div class='fb-edit-section-header'>Data Source</div>
 <select data-rv-value="model.<%= Formbuilder.options.mappings.DATA_SOURCE.DATA_SOURCE %>">
 <% for (i in (Formbuilder.attr('sources') || [])) { %>
@@ -28,7 +23,6 @@
     </label>
     <% if (rf.get(Formbuilder.options.mappings.DATA_SOURCE.IS_FILTERED)) { %>
     <select data-rv-value="model.<%= Formbuilder.options.mappings.DATA_SOURCE.FILTER %>">
-        <option value="null">[ No Filter ]</option>
     <%
         for (i in (rf.filters() || [])) { %>
         <option value="<%= i %>">

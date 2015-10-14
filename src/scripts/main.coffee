@@ -164,6 +164,8 @@ class TableFieldView extends ViewFieldView
     'click .js-duplicate': 'duplicate'
 
 
+
+
   showSelectors: (e) ->
     @$el.find('.drop-area').html(Formbuilder.templates['view/element_selector']())
 
@@ -195,7 +197,8 @@ class TableFieldView extends ViewFieldView
      @
 
   focusEditView: (e) ->
-    @parentView.createAndShowEditView(@model)
+    if (!$(e.target).parents('.dropdown-toggle').length && !$(e.target).hasClass('dropdown-toggle'))
+      @parentView.createAndShowEditView(@model)
 
   focusSubelement: (e) ->
     e.preventDefault();
@@ -824,7 +827,7 @@ class Formbuilder
     HTTP_METHOD: 'POST'
     AUTOSAVE: false
     CLEAR_FIELD_CONFIRM: false
-    ENABLED_FIELDS: ['text','checkbox','dropdown', 'textarea', 'radio', 'date','section', 'signature', 'info', 'grid', 'number', 'table', 'datasource']
+    ENABLED_FIELDS: ['text','checkbox','dropdown', 'textarea', 'radio', 'date','section', 'signature', 'info', 'grid', 'number', 'table', 'datasource', 'time']
 
     mappings:
       SIZE: 'options.size'
