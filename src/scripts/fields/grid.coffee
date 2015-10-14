@@ -22,7 +22,10 @@ Formbuilder.registerField 'grid',
         </textarea>
       </div>
       <label class="checkbox">
-         <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.GRID.FULL_WIDTH %>' /> Display full width ?
+         <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.GRID.FULL_WIDTH %>' /> Display full width?
+      </label>
+      <label class="checkbox">
+         <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.GRID.FIRST_ROW_HEADINGS%>' /> First row headings?
       </label>
       <div class='fb-edit-section-header'>Number of Columns</div>
         <select data-rv-value="model.<%= Formbuilder.options.mappings.GRID.NUMCOLS %>">
@@ -73,6 +76,7 @@ Formbuilder.registerField 'grid',
     attrs.options.num_cols = 1
     attrs.options.num_rows = 1
     attrs.options.full_width = false
+    attrs.options.first_row_headings = false
     attrs.children = []
     attrs.childModels = () ->
       @collection.filter (model) ->

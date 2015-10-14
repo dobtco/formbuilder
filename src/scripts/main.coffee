@@ -854,7 +854,8 @@ class Formbuilder
         NUMCOLS: 'options.num_cols',
         ROWS: 'options.rows',
         NUMROWS: 'options.num_rows',
-        FULL_WIDTH: 'options.full_width'
+        FULL_WIDTH: 'options.full_width',
+        FIRST_ROW_HEADINGS: 'options.first_row_headings'
       TABLE:
         COLS: 'options.cols',
         NUMCOLS: 'options.num_cols',
