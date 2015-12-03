@@ -120,6 +120,12 @@
       return this.parentModel !== void 0;
     };
 
+    FormbuilderModel.prototype.inTable = function() {
+      var parent;
+      parent = this.parentModel();
+      return parent && parent.get('type') === 'table';
+    };
+
     FormbuilderModel.prototype.attachMethods = function() {
       if (typeof this.attributes.initialize === 'function') {
         this.attributes.initialize.call(this);
@@ -386,7 +392,7 @@
         this.$el.find('.header-' + element.uuid).html(Formbuilder.templates["view/table_header"]({
           rf: model,
           element: element
-        })).data('cid', model.cid);
+        })).css('background-color', model.get(Formbuilder.options.mappings.LABEL_BACKGROUND_COLOR)).data('cid', model.cid);
         this.$el.find('.element-' + element.uuid).html(Formbuilder.templates["view/table_element"]({
           rf: model,
           element: element
@@ -1095,6 +1101,10 @@
       return this.hasParent(model) && model.get('options.grid');
     };
 
+    BuilderView.prototype.inTable = function(model) {
+      return this.hasParent(model) && model.get('options.table');
+    };
+
     BuilderView.prototype.hasParent = function(model) {
       return model.get('parent_uuid');
     };
@@ -1271,6 +1281,8 @@
         INCLUDE_BLANK: 'options.include_blank_option',
         INCLUDE_SCORING: 'is_scored',
         INTEGER_ONLY: 'options.integer_only',
+        LABEL_COLOR: 'options.label_color',
+        LABEL_BACKGROUND_COLOR: 'options.label_background_color',
         READ_ONLY: 'options.read_only',
         COLUMN_WIDTH: 'options.column_width',
         NUMERIC: {
@@ -1950,6 +1962,8 @@ __p +=
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.TYPE)].edit({rf: rf}) )) == null ? '' : __t) +
 '\n' +
 ((__t = ( Formbuilder.templates['edit/columnwidth']({rf: rf}) )) == null ? '' : __t) +
+'\n' +
+((__t = ( Formbuilder.templates['edit/table_color']({rf: rf}) )) == null ? '' : __t) +
 '\n';
 
 }
@@ -2093,6 +2107,20 @@ with (obj) {
 __p += '<label class="checkbox">\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INTEGER_ONLY )) == null ? '' : __t) +
 '\' />\n  Whole numbers only?\n</label>\n';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["edit/label_color"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<input type=\'text\' class="form-control" data-rv-input=\'model.' +
+((__t = ( Formbuilder.options.mappings.LABEL_COLOR )) == null ? '' : __t) +
+'\'\n       placeholder="Label colour"\n/>\n<input type=\'text\' class="form-control" data-rv-input=\'model.' +
+((__t = ( Formbuilder.options.mappings.LABEL_BACKGROUND_COLOR )) == null ? '' : __t) +
+'\'\n       placeholder="Label background color"\n/>\n';
 
 }
 return __p
@@ -2250,6 +2278,23 @@ with (obj) {
 __p += '<div class=\'fb-edit-section-header\'>Size</div>\n<select data-rv-value="model.' +
 ((__t = ( Formbuilder.options.mappings.SIZE )) == null ? '' : __t) +
 '">\n  <option value="small">Small</option>\n  <option value="medium">Medium</option>\n  <option value="large">Large</option>\n</select>\n';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["edit/table_color"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ if (rf.inTable()) { ;
+__p += '\n<div class="fb-label-color">\n    <div class=\'fb-edit-section-header\'>Header Colour</div>\n    ' +
+((__t = ( Formbuilder.templates['edit/label_color']({rf: rf}) )) == null ? '' : __t) +
+'\n</div>\n';
+ } ;
+
 
 }
 return __p
@@ -2474,7 +2519,9 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<label>\n  <span>' +
+__p += '<label>\n  <span style="color: ' +
+((__t = ( rf.get(Formbuilder.options.mappings.LABEL_COLOR) || '#000' )) == null ? '' : __t) +
+'">' +
 ((__t = ( Formbuilder.helpers.simple_format(rf.get(Formbuilder.options.mappings.LABEL)) )) == null ? '' : __t) +
 '\n  ';
  if (rf.get(Formbuilder.options.mappings.REQUIRED)) { ;

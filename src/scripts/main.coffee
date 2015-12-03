@@ -13,6 +13,9 @@ class FormbuilderModel extends Backbone.DeepModel
     @attachMethods()
   parentModel: () -> @collection.findWhereUuid(@get('parent_uuid'))
   hasParent: () -> @parentModel != undefined
+  inTable: () ->
+    parent = @parentModel()
+    parent and parent.get('type') is 'table'
   attachMethods: ()->
     if typeof @attributes.initialize is 'function'
       @attributes.initialize.call(@)
@@ -30,7 +33,6 @@ class FormbuilderModel extends Backbone.DeepModel
          delete @attributes[name]
 
      , @)
-
 
 class FormbuilderCollection extends Backbone.Collection
   model: FormbuilderModel
@@ -180,7 +182,9 @@ class TableFieldView extends ViewFieldView
     childModel.set('options.in_sequence', true)
     @listenTo childModel, "change", @update
     elements = @model.attributes.options.elements || []
-    newElement = {'uuid':childModel.get('uuid')}
+    newElement = {
+      'uuid': childModel.get('uuid')
+    }
     elements.push(newElement)
     @model.attributes.options.elements = elements
     @parentView.collection.add childModel
@@ -212,7 +216,7 @@ class TableFieldView extends ViewFieldView
   renderElements: () ->
     _.each @model.get('options.elements'), (element) ->
         model = @parentView.modelByUuid(element.uuid)
-        @$el.find('.header-' + element.uuid).html(Formbuilder.templates["view/table_header"]({rf: model, element: element})).data('cid', model.cid)
+        @$el.find('.header-' + element.uuid).html(Formbuilder.templates["view/table_header"]({rf: model, element: element})).css('background-color', model.get(Formbuilder.options.mappings.LABEL_BACKGROUND_COLOR)).data('cid', model.cid)
         @$el.find('.element-' + element.uuid).html(Formbuilder.templates["view/table_element"]({rf: model, element: element})).data('cid', model.cid)
         @$el.find('.total-' + element.uuid).html(Formbuilder.templates["view/table_total"]({rf: model, element: element})).data('cid', model.cid)
     ,@
@@ -726,6 +730,8 @@ class BuilderView extends Backbone.View
 
   inGrid: (model) -> @hasParent(model) and model.get('options.grid')
 
+  inTable: (model) -> @hasParent(model) and model.get('options.table')
+
   hasParent: (model) -> model.get('parent_uuid')
 
   modelByUuid: (uuid) -> @collection.findWhere {'uuid':uuid}
@@ -845,6 +851,8 @@ class Formbuilder
       INCLUDE_BLANK: 'options.include_blank_option'
       INCLUDE_SCORING: 'is_scored'
       INTEGER_ONLY: 'options.integer_only'
+      LABEL_COLOR: 'options.label_color'
+      LABEL_BACKGROUND_COLOR: 'options.label_background_color'
       READ_ONLY: 'options.read_only'
       COLUMN_WIDTH: 'options.column_width'
       NUMERIC:
