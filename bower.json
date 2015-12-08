@@ -16,19 +16,20 @@
     "tests"
   ],
   "dependencies": {
-    "ie8-node-enum": "https://gist.github.com/adamjacobbecker/8902451/raw/b68459289526cb76c2e22416d98d0dbd0b722fa0/ie8_node_enum.js",
+    "ie8-node-enum": "https://gist.github.com/ajb/8902451/raw/b68459289526cb76c2e22416d98d0dbd0b722fa0/ie8_node_enum.js",
+    "jquery.scrollWindowTo": "https://gist.github.com/ajb/6519570/raw/cd741057495d0fb19e545a0f9a098efba3bef9c8/jquery.scrollWindowTo.js",
     "jquery": "~1.11.1",
     "jquery-ui": "~1.10.3",
-    "jquery.scrollWindowTo": "https://gist.github.com/adamjacobbecker/6519570/raw/cd741057495d0fb19e545a0f9a098efba3bef9c8/jquery.scrollWindowTo.js",
-    "underscore.mixin.deepExtend": "https://gist.github.com/adamjacobbecker/6519561/raw/63682037af9b10200b05c1a3d5890903397b2103/underscore.mixin.deepExtend.js",
     "backbone": "~1.1.0",
     "backbone-deep-model": "~0.10.4",
+    "underscore.mixin.deepExtend": "https://gist.github.com/ajb/6519561/raw/63682037af9b10200b05c1a3d5890903397b2103/underscore.mixin.deepExtend.js",
     "rivets": "~0.5.13",
     "signature_pad": "~1.3.2",
     "bootstrap": "~3.1.1",
     "summernote": "~0.6.16",
     "node-uuid": "~1.4.1",
     "mathjs": "~1.1.1",
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "spectrum": "~1.7.1"
   }
 }

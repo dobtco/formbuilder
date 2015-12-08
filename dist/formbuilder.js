@@ -1087,6 +1087,15 @@
       } else {
         fieldWrapper.removeClass('fb-edit-field-grid');
       }
+      if (model.inTable()) {
+        $('.spectrum-colorpicker', ".fb-edit-field-wrapper").spectrum({
+          allowEmpty: true,
+          preferredFormat: 'hex',
+          showPalette: true,
+          showPaletteOnly: true,
+          palette: ['#000000', '#424242', '#636363', '#9C9C94', '#CEC6CE', '#EFEFEF', '#F7F7F7', '#FFFFFF', '#FF0000', '#FF9C00', '#FFFF00', '#00FF00', '#00FFFF', '#0000FF', '#9C00FF', '#FF00FF', '#F7C6CE', '#FFE7CE', '#FFEFC6', '#D6EFD6', '#CEDEE7', '#CEE7F7', '#D6D6E7', '#E7D6DE', '#E79C9C', '#FFC69C', '#FFE79C', '#B5D6A5', '#A5C6CE', '#9CC6EF', '#B5A5D6', '#D6A5BD', '#E76363', '#F7AD6B', '#FFD663', '#94BD7B', '#73A5AD', '#6BADDE', '#8C7BC6', '#C67BA5', '#CE0000', '#E79439', '#EFC631', '#6BA54A', '#4A7B8C', '#3984C6', '#634AA5', '#A54A7B', '#9C0000', '#B56308', '#BD9400', '#397B21', '#104A5A', '#085294', '#311873', '#731842', '#630000', '#7B3900', '#846300', '#295218', '#083139', '#003163', '#21104A', '#4A1031']
+        });
+      }
       this.$el.find(".fb-tabs a[data-target=\"#editField\"]").click();
       this.scrollLeftWrapper($responseFieldEl);
       attrs = Formbuilder.helpers.defaultFieldAttrs(model.get('type'));
@@ -2116,11 +2125,7 @@ this["Formbuilder"]["templates"]["edit/label_color"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<input type=\'text\' class="form-control" data-rv-input=\'model.' +
-((__t = ( Formbuilder.options.mappings.LABEL_COLOR )) == null ? '' : __t) +
-'\'\n       placeholder="Label colour"\n/>\n<input type=\'text\' class="form-control" data-rv-input=\'model.' +
-((__t = ( Formbuilder.options.mappings.LABEL_BACKGROUND_COLOR )) == null ? '' : __t) +
-'\'\n       placeholder="Label background color"\n/>\n';
+__p += '';
 
 }
 return __p
@@ -2290,9 +2295,11 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 
  if (rf.inTable()) { ;
-__p += '\n<div class="fb-label-color">\n    <div class=\'fb-edit-section-header\'>Header Colour</div>\n    ' +
-((__t = ( Formbuilder.templates['edit/label_color']({rf: rf}) )) == null ? '' : __t) +
-'\n</div>\n';
+__p += '\n<div class="fb-label-color">\n    <div class=\'fb-edit-section-header\'>Header Label Colour</div>\n    <div>\n        <input type=\'hidden\' class="form-control spectrum-colorpicker" id="fb-label-color"\n               data-rv-value=\'model.' +
+((__t = ( Formbuilder.options.mappings.LABEL_COLOR )) == null ? '' : __t) +
+'\'/>\n    </div>\n    <div class=\'fb-edit-section-header\'>Header Background Colour</div>\n    <div>\n        <input type=\'hidden\' class="form-control spectrum-colorpicker" id="fb-label-background-color"\n               data-rv-value=\'model.' +
+((__t = ( Formbuilder.options.mappings.LABEL_BACKGROUND_COLOR )) == null ? '' : __t) +
+'\'/>\n    </div>\n</div>\n';
  } ;
 
 

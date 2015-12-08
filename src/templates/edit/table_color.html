@@ -1,6 +1,14 @@
 <% if (rf.inTable()) { %>
 <div class="fb-label-color">
-    <div class='fb-edit-section-header'>Header Colour</div>
-    <%= Formbuilder.templates['edit/label_color']({rf: rf}) %>
+    <div class='fb-edit-section-header'>Header Label Colour</div>
+    <div>
+        <input type='hidden' class="form-control spectrum-colorpicker" id="fb-label-color"
+               data-rv-value='model.<%= Formbuilder.options.mappings.LABEL_COLOR %>'/>
+    </div>
+    <div class='fb-edit-section-header'>Header Background Colour</div>
+    <div>
+        <input type='hidden' class="form-control spectrum-colorpicker" id="fb-label-background-color"
+               data-rv-value='model.<%= Formbuilder.options.mappings.LABEL_BACKGROUND_COLOR %>'/>
+    </div>
 </div>
 <% } %>
