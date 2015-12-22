@@ -13,8 +13,14 @@ Formbuilder.registerField 'time',
   </div>
   """
 
-  edit: ""
+  edit: """
+    <%= Formbuilder.templates['edit/time']({ rf: rf }) %>
+  """
 
   addButton: """
     <span class="fb-icon-time"></span> Time
   """
+
+  defaultAttributes: (attrs) ->
+    attrs.options.default_time = false
+    attrs

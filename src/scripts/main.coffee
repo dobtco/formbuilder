@@ -871,6 +871,8 @@ class Formbuilder
       LABEL_BACKGROUND_COLOR: 'options.label_background_color'
       READ_ONLY: 'options.read_only'
       COLUMN_WIDTH: 'options.column_width'
+      DEFAULT_TIME: 'options.default_time'
+      DEFAULT_DATE: 'options.default_date'
       NUMERIC:
         CALCULATION_TYPE: 'options.calculation_type'
         CALCULATION_EXPRESSION: 'options.calculation_expression'

@@ -1294,6 +1294,8 @@
         LABEL_BACKGROUND_COLOR: 'options.label_background_color',
         READ_ONLY: 'options.read_only',
         COLUMN_WIDTH: 'options.column_width',
+        DEFAULT_TIME: 'options.default_time',
+        DEFAULT_DATE: 'options.default_date',
         NUMERIC: {
           CALCULATION_TYPE: 'options.calculation_type',
           CALCULATION_EXPRESSION: 'options.calculation_expression',
@@ -1574,8 +1576,12 @@
     name: 'Date',
     order: 20,
     view: "<div class='input-line'>\n  <input type=\"text\" placeholder=\" DD/MM/YYYY \" />\n</div>",
-    edit: "",
-    addButton: "<span class=\"fb-icon-date\"></span> Date"
+    edit: "<%= Formbuilder.templates['edit/date']({ rf: rf }) %>",
+    addButton: "<span class=\"fb-icon-date\"></span> Date",
+    defaultAttributes: function(attrs) {
+      attrs.options.default_date = false;
+      return attrs;
+    }
   });
 
 }).call(this);
@@ -1939,8 +1945,12 @@
     name: 'Time',
     order: 25,
     view: "<div class=\"form-group\">\n  <div class=\"input-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"12:00 PM\">\n    <div class=\"input-group-addon glyphicon glyphicon-time\"></div>\n  </div>\n</div>",
-    edit: "",
-    addButton: "<span class=\"fb-icon-time\"></span> Time"
+    edit: "<%= Formbuilder.templates['edit/time']({ rf: rf }) %>",
+    addButton: "<span class=\"fb-icon-time\"></span> Time",
+    defaultAttributes: function(attrs) {
+      attrs.options.default_time = false;
+      return attrs;
+    }
   });
 
 }).call(this);
@@ -2109,6 +2119,18 @@ __p += '\n';
 return __p
 };
 
+this["Formbuilder"]["templates"]["edit/date"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class="fb-default-date-wrapper">\n    <label class="checkbox">\n        <input class="default-date" type=\'checkbox\' data-rv-checked=\'model.' +
+((__t = ( Formbuilder.options.mappings.DEFAULT_DATE )) == null ? '' : __t) +
+'\' />\n        Default to current date\n    </label>\n</div>\n';
+
+}
+return __p
+};
+
 this["Formbuilder"]["templates"]["edit/integer_only"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
@@ -2116,16 +2138,6 @@ with (obj) {
 __p += '<label class="checkbox">\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INTEGER_ONLY )) == null ? '' : __t) +
 '\' />\n  Whole numbers only?\n</label>\n';
-
-}
-return __p
-};
-
-this["Formbuilder"]["templates"]["edit/label_color"] = function(obj) {
-obj || (obj = {});
-var __t, __p = '', __e = _.escape;
-with (obj) {
-__p += '';
 
 }
 return __p
@@ -2328,6 +2340,18 @@ with (obj) {
 __p += '<div class=\'fb-edit-section-header\'>Totals</div>\n    <label>\n      <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.TABLE.COLUMNTOTALS )) == null ? '' : __t) +
 '\' />\n      Display column totals?\n    </label>\n</div>';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["edit/time"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class="fb-default-time-wrapper">\n    <label class="checkbox">\n        <input class="default-time" type=\'checkbox\' data-rv-checked=\'model.' +
+((__t = ( Formbuilder.options.mappings.DEFAULT_TIME )) == null ? '' : __t) +
+'\' />\n        Default Time\n    </label>\n</div>\n';
 
 }
 return __p
