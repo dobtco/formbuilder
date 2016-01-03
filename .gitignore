@@ -4,3 +4,4 @@ bower_components
 compiled
 npm-debug.log
 .DS_Store
+.idea

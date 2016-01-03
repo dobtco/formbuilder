@@ -2351,7 +2351,7 @@ var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<div class="fb-default-time-wrapper">\n    <label class="checkbox">\n        <input class="default-time" type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.DEFAULT_TIME )) == null ? '' : __t) +
-'\' />\n        Default Time\n    </label>\n</div>\n';
+'\' />\n        Default to current time\n    </label>\n</div>\n';
 
 }
 return __p
