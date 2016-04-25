@@ -1,9 +1,0 @@
-<div class='subtemplate-wrapper'>
-  <div class='cover'></div>
-  <%= Formbuilder.templates['view/label']({rf: rf}) %>
-
-  <%= Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].view({rf: rf}) %>
-
-  <%= Formbuilder.templates['view/description']({rf: rf}) %>
-  <%= Formbuilder.templates['view/duplicate_remove']({rf: rf}) %>
-</div>

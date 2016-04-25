@@ -1,0 +1,5 @@
+<% if @model.justCreated: %>
+  <%- JST['form_builder/templates/edit/field_type'](@) %>
+<% else: %>
+  <p class='fb_edit_help'><%= t('formbuilder.no_options') %></p>
+<% end %>

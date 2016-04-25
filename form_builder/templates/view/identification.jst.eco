@@ -1,0 +1,29 @@
+<div class='cover'></div>
+
+<% if @parentView.project.get('anonymous'): %>
+  <span class='fb_id_blank'><%= t('formbuilder.responses_anonymous') %></span>
+<% else if @parentView.project.get('registered'): %>
+  <div class="user_block">
+    <figure>
+      <img src="//dashboard.dobt.co/images/no_user_img.png" alt="A blank avatar">
+      <figcaption>
+        <p class="user_block_header"><%= t('formbuilder.responding_as') %></p>
+        <em>account.email@example.com</em>
+      </figcaption>
+    </figure>
+  </div>
+<% else: %>
+  <div class='js-id-field-wrapper'></div>
+
+  <% if @parentView.project.get('hide_responder_names'): %>
+    <span class='label'><%= t('formbuilder.boxes.blind') %></span>
+  <% end %>
+<% end %>
+
+<div class='fb_actions'>
+  <% if @parentView.project.get('anonymous'): %>
+    <a href='#' data-restore-id-fields><%= t('formbuilder.restore_name_email') %></a>
+  <% else: %>
+    <a href='#' data-remove-id-fields><%= t('formbuilder.remove') %></a>
+  <% end %>
+</div>

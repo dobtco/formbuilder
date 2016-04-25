@@ -1,0 +1,4 @@
+<div class='fb_edit_section'>
+  <label><%= t('formbuilder.add_description') %></label>
+  <textarea data-rv-input='model.<%= Formbuilder.mappings.DESCRIPTION %>'></textarea>
+</div>

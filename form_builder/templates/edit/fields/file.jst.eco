@@ -1,0 +1,19 @@
+<hr />
+
+<div class='fb_edit_section fb_edit_section_horiz'>
+  <label><%= t('formbuilder.let_users_upload') %></label>
+  <div class='fb_edit_section_horiz_content'>
+    <select class="small" data-rv-value="model.<%= Formbuilder.mappings.FILE_TYPES %>" data-width="70%" data-no-blank-class>
+      <% for i in ['', 'images', 'audio', 'videos', 'docs', 'spreadsheets', 'presentations', 'pdfs']: %>
+        <option value='<%= i %>'><%= t("formbuilder.file_formats.#{i || 'all'}") %></option>
+      <% end %>
+    </select>
+  </div>
+</div>
+
+<div class='fb_edit_section'>
+  <label class='control small'>
+    <input type="checkbox" data-rv-checked="model.<%= Formbuilder.mappings.MULTIPLE_FILES %>" />
+    <%= t('formbuilder.allow_multiple_files') %>
+  </label>
+</div>

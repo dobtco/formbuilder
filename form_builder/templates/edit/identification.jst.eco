@@ -1,0 +1,24 @@
+<div class="fb_edit_section">
+  <div class="label"><%= t('formbuilder.name_and_email') %></div>
+</div>
+
+<div data-rv-hide='project.anonymous'>
+  <hr>
+  <div class="fb_edit_section">
+    <label class='control small'>
+      <input type='checkbox' data-rv-checked='project.hide_responder_names' />
+      <%= t('formbuilder.boxes.blind') %>
+    </label>
+
+    <label class='control small'>
+      <input type='checkbox' data-rv-checked='project.registered' />
+      <%= t('formbuilder.require_screendoor_account') %>
+    </label>
+
+    <div class='input_sub' data-rv-show='project.registered'>
+      <label class='control small'>
+        <input type='checkbox' data-rv-checked='project.only_allow_one_response' />
+        <%= t('formbuilder.only_allow_one') %>
+    </div>
+  </div>
+</div>

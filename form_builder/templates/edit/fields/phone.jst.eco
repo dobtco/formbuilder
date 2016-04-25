@@ -1,0 +1,12 @@
+<hr />
+
+<div class='fb_edit_section fb_edit_section_horiz'>
+  <label><%= t('formbuilder.format') %></label>
+  <div class='fb_edit_section_horiz_content'>
+    <select class="small" data-width="100%" data-rv-value="model.<%= Formbuilder.mappings.PHONE_FORMAT %>">
+      <% for i in ['us', 'intl']: %>
+        <option value='<%= i %>'><%= t("formbuilder.phone_formats.#{i || 'all'}") %></option>
+      <% end %>
+    </select>
+  </div>
+</div>

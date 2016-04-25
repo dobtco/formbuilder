@@ -1,0 +1,3 @@
+<div class="fr_page_break_inner">
+  <span><%= t('response_field_types.page_break') %></span>
+</div>

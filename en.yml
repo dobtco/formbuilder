@@ -1,0 +1,107 @@
+  formbuilder:
+    enter_text_here: Enter your text here
+    only_allow_one: Only allow one response per account
+    copy: Copy
+    hide_field: Hide this field
+    delete_field_and_answers: Delete this field and its answers
+    move: Move
+    responses_anonymous: Responses will be anonymous.
+    responding_as: Responding as…
+    restore_name_email: Restore name and email fields
+    remove: Remove
+    add_column: Add column
+    add_description: Add a description
+    add_in_bulk: Add in bulk
+    add_new_field: Add a new field
+    add_option: Add an option
+    add_options_in_bulk: Add options in bulk
+    add_options: Add options
+    allow_multiple_files: Allow users to upload multiple files
+    blind_hint: <strong>Blind</strong> fields will be hidden during review.
+    characters: characters
+    column_limit_hint: Respondents will be able to add/remove rows within these constraints. You can leave these blank for no limits.
+    column: Column
+    columns: Columns
+    define_preset_values: Define preset values
+    developer: Developer
+    display_column_totals: Display column totals for numeric fields
+    drag_from_left: Drag in a field from the left side to get started.
+    drag_map_to_default: Drag the map to set a default location
+    edit_field: Edit field
+    format: Format
+    hidden_hint: <strong>Hidden</strong> fields aren't shown to respondents.
+    hide_cents: Hide the 'cents' field
+    hide_seconds: Hide the 'seconds' field
+    hide_year: Hide the 'Year' field
+    include_blank_option: Include a blank option
+    include_other: "Include 'other'"
+    label: Label
+    length: Length
+    let_users_upload: Let users upload...
+    min_max: "Min / Max"
+    name_and_email: Name and Email
+    no_length_limit_hint: If you don't want to set a character or word limit, leave this blank.
+    no_options: No options available
+    num_rows: "# of rows"
+    one_option_per_line: One option per line
+    only_integers: Only accept integers
+    option: Option
+    options: Options
+    preset_values_hint: These cells will be pre-populated when displaying the form, and will not be editable by the user.
+    require_screendoor_account: Require a Screendoor account to submit
+    set_default_location: Set default location
+    show: Show…
+    text: Text
+    type: Type
+    words: words
+    size: Size
+    units: Units
+    move_up: Move up
+    move_down: Move down
+    sizes:
+      small: Small
+      medium: Medium
+      large: Large
+    phone_formats:
+      us: US (10-digit)
+      intl: International
+    boxes:
+      required: Required
+      admin_only: Hidden
+      blind: Blind
+    field_categories:
+      inputs: Inputs
+      geographic: Geographic
+      non_input: Non-input
+    file_formats:
+      all: Anything
+      images: Images
+      audio: Audio files
+      videos: Videos
+      docs: Documents
+      spreadsheets: Spreadsheets
+      presentations: Presentations
+      pdfs: PDFs
+    address_formats:
+      all: All fields
+      city_state: City and State only
+      city_state_zip: City, State and ZIP Code only
+      country: Country only
+    rules:
+      title: Rules
+      add: Add a rule
+      show_if: Show this field if
+      show_if_single: Show this field if…
+      add_q: Want to add a rule?
+      add_q_hint: Select another field to show and hide it based on the answer to this one.
+      of_rules_apply: "of these rules apply:"
+      all: all
+      any: any
+    errors:
+      duplicate_columns: You can't have columns with duplicate names.
+      blank_column: Please enter a label for each column.
+      blank_option: Please enter text for each option.
+      range_mismatch: Please enter a maximum larger than the minimum.
+    range:
+      between: between
+      and: and

@@ -1,0 +1,55 @@
+<hr />
+
+<div class='fb_edit_section'>
+  <label><%= t('formbuilder.columns') %></label>
+
+  <div class='fb_options'>
+    <% for option, i in @model.getColumns(): %>
+      <fieldset class='option drag_list_item' data-index="<%= i %>">
+        <span class='drag_list_item_box'>
+          <i class='fa fa-reorder drag_list_reorder'></i>
+          <span class='drag_list_item_input'>
+            <input type="text" data-rv-input="model.field_options.columns.<%= i %>.label" />
+          </span>
+        </span>
+        <% unless @model.getColumns().length < 2: %>
+          <a class="js-remove-option drag_list_remove icon_secondary" title="Remove Column" href='#'><i class='fa fa-minus-circle'></i></a>
+        <% end %>
+      </fieldset>
+    <% end %>
+  </div>
+
+  <div class='form_error' data-rv-show='model.errors.duplicateColumns'><%= t('formbuilder.errors.duplicate_columns') %></div>
+  <div class='form_error' data-rv-show='model.errors.blankColumn'><%= t('formbuilder.errors.blank_column') %></div>
+
+  <div class='fb_bottom_add'>
+    <a class="js-add-option button_uppercase" href='#'><i class="fa fa-plus-circle"></i> <%= t('formbuilder.add_column') %></a>
+  </div>
+
+  <label class='control small'>
+    <input type="checkbox" data-rv-checked="model.<%= Formbuilder.mappings.COLUMN_TOTALS %>" />
+    <%= t('formbuilder.display_column_totals') %>
+  </label>
+</div>
+
+<hr />
+
+<div class='fb_edit_section fb_edit_section_horiz fb_edit_section_num_rows fb_edit_section_between'>
+  <label><%= t('formbuilder.num_rows') %></label>
+  <div class='fb_edit_section_horiz_content'>
+    <span><%= t('formbuilder.range.between') %></span>
+    <input type="text" class='small' data-rv-input="model.<%= Formbuilder.mappings.MINROWS %>" />
+    <span><%= t('formbuilder.range.and') %></span>
+    <input type="text" class='small' data-rv-input="model.<%= Formbuilder.mappings.MAXROWS %>" />
+    <div class='form_error' data-rv-show='model.errors.minMaxRowsMismatch'><%= t('formbuilder.errors.range_mismatch') %></div>
+  </div>
+</div>
+
+<p class='fb_edit_help'>
+  <%= t('formbuilder.column_limit_hint') %>
+</p>
+</div>
+
+<hr />
+
+<a class='button small' data-show-modal='PresetValues' href='#'><%= t('formbuilder.define_preset_values') %></a>

@@ -1,0 +1,557 @@
+@import 'includes';
+
+$fbLeftWidth: 19rem;
+$fbLeftWidthDesk: 23.5rem;
+$minFieldHeight: 5.5rem;
+
+.fb_main {
+  position: relative;
+  @include cf;
+
+  // Override hr margins
+  hr {
+    margin: 1rem 0;
+  }
+}
+
+.fb_default_location_modal_map {
+  width: 100%;
+  max-width: 500px;
+  height: 220px;
+}
+
+.fb_edit_section {
+  margin-bottom: 0.75rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  textarea {
+    width: 100%;
+  }
+}
+
+.fb_edit_section_label {
+  position: relative;
+
+  .styled_select_wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  textarea {
+    height: 9rem;
+  }
+}
+
+.fb_edit_section_boxes {
+  @include cf;
+  @media screen and (min-width: $deskWidth) {
+    .control {
+      width: 33.333%;
+      float: left;
+    }
+  }
+}
+
+.fb_edit_help {
+  color: #999;
+  font-size: $fontSmaller;
+  margin-bottom: 0.5rem;
+}
+
+// Horizontal formbuilder sections
+
+.fb_edit_section_horiz {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.fb_edit_section_units label {
+  vertical-align: middle;
+}
+
+.fb_edit_section_horiz label,
+.fb_edit_section_horiz_content {
+  display: table-cell;
+  vertical-align: top;
+}
+
+.fb_edit_section_horiz label {
+  width: 31%;
+  padding-right: 2%;
+  padding-top: ($smallInputHeight - $lineHeight) / 2;
+}
+
+.fb_edit_section_horiz_content {
+  width: 67%;
+}
+
+.fb_edit_section_between {
+  input[type=text] {
+    width: 3rem;
+    display: inline;
+  }
+  span {
+    font-size: $fontSmaller;
+  }
+  .fb_edit_help {
+    margin-top: 0.5rem;
+  }
+}
+
+.fb_edit_section_min_max_length {
+  .styled_select_wrapper {
+    margin-top: 0.5rem;
+  }
+}
+
+.fb_edit_section_conditions {
+  .button {
+    display: block;
+  }
+
+  input[type=text] {
+    display: inline;
+  }
+}
+
+.fb_condition_add {
+  margin-top: $rhythm;
+}
+
+.fb_condition_label {
+  color: $darkerGray;
+  font-size: $fontSmall;
+  padding-top: ($smallInputHeight - $lineHeight) / 2;
+  line-height: $smallInputHeight;
+  margin-bottom: $rhythm;
+  .styled_select_wrapper {
+    margin: 0 $rhythm;
+  }
+}
+
+.fb_condition {
+  background-color: $lightestGray;
+  border: 1px solid $lighterGray;
+  padding: $rhythm;
+  margin-right: 2rem;
+  position: relative;
+  border-radius: $radius;
+  margin-bottom: $rhythm * 2;
+}
+
+.fb_condition_field {
+  margin-bottom: $rhythm;
+}
+
+.fb_condition_trigger {
+  display: block;
+  @include cf;
+}
+
+.fb_condition_trigger_option,
+.fb_condition_trigger_input {
+  float: left;
+}
+
+.fb_condition_trigger_option {
+  width: 50%;
+  margin-right: 3%;
+}
+
+.fb_condition_trigger_input {
+  width: 47%;
+}
+
+.fb_condition_characters {
+  input, span {
+    display: inline-block;
+  }
+  input {
+    width: 3.5rem;
+  }
+  span {
+    font-size: $fontSmall;
+    margin-left: $rhythm;
+    color: $darkerGray;
+    @include font_smoothing;
+  }
+}
+
+.fb_condition_remove {
+  @include topCenterAbsolute(1rem);
+  right: -2rem;
+  width: 2rem;
+  text-align: center;
+  line-height: 1;
+}
+
+.fb_add_field_section {
+  font-size: 0;
+  margin-bottom: 1rem;
+
+  .button {
+    display: inline-block;
+    width: 48%;
+    margin: 0 1% 0.5rem;
+    font-size: $fontSmaller;
+  }
+
+  .symbol {
+    opacity: 0.6;
+    margin-right: 0.15em;
+  }
+}
+
+.fb_left {
+  width: $fbLeftWidth;
+  padding-right: $rhythm * 2;
+  @media screen and (min-width: $maxWidth) {
+    width: $fbLeftWidthDesk;
+    padding-right: $rhythm * 5;
+  }
+  float: left;
+}
+
+.fb_left_header {
+  @include cf;
+  margin-bottom: $rhythm / 2;
+
+  h4 {
+    float: left;
+    margin-bottom: 0;
+    line-height: $lineHeight + 0.5rem;
+  }
+
+  .button {
+    float: right;
+  }
+}
+
+.fb_right {
+  margin-left: $fbLeftWidth;
+  @media screen and (min-width: $deskWidth) {
+    margin-left: $fbLeftWidthDesk;
+  }
+  padding: 50px 0 0 ($rhythm * 2);
+  border-left: 1px solid #ddd;
+  min-height: 100%;
+  overflow: hidden;
+}
+
+.fb_response_fields {
+  padding-bottom: 150px;
+
+  .gu-transit {
+    opacity: 0;
+  }
+
+  button.gu-transit {
+    opacity: 1;
+    display: block;
+    border: 1px dashed $gray;
+    background: #fff;
+    color: #fff;
+    min-height: $minFieldHeight;
+    height: $minFieldHeight;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  // Drop directly onto blank slate
+  &.is_blank_slate {
+    .gu-transit {
+      display: none;
+    }
+  }
+
+  &.is_drop_target .fb_blank_slate {
+    border-color: $gray;
+  }
+}
+
+.fb_main {
+  .fr_response_field_identification {
+    padding-bottom: 0;
+    border-bottom: 0;
+    margin-bottom: $rhythm;
+  }
+  .fr_response_field {
+    margin-bottom: $rhythm;
+
+    > .label {
+      margin-bottom: $rhythm;
+    }
+  }
+  .fr_response_field_confirm {
+    // Hassle-free way to center this vertically while we sort out
+    // https://github.com/dobtco/screendoor-v2/pull/3513
+    margin-top: 1rem;
+  }
+}
+
+.fb_identification_hint {
+  position: relative;
+  font-size: $fontSmaller;
+  z-index: $z_formBuilderTextOverlay;
+  margin-bottom: 10px;
+}
+
+.fb_field_wrapper {
+  cursor: pointer;
+  margin-bottom: $rhythm * 4;
+  padding: $rhythm $rhythm $rhythm ($rhythm * 6);
+  border: 1px dashed transparent;
+  position: relative;
+  min-height: $minFieldHeight; // Now that we have "Move" buttons...
+  h2, h3, h4 {
+    margin-bottom: $rhythm;
+  }
+  .fb_move {
+    transition: opacity 0.1s linear, transform 200ms $easeOutSine;
+  }
+  &:hover,
+  &.editing {
+    .fr_response_field,
+    .fb_move {
+      transform: translateX(0);
+    }
+    .fb_move {
+      opacity: 1;
+    }
+    .fb_actions,
+    .fb_move {
+      display: block;
+    }
+  }
+  .cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: $z_formBuilderCover;
+
+    // Workaround for IE bug: http://stackoverflow.com/a/9110796/861997
+    background: white;
+    opacity: 0;
+  }
+  &:hover {
+    border-color: $darkGray;
+    border-radius: $radius;
+  }
+  &.editing {
+    background-color: $lightestGray;
+    border: 1px solid darken(#fafafa,5%);
+    box-shadow: 0 1px 0 rgba(#000,0.06);
+    border-radius: $radius;
+    transition: none;
+  }
+  &.has_errors {
+    background-color: rgba($errorColor,0.1);
+  }
+  &.fb_field_wrapper_id {
+    padding: $rhythm;
+    margin-left: $rhythm * 3;
+    min-height: 0;
+    .fr_response_field {
+      transform: translateX(0);
+    }
+    .user_block {
+      margin: 0;
+      img {
+        height: 5rem !important; // Avoid layout jank when the image loads
+        display: block;
+      }
+    }
+  }
+}
+
+.fb_id_blank {
+  background: $lighterGray;
+  font-size: $fontSmall;
+  font-style: italic;
+  padding: $rhythm ($rhythm * 2);
+  border-radius: $radius;
+  display: block;
+  color: $darkestGray;
+  @include font_smoothing;
+  .editing & {
+    background: $lightestGray;
+  }
+}
+
+.fb_field_wrapper .fr_response_field,
+.fb_move {
+  transform: translateX($rhythm * -2.5);
+}
+
+.fb_field_wrapper .fr_response_field {
+  transition: transform 200ms $easeOutSine;
+}
+
+.fb_move {
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  width: $rhythm * 5;
+  border-right: 1px solid $lightGray;
+  height: 100%;
+  cursor: move;
+  z-index: $z_formBuilderCover + 1;
+  border-radius: $radius 0 0 $radius;
+  span {
+    @include topCenterAbsolute($fontSmallest);
+    width: 100%;
+    font-size: $fontSmallest;
+    line-height: $fontSmallest;
+    text-transform: uppercase;
+    color: $darkGray;
+    text-align: center;
+  }
+  a {
+    color: $darkerGray;
+    font-size: 1.5rem;
+    display: block;
+    text-align: center;
+    &:first-child {
+      border-top-left-radius: $radius;
+    }
+    &:last-child {
+      border-bottom-left-radius: $radius;
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+      left: 0;
+    }
+    &:hover {
+      background: rgba(#000,0.03);
+    }
+    &:focus {
+      outline: 0;
+      background: rgba(#000,0.05);
+    }
+    &:active {
+      background: rgba(#000,0.1);
+    }
+    &.disabled {
+      opacity: 0.3;
+      background: none;
+      cursor: default;
+    }
+  }
+  .editing & {
+    background: $lighterGray;
+  }
+}
+
+.fb_move_up {
+  top: 0;
+}
+
+.fb_move_down {
+  bottom: 0;
+
+  .button {
+    vertical-align: bottom;
+  }
+}
+
+.fb_actions {
+  display: none;
+  position: absolute;
+  bottom: - $rhythm * 4;
+  right: 0;
+
+  > a, > span {
+    font-size: $fontSmaller;
+    text-transform: uppercase;
+    letter-spacing: $letterspaceSmaller;
+    line-height: $rhythm * 4;
+    margin-left: $rhythm;
+    margin-right: $rhythm;
+  }
+}
+
+.fb_bottom_add {
+  @include cf;
+  margin: $rhythm * 2 0;
+  .button_uppercase {
+    float: left;
+    + a {
+      float: right;
+      font-size: $fontSmaller;
+      margin-top: $rhythm / 2;
+    }
+  }
+}
+
+.fb_option_blank {
+  margin-bottom: $rhythm;
+}
+
+// This is what a page break looks like inside of formbuilder
+
+.fr_response_field_page_break {
+  margin: 0;
+}
+
+.fr_page_break_inner {
+  text-align: center;
+  color: $darkerGray;
+  font-size: $fontSmaller;
+  letter-spacing: $letterspaceSmaller;
+  text-transform: uppercase;
+  font-weight: $weightBold;
+  border-top: 1px dotted $darkerGray;
+  line-height: 1rem;
+  margin-top: 2rem;
+
+  span {
+    background: $white;
+    display: inline-block;
+    padding: 0 $rhythm;
+    position: relative;
+    top: -0.5rem;
+    .editing & {
+      background: $lightestGray;
+    }
+  }
+}
+
+.fb_field_id {
+  @include cf;
+  background: $lighterGray;
+  border-radius: $radius;
+  padding: $rhythm $rhythm * 2;
+
+  span {
+    font-size: $fontSmall;
+    color: $darkerGray;
+  }
+
+  code {
+    float: right;
+  }
+}
+
+// Blank slate
+
+.fb_blank_slate {
+  border: 1px dashed transparent;
+  div {
+    @include fontH3;
+    color: #888;
+    text-align: center;
+    width: 90%;
+    max-width: 19rem;
+    padding: $lineHeight * 2 0;
+    @include font_smoothing;
+    margin: 0 auto;
+  }
+}

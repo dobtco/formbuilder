@@ -1,0 +1,16 @@
+<div class='fb_edit_section fb_edit_section_boxes'>
+  <% for i in ['REQUIRED', 'ADMIN_ONLY', 'BLIND']: %>
+    <label class='control small'>
+      <input type='checkbox' data-rv-checked='model.<%= Formbuilder.mappings[i] %>' />
+      <%= t("formbuilder.boxes.#{i.toLowerCase()}") %>
+    </label>
+  <% end %>
+</div>
+
+<p class='fb_edit_help'>
+  <%- t('formbuilder.hidden_hint') %>
+</p>
+
+<p class='fb_edit_help'>
+  <%- t('formbuilder.blind_hint') %>
+</p>

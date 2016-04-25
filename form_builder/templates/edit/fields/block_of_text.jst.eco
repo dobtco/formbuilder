@@ -1,0 +1,7 @@
+<div class='fb_edit_section fb_edit_section_label'>
+  <label><%= t('formbuilder.text') %></label>
+  <textarea data-rv-input='model.<%= Formbuilder.mappings.DESCRIPTION %>'></textarea>
+</div>
+
+<%- JST['form_builder/templates/edit/field_type'](@) %>
+<%- JST['form_builder/templates/edit/size'](@) %>

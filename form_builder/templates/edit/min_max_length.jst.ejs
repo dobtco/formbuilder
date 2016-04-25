@@ -1,0 +1,20 @@
+<hr />
+
+<div class='fb_edit_section fb_edit_section_horiz fb_edit_section_min_max_length fb_edit_section_between'>
+  <label><%= t('formbuilder.length') %></label>
+  <div class='fb_edit_section_horiz_content'>
+    <span><%= t('formbuilder.range.between') %></span>
+    <input type="text" class="small" data-rv-input="model.<%= Formbuilder.mappings.MINLENGTH %>" />
+    <span><%= t('formbuilder.range.and') %></span>
+    <input type="text" class="small" data-rv-input="model.<%= Formbuilder.mappings.MAXLENGTH %>" />
+    <select class="small" data-rv-value="model.<%= Formbuilder.mappings.LENGTH_UNITS %> | fallback characters" data-width="11rem">
+      <option value="characters"><%= t('formbuilder.characters') %></option>
+      <option value="words"><%= t('formbuilder.words') %></option>
+    </select>
+    <p class="fb_edit_help"><%= t('formbuilder.no_length_limit_hint') %></p>
+
+    <div class='form_error' data-rv-show='model.errors.minMaxLengthMismatch'>
+      <%= t('formbuilder.errors.range_mismatch') %>
+    </div>
+  </div>
+</div>

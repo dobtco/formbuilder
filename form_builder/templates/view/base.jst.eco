@@ -1,0 +1,25 @@
+<div class='cover'></div>
+
+<div class='fb_move'>
+  <span><%= t('formbuilder.move') %></span>
+  <a href='#' data-sort-up title='<%= t('formbuilder.move_up') %>'><i class='fa fa-angle-up'></i></a>
+  <a href='#' data-sort-down title='<%= t('formbuilder.move_down') %>'><i class='fa fa-angle-down'></i></a>
+</div>
+
+<div class='fb_actions'>
+  <a href='#' data-duplicate><%= t('formbuilder.copy') %></a>
+
+  <% if @hasResponses && @model.input_field && !@model.justCreated: %>
+    <a href='#' data-toggle='dropdown'><%= t('actions.delete') %></a>
+    <div class='dropdown_menu dropdown_right'>
+      <ul class='dropdown_body'>
+        <% unless @model.get('admin_only'): %>
+          <li><a data-soft-remove href='#'><%= t('formbuilder.hide_field') %></a></li>
+        <% end %>
+        <li><a data-hard-remove href='#'><%= t('formbuilder.delete_field_and_answers') %></a></li>
+      </ul>
+    </div>
+  <% else: %>
+    <a href='#' data-hard-remove><%= t('actions.delete') %></a>
+  <% end %>
+</div>

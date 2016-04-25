@@ -1,0 +1,8 @@
+<hr />
+
+<div class='fb_edit_section'>
+  <label class='control small'>
+    <input type="checkbox" data-rv-checked="model.<%= Formbuilder.mappings.DISABLE_YEAR %>" />
+    <%= t('formbuilder.hide_year') %>
+  </label>
+</div>

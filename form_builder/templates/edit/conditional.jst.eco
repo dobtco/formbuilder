@@ -1,0 +1,79 @@
+<hr />
+
+<% if @canAddConditions() || @model.isConditional(): %>
+  <div class='fb_edit_section fb_edit_section_conditions'>
+    <label><%= t('formbuilder.rules.title') %></label>
+    <% if @model.isConditional(): %>
+      <div class='fb_condition_label'>
+        <% if (@model.getConditions().length == 1): %>
+          <%= t('formbuilder.rules.show_if_single') %>
+        <% else: %>
+          <%= t('formbuilder.rules.show_if') %>
+          <select class='small' data-width="auto" data-rv-value='model.<%= Formbuilder.mappings.CONDITION_METHOD %>' data-no-blank-class>
+              <option value=""><%= t('formbuilder.rules.all') %></option>
+              <option value="any"><%= t('formbuilder.rules.any') %></option>
+          </select>
+          <%= t('formbuilder.rules.of_rules_apply') %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% for condition, i in @model.getConditions(): %>
+      <div class='fb_condition'>
+        <div class='fb_condition_field'>
+          <select class='small' data-width="100%" data-rv-value='model.<%= Formbuilder.mappings.CONDITIONS %>.<%= i %>.response_field_id'>
+            <% for model in @conditionFieldOptions(): %>
+              <option value="<%= model.id %>"><%= model.get(Formbuilder.mappings.LABEL) %></option>
+            <% end %>
+          </select>
+        </div>
+
+        <div class='fb_condition_trigger'>
+          <div class="fb_condition_trigger_option">
+            <% if @conditionField(i): %>
+              <select class='small' data-width="100%" data-rv-value='model.<%= Formbuilder.mappings.CONDITIONS %>.<%= i %>.method'>
+                <% for method in @conditionMethodsAtIndex(i): %>
+                  <option value="<%= method.key %>"><%= method.label %></option>
+                <% end %>
+              </select>
+            <% end %>
+          </div>
+
+          <div class="fb_condition_trigger_input">
+            <% if @conditionMethod(i): %>
+              <% if App.ResponseConditions.hasPredefinedOptions(@conditionField(i).field_type): %>
+                <select class='small' data-width='100%' data-rv-value="model.<%= Formbuilder.mappings.CONDITIONS %>.<%= i %>.value">
+                  <% for optionLabel in @conditionValueOptions(i): %>
+                    <option value="<%= optionLabel %>"><%= optionLabel %></option>
+                  <% end %>
+                </select>
+              <% else if @conditionMethod(i) in ['shorter', 'longer']: %>
+                <div class='fb_condition_characters'>
+                  <input type='text' class='small ' data-rv-input="model.<%= Formbuilder.mappings.CONDITIONS %>.<%= i %>.value">
+                  <span><%= @conditionField(i).getLengthValidationUnits() %></span>
+                </div>
+              <% else: %>
+                <input type='text' class='small' data-rv-input="model.<%= Formbuilder.mappings.CONDITIONS %>.<%= i %>.value">
+              <% end %>
+            <% end %>
+          </div>
+
+        </div>
+
+        <a class='fb_condition_remove js-remove-condition icon_secondary' data-index="<%= i %>" href='#'><i class='fa fa-minus-circle'></i></a>
+      </div>
+    <% end %>
+
+    <% if @canAddConditions(): %>
+      <a class='button_uppercase fb_condition_add js-add-condition' href='#'>
+        <i class='fa fa-plus-circle'></i>
+        <%= t('formbuilder.rules.add') %>
+      </a>
+    <% end %>
+  </div>
+<% else: %>
+  <div class='fb_edit_section'>
+    <label><%= t('formbuilder.rules.add_q') %></label>
+    <p class='fb_edit_help'><%= t('formbuilder.rules.add_q_hint') %></p>
+  </div>
+<% end %>

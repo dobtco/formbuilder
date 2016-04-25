@@ -1,0 +1,41 @@
+<div class='fb_left'>
+  <div class='fb_add_field_wrapper'>
+    <div class='fb_left_header'>
+      <h4><%= t('formbuilder.add_new_field') %></h4>
+    </div>
+
+    <% for section, fields of Formbuilder.FIELD_CATEGORIES: %>
+      <h5><%= t("formbuilder.field_categories.#{section}") %></h5>
+      <div class='fb_add_field_section'>
+        <% for key, field of fields: %>
+          <button data-field-type="<%= key %>" class="button small">
+            <% if field.buttonHtml: %>
+              <%- field.buttonHtml %>
+            <% else: %>
+              <span class="symbol"><span class="fa fa-<%= field.icon %>"></span></span>
+            <% end %>
+
+            <%= t("response_field_types.#{key}") %>
+          </button>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class='fb_left_pane_wrapper' style='display:none;'>
+    <div class='fb_left_header'>
+      <h4><%= t('formbuilder.edit_field') %></h4>
+      <a class='js-add-field button small primary' href='#'><%= t('formbuilder.add_new_field') %></a>
+    </div>
+
+    <div class='fb_edit_field_inner'></div>
+  </div>
+</div>
+
+<div class='fb_right'>
+  <div class='fb_response_fields'>
+    <div class='fb_blank_slate'>
+      <div><%= t('formbuilder.drag_from_left') %></div>
+    </div>
+  </div>
+</div>

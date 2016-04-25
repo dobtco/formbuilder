@@ -1,0 +1,52 @@
+<% fieldType = if @model.field_type == 'checkboxes' then 'checkbox' else 'radio' %>
+
+<hr />
+
+<div class='fb_edit_section'>
+  <label><%= t('formbuilder.options') %></div>
+
+  <div class='fb_options'>
+    <% for option, i in @model.getOptions(): %>
+      <fieldset class='option drag_list_item drag_list_item_checkbox' data-index="<%= i %>">
+        <span class='drag_list_item_box'>
+          <i class='fa fa-reorder drag_list_reorder'></i>
+          <label class="control">
+            <input type="<%= fieldType %>" class='js-set-checked' <%= if @isChecked(i) then 'checked' %> />
+          </label>
+          <span class='drag_list_item_input'>
+            <input type="text" data-rv-input="model.field_options.options.<%= i %>.label" />
+          </span>
+        </span>
+        <% unless @model.getOptions().length < 2: %>
+          <a class="js-remove-option drag_list_remove icon_secondary" title="Remove Option" href='#'><i class='fa fa-minus-circle'></i></a>
+        <% end %>
+      </fieldset>
+    <% end %>
+  </div>
+
+  <div class='form_error' data-rv-show='model.errors.blankOption'><%= t('formbuilder.errors.blank_option') %></div>
+
+  <div class='fb_bottom_add'>
+    <a class="js-add-option button_uppercase" href='#'><i class="fa fa-plus-circle"></i> <%= t('formbuilder.add_option') %></a>
+
+    <a data-show-modal='BulkAddOptions' href='#'><%= t('formbuilder.add_in_bulk') %></a>
+  </div>
+
+  <% if @includeBlank?: %>
+    <div class='fb_option_blank'>
+      <label class='control small'>
+        <input type='checkbox' data-rv-checked='model.<%= Formbuilder.mappings.INCLUDE_BLANK %>' />
+        <%= t('formbuilder.include_blank_option') %>
+      </label>
+    </div>
+  <% end %>
+
+  <% if @includeOther?: %>
+    <div class="fb_option_other">
+      <label class='control small'>
+        <input type='checkbox' data-rv-checked='model.<%= Formbuilder.mappings.INCLUDE_OTHER %>' />
+        <%= t('formbuilder.include_other') %>
+      </label>
+    </div>
+  <% end %>
+</div>

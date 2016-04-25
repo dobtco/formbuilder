@@ -1,0 +1,11 @@
+<div data-rv-show='model.id'>
+  <hr />
+
+  <div class='fb_edit_section'>
+    <label><%= t('formbuilder.developer') %></label>
+    <div class='fb_field_id'>
+      <span>ID</span>
+      <code data-rv-text='model.id'></code>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+<hr />
+
+<div class='fb_edit_section fb_edit_section_horiz'>
+  <label><%= t('formbuilder.show') %></label>
+  <div class='fb_edit_section_horiz_content'>
+    <select class='small' data-width='auto' data-rv-value="model.<%= Formbuilder.mappings.ADDRESS_FORMAT %>" data-no-blank-class>
+      <% for i in ['', 'city_state', 'city_state_zip', 'country']: %>
+        <option value='<%= i %>'><%= t("formbuilder.address_formats.#{i || 'all'}") %></option>
+      <% end %>
+    </select>
+  </div>
+</div>
