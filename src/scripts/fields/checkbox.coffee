@@ -30,6 +30,7 @@ Formbuilder.registerField 'checkbox',
   edit: """
     <%= Formbuilder.templates['edit/options']({ rf: rf }) %>
     <%= Formbuilder.templates['edit/options_per_row']({ rf: rf }) %>
+    <%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>
   """
 
   addButton: """

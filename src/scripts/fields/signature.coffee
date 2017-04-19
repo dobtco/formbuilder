@@ -12,7 +12,9 @@ Formbuilder.registerField 'signature',
     <button class="btn btn-default btn-xs">Clear</button>
   """
 
-  edit: ""
+  edit: """
+  <%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>
+  """
 
   addButton: """
     <span class="fb-icon-signature"></span> Signature

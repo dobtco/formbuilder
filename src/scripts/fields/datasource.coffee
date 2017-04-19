@@ -15,6 +15,7 @@ Formbuilder.registerField 'datasource',
 
   edit: """
     <%= Formbuilder.templates['edit/data_source_options']({ rf: rf }) %>
+    <%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>
   """
 
   addButton: """

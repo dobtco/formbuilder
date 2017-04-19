@@ -9,6 +9,7 @@ Formbuilder.registerField 'website',
   """
 
   edit: """
+  <%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>
   """
 
   addButton: """

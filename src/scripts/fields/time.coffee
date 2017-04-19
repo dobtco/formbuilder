@@ -15,6 +15,7 @@ Formbuilder.registerField 'time',
 
   edit: """
     <%= Formbuilder.templates['edit/time']({ rf: rf }) %>
+    <%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>
   """
 
   addButton: """

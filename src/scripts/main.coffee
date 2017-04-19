@@ -12,10 +12,14 @@ class FormbuilderModel extends Backbone.DeepModel
       @attributes.parent_uuid = null
     @attachMethods()
   parentModel: () -> @collection.findWhereUuid(@get('parent_uuid'))
-  hasParent: () -> @parentModel != undefined
+  hasParent: () -> @parentModel() != undefined
   inTable: () ->
     parent = @parentModel()
     parent and parent.get('type') is 'table'
+  inGrid:() ->
+    parent = @parentModel()
+    parent and parent.get('type') is 'grid'
+
   attachMethods: ()->
     if typeof @attributes.initialize is 'function'
       @attributes.initialize.call(@)
@@ -52,6 +56,27 @@ class FormbuilderCollection extends Backbone.Collection
 
   findWhereUuid: (uuid) -> @findWhere({'uuid':uuid})
   findDataSourceFields: () -> @where({'type':'datasource'})
+  findConditionalTriggers: (child) ->
+    items = @filter (model) ->
+      correctType = model.get('type') in ['dropdown', 'checkbox', 'radio']
+      differentModel = model != child
+      hasNoParent = !model.hasParent()
+      correctType and differentModel and hasNoParent
+    items
+  findConditionalTriggerOptions: (child) ->
+    parentUuid = child.get(Formbuilder.options.mappings.CONDITIONAL_PARENT)
+    options = []
+    if parentUuid
+      options = _.chain(@findConditionalTriggers(child))
+        .filter((trigger) -> trigger.get('uuid') == parentUuid)
+        .map((trigger) -> trigger.get('answers'))
+        .flatten(true)
+        .value()
+      options.unshift({'uuid': null, label: '[No Selection] <span type="button" class="btn-xs btn-link" data-toggle="tooltip" data-placement="bottom" title="If selected, this element will display when the triggering element has no value">
+        <span class="glyphicon glyphicon-question-sign"></span>
+    </span>'})
+    options
+
 
 
 class ViewFieldView extends Backbone.View
@@ -861,6 +886,8 @@ class Formbuilder
       ADMIN_ONLY: 'admin_only'
       POPULATE_FROM: 'options.populate_from'
       POPULATE_UUID: 'options.populate_uuid'
+      CONDITIONAL_PARENT: 'options.conditional.parent'
+      CONDITIONAL_VALUES: 'options.conditional.values'
       OPTIONS: 'answers'
       DESCRIPTION: 'description'
       INCLUDE_OTHER: 'options.include_other_option'
@@ -913,6 +940,8 @@ class Formbuilder
       INCLUDE_SCORING: ->
         @reset()
       POPULATE_UUID: ->
+        @reset()
+      CONDITIONAL_PARENT: ->
         @reset()
       'DATA_SOURCE.DATA_SOURCE': ->
         @reset()

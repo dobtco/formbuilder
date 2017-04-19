@@ -20,6 +20,7 @@ Formbuilder.registerField 'section',
     </textarea>
   </div>
   </div>
+
   """
 
   addButton: """
