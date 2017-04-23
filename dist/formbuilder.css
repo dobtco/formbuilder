@@ -38,6 +38,7 @@
 .fb-field-wrapper:hover .actions-wrapper,.fb-field-wrapper.editing .actions-wrapper{display:block}
 .fb-field-wrapper:hover .subtemplate-wrapper{border-color:#ddd;border-radius:3px}
 .fb-field-wrapper.editing{background-color:#ecf0f1;border-radius:3px}
+.fb-field-wrapper.parent{box-shadow:rgba(0,0,0,0.3) 1px 1px 10px}
 .fb-field-wrapper.editing .subtemplate-wrapper{border-color:#d9e1e3;border-style:solid;margin:0;border-radius:3px}
 .fb-field-wrapper .actions-wrapper{display:none;position:absolute;bottom:-7px;right:5px;z-index:3}
 .fb-field-wrapper .actions-wrapper a{display:inline-block;background-color:#ccc;padding:2px 8px}

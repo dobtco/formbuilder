@@ -1118,12 +1118,20 @@
     };
 
     BuilderView.prototype.createAndShowEditView = function(model) {
-      var $newEditEl, $responseFieldEl, attrs, fieldWrapper;
+      var $newEditEl, $parentWrapper, $responseFieldEl, attrs, fieldWrapper, parent;
       $responseFieldEl = this.$el.find(".fb-field-wrapper").filter(function() {
         return $(this).data('cid') === model.cid;
       });
+      $('.fb-field-wrapper').removeClass('parent');
       $('.fb-field-wrapper').removeClass('editing');
       $responseFieldEl.addClass('editing');
+      parent = model.conditionalParent();
+      if (parent) {
+        $parentWrapper = this.$el.find(".fb-field-wrapper").filter(function() {
+          return $(this).data('cid') === parent.cid;
+        });
+        $parentWrapper.addClass('parent');
+      }
       if (this.editView) {
         if (this.editView.model.cid === model.cid) {
           this.$el.find(".fb-tabs a[data-target=\"#editField\"]").click();
