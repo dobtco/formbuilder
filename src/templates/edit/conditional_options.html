@@ -1,4 +1,4 @@
-<% if (!rf.inTable() && !rf.inGrid()) { %>
+<% if (rf.canBeConditionallyDisplayed()) { %>
 
 
 <div class='fb-edit-section-header'>Conditionally Display?
@@ -22,7 +22,8 @@ if (list.length) {
 </select>
 <%
 
-var selectedList = rf.collection.findConditionalTriggerOptions(rf)
+var selectedList = rf.conditionalTriggerOptions();
+
 
 for (i in selectedList) { %>
 <label class="checkbox">

@@ -5,7 +5,7 @@ rivets.binders.append =
 
     @callback = () =>
       currentValue = _.clone(@model.get(@keypath)) || []
-      if el.value and _.contains(currentValue, el.value)
+      if _.contains(currentValue, el.value)
         newValue = _.without(currentValue, el.value)
         @model.set(@keypath, newValue)
       else

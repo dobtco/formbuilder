@@ -12,6 +12,7 @@
 .fb-icon-text:before{content:'\e80a'}
 .fb-icon-number:before{content:'\e80b'}
 .fb-icon-time:before{content:'\e80c'}
+.fb-icon-conditional:before{content:'\E80D'}
 .fb-button{text-align:left}
 .fb-clear{clear:both}
 .fb-main{padding:0 20px 0 0;position:relative}
@@ -65,6 +66,8 @@ input[readonly]{cursor:not-allowed;background-color:#eee}
 .fb-common-wrapper .fb-label-description{margin-bottom:10px}
 .fb-common-wrapper .fb-label-description input,.fb-common-wrapper .fb-label-description textarea{width:100%}
 .fb-common-wrapper .fb-label-description textarea{min-height:5em}
+.fb-conditional-question{float:right;font-size:.9em;max-width:50%;text-overflow:ellipsis;height:20px;white-space:nowrap;overflow:hidden}
+.fb-conditional-question-trigger > span{font-weight:bold}
 .option-score-input{width:50px}
 .option-label-input{width:170px}
 .response-field-draggable-helper{border:1px dashed #ddd;background:#eee}

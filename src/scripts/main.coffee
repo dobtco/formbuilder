@@ -19,6 +19,27 @@ class FormbuilderModel extends Backbone.DeepModel
   inGrid:() ->
     parent = @parentModel()
     parent and parent.get('type') is 'grid'
+  canBeConditionallyDisplayed:() -> !@inTable() and !@inGrid()
+  conditionalParent: () ->
+    parentUuid = @get(Formbuilder.options.mappings.CONDITIONAL_PARENT)
+    if parentUuid
+      return @collection.findWhereUuid(parentUuid)
+    null
+
+  answers: () -> @get('answers') || []
+
+  conditionalTriggerOptions: (selected) ->
+    parent = @conditionalParent()
+    options = []
+    if parent
+      options = _.clone(parent.answers())
+      options.unshift({'uuid': '', 'label': '[No Selection]'})
+      if selected
+        triggerValues =  @get(Formbuilder.options.mappings.CONDITIONAL_VALUES) || []
+        options = _.filter options, (trigger) -> trigger.uuid in triggerValues
+
+    options
+
 
   attachMethods: ()->
     if typeof @attributes.initialize is 'function'
@@ -63,19 +84,7 @@ class FormbuilderCollection extends Backbone.Collection
       hasNoParent = !model.hasParent()
       correctType and differentModel and hasNoParent
     items
-  findConditionalTriggerOptions: (child) ->
-    parentUuid = child.get(Formbuilder.options.mappings.CONDITIONAL_PARENT)
-    options = []
-    if parentUuid
-      options = _.chain(@findConditionalTriggers(child))
-        .filter((trigger) -> trigger.get('uuid') == parentUuid)
-        .map((trigger) -> trigger.get('answers'))
-        .flatten(true)
-        .value()
-      options.unshift({'uuid': null, label: '[No Selection] <span type="button" class="btn-xs btn-link" data-toggle="tooltip" data-placement="bottom" title="If selected, this element will display when the triggering element has no value">
-        <span class="glyphicon glyphicon-question-sign"></span>
-    </span>'})
-    options
+
 
 
 

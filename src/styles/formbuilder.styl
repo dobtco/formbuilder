@@ -46,6 +46,7 @@ $editing-border = darken($editing-bg, 7%)
 .fb-icon-text:before { content: '\e80a'; } /* '' */
 .fb-icon-number:before { content: '\e80b'; } /* '' */
 .fb-icon-time:before { content: '\e80c'; } /* '' */
+.fb-icon-conditional:before { content: '\E80D'; } /* '' */
 
 .fb-button {
   text-align: left;
@@ -347,6 +348,20 @@ input[readonly] {
 
 .fb-common-wrapper .fb-label-description textarea {
   min-height: 5em;
+}
+
+.fb-conditional-question {
+    float: right;
+    font-size: .9em;
+    max-width: 50%;
+    text-overflow: ellipsis;
+    height: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.fb-conditional-question-trigger > span {
+    font-weight: bold;
 }
 
 .option-score-input {

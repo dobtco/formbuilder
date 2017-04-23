@@ -10,7 +10,7 @@
       this.callback = function() {
         var currentValue, newValue;
         currentValue = _.clone(_this.model.get(_this.keypath)) || [];
-        if (el.value && _.contains(currentValue, el.value)) {
+        if (_.contains(currentValue, el.value)) {
           newValue = _.without(currentValue, el.value);
           return _this.model.set(_this.keypath, newValue);
         } else {
@@ -77,7 +77,8 @@
 (function() {
   var BuilderView, EditFieldView, Formbuilder, FormbuilderCollection, FormbuilderModel, GridFieldView, TableFieldView, ViewFieldView, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6,
     __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   FormbuilderModel = (function(_super) {
     __extends(FormbuilderModel, _super);
@@ -130,6 +131,44 @@
       var parent;
       parent = this.parentModel();
       return parent && parent.get('type') === 'grid';
+    };
+
+    FormbuilderModel.prototype.canBeConditionallyDisplayed = function() {
+      return !this.inTable() && !this.inGrid();
+    };
+
+    FormbuilderModel.prototype.conditionalParent = function() {
+      var parentUuid;
+      parentUuid = this.get(Formbuilder.options.mappings.CONDITIONAL_PARENT);
+      if (parentUuid) {
+        return this.collection.findWhereUuid(parentUuid);
+      }
+      return null;
+    };
+
+    FormbuilderModel.prototype.answers = function() {
+      return this.get('answers') || [];
+    };
+
+    FormbuilderModel.prototype.conditionalTriggerOptions = function(selected) {
+      var options, parent, triggerValues;
+      parent = this.conditionalParent();
+      options = [];
+      if (parent) {
+        options = _.clone(parent.answers());
+        options.unshift({
+          'uuid': '',
+          'label': '[No Selection]'
+        });
+        if (selected) {
+          triggerValues = this.get(Formbuilder.options.mappings.CONDITIONAL_VALUES) || [];
+          options = _.filter(options, function(trigger) {
+            var _ref1;
+            return _ref1 = trigger.uuid, __indexOf.call(triggerValues, _ref1) >= 0;
+          });
+        }
+      }
+      return options;
     };
 
     FormbuilderModel.prototype.attachMethods = function() {
@@ -203,26 +242,6 @@
         return correctType && differentModel && hasNoParent;
       });
       return items;
-    };
-
-    FormbuilderCollection.prototype.findConditionalTriggerOptions = function(child) {
-      var options, parentUuid;
-      parentUuid = child.get(Formbuilder.options.mappings.CONDITIONAL_PARENT);
-      options = [];
-      if (parentUuid) {
-        options = _.chain(this.findConditionalTriggers(child)).filter(function(trigger) {
-          return trigger.get('uuid') === parentUuid;
-        }).map(function(trigger) {
-          return trigger.get('answers');
-        }).flatten(true).value();
-        options.unshift({
-          'uuid': null,
-          label: '[No Selection] <span type="button" class="btn-xs btn-link" data-toggle="tooltip" data-placement="bottom" title="If selected, this element will display when the triggering element has no value">\
-        <span class="glyphicon glyphicon-question-sign"></span>\
-    </span>'
-        });
-      }
-      return options;
     };
 
     return FormbuilderCollection;
@@ -2104,7 +2123,7 @@ var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
 
- if (!rf.inTable() && !rf.inGrid()) { ;
+ if (rf.canBeConditionallyDisplayed()) { ;
 __p += '\n\n\n<div class=\'fb-edit-section-header\'>Conditionally Display?\n    <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Checkbox, Radio and Dropdown elements can be used to conditionally trigger the display of elements">\n        <span class="glyphicon glyphicon-question-sign"></span>\n    </span>\n</div>\n';
   var list = rf.collection.findConditionalTriggers(rf);
 if (list.length) {
@@ -2123,7 +2142,8 @@ __p += '\n    <option value="' +
 __p += '\n</select>\n';
 
 
-var selectedList = rf.collection.findConditionalTriggerOptions(rf)
+var selectedList = rf.conditionalTriggerOptions();
+
 
 for (i in selectedList) { ;
 __p += '\n<label class="checkbox">\n    <input type=\'checkbox\' data-rv-append=\'model.' +
@@ -2573,6 +2593,8 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<div class=\'subtemplate-wrapper\'>\n  <div class=\'cover\'></div>\n  ' +
+((__t = ( Formbuilder.templates['view/conditional']({rf: rf}) )) == null ? '' : __t) +
+'\n  ' +
 ((__t = ( Formbuilder.templates['view/label']({rf: rf}) )) == null ? '' : __t) +
 '\n\n  ' +
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.TYPE)].view({rf: rf}) )) == null ? '' : __t) +
@@ -2591,10 +2613,35 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<div class=\'subtemplate-wrapper\'>\n  <div class=\'cover\'></div>\n  ' +
+((__t = ( Formbuilder.templates['view/conditional']({rf: rf}) )) == null ? '' : __t) +
+'\n  ' +
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.TYPE)].view({rf: rf}) )) == null ? '' : __t) +
 '\n  ' +
 ((__t = ( Formbuilder.templates['view/duplicate_remove']({rf: rf}) )) == null ? '' : __t) +
 '\n</div>\n';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["view/conditional"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+
+var parent = rf.conditionalParent();
+var triggerValues = _.pluck(rf.conditionalTriggerOptions(true), 'label');
+if (parent && triggerValues.length) {
+;
+__p += '\n<div class="fb-conditional-question">\n    <i class="fb-icon-conditional"></i>\n    <span class="fb-conditional-question-trigger">display when <span>' +
+((__t = ( parent.get('label') )) == null ? '' : __t) +
+'</span> is <span>' +
+((__t = ( triggerValues.join(' or ') )) == null ? '' : __t) +
+'</span></span>\n</div>\n';
+ } ;
+__p += '\n';
 
 }
 return __p
