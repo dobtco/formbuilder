@@ -2146,7 +2146,7 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 
  if (rf.canBeConditionallyDisplayed()) { ;
-__p += '\n\n\n<div class=\'fb-edit-section-header\'>Conditionally Display?\n    <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Checkbox, Radio and Dropdown elements can be used to conditionally trigger the display of elements">\n        <span class="glyphicon glyphicon-question-sign"></span>\n    </span>\n</div>\n';
+__p += '\n\n\n<div class=\'fb-edit-section-header\'>Conditionally Display?\n    <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Checkbox, Radio and Dropdown elements can be used to conditionally trigger the display of elements">\n        <span class="glyphicon glyphicon-question-sign"></span>\n    </span>\n    <script>\n      $(\'[data-toggle="tooltip"]\').tooltip()\n    </script>\n</div>\n';
   var list = rf.collection.findConditionalTriggers(rf);
 if (list.length) {
 ;
@@ -2178,7 +2178,7 @@ __p += '\n<label class="checkbox">\n    <input type=\'checkbox\' data-rv-append=
  } ;
 __p += '\n';
  } else { ;
-__p += '\nNo trigger elements     <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Checkbox, Radio and Dropdown elements can be used to conditionally trigger the display of elements">\n        <span class="glyphicon glyphicon-question-sign"></span>\n    </span>\n';
+__p += '\nNo trigger elements\n';
  } ;
 __p += '\n';
  } ;

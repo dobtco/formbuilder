@@ -5,6 +5,9 @@
     <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Checkbox, Radio and Dropdown elements can be used to conditionally trigger the display of elements">
         <span class="glyphicon glyphicon-question-sign"></span>
     </span>
+    <script>
+      $('[data-toggle="tooltip"]').tooltip()
+    </script>
 </div>
 <%  var list = rf.collection.findConditionalTriggers(rf);
 if (list.length) {
@@ -32,9 +35,7 @@ for (i in selectedList) { %>
 </label>
 <% } %>
 <% } else { %>
-No trigger elements     <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Checkbox, Radio and Dropdown elements can be used to conditionally trigger the display of elements">
-        <span class="glyphicon glyphicon-question-sign"></span>
-    </span>
+No trigger elements
 <% } %>
 <% } %>
 

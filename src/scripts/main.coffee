@@ -200,8 +200,6 @@ class TableFieldView extends ViewFieldView
     'click .js-duplicate': 'duplicate'
 
 
-
-
   showSelectors: (e) ->
     @$el.find('.drop-area').html(Formbuilder.templates['view/element_selector']())
 

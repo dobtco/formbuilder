@@ -73,6 +73,7 @@ module.exports = (grunt) ->
             'bower_components/backbone/backbone.js'
             'bower_components/backbone-deep-model/src/deep-model.js'
             'bower_components/bootstrap/dist/js/bootstrap.js',
+            'bower_components/bootstrap/js/tooltip.js',
             'bower_components/signature_pad/signature_pad.js'
             'bower_components/node-uuid/uuid.js'
             'bower_components/spectrum/spectrum.js'

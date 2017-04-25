@@ -100,14 +100,14 @@
                "calculation_type": "sum(column_uuid_76b257ed_16fa_422d_a732_da6c6170c807)"
             }
           },
-          {
-            "type": "table",
-            "label": "Table",
-            "options": {
-                "elements": [{"uuid":"d2ce1858-603a-4e31-8cce-ea51ef08ef13"},{"uuid":"76b257ed-16fa-422d-a732-da6c6170c807", "totalColumn": true,  "totalColumnUuid": 'efc11190-a876-457a-9210-1d2ae8882ff5'},{"uuid":"a720d44f-e4da-4fa5-a7aa-567e82a5fe2a"},{"uuid":"c171bdb9-dffb-4bf7-84a9-fd6ae848dd79", "totalColumn": true, "totalColumnUuid": 'b9a1b61f-fd1a-4df5-b8ba-9bed3aa41d7a'}],
-            },
-            "uuid": "909cbdba-4431-4ed8-ab28-96006d356ad7"
-          },
+//          {
+//            "type": "table",
+//            "label": "Table",
+//            "options": {
+//                "elements": [{"uuid":"d2ce1858-603a-4e31-8cce-ea51ef08ef13"},{"uuid":"76b257ed-16fa-422d-a732-da6c6170c807", "totalColumn": true,  "totalColumnUuid": 'efc11190-a876-457a-9210-1d2ae8882ff5'},{"uuid":"a720d44f-e4da-4fa5-a7aa-567e82a5fe2a"},{"uuid":"c171bdb9-dffb-4bf7-84a9-fd6ae848dd79", "totalColumn": true, "totalColumnUuid": 'b9a1b61f-fd1a-4df5-b8ba-9bed3aa41d7a'}],
+//            },
+//            "uuid": "909cbdba-4431-4ed8-ab28-96006d356ad7"
+//          },
          {
             "type": "datasource",
             "label": "Work Contractor",
@@ -240,16 +240,6 @@
 
     });
   </script>
-  <script>
-    var horde = gremlins.createHorde();
-    var hordeButton = document.createElement("button");
-    hordeButton.className = 'btn btn-danger';
-    hordeButton.innerHTML = 'Unleash the Gremlins';
-    document.body.appendChild(hordeButton);
-    hordeButton.addEventListener('click', function() {
-      horde.unleash({ nb: 500 });
-      this.style.display = 'none';
-    });
-  </script>
+
 </body>
 </html>
