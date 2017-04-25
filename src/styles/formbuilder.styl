@@ -48,6 +48,8 @@ $editing-border = darken($editing-bg, 7%)
 .fb-icon-time:before { content: '\e80c'; } /* '' */
 .fb-icon-conditional:before { content: '\E80D'; } /* '' */
 
+
+
 .fb-button {
   text-align: left;
 }
@@ -190,6 +192,8 @@ $editing-border = darken($editing-bg, 7%)
 .fb-field-wrapper.editing {
   background-color: $editing-bg;
   border-radius: 3px;
+  box-shadow: inset 0 0 7px 2px rgba(100,100,100,0.1);
+  border: 1px solid rgba(100,100,100,0.2);
 }
 
 .fb-field-wrapper.parent {
@@ -424,9 +428,24 @@ input[readonly] {
   width: 145px;
 }
 
-.response-field-checkboxes .fb-option,.response-field-radio .fb-option {
+.response-field-checkbox .fb-option,.response-field-radio .fb-option {
   margin-bottom: 5px;
+  padding: 3px 8px;
   display: inline-block;
+}
+
+.fb-option {
+
+}
+
+.editing .trigger-option, .fb-option.trigger-option  {
+    background-color: #5cb85c;
+    border-radius: 0.25em;
+    color: white;
+}
+
+.fb-conditional-question .trigger-option {
+   padding: 1px 4px;
 }
 
 .response-field-website input {

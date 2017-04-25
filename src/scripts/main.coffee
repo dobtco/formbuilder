@@ -504,9 +504,11 @@ class EditFieldView extends Backbone.View
     'input .option-label-input': 'forceRender'
 
 
+
   initialize: (options) ->
     {@parentView} = options
     @listenTo @model, "destroy", @remove
+
     _.each Formbuilder.options.change, (callback, key) =>
       eventName = 'change:' + _.nested(Formbuilder.options.mappings, key)
       @listenTo @model, eventName, callback
@@ -518,12 +520,14 @@ class EditFieldView extends Backbone.View
     return @
 
   reset: ->
+    @stopListening()
     @parentView.editView = undefined
     @parentView.createAndShowEditView(@model)
 
   remove: ->
     @parentView.editView = undefined
     @parentView.$el.find("[data-target=\"#addField\"]").click()
+    @stopListening()
     super
 
   # @todo this should really be on the model, not the view
@@ -735,13 +739,19 @@ class BuilderView extends Backbone.View
   createAndShowEditView: (model) ->
     $responseFieldEl = @$el.find(".fb-field-wrapper").filter( -> $(@).data('cid') == model.cid )
     $('.fb-field-wrapper').removeClass('parent')
+    $('.fb-option').removeClass('trigger-option')
     $('.fb-field-wrapper').removeClass('editing')
     $responseFieldEl.addClass('editing')
 
     parent = model.conditionalParent()
     if parent
+      selectedTriggers = model.get(Formbuilder.options.mappings.CONDITIONAL_VALUES) || []
       $parentWrapper = @$el.find(".fb-field-wrapper").filter( -> $(@).data('cid') == parent.cid )
       $parentWrapper.addClass('parent')
+      $parentWrapper.find('.fb-option')
+                    .filter(-> uuid = $(@).data('uuid'); $(@).data('uuid') in selectedTriggers)
+                    .each(-> $(@).addClass('trigger-option'))
+
 
 
     if @editView
@@ -958,6 +968,8 @@ class Formbuilder
       POPULATE_UUID: ->
         @reset()
       CONDITIONAL_PARENT: ->
+        @reset()
+      CONDITIONAL_VALUES: ->
         @reset()
       'DATA_SOURCE.DATA_SOURCE': ->
         @reset()

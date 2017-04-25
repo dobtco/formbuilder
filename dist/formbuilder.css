@@ -37,7 +37,7 @@
 .fb-field-wrapper input{border-radius:3px;border:thin solid #ddd}
 .fb-field-wrapper:hover .actions-wrapper,.fb-field-wrapper.editing .actions-wrapper{display:block}
 .fb-field-wrapper:hover .subtemplate-wrapper{border-color:#ddd;border-radius:3px}
-.fb-field-wrapper.editing{background-color:#ecf0f1;border-radius:3px}
+.fb-field-wrapper.editing{background-color:#ecf0f1;border-radius:3px;box-shadow:inset 0 0 7px 2px rgba(100,100,100,0.1);border:1px solid rgba(100,100,100,0.2)}
 .fb-field-wrapper.parent{box-shadow:rgba(0,0,0,0.3) 1px 1px 10px}
 .fb-field-wrapper.editing .subtemplate-wrapper{border-color:#d9e1e3;border-style:solid;margin:0;border-radius:3px}
 .fb-field-wrapper .actions-wrapper{display:none;position:absolute;bottom:-7px;right:5px;z-index:3}
@@ -81,7 +81,9 @@ input[readonly]{cursor:not-allowed;background-color:#eee}
 .response-field-address .city,.response-field-address .state,.response-field-address .zip,.response-field-address .country{width:198px}
 .response-field-date .month,.response-field-date .day,.response-field-date .year{width:50px}
 .response-field-time .input-group{width:145px}
-.response-field-checkboxes .fb-option,.response-field-radio .fb-option{margin-bottom:5px;display:inline-block}
+.response-field-checkbox .fb-option,.response-field-radio .fb-option{margin-bottom:5px;padding:3px 8px;display:inline-block}
+.editing .trigger-option,.fb-option.trigger-option{background-color:#5cb85c;border-radius:.25em;color:#fff}
+.fb-conditional-question .trigger-option{padding:1px 4px}
 .response-field-website input{width:200px}
 .response-field-signature .fb-signature{width:300px;height:150px}
 .response-field-signature .fb-signature-placeholder{color:#aaa}
