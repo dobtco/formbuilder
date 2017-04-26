@@ -19,7 +19,7 @@ class FormbuilderModel extends Backbone.DeepModel
   inGrid:() ->
     parent = @parentModel()
     parent and parent.get('type') is 'grid'
-  canBeConditionallyDisplayed:() -> !@inTable() and !@inGrid()
+  canBeConditionallyDisplayed:() -> !@inTable() and !@inGrid() and Formbuilder.conditionalFunctionality
   conditionalParent: () ->
     parentUuid = @get(Formbuilder.options.mappings.CONDITIONAL_PARENT)
     if parentUuid
@@ -874,6 +874,9 @@ class Formbuilder
         instance.mainView.reset()
     if Formbuilder.attrs[name] != undefined then Formbuilder.attrs[name] else undefined
 
+  @disabledFields: []
+  @conditionalFunctionality = true;
+  @disableField: (field) -> @disabledFields.push(field)
 
   @helpers:
     defaultFieldAttrs: (type) ->
@@ -993,7 +996,9 @@ class Formbuilder
 
   @registerField: (name, opts) ->
     enabled = true
-    unless _.contains(Formbuilder.options.ENABLED_FIELDS, name)
+
+    fields = _.difference(Formbuilder.options.ENABLED_FIELDS, @disabledFields)
+    unless _.contains(fields, name)
       enabled = false
     for x in ['view', 'edit']
       opts[x] = if enabled then _.template(opts[x]) else (x) -> ''

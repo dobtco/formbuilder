@@ -134,7 +134,7 @@
     };
 
     FormbuilderModel.prototype.canBeConditionallyDisplayed = function() {
-      return !this.inTable() && !this.inGrid();
+      return !this.inTable() && !this.inGrid() && Formbuilder.conditionalFunctionality;
     };
 
     FormbuilderModel.prototype.conditionalParent = function() {
@@ -1322,6 +1322,14 @@
       }
     };
 
+    Formbuilder.disabledFields = [];
+
+    Formbuilder.conditionalFunctionality = true;
+
+    Formbuilder.disableField = function(field) {
+      return this.disabledFields.push(field);
+    };
+
     Formbuilder.helpers = {
       defaultFieldAttrs: function(type) {
         var attrs, _base;
@@ -1459,9 +1467,10 @@
     };
 
     Formbuilder.registerField = function(name, opts) {
-      var enabled, x, _i, _len, _ref7;
+      var enabled, fields, x, _i, _len, _ref7;
       enabled = true;
-      if (!_.contains(Formbuilder.options.ENABLED_FIELDS, name)) {
+      fields = _.difference(Formbuilder.options.ENABLED_FIELDS, this.disabledFields);
+      if (!_.contains(fields, name)) {
         enabled = false;
       }
       _ref7 = ['view', 'edit'];
