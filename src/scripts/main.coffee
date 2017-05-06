@@ -994,6 +994,7 @@ class Formbuilder
   getPayload: ->
     return @mainView.getPayload()
 
+
   @registerField: (name, opts) ->
     enabled = true
 

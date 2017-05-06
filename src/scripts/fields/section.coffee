@@ -20,7 +20,7 @@ Formbuilder.registerField 'section',
     </textarea>
   </div>
   </div>
-
+  <%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>
   """
 
   addButton: """

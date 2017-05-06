@@ -25,6 +25,7 @@
 <body>
 
   <div class='fb-main'></div>
+  <button id="log-payload" class="btn btn-default">Log Payload</button>
   <script src="vendor/js/vendor.js"></script>
   <script src="bower_components/summernote/dist/summernote.js"></script>
   <script src="dist/formbuilder.js"></script>
@@ -53,7 +54,7 @@
           }
         }
       });
-      Formbuilder.conditionalFunctionality = false;
+
       window.fb = new Formbuilder({
         selector: '.fb-main',
         bootstrapData: [
@@ -239,6 +240,10 @@
 
 
 
+    });
+
+    $('#log-payload').on('click', function() {
+      console.log(fb.getPayload());
     });
   </script>
 
