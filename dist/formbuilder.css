@@ -18,7 +18,7 @@
 .fb-main{padding:0 20px 0 0;position:relative}
 .fb-save-wrapper{position:absolute;right:20px;top:10px}
 .fb-left{float:left;width:320px;padding-top:30px}
-.fb-right{padding-top:70px;margin-left:320px;border-left:1px solid #ddd;padding-left:20px;min-height:100%;overflow:hidden}
+.fb-right{padding-top:70px;margin-left:320px;border-left:1px solid #ddd;padding-left:20px;padding-bottom:150px;min-height:100%;overflow:hidden}
 .fb-no-response-fields{color:#999}
 .fb-tabs{list-style:none;margin:0 0 20px 0;padding:0 0 0 20px;border-bottom:1px solid #ccc}
 .fb-tabs li{display:inline-block}
