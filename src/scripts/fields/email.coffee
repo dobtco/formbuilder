@@ -8,7 +8,9 @@ Formbuilder.registerField 'email',
     <input type='text' class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />
   """
 
-  edit: ""
+  edit: """
+  <%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>
+  """
 
   addButton: """
     <span class="icon-email"></span> Email

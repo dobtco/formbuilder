@@ -46,6 +46,9 @@ $editing-border = darken($editing-bg, 7%)
 .fb-icon-text:before { content: '\e80a'; } /* '' */
 .fb-icon-number:before { content: '\e80b'; } /* '' */
 .fb-icon-time:before { content: '\e80c'; } /* '' */
+.fb-icon-conditional:before { content: '\E80D'; } /* '' */
+
+
 
 .fb-button {
   text-align: left;
@@ -190,7 +193,14 @@ $editing-border = darken($editing-bg, 7%)
 .fb-field-wrapper.editing {
   background-color: $editing-bg;
   border-radius: 3px;
+  box-shadow: inset 0 0 7px 2px rgba(100,100,100,0.1);
+  border: 1px solid rgba(100,100,100,0.2);
 }
+
+.fb-field-wrapper.parent {
+  box-shadow: rgba(0,0,0,0.3) 1px 1px 10px;
+}
+
 
 .fb-field-wrapper.editing .subtemplate-wrapper {
   border-color: $editing-border;
@@ -350,6 +360,20 @@ input[readonly] {
   min-height: 5em;
 }
 
+.fb-conditional-question {
+    float: right;
+    font-size: .9em;
+    max-width: 50%;
+    text-overflow: ellipsis;
+    height: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.fb-conditional-question-trigger > span {
+    font-weight: bold;
+}
+
 .option-score-input {
   width: 50px;
 }
@@ -405,9 +429,24 @@ input[readonly] {
   width: 145px;
 }
 
-.response-field-checkboxes .fb-option,.response-field-radio .fb-option {
+.response-field-checkbox .fb-option,.response-field-radio .fb-option {
   margin-bottom: 5px;
+  padding: 3px 8px;
   display: inline-block;
+}
+
+.fb-option {
+
+}
+
+.editing .trigger-option, .fb-option.trigger-option  {
+    background-color: #5cb85c;
+    border-radius: 0.25em;
+    color: white;
+}
+
+.fb-conditional-question .trigger-option {
+   padding: 1px 4px;
 }
 
 .response-field-website input {

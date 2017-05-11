@@ -10,6 +10,7 @@ Formbuilder.registerField 'textarea',
 
   edit: """
   <%= Formbuilder.templates['edit/populate_from']({ rf: rf }) %>
+  <%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>
   """
 
   addButton: """

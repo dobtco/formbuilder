@@ -19,7 +19,9 @@ Formbuilder.registerField 'price',
     </div>
   """
 
-  edit: ""
+  edit: """
+  <%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>
+  """
 
   addButton: """
     <span class="fb-icon-price"></span> Price

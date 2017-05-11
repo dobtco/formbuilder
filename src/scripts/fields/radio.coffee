@@ -7,8 +7,8 @@ Formbuilder.registerField 'radio',
   view: """
     <div class="fb-options-per-row-<%= rf.get(Formbuilder.options.mappings.OPTIONS_PER_ROW) %>">
         <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>
-          <div class="fb-option-wrapper">
-            <label class='fb-option'>
+          <div class="fb-option-wrapper <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>">
+            <label class='fb-option' data-uuid="<%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].uuid %>">
               <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick="javascript: return false;" />
               <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>
             </label>
@@ -32,11 +32,12 @@ Formbuilder.registerField 'radio',
     <%= Formbuilder.templates['edit/scoring']({ rf: rf }) %>
     <%= Formbuilder.templates['edit/options']({ rf: rf }) %>
     <%= Formbuilder.templates['edit/options_per_row']({ rf: rf }) %>
+    <%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>
   """
 
 
   addButton: """
-    <span class="fb-icon-radio"></span> Multiple Choice
+    <span class="fb-icon-radio"></span> Radio Button
   """
 
   defaultAttributes: (attrs) ->

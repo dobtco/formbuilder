@@ -10,9 +10,9 @@
       this.callback = function() {
         var currentValue, newValue;
         currentValue = _.clone(_this.model.get(_this.keypath)) || [];
-        if (el.value && _.contains(currentValue, el.value)) {
+        if (_.contains(currentValue, el.value)) {
           newValue = _.without(currentValue, el.value);
-          return _this.model.set(_this.keypath, currentValue);
+          return _this.model.set(_this.keypath, newValue);
         } else {
           currentValue.push(el.value);
           return _this.model.set(_this.keypath, currentValue);
@@ -77,7 +77,8 @@
 (function() {
   var BuilderView, EditFieldView, Formbuilder, FormbuilderCollection, FormbuilderModel, GridFieldView, TableFieldView, ViewFieldView, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6,
     __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   FormbuilderModel = (function(_super) {
     __extends(FormbuilderModel, _super);
@@ -117,13 +118,57 @@
     };
 
     FormbuilderModel.prototype.hasParent = function() {
-      return this.parentModel !== void 0;
+      return this.parentModel() !== void 0;
     };
 
     FormbuilderModel.prototype.inTable = function() {
       var parent;
       parent = this.parentModel();
       return parent && parent.get('type') === 'table';
+    };
+
+    FormbuilderModel.prototype.inGrid = function() {
+      var parent;
+      parent = this.parentModel();
+      return parent && parent.get('type') === 'grid';
+    };
+
+    FormbuilderModel.prototype.canBeConditionallyDisplayed = function() {
+      return !this.inTable() && !this.inGrid() && Formbuilder.conditionalFunctionality;
+    };
+
+    FormbuilderModel.prototype.conditionalParent = function() {
+      var parentUuid;
+      parentUuid = this.get(Formbuilder.options.mappings.CONDITIONAL_PARENT);
+      if (parentUuid) {
+        return this.collection.findWhereUuid(parentUuid);
+      }
+      return null;
+    };
+
+    FormbuilderModel.prototype.answers = function() {
+      return this.get('answers') || [];
+    };
+
+    FormbuilderModel.prototype.conditionalTriggerOptions = function(selected) {
+      var options, parent, triggerValues;
+      parent = this.conditionalParent();
+      options = [];
+      if (parent) {
+        options = _.clone(parent.answers());
+        options.unshift({
+          'uuid': '',
+          'label': '[No Selection]'
+        });
+        if (selected) {
+          triggerValues = this.get(Formbuilder.options.mappings.CONDITIONAL_VALUES) || [];
+          options = _.filter(options, function(trigger) {
+            var _ref1;
+            return _ref1 = trigger.uuid, __indexOf.call(triggerValues, _ref1) >= 0;
+          });
+        }
+      }
+      return options;
     };
 
     FormbuilderModel.prototype.attachMethods = function() {
@@ -185,6 +230,18 @@
       return this.where({
         'type': 'datasource'
       });
+    };
+
+    FormbuilderCollection.prototype.findConditionalTriggers = function(child) {
+      var items;
+      items = this.filter(function(model) {
+        var correctType, differentModel, hasNoParent, _ref2;
+        correctType = (_ref2 = model.get('type')) === 'dropdown' || _ref2 === 'checkbox' || _ref2 === 'radio';
+        differentModel = model !== child;
+        hasNoParent = !model.hasParent();
+        return correctType && differentModel && hasNoParent;
+      });
+      return items;
     };
 
     return FormbuilderCollection;
@@ -779,6 +836,7 @@
     };
 
     EditFieldView.prototype.reset = function() {
+      this.stopListening();
       this.parentView.editView = void 0;
       return this.parentView.createAndShowEditView(this.model);
     };
@@ -786,6 +844,7 @@
     EditFieldView.prototype.remove = function() {
       this.parentView.editView = void 0;
       this.parentView.$el.find("[data-target=\"#addField\"]").click();
+      this.stopListening();
       return EditFieldView.__super__.remove.apply(this, arguments);
     };
 
@@ -1061,12 +1120,29 @@
     };
 
     BuilderView.prototype.createAndShowEditView = function(model) {
-      var $newEditEl, $responseFieldEl, attrs, fieldWrapper;
+      var $newEditEl, $parentWrapper, $responseFieldEl, attrs, fieldWrapper, parent, selectedTriggers;
       $responseFieldEl = this.$el.find(".fb-field-wrapper").filter(function() {
         return $(this).data('cid') === model.cid;
       });
+      $('.fb-field-wrapper').removeClass('parent');
+      $('.fb-option').removeClass('trigger-option');
       $('.fb-field-wrapper').removeClass('editing');
       $responseFieldEl.addClass('editing');
+      parent = model.conditionalParent();
+      if (parent) {
+        selectedTriggers = model.get(Formbuilder.options.mappings.CONDITIONAL_VALUES) || [];
+        $parentWrapper = this.$el.find(".fb-field-wrapper").filter(function() {
+          return $(this).data('cid') === parent.cid;
+        });
+        $parentWrapper.addClass('parent');
+        $parentWrapper.find('.fb-option').filter(function() {
+          var uuid, _ref7;
+          uuid = $(this).data('uuid');
+          return _ref7 = $(this).data('uuid'), __indexOf.call(selectedTriggers, _ref7) >= 0;
+        }).each(function() {
+          return $(this).addClass('trigger-option');
+        });
+      }
       if (this.editView) {
         if (this.editView.model.cid === model.cid) {
           this.$el.find(".fb-tabs a[data-target=\"#editField\"]").click();
@@ -1246,6 +1322,14 @@
       }
     };
 
+    Formbuilder.disabledFields = [];
+
+    Formbuilder.conditionalFunctionality = true;
+
+    Formbuilder.disableField = function(field) {
+      return this.disabledFields.push(field);
+    };
+
     Formbuilder.helpers = {
       defaultFieldAttrs: function(type) {
         var attrs, _base;
@@ -1284,6 +1368,8 @@
         ADMIN_ONLY: 'admin_only',
         POPULATE_FROM: 'options.populate_from',
         POPULATE_UUID: 'options.populate_uuid',
+        CONDITIONAL_PARENT: 'options.conditional.parent',
+        CONDITIONAL_VALUES: 'options.conditional.values',
         OPTIONS: 'answers',
         DESCRIPTION: 'description',
         INCLUDE_OTHER: 'options.include_other_option',
@@ -1343,6 +1429,12 @@
         POPULATE_UUID: function() {
           return this.reset();
         },
+        CONDITIONAL_PARENT: function() {
+          return this.reset();
+        },
+        CONDITIONAL_VALUES: function() {
+          return this.reset();
+        },
         'DATA_SOURCE.DATA_SOURCE': function() {
           return this.reset();
         },
@@ -1375,9 +1467,10 @@
     };
 
     Formbuilder.registerField = function(name, opts) {
-      var enabled, x, _i, _len, _ref7;
+      var enabled, fields, x, _i, _len, _ref7;
       enabled = true;
-      if (!_.contains(Formbuilder.options.ENABLED_FIELDS, name)) {
+      fields = _.difference(Formbuilder.options.ENABLED_FIELDS, this.disabledFields);
+      if (!_.contains(fields, name)) {
         enabled = false;
       }
       _ref7 = ['view', 'edit'];
@@ -1464,7 +1557,7 @@
     name: 'Address',
     order: 50,
     view: "<div class='input-line'>\n  <span class='street'>\n    <input type='text' />\n    <label>Address</label>\n  </span>\n</div>\n\n<div class='input-line'>\n  <span class='city'>\n    <input type='text' />\n    <label>City</label>\n  </span>\n\n  <span class='state'>\n    <input type='text' />\n    <label>State / Province / Region</label>\n  </span>\n</div>\n\n<div class='input-line'>\n  <span class='zip'>\n    <input type='text' />\n    <label>Zipcode</label>\n  </span>\n\n  <span class='country'>\n    <select><option>United States</option></select>\n    <label>Country</label>\n  </span>\n</div>",
-    edit: "",
+    edit: "<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-address\"></span> Address"
   });
 
@@ -1474,8 +1567,8 @@
   Formbuilder.registerField('checkbox', {
     name: 'Checkboxes',
     order: 10,
-    view: "<div class=\"fb-options-per-row-<%= rf.get(Formbuilder.options.mappings.OPTIONS_PER_ROW) %>\">\n    <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n      <div class=\"fb-option-wrapper\">\n        <label class='fb-option'>\n          <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n          <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n        </label>\n      </div>\n    <% } %>\n\n    <% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n      <div class='other-option'>\n        <label class='fb-option'>\n          <input type='checkbox' />\n          Other\n        </label>\n\n        <input type='text' />\n      </div>\n    <% } %>\n</div>",
-    edit: "<%= Formbuilder.templates['edit/options']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/options_per_row']({ rf: rf }) %>",
+    view: "<div class=\"fb-options-per-row-<%= rf.get(Formbuilder.options.mappings.OPTIONS_PER_ROW) %>\">\n    <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n      <div class=\"fb-option-wrapper\">\n        <label class='fb-option' data-uuid=\"<%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].uuid %>\">\n          <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n          <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n        </label>\n      </div>\n    <% } %>\n\n    <% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n      <div class='other-option'>\n        <label class='fb-option'>\n          <input type='checkbox' />\n          Other\n        </label>\n\n        <input type='text' />\n      </div>\n    <% } %>\n</div>",
+    edit: "<%= Formbuilder.templates['edit/options']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/options_per_row']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-checkbox\"></span> Checkboxes",
     defaultAttributes: function(attrs) {
       attrs.answers = [
@@ -1503,7 +1596,7 @@
     name: 'List',
     order: 70,
     view: "<select>\n  <option>\n     <%= rf.source().title %>\n     (<%= rf.sourceProperty(rf.get(Formbuilder.options.mappings.DATA_SOURCE.VALUE_TEMPLATE)) %>)\n  </option>\n</select>",
-    edit: "<%= Formbuilder.templates['edit/data_source_options']({ rf: rf }) %>",
+    edit: "<%= Formbuilder.templates['edit/data_source_options']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-data-source\"></span> Data Source",
     defaultAttributes: function(attrs, formbuilder) {
       var datasources;
@@ -1576,7 +1669,7 @@
     name: 'Date',
     order: 20,
     view: "<div class='input-line'>\n  <input type=\"text\" placeholder=\" DD/MM/YYYY \" />\n</div>",
-    edit: "<%= Formbuilder.templates['edit/date']({ rf: rf }) %>",
+    edit: "<%= Formbuilder.templates['edit/date']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-date\"></span> Date",
     defaultAttributes: function(attrs) {
       attrs.options.default_date = false;
@@ -1591,7 +1684,7 @@
     name: 'Dropdown',
     order: 24,
     view: "<select>\n  <% if (rf.get(Formbuilder.options.mappings.INCLUDE_BLANK)) { %>\n    <option value=''></option>\n  <% } %>\n\n  <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n    <option <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'selected' %>>\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </option>\n  <% } %>\n</select>",
-    edit: "<%= Formbuilder.templates['edit/scoring']() %>\n<%= Formbuilder.templates['edit/options']({ rf: rf }) %>",
+    edit: "<%= Formbuilder.templates['edit/scoring']() %>\n<%= Formbuilder.templates['edit/options']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-dropdown\"></span> Dropdown",
     defaultAttributes: function(attrs) {
       attrs.answers = [
@@ -1620,7 +1713,7 @@
     name: 'Email',
     order: 40,
     view: "<input type='text' class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />",
-    edit: "",
+    edit: "<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"icon-email\"></span> Email"
   });
 
@@ -1631,7 +1724,7 @@
     name: 'File',
     order: 55,
     view: "<canvas />",
-    edit: "",
+    edit: "<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-file\"></span> File"
   });
 
@@ -1668,7 +1761,7 @@
     order: 20,
     element_type: 'non_input',
     view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>",
-    edit: "<div class=\"fb-edit-section-header\">Details</div>\n<div class=\"fb-common-wrapper\">\n  <div class=\"fb-label-description\">\n    <input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.LABEL %>\">\n  </div>\n  <textarea class=\"fb-info-editor\" style=\"display:none;\" data-rv-input=\"model.<%= Formbuilder.options.mappings.DESCRIPTION %>\">\n  </textarea>\n</div>",
+    edit: "<div class=\"fb-edit-section-header\">Details</div>\n<div class=\"fb-common-wrapper\">\n  <div class=\"fb-label-description\">\n    <input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.LABEL %>\">\n  </div>\n  <textarea class=\"fb-info-editor\" style=\"display:none;\" data-rv-input=\"model.<%= Formbuilder.options.mappings.DESCRIPTION %>\">\n  </textarea>\n</div>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-info\"></span> Info",
     onEdit: function(model) {
       var update;
@@ -1695,7 +1788,7 @@
     name: 'Number',
     order: 30,
     view: "<input type='text' class=\"calculated\" value=\"<%= rf.get(Formbuilder.options.mappings.NUMERIC.CALCULATION_DISPLAY) %>\" <%= rf.get(Formbuilder.options.mappings.NUMERIC.CALCULATION_DISPLAY) ? 'readonly=\"readonly\"' : ''  %> />\n<% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>\n  <%= units %>\n<% } %>",
-    edit: "<%= Formbuilder.templates['edit/integer_only']({rf:rf}) %>\n<%= Formbuilder.templates['edit/total']({rf:rf}) %>\n<%= Formbuilder.templates['edit/min_max']({rf:rf}) %>",
+    edit: "<%= Formbuilder.templates['edit/integer_only']({rf:rf}) %>\n<%= Formbuilder.templates['edit/total']({rf:rf}) %>\n<%= Formbuilder.templates['edit/min_max']({rf:rf}) %>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-number\"></span> Number",
     defaultAttributes: function(attrs, formbuilder) {
       attrs.options.calculation_type = '';
@@ -1771,7 +1864,7 @@
     name: 'Price',
     order: 45,
     view: "<div class='input-line'>\n  <span class='above-line'>$</span>\n  <span class='dolars'>\n    <input type='text' />\n    <label>Dollars</label>\n  </span>\n  <span class='above-line'>.</span>\n  <span class='cents'>\n    <input type='text' />\n    <label>Cents</label>\n  </span>\n</div>",
-    edit: "",
+    edit: "<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-price\"></span> Price"
   });
 
@@ -1781,9 +1874,9 @@
   Formbuilder.registerField('radio', {
     name: 'Radio Button',
     order: 15,
-    view: "<div class=\"fb-options-per-row-<%= rf.get(Formbuilder.options.mappings.OPTIONS_PER_ROW) %>\">\n    <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n      <div class=\"fb-option-wrapper\">\n        <label class='fb-option'>\n          <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n          <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n        </label>\n      </div>\n    <% } %>\n\n    <% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n      <div class='fb-option-wrapper other-option'>\n        <label class='fb-option'>\n          <input type='radio' />\n          Other\n        </label>\n\n        <input type='text' />\n      </div>\n    <% } %>\n</div>",
-    edit: "<%= Formbuilder.templates['edit/scoring']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/options']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/options_per_row']({ rf: rf }) %>",
-    addButton: "<span class=\"fb-icon-radio\"></span> Multiple Choice",
+    view: "<div class=\"fb-options-per-row-<%= rf.get(Formbuilder.options.mappings.OPTIONS_PER_ROW) %>\">\n    <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n      <div class=\"fb-option-wrapper <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\">\n        <label class='fb-option' data-uuid=\"<%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].uuid %>\">\n          <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n          <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n        </label>\n      </div>\n    <% } %>\n\n    <% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n      <div class='fb-option-wrapper other-option'>\n        <label class='fb-option'>\n          <input type='radio' />\n          Other\n        </label>\n\n        <input type='text' />\n      </div>\n    <% } %>\n</div>",
+    edit: "<%= Formbuilder.templates['edit/scoring']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/options']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/options_per_row']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
+    addButton: "<span class=\"fb-icon-radio\"></span> Radio Button",
     defaultAttributes: function(attrs) {
       attrs.answers = [
         {
@@ -1812,7 +1905,7 @@
     order: 10,
     element_type: 'non_input',
     view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>",
-    edit: "<div class=\"fb-edit-section-header\">Details</div>\n<div class=\"fb-common-wrapper\">\n<div class=\"fb-label-description\">\n  <input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.LABEL %>\">\n  <textarea data-rv-input=\"model.<%= Formbuilder.options.mappings.DESCRIPTION %>\" placeholder=\"Add a longer description to this field\">\n  </textarea>\n</div>\n</div>",
+    edit: "<div class=\"fb-edit-section-header\">Details</div>\n<div class=\"fb-common-wrapper\">\n<div class=\"fb-label-description\">\n  <input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.LABEL %>\">\n  <textarea data-rv-input=\"model.<%= Formbuilder.options.mappings.DESCRIPTION %>\" placeholder=\"Add a longer description to this field\">\n  </textarea>\n</div>\n</div>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-section\"></span> Section Break"
   });
 
@@ -1823,7 +1916,7 @@
     name: 'Signature',
     order: 65,
     view: "<div class=\"fb-signature form-control\">\n    <div class=\"fb-signature-placeholder\">Sign Here</div>\n    <div class=\"fb-signature-pad\"></div>\n</div>\n<button class=\"btn btn-default btn-xs\">Clear</button>",
-    edit: "",
+    edit: "<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-signature\"></span> Signature"
   });
 
@@ -1915,7 +2008,7 @@
     name: 'Text',
     order: 0,
     view: "<input type='text' class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />",
-    edit: "<%= Formbuilder.templates['edit/populate_from']({ rf: rf }) %>",
+    edit: "<%= Formbuilder.templates['edit/populate_from']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-text\"></span> Text",
     defaultAttributes: function(attrs) {
       attrs.options.size = 'small';
@@ -1930,7 +2023,7 @@
     name: 'Paragraph',
     order: 5,
     view: "<textarea class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>'></textarea>",
-    edit: "<%= Formbuilder.templates['edit/populate_from']({ rf: rf }) %>",
+    edit: "<%= Formbuilder.templates['edit/populate_from']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-textarea\"></span> Paragraph",
     defaultAttributes: function(attrs) {
       attrs.options.size = 'small';
@@ -1945,7 +2038,7 @@
     name: 'Time',
     order: 25,
     view: "<div class=\"form-group\">\n  <div class=\"input-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"12:00 PM\">\n    <div class=\"input-group-addon glyphicon glyphicon-time\"></div>\n  </div>\n</div>",
-    edit: "<%= Formbuilder.templates['edit/time']({ rf: rf }) %>",
+    edit: "<%= Formbuilder.templates['edit/time']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-time\"></span> Time",
     defaultAttributes: function(attrs) {
       attrs.options.default_time = false;
@@ -1960,7 +2053,7 @@
     name: 'Website',
     order: 35,
     view: "<input type='text' placeholder='http://' />",
-    edit: "",
+    edit: "<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-website\"></span> Website"
   });
 
@@ -2050,6 +2143,55 @@ __p += '<div class=\'fb-edit-section-header\'>Details</div>\n\n<div class=\'fb-c
 '\n  </div>\n  <div class=\'fb-common-checkboxes\'>\n    ' +
 ((__t = ( Formbuilder.templates['edit/checkboxes']() )) == null ? '' : __t) +
 '\n  </div>\n  <div class=\'fb-clear\'></div>\n</div>';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["edit/conditional_options"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ if (rf.canBeConditionallyDisplayed()) { ;
+__p += '\n\n\n<div class=\'fb-edit-section-header\'>Conditionally Display?\n    <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Checkbox, Radio and Dropdown elements can be used to conditionally trigger the display of elements">\n        <span class="glyphicon glyphicon-question-sign"></span>\n    </span>\n    <script>\n      $(\'[data-toggle="tooltip"]\').tooltip()\n    </script>\n</div>\n';
+  var list = rf.collection.findConditionalTriggers(rf);
+if (list.length) {
+;
+__p += '\n\n\n<select data-rv-value="model.' +
+((__t = ( Formbuilder.options.mappings.CONDITIONAL_PARENT )) == null ? '' : __t) +
+'">\n    <option>\n        ';
+
+        for (i in (list || [])) { ;
+__p += '\n    <option value="' +
+((__t = ( list[i].get('uuid') )) == null ? '' : __t) +
+'">\n        ' +
+((__t = ( list[i].get('label') )) == null ? '' : __t) +
+'\n    </option>\n    ';
+ } ;
+__p += '\n</select>\n';
+
+
+var selectedList = rf.conditionalTriggerOptions();
+
+
+for (i in selectedList) { ;
+__p += '\n<label class="checkbox">\n    <input type=\'checkbox\' data-rv-append=\'model.' +
+((__t = ( Formbuilder.options.mappings.CONDITIONAL_VALUES )) == null ? '' : __t) +
+'\' value="' +
+((__t = ( selectedList[i].uuid )) == null ? '' : __t) +
+'" />\n    ' +
+((__t = ( selectedList[i].label )) == null ? '' : __t) +
+'\n</label>\n';
+ } ;
+__p += '\n';
+ } else { ;
+__p += '\nNo trigger elements\n';
+ } ;
+__p += '\n';
+ } ;
+__p += '\n\n';
 
 }
 return __p
@@ -2482,6 +2624,8 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<div class=\'subtemplate-wrapper\'>\n  <div class=\'cover\'></div>\n  ' +
+((__t = ( Formbuilder.templates['view/conditional']({rf: rf}) )) == null ? '' : __t) +
+'\n  ' +
 ((__t = ( Formbuilder.templates['view/label']({rf: rf}) )) == null ? '' : __t) +
 '\n\n  ' +
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.TYPE)].view({rf: rf}) )) == null ? '' : __t) +
@@ -2500,10 +2644,35 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<div class=\'subtemplate-wrapper\'>\n  <div class=\'cover\'></div>\n  ' +
+((__t = ( Formbuilder.templates['view/conditional']({rf: rf}) )) == null ? '' : __t) +
+'\n  ' +
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.TYPE)].view({rf: rf}) )) == null ? '' : __t) +
 '\n  ' +
 ((__t = ( Formbuilder.templates['view/duplicate_remove']({rf: rf}) )) == null ? '' : __t) +
 '\n</div>\n';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["view/conditional"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+
+var parent = rf.conditionalParent();
+var triggerValues = _.pluck(rf.conditionalTriggerOptions(true), 'label');
+if (parent && triggerValues.length) {
+;
+__p += '\n<div class="fb-conditional-question">\n    <i class="fb-icon-conditional"></i>\n    <span class="fb-conditional-question-trigger">display when <span>' +
+((__t = ( parent.get('label') )) == null ? '' : __t) +
+'</span> is <span class="trigger-option">' +
+((__t = ( triggerValues.join('</span>or<span class="trigger-option">') )) == null ? '' : __t) +
+'</span></span>\n</div>\n';
+ } ;
+__p += '\n';
 
 }
 return __p
@@ -2539,7 +2708,7 @@ this["Formbuilder"]["templates"]["view/element_selector"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class="element-selector btn-group">\n<button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown">\n    <span class="glyphicon glyphicon-plus"></span>\n</button>\n<ul class="dropdown-menu pull-right" role="menu">\n    <li data-type="text"><span class="fb-icon-text"></span> Text</li>\n    <li data-type="number"><span class="fb-icon-number"></span> Number</li>\n    <li data-type="textarea"><span class="fb-icon-textarea"></span> Paragraph</li>\n    <li data-type="info"><span class="fb-icon-info"></span> Info</li>\n    <li role="presentation" class="divider"></li>\n    <li data-type="dropdown"><span class="fb-icon-dropdown"></span> Dropdown</li>\n    <li data-type="radio"><span class="fb-icon-radio"></span> Radio</li>\n    <li data-type="checkbox"><span class="fb-icon-checkbox"></span> Multiple Choice</li>\n    <li data-type="datasource"><span class="fb-icon-data-source"></span> Data Source</li>\n    <li role="presentation" class="divider"></li>\n    <li data-type="date"><span class="fb-icon-date"></span> Date</li>\n    <li data-type="time"><span class="fb-icon-time"></span> Time</li>\n    <li data-type="signature"><span class="fb-icon-signature"></span> Signature</li>\n</ul>\n</div>';
+__p += '<div class="element-selector btn-group">\n<button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown">\n    <span class="glyphicon glyphicon-plus"></span>\n</button>\n<ul class="dropdown-menu pull-right" role="menu">\n    <li data-type="text"><span class="fb-icon-text"></span> Text</li>\n    <li data-type="number"><span class="fb-icon-number"></span> Number</li>\n    <li data-type="textarea"><span class="fb-icon-textarea"></span> Paragraph</li>\n    <li data-type="info"><span class="fb-icon-info"></span> Info</li>\n    <li role="presentation" class="divider"></li>\n    <li data-type="dropdown"><span class="fb-icon-dropdown"></span> Dropdown</li>\n    <li data-type="radio"><span class="fb-icon-radio"></span> Radio Button</li>\n    <li data-type="checkbox"><span class="fb-icon-checkbox"></span> Checkboxes</li>\n    <li data-type="datasource"><span class="fb-icon-data-source"></span> Data Source</li>\n    <li role="presentation" class="divider"></li>\n    <li data-type="date"><span class="fb-icon-date"></span> Date</li>\n    <li data-type="time"><span class="fb-icon-time"></span> Time</li>\n    <li data-type="signature"><span class="fb-icon-signature"></span> Signature</li>\n</ul>\n</div>\n';
 
 }
 return __p

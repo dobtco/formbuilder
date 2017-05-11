@@ -8,7 +8,9 @@ Formbuilder.registerField 'file',
     <canvas />
   """
 
-  edit: ""
+  edit: """
+  <%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>
+  """
 
   addButton: """
     <span class="fb-icon-file"></span> File

@@ -12,10 +12,35 @@ class FormbuilderModel extends Backbone.DeepModel
       @attributes.parent_uuid = null
     @attachMethods()
   parentModel: () -> @collection.findWhereUuid(@get('parent_uuid'))
-  hasParent: () -> @parentModel != undefined
+  hasParent: () -> @parentModel() != undefined
   inTable: () ->
     parent = @parentModel()
     parent and parent.get('type') is 'table'
+  inGrid:() ->
+    parent = @parentModel()
+    parent and parent.get('type') is 'grid'
+  canBeConditionallyDisplayed:() -> !@inTable() and !@inGrid() and Formbuilder.conditionalFunctionality
+  conditionalParent: () ->
+    parentUuid = @get(Formbuilder.options.mappings.CONDITIONAL_PARENT)
+    if parentUuid
+      return @collection.findWhereUuid(parentUuid)
+    null
+
+  answers: () -> @get('answers') || []
+
+  conditionalTriggerOptions: (selected) ->
+    parent = @conditionalParent()
+    options = []
+    if parent
+      options = _.clone(parent.answers())
+      options.unshift({'uuid': '', 'label': '[No Selection]'})
+      if selected
+        triggerValues =  @get(Formbuilder.options.mappings.CONDITIONAL_VALUES) || []
+        options = _.filter options, (trigger) -> trigger.uuid in triggerValues
+
+    options
+
+
   attachMethods: ()->
     if typeof @attributes.initialize is 'function'
       @attributes.initialize.call(@)
@@ -52,6 +77,15 @@ class FormbuilderCollection extends Backbone.Collection
 
   findWhereUuid: (uuid) -> @findWhere({'uuid':uuid})
   findDataSourceFields: () -> @where({'type':'datasource'})
+  findConditionalTriggers: (child) ->
+    items = @filter (model) ->
+      correctType = model.get('type') in ['dropdown', 'checkbox', 'radio']
+      differentModel = model != child
+      hasNoParent = !model.hasParent()
+      correctType and differentModel and hasNoParent
+    items
+
+
 
 
 class ViewFieldView extends Backbone.View
@@ -164,8 +198,6 @@ class TableFieldView extends ViewFieldView
     'click .response-field-table td.element': 'focusSubelement'
     'click .js-clear': 'clear'
     'click .js-duplicate': 'duplicate'
-
-
 
 
   showSelectors: (e) ->
@@ -470,9 +502,11 @@ class EditFieldView extends Backbone.View
     'input .option-label-input': 'forceRender'
 
 
+
   initialize: (options) ->
     {@parentView} = options
     @listenTo @model, "destroy", @remove
+
     _.each Formbuilder.options.change, (callback, key) =>
       eventName = 'change:' + _.nested(Formbuilder.options.mappings, key)
       @listenTo @model, eventName, callback
@@ -484,12 +518,14 @@ class EditFieldView extends Backbone.View
     return @
 
   reset: ->
+    @stopListening()
     @parentView.editView = undefined
     @parentView.createAndShowEditView(@model)
 
   remove: ->
     @parentView.editView = undefined
     @parentView.$el.find("[data-target=\"#addField\"]").click()
+    @stopListening()
     super
 
   # @todo this should really be on the model, not the view
@@ -700,8 +736,21 @@ class BuilderView extends Backbone.View
 
   createAndShowEditView: (model) ->
     $responseFieldEl = @$el.find(".fb-field-wrapper").filter( -> $(@).data('cid') == model.cid )
+    $('.fb-field-wrapper').removeClass('parent')
+    $('.fb-option').removeClass('trigger-option')
     $('.fb-field-wrapper').removeClass('editing')
     $responseFieldEl.addClass('editing')
+
+    parent = model.conditionalParent()
+    if parent
+      selectedTriggers = model.get(Formbuilder.options.mappings.CONDITIONAL_VALUES) || []
+      $parentWrapper = @$el.find(".fb-field-wrapper").filter( -> $(@).data('cid') == parent.cid )
+      $parentWrapper.addClass('parent')
+      $parentWrapper.find('.fb-option')
+                    .filter(-> uuid = $(@).data('uuid'); $(@).data('uuid') in selectedTriggers)
+                    .each(-> $(@).addClass('trigger-option'))
+
+
 
     if @editView
       if @editView.model.cid is model.cid
@@ -825,6 +874,9 @@ class Formbuilder
         instance.mainView.reset()
     if Formbuilder.attrs[name] != undefined then Formbuilder.attrs[name] else undefined
 
+  @disabledFields: []
+  @conditionalFunctionality = true;
+  @disableField: (field) -> @disabledFields.push(field)
 
   @helpers:
     defaultFieldAttrs: (type) ->
@@ -861,6 +913,8 @@ class Formbuilder
       ADMIN_ONLY: 'admin_only'
       POPULATE_FROM: 'options.populate_from'
       POPULATE_UUID: 'options.populate_uuid'
+      CONDITIONAL_PARENT: 'options.conditional.parent'
+      CONDITIONAL_VALUES: 'options.conditional.values'
       OPTIONS: 'answers'
       DESCRIPTION: 'description'
       INCLUDE_OTHER: 'options.include_other_option'
@@ -914,6 +968,10 @@ class Formbuilder
         @reset()
       POPULATE_UUID: ->
         @reset()
+      CONDITIONAL_PARENT: ->
+        @reset()
+      CONDITIONAL_VALUES: ->
+        @reset()
       'DATA_SOURCE.DATA_SOURCE': ->
         @reset()
       'DATA_SOURCE.IS_FILTERED': ->
@@ -936,9 +994,12 @@ class Formbuilder
   getPayload: ->
     return @mainView.getPayload()
 
+
   @registerField: (name, opts) ->
     enabled = true
-    unless _.contains(Formbuilder.options.ENABLED_FIELDS, name)
+
+    fields = _.difference(Formbuilder.options.ENABLED_FIELDS, @disabledFields)
+    unless _.contains(fields, name)
       enabled = false
     for x in ['view', 'edit']
       opts[x] = if enabled then _.template(opts[x]) else (x) -> ''

@@ -20,6 +20,7 @@ Formbuilder.registerField 'dropdown',
   edit: """
     <%= Formbuilder.templates['edit/scoring']() %>
     <%= Formbuilder.templates['edit/options']({ rf: rf }) %>
+    <%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>
   """
 
   addButton: """

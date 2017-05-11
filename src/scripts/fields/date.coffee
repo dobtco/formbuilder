@@ -10,7 +10,10 @@ Formbuilder.registerField 'date',
     </div>
   """
 
-  edit: "<%= Formbuilder.templates['edit/date']({ rf: rf }) %>"
+  edit: """
+  <%= Formbuilder.templates['edit/date']({ rf: rf }) %>
+  <%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>
+  """
 
   addButton: """
     <span class="fb-icon-date"></span> Date

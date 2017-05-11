@@ -1,0 +1,10 @@
+<%
+var parent = rf.conditionalParent();
+var triggerValues = _.pluck(rf.conditionalTriggerOptions(true), 'label');
+if (parent && triggerValues.length) {
+%>
+<div class="fb-conditional-question">
+    <i class="fb-icon-conditional"></i>
+    <span class="fb-conditional-question-trigger">display when <span><%= parent.get('label') %></span> is <span class="trigger-option"><%= triggerValues.join('</span>or<span class="trigger-option">') %></span></span>
+</div>
+<% } %>

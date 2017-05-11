@@ -4,15 +4,16 @@
   <title>Form Builder</title>
   <meta name="description" content="">
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+  <link rel="stylesheet" href="vendor/css/vendor.css" />
   <link rel="stylesheet" href="dist/formbuilder.css" />
   <style>
   @font-face {
     font-family: 'fontello';
-    src: url('vendor/fonts/fontello.eot');
-    src: url('vendor/fonts/fontello.eot') format('embedded-opentype'),
-         url('vendor/fonts/fontello.woff') format('woff'),
-         url('vendor/fonts/fontello.ttf') format('truetype'),
-         url('vendor/fonts/fontello.svg') format('svg');
+    src: url('/vendor/fonts/fontello.eot');
+    src: url('/vendor/fonts/fontello.eot') format('embedded-opentype'),
+         url('/vendor/fonts/fontello.woff') format('woff'),
+         url('/vendor/fonts/fontello.ttf') format('truetype'),
+         url('/vendor/fonts/fontello.svg') format('svg');
     font-weight: normal;
     font-style: normal;
   }
@@ -24,6 +25,7 @@
 <body>
 
   <div class='fb-main'></div>
+  <button id="log-payload" class="btn btn-default">Log Payload</button>
   <script src="vendor/js/vendor.js"></script>
   <script src="bower_components/summernote/dist/summernote.js"></script>
   <script src="dist/formbuilder.js"></script>
@@ -52,6 +54,7 @@
           }
         }
       });
+
       window.fb = new Formbuilder({
         selector: '.fb-main',
         bootstrapData: [
@@ -133,15 +136,15 @@
             "label": "Security personnel #82?",
             "type": "radio",
             "answers": [{
+                "uuid": "2b85c25b-8359-403d-a318-4d1e6f34fc75",
                 "label": "Yes",
                 "checked": false
             }, {
+                "uuid":"74027533-dc7e-43aa-96c6-3f0f2d34d77b",
                 "label": "No",
                 "checked": false
             }],
-            "options": {
-                "include_other_option": true
-            },
+            "options": {},
             "uuid": "33cfb242-80cd-428a-828e-344cdb5a6f2a"
           },
           {
@@ -154,14 +157,15 @@
           {
             "type": "radio",
             "answers": [{
+                "uuid":"3693e4db-1235-4fdc-ba15-9d1e80fa0b22",
                 "label": "Yes",
                 "checked": false
             }, {
+                "uuid": "d45c4e90-1381-4ce1-81a3-8f58de2ceab2",
                 "label": "No",
                 "checked": false
             }],
             "options": {
-                "include_other_option": true,
                 "grid": {
                     row: 0,
                     col: 0
@@ -199,7 +203,6 @@
                 "checked": false
             }],
             "options": {
-                "include_other_option": true,
                 "grid": {
                     row: 0,
                     col: 1
@@ -223,7 +226,6 @@
                 "checked": false
             }],
             "options": {
-                "include_other_option": true,
                 "grid": {
                     row: 0,
                     col: 1
@@ -239,17 +241,11 @@
 
 
     });
-  </script>
-  <script>
-    var horde = gremlins.createHorde();
-    var hordeButton = document.createElement("button");
-    hordeButton.className = 'btn btn-danger';
-    hordeButton.innerHTML = 'Unleash the Gremlins';
-    document.body.appendChild(hordeButton);
-    hordeButton.addEventListener('click', function() {
-      horde.unleash({ nb: 500 });
-      this.style.display = 'none';
+
+    $('#log-payload').on('click', function() {
+      console.log(fb.getPayload());
     });
   </script>
+
 </body>
 </html>
