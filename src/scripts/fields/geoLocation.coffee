@@ -1,6 +1,6 @@
 Formbuilder.registerField 'geolocation',
 
-  name: 'GeoLocation'
+  name: 'Geolocation'
 
   order: 60
 
@@ -14,7 +14,6 @@ Formbuilder.registerField 'geolocation',
     <p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>
 
     <span><%=rf.geolocationFunctionality%></span>
-
   """
 
   edit: """
