@@ -1735,7 +1735,7 @@
     name: 'GeoLocation',
     order: 60,
     element_type: 'non_input',
-    view: "<div class=\"form-group\">\n <button id='' class='fb-button'>Get GeoLocation</button>\n<span><%=rf.geolocationFunctionality%></span>\n</div>",
+    view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<div class=\"form-group\">\n <button class='fb-button'>Get GeoLocation</button>\n</div>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>\n\n<span><%=rf.geolocationFunctionality%></span>\n",
     edit: "<div class=\"fb-edit-section-header\">Details</div>\n<div class=\"fb-common-wrapper\">\n<div class=\"fb-label-description\">\n  <input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.LABEL %>\">\n  <textarea data-rv-input=\"model.<%= Formbuilder.options.mappings.DESCRIPTION %>\" placeholder=\"Add a longer description to this field\">\n  </textarea>\n</div>\n</div>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-geolocation\"></span> GeoLocation"
   });

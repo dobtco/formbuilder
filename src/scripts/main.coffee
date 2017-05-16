@@ -874,7 +874,6 @@ class Formbuilder
         instance.mainView.reset()
     if Formbuilder.attrs[name] != undefined then Formbuilder.attrs[name] else undefined
 
-
   @conditionalFunctionality = true;
   @geolocationFunctionality = true;
   @disableField: (field) ->  @fields[field].enabled = false;
