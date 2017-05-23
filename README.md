@@ -1,5 +1,6 @@
 Formbuilder.js
 ============
+[![CDNJS version](https://img.shields.io/cdnjs/v/formbuilder.svg)](https://cdnjs.com/libraries/formbuilder)
 
 #### Update 9/26/14
 
