@@ -874,9 +874,9 @@ class Formbuilder
         instance.mainView.reset()
     if Formbuilder.attrs[name] != undefined then Formbuilder.attrs[name] else undefined
 
-  @disabledFields: []
   @conditionalFunctionality = true;
-  @disableField: (field) -> @disabledFields.push(field)
+  @geolocationFunctionality = true;
+  @disableField: (field) ->  @fields[field].enabled = false;
 
   @helpers:
     defaultFieldAttrs: (type) ->
@@ -901,7 +901,7 @@ class Formbuilder
     HTTP_METHOD: 'POST'
     AUTOSAVE: false
     CLEAR_FIELD_CONFIRM: false
-    ENABLED_FIELDS: ['text','checkbox','dropdown', 'textarea', 'radio', 'date','section', 'signature', 'info', 'grid', 'number', 'table', 'datasource', 'time']
+    ENABLED_FIELDS: ['text','checkbox','dropdown', 'textarea', 'radio', 'date','section', 'signature', 'info', 'grid', 'number', 'table', 'datasource', 'time','geolocation']
 
     mappings:
       SIZE: 'options.size'
