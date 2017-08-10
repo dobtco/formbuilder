@@ -2180,15 +2180,15 @@ __p += '\n\n\n<select data-rv-value="model.' +
         for (i in (list || [])) { ;
 __p += '\n    <option value="' +
 ((__t = ( list[i].get('uuid') )) == null ? '' : __t) +
-'">\n        ';
+'">\n        ' +
+((__t = ( list[i].get('label') )) == null ? '' : __t) +
+'\n        ';
  if( rf.canShowReferenceID() &&  list[i].get('reference_id')) { ;
-__p += '\n          [' +
+__p += '\n        [' +
 ((__t = ( list[i].get('reference_id') )) == null ? '' : __t) +
 ']\n        ';
  } ;
-__p += '\n        ' +
-((__t = ( list[i].get('label') )) == null ? '' : __t) +
-'\n    </option>\n    ';
+__p += '\n    </option>\n    ';
  } ;
 __p += '\n</select>\n';
 
