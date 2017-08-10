@@ -19,6 +19,9 @@ if (list.length) {
         <%
         for (i in (list || [])) { %>
     <option value="<%= list[i].get('uuid') %>">
+        <% if( rf.canShowReferenceID() &&  list[i].get('reference_id')) { %>
+          [<%= list[i].get('reference_id') %>]
+        <% } %>
         <%= list[i].get('label') %>
     </option>
     <% } %>

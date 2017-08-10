@@ -20,6 +20,7 @@ class FormbuilderModel extends Backbone.DeepModel
     parent = @parentModel()
     parent and parent.get('type') is 'grid'
   canBeConditionallyDisplayed:() -> !@inTable() and !@inGrid() and Formbuilder.conditionalFunctionality
+  canShowReferenceID: () -> Formbuilder.showReferenceIDFunctionlity
   conditionalParent: () ->
     parentUuid = @get(Formbuilder.options.mappings.CONDITIONAL_PARENT)
     if parentUuid
@@ -876,6 +877,7 @@ class Formbuilder
 
   @disabledFields: []
   @conditionalFunctionality = true;
+  @showReferenceIDFunctionlity = false;
   @disableField: (field) -> @disabledFields.push(field)
 
   @helpers:
@@ -927,6 +929,7 @@ class Formbuilder
       COLUMN_WIDTH: 'options.column_width'
       DEFAULT_TIME: 'options.default_time'
       DEFAULT_DATE: 'options.default_date'
+      REFERENCE_ID: 'reference_id'
       NUMERIC:
         CALCULATION_TYPE: 'options.calculation_type'
         CALCULATION_EXPRESSION: 'options.calculation_expression'
