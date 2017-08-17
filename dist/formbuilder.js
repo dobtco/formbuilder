@@ -138,7 +138,7 @@
     };
 
     FormbuilderModel.prototype.canShowReferenceID = function() {
-      return Formbuilder.showReferenceIDFunctionlity;
+      return Formbuilder.showReferenceIDFunctionality;
     };
 
     FormbuilderModel.prototype.conditionalParent = function() {
@@ -1326,14 +1326,14 @@
       }
     };
 
-    Formbuilder.disabledFields = [];
-
     Formbuilder.conditionalFunctionality = true;
 
-    Formbuilder.showReferenceIDFunctionlity = false;
+    Formbuilder.showReferenceIDFunctionality = false;
+
+    Formbuilder.geolocationFunctionality = true;
 
     Formbuilder.disableField = function(field) {
-      return this.disabledFields.push(field);
+      return this.fields[field].enabled = false;
     };
 
     Formbuilder.helpers = {
@@ -1363,7 +1363,7 @@
       HTTP_METHOD: 'POST',
       AUTOSAVE: false,
       CLEAR_FIELD_CONFIRM: false,
-      ENABLED_FIELDS: ['text', 'checkbox', 'dropdown', 'textarea', 'radio', 'date', 'section', 'signature', 'info', 'grid', 'number', 'table', 'datasource', 'time'],
+      ENABLED_FIELDS: ['text', 'checkbox', 'dropdown', 'textarea', 'radio', 'date', 'section', 'signature', 'info', 'grid', 'number', 'table', 'datasource', 'time', 'geolocation'],
       mappings: {
         SIZE: 'options.size',
         UNITS: 'options.units',
@@ -1476,7 +1476,7 @@
     Formbuilder.registerField = function(name, opts) {
       var enabled, fields, x, _i, _len, _ref7;
       enabled = true;
-      fields = _.difference(Formbuilder.options.ENABLED_FIELDS, this.disabledFields);
+      fields = Formbuilder.options.ENABLED_FIELDS;
       if (!_.contains(fields, name)) {
         enabled = false;
       }
@@ -1733,6 +1733,18 @@
     view: "<canvas />",
     edit: "<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-file\"></span> File"
+  });
+
+}).call(this);
+
+(function() {
+  Formbuilder.registerField('geolocation', {
+    name: 'Geolocation',
+    order: 60,
+    element_type: 'non_input',
+    view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<div class=\"form-group\">\n <button class='fb-button'>Get GeoLocation</button>\n</div>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>\n\n<span><%=rf.geolocationFunctionality%></span>",
+    edit: "<div class=\"fb-edit-section-header\">Details</div>\n<div class=\"fb-common-wrapper\">\n<div class=\"fb-label-description\">\n  <input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.LABEL %>\">\n  <textarea data-rv-input=\"model.<%= Formbuilder.options.mappings.DESCRIPTION %>\" placeholder=\"Add a longer description to this field\">\n  </textarea>\n</div>\n</div>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
+    addButton: "<span class=\"fb-icon-geolocation\"></span> GeoLocation"
   });
 
 }).call(this);
@@ -2740,7 +2752,7 @@ this["Formbuilder"]["templates"]["view/element_selector"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class="element-selector btn-group">\n<button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown">\n    <span class="glyphicon glyphicon-plus"></span>\n</button>\n<ul class="dropdown-menu pull-right" role="menu">\n    <li data-type="text"><span class="fb-icon-text"></span> Text</li>\n    <li data-type="number"><span class="fb-icon-number"></span> Number</li>\n    <li data-type="textarea"><span class="fb-icon-textarea"></span> Paragraph</li>\n    <li data-type="info"><span class="fb-icon-info"></span> Info</li>\n    <li role="presentation" class="divider"></li>\n    <li data-type="dropdown"><span class="fb-icon-dropdown"></span> Dropdown</li>\n    <li data-type="radio"><span class="fb-icon-radio"></span> Radio Button</li>\n    <li data-type="checkbox"><span class="fb-icon-checkbox"></span> Checkboxes</li>\n    <li data-type="datasource"><span class="fb-icon-data-source"></span> Data Source</li>\n    <li role="presentation" class="divider"></li>\n    <li data-type="date"><span class="fb-icon-date"></span> Date</li>\n    <li data-type="time"><span class="fb-icon-time"></span> Time</li>\n    <li data-type="signature"><span class="fb-icon-signature"></span> Signature</li>\n</ul>\n</div>\n';
+__p += '<div class="element-selector btn-group">\n<button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown">\n    <span class="glyphicon glyphicon-plus"></span>\n</button>\n<ul class="dropdown-menu pull-right" role="menu">\n    <li data-type="text"><span class="fb-icon-text"></span> Text</li>\n    <li data-type="number"><span class="fb-icon-number"></span> Number</li>\n    <li data-type="textarea"><span class="fb-icon-textarea"></span> Paragraph</li>\n    <li data-type="info"><span class="fb-icon-info"></span> Info</li>\n    <li role="presentation" class="divider"></li>\n    <li data-type="dropdown"><span class="fb-icon-dropdown"></span> Dropdown</li>\n    <li data-type="radio"><span class="fb-icon-radio"></span> Radio Button</li>\n    <li data-type="checkbox"><span class="fb-icon-checkbox"></span> Checkboxes</li>\n    <li data-type="datasource"><span class="fb-icon-data-source"></span> Data Source</li>\n    <li role="presentation" class="divider"></li>\n    <li data-type="date"><span class="fb-icon-date"></span> Date</li>\n    <li data-type="time"><span class="fb-icon-time"></span> Time</li>\n    <li data-type="signature"><span class="fb-icon-signature"></span> Signature</li>\n    <li data-type="geolocation"><span class="fb-icon-geolocation"></span> GeoLocation</li>\n</ul>\n</div>\n';
 
 }
 return __p

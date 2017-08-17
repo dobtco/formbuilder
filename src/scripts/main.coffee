@@ -20,7 +20,7 @@ class FormbuilderModel extends Backbone.DeepModel
     parent = @parentModel()
     parent and parent.get('type') is 'grid'
   canBeConditionallyDisplayed:() -> !@inTable() and !@inGrid() and Formbuilder.conditionalFunctionality
-  canShowReferenceID: () -> Formbuilder.showReferenceIDFunctionlity
+  canShowReferenceID: () -> Formbuilder.showReferenceIDFunctionality
   conditionalParent: () ->
     parentUuid = @get(Formbuilder.options.mappings.CONDITIONAL_PARENT)
     if parentUuid
@@ -875,10 +875,11 @@ class Formbuilder
         instance.mainView.reset()
     if Formbuilder.attrs[name] != undefined then Formbuilder.attrs[name] else undefined
 
-  @disabledFields: []
   @conditionalFunctionality = true;
-  @showReferenceIDFunctionlity = false;
-  @disableField: (field) -> @disabledFields.push(field)
+  @showReferenceIDFunctionality = false;
+  @geolocationFunctionality = true;
+  @disableField: (field) ->  @fields[field].enabled = false;
+
 
   @helpers:
     defaultFieldAttrs: (type) ->
@@ -903,7 +904,7 @@ class Formbuilder
     HTTP_METHOD: 'POST'
     AUTOSAVE: false
     CLEAR_FIELD_CONFIRM: false
-    ENABLED_FIELDS: ['text','checkbox','dropdown', 'textarea', 'radio', 'date','section', 'signature', 'info', 'grid', 'number', 'table', 'datasource', 'time']
+    ENABLED_FIELDS: ['text','checkbox','dropdown', 'textarea', 'radio', 'date','section', 'signature', 'info', 'grid', 'number', 'table', 'datasource', 'time','geolocation']
 
     mappings:
       SIZE: 'options.size'
@@ -1001,7 +1002,7 @@ class Formbuilder
   @registerField: (name, opts) ->
     enabled = true
 
-    fields = _.difference(Formbuilder.options.ENABLED_FIELDS, @disabledFields)
+    fields = Formbuilder.options.ENABLED_FIELDS
     unless _.contains(fields, name)
       enabled = false
     for x in ['view', 'edit']
