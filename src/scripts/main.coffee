@@ -26,6 +26,10 @@ class FormbuilderModel extends Backbone.DeepModel
       return @collection.findWhereUuid(parentUuid)
     null
 
+  conditionalChildren: () ->
+    uuid = @attributes.uuid
+    @collection.filter (item) -> uuid is item.get(Formbuilder.options.mappings.CONDITIONAL_PARENT)
+
   answers: () -> @get('answers') || []
 
   conditionalTriggerOptions: (selected) ->
@@ -146,6 +150,11 @@ class ViewFieldView extends Backbone.View
   clear: (e) ->
     e.preventDefault()
     e.stopPropagation()
+
+    _.each @model.conditionalChildren(), (conditionalChild) ->
+      conditionalChild.unset(Formbuilder.options.mappings.CONDITIONAL_PARENT)
+      conditionalChild.unset(Formbuilder.options.mappings.CONDITIONAL_VALUES)
+
 
     cb = =>
       @parentView.handleFormUpdate()
