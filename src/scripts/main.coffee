@@ -26,6 +26,10 @@ class FormbuilderModel extends Backbone.DeepModel
       return @collection.findWhereUuid(parentUuid)
     null
 
+  conditionalChildren: () ->
+    uuid = @attributes.uuid
+    @collection.filter (item) -> uuid is item.get(Formbuilder.options.mappings.CONDITIONAL_PARENT)
+
   answers: () -> @get('answers') || []
 
   conditionalTriggerOptions: (selected) ->
@@ -147,6 +151,11 @@ class ViewFieldView extends Backbone.View
     e.preventDefault()
     e.stopPropagation()
 
+    _.each @model.conditionalChildren(), (conditionalChild) ->
+      conditionalChild.unset(Formbuilder.options.mappings.CONDITIONAL_PARENT)
+      conditionalChild.unset(Formbuilder.options.mappings.CONDITIONAL_VALUES)
+
+
     cb = =>
       @parentView.handleFormUpdate()
       @model.destroy()
@@ -198,7 +207,6 @@ class TableFieldView extends ViewFieldView
     'click .response-field-table td.element': 'focusSubelement'
     'click .js-clear': 'clear'
     'click .js-duplicate': 'duplicate'
-
 
   showSelectors: (e) ->
     @$el.find('.drop-area').html(Formbuilder.templates['view/element_selector']())
