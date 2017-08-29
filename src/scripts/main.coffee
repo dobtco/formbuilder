@@ -20,6 +20,7 @@ class FormbuilderModel extends Backbone.DeepModel
     parent = @parentModel()
     parent and parent.get('type') is 'grid'
   canBeConditionallyDisplayed:() -> !@inTable() and !@inGrid() and Formbuilder.conditionalFunctionality
+  canShowReferenceID: () -> Formbuilder.showReferenceIDFunctionality
   conditionalParent: () ->
     parentUuid = @get(Formbuilder.options.mappings.CONDITIONAL_PARENT)
     if parentUuid
@@ -883,8 +884,10 @@ class Formbuilder
     if Formbuilder.attrs[name] != undefined then Formbuilder.attrs[name] else undefined
 
   @conditionalFunctionality = true;
+  @showReferenceIDFunctionality = false;
   @geolocationFunctionality = true;
   @disableField: (field) ->  @fields[field].enabled = false;
+
 
   @helpers:
     defaultFieldAttrs: (type) ->
@@ -935,6 +938,7 @@ class Formbuilder
       COLUMN_WIDTH: 'options.column_width'
       DEFAULT_TIME: 'options.default_time'
       DEFAULT_DATE: 'options.default_date'
+      REFERENCE_ID: 'reference_id'
       NUMERIC:
         CALCULATION_TYPE: 'options.calculation_type'
         CALCULATION_EXPRESSION: 'options.calculation_expression'
@@ -1006,7 +1010,7 @@ class Formbuilder
   @registerField: (name, opts) ->
     enabled = true
 
-    fields = _.difference(Formbuilder.options.ENABLED_FIELDS, @disabledFields)
+    fields = Formbuilder.options.ENABLED_FIELDS
     unless _.contains(fields, name)
       enabled = false
     for x in ['view', 'edit']

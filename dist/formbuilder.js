@@ -137,6 +137,10 @@
       return !this.inTable() && !this.inGrid() && Formbuilder.conditionalFunctionality;
     };
 
+    FormbuilderModel.prototype.canShowReferenceID = function() {
+      return Formbuilder.showReferenceIDFunctionality;
+    };
+
     FormbuilderModel.prototype.conditionalParent = function() {
       var parentUuid;
       parentUuid = this.get(Formbuilder.options.mappings.CONDITIONAL_PARENT);
@@ -1336,6 +1340,8 @@
 
     Formbuilder.conditionalFunctionality = true;
 
+    Formbuilder.showReferenceIDFunctionality = false;
+
     Formbuilder.geolocationFunctionality = true;
 
     Formbuilder.disableField = function(field) {
@@ -1394,6 +1400,7 @@
         COLUMN_WIDTH: 'options.column_width',
         DEFAULT_TIME: 'options.default_time',
         DEFAULT_DATE: 'options.default_date',
+        REFERENCE_ID: 'reference_id',
         NUMERIC: {
           CALCULATION_TYPE: 'options.calculation_type',
           CALCULATION_EXPRESSION: 'options.calculation_expression',
@@ -1481,7 +1488,7 @@
     Formbuilder.registerField = function(name, opts) {
       var enabled, fields, x, _i, _len, _ref7;
       enabled = true;
-      fields = _.difference(Formbuilder.options.ENABLED_FIELDS, this.disabledFields);
+      fields = Formbuilder.options.ENABLED_FIELDS;
       if (!_.contains(fields, name)) {
         enabled = false;
       }
@@ -2160,13 +2167,20 @@ return __p
 
 this["Formbuilder"]["templates"]["edit/common"] = function(obj) {
 obj || (obj = {});
-var __t, __p = '', __e = _.escape;
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<div class=\'fb-edit-section-header\'>Details</div>\n\n<div class=\'fb-common-wrapper\'>\n  <div class=\'fb-label-description\'>\n    ' +
+
+ if (rf.canShowReferenceID()) { ;
+__p += '\n<div class="fb-edit-reference-wrap">\n    <div class=\'fb-edit-section-header\'>Reference ID</div>\n    ' +
+((__t = ( Formbuilder.templates['edit/reference_id']({rf: rf}) )) == null ? '' : __t) +
+'\n</div>\n';
+ } ;
+__p += '\n<div class=\'fb-edit-section-header\'>Details</div>\n\n<div class=\'fb-common-wrapper\'>\n    <div class=\'fb-label-description\'>\n        ' +
 ((__t = ( Formbuilder.templates['edit/label_description']({rf: rf}) )) == null ? '' : __t) +
-'\n  </div>\n  <div class=\'fb-common-checkboxes\'>\n    ' +
+'\n    </div>\n    <div class=\'fb-common-checkboxes\'>\n        ' +
 ((__t = ( Formbuilder.templates['edit/checkboxes']() )) == null ? '' : __t) +
-'\n  </div>\n  <div class=\'fb-clear\'></div>\n</div>';
+'\n    </div>\n    <div class=\'fb-clear\'></div>\n</div>';
 
 }
 return __p
@@ -2192,7 +2206,13 @@ __p += '\n    <option value="' +
 ((__t = ( list[i].get('uuid') )) == null ? '' : __t) +
 '">\n        ' +
 ((__t = ( list[i].get('label') )) == null ? '' : __t) +
-'\n    </option>\n    ';
+'\n        ';
+ if( rf.canShowReferenceID() &&  list[i].get('reference_id')) { ;
+__p += '\n        [' +
+((__t = ( list[i].get('reference_id') )) == null ? '' : __t) +
+']\n        ';
+ } ;
+__p += '\n    </option>\n    ';
  } ;
 __p += '\n</select>\n';
 
@@ -2437,6 +2457,18 @@ __p += '\n            <option value="' +
 __p += '\n    </select>\n';
  } ;
 __p += '\n';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["edit/reference_id"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<input type=\'text\' class="form-control" maxlength="10" placeholder="Add a reference ID to this field " data-rv-input=\'model.' +
+((__t = ( Formbuilder.options.mappings.REFERENCE_ID )) == null ? '' : __t) +
+'\' />';
 
 }
 return __p

@@ -1,11 +1,17 @@
+<% if (rf.canShowReferenceID()) { %>
+<div class="fb-edit-reference-wrap">
+    <div class='fb-edit-section-header'>Reference ID</div>
+    <%= Formbuilder.templates['edit/reference_id']({rf: rf}) %>
+</div>
+<% } %>
 <div class='fb-edit-section-header'>Details</div>
 
 <div class='fb-common-wrapper'>
-  <div class='fb-label-description'>
-    <%= Formbuilder.templates['edit/label_description']({rf: rf}) %>
-  </div>
-  <div class='fb-common-checkboxes'>
-    <%= Formbuilder.templates['edit/checkboxes']() %>
-  </div>
-  <div class='fb-clear'></div>
+    <div class='fb-label-description'>
+        <%= Formbuilder.templates['edit/label_description']({rf: rf}) %>
+    </div>
+    <div class='fb-common-checkboxes'>
+        <%= Formbuilder.templates['edit/checkboxes']() %>
+    </div>
+    <div class='fb-clear'></div>
 </div>
