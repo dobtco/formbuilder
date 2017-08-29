@@ -146,6 +146,14 @@
       return null;
     };
 
+    FormbuilderModel.prototype.conditionalChildren = function() {
+      var uuid;
+      uuid = this.attributes.uuid;
+      return this.collection.filter(function(item) {
+        return uuid === item.get(Formbuilder.options.mappings.CONDITIONAL_PARENT);
+      });
+    };
+
     FormbuilderModel.prototype.answers = function() {
       return this.get('answers') || [];
     };
@@ -308,6 +316,10 @@
         _this = this;
       e.preventDefault();
       e.stopPropagation();
+      _.each(this.model.conditionalChildren(), function(conditionalChild) {
+        conditionalChild.unset(Formbuilder.options.mappings.CONDITIONAL_PARENT);
+        return conditionalChild.unset(Formbuilder.options.mappings.CONDITIONAL_VALUES);
+      });
       cb = function() {
         _this.parentView.handleFormUpdate();
         return _this.model.destroy();
