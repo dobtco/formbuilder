@@ -45,7 +45,7 @@
 .fb-field-wrapper .actions-wrapper a{display:inline-block;background-color:#ccc;padding:2px 8px}
 .edit-response-field input,.edit-response-field textarea,.edit-response-field select{border:thin solid #ddd;border-radius:.25em;padding:.5em;display:inline-block;height:auto;vertical-align:middle}
 .edit-response-field input:focus,.edit-response-field textarea:focus,.edit-response-field select:focus{outline:none}
-.edit-response-field select{font-size:14px}
+.edit-response-field select{font-size:14px;max-width:100%}
 input[readonly]{cursor:not-allowed;background-color:#eee}
 .fb-field-wrapper .subtemplate-wrapper{border:1px dashed transparent;margin-bottom:10px;padding:10px;position:relative}
 .fb-field-wrapper .subtemplate-wrapper .cover{position:absolute;top:0;left:0;height:100%;width:100%;z-index:2}

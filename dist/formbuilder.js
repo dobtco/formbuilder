@@ -183,6 +183,26 @@
       return options;
     };
 
+    FormbuilderModel.prototype.isValid = function() {
+      var conditional, conditional_ele, conditional_parent, conditional_values, options;
+      conditional_ele = this.canBeConditionallyDisplayed();
+      if (!conditional_ele) {
+        return true;
+      } else {
+        options = this.attributes.options;
+        conditional = options.conditional;
+        if (conditional) {
+          conditional_values = conditional.values;
+          conditional_parent = conditional.parent;
+        }
+      }
+      if ((conditional_parent && conditional_values) || (typeof conditional_values === "undefined" && typeof conditional_parent === "undefined")) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
     FormbuilderModel.prototype.attachMethods = function() {
       if (typeof this.attributes.initialize === 'function') {
         this.attributes.initialize.call(this);
@@ -855,26 +875,6 @@
       return this;
     };
 
-    EditFieldView.prototype.isValid = function(model) {
-      var conditional, conditional_ele, conditional_parent, conditional_values, options;
-      conditional_ele = model.canBeConditionallyDisplayed();
-      if (!conditional_ele) {
-        return true;
-      } else {
-        options = model.attributes.options;
-        conditional = options.conditional;
-        if (conditional) {
-          conditional_values = conditional.values;
-          conditional_parent = conditional.parent;
-        }
-      }
-      if ((conditional_parent && conditional_values) || (typeof conditional_values === "undefined" && typeof conditional_parent === "undefined")) {
-        return true;
-      } else {
-        return false;
-      }
-    };
-
     EditFieldView.prototype.reset = function() {
       this.stopListening();
       this.parentView.editView = void 0;
@@ -883,7 +883,7 @@
 
     EditFieldView.prototype.remove = function() {
       var go;
-      go = this.isValid(this.model);
+      go = this.model.isValid();
       if (go) {
         this.parentView.editView = void 0;
         this.parentView.$el.find("[data-target=\"#addField\"]").click();
@@ -1034,7 +1034,11 @@
     };
 
     BuilderView.prototype.showTab = function(e) {
-      var $el, first_model, target;
+      var $el, first_model, go, target;
+      go = true;
+      if (this.editView.model && this.editView.model.isValid() === false) {
+        go = false;
+      }
       $el = $(e.currentTarget);
       target = $el.data('target');
       $el.closest('li').addClass('active').siblings('li').removeClass('active');
@@ -1042,7 +1046,7 @@
       if (target !== '#editField') {
         this.unlockLeftWrapper();
       }
-      if (target === '#editField' && !this.editView && (first_model = this.collection.models[0])) {
+      if (go && target === '#editField' && !this.editView && (first_model = this.collection.models[0])) {
         return this.createAndShowEditView(first_model);
       }
     };

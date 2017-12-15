@@ -45,6 +45,20 @@ class FormbuilderModel extends Backbone.DeepModel
 
     options
 
+  isValid: ()->
+    conditional_ele = @canBeConditionallyDisplayed()
+    if !conditional_ele
+      return true
+    else
+      options = @attributes.options
+      conditional = options.conditional
+      if conditional
+        conditional_values = conditional.values
+        conditional_parent = conditional.parent
+    if ((conditional_parent && conditional_values) || (typeof conditional_values is "undefined" && typeof conditional_parent is "undefined"))
+      return true
+    else
+      return false
 
   attachMethods: ()->
     if typeof @attributes.initialize is 'function'
@@ -526,28 +540,13 @@ class EditFieldView extends Backbone.View
     return @
 
 
-  isValid: (model)->
-    conditional_ele = model.canBeConditionallyDisplayed()
-    if !conditional_ele
-      return true
-    else
-      options = model.attributes.options
-      conditional = options.conditional
-      if conditional
-        conditional_values = conditional.values
-        conditional_parent = conditional.parent
-    if ((conditional_parent && conditional_values) || (typeof conditional_values is "undefined" && typeof conditional_parent is "undefined"))
-      return true
-    else
-      return false
-
   reset: ->
     @stopListening()
     @parentView.editView = undefined
     @parentView.createAndShowEditView(@model)
 
   remove: ->
-    go = @isValid(@model)
+    go = this.model.isValid()
     if go
       @parentView.editView = undefined
       @parentView.$el.find("[data-target=\"#addField\"]").click()
@@ -667,6 +666,10 @@ class BuilderView extends Backbone.View
         'margin-top': Math.min(maxMargin, newMargin)
 
   showTab: (e) ->
+    go = true
+    if this.editView.model and this.editView.model.isValid() == false
+      go = false
+
     $el = $(e.currentTarget)
     target = $el.data('target')
     $el.closest('li').addClass('active').siblings('li').removeClass('active')
@@ -674,7 +677,7 @@ class BuilderView extends Backbone.View
 
     @unlockLeftWrapper() unless target == '#editField'
 
-    if target == '#editField' && !@editView && (first_model = @collection.models[0])
+    if go && target == '#editField' && !@editView && (first_model = @collection.models[0])
       @createAndShowEditView(first_model)
 
   createView: (responseField) ->
@@ -755,6 +758,7 @@ class BuilderView extends Backbone.View
 
   addField: (e) ->
     type = $(e.currentTarget).data('type')
+
     @createField Formbuilder.helpers.defaultFieldAttrs(type, {})
 
   createField: (attrs, options) ->
@@ -790,10 +794,6 @@ class BuilderView extends Backbone.View
         .filter(-> uuid = $(@).data('uuid'); $(@).data('uuid') in selectedTriggers)
             .each(-> $(@).addClass('trigger-option'))
 
-
-
-
-
     if go
       @editView = new EditFieldView
         model: model
@@ -820,6 +820,7 @@ class BuilderView extends Backbone.View
       })
 
       @$el.find(".fb-tabs a[data-target=\"#editField\"]").click()
+
       @scrollLeftWrapper($responseFieldEl)
       attrs = Formbuilder.helpers.defaultFieldAttrs(model.get('type'))
       if attrs.definition.onEdit != undefined
