@@ -89,9 +89,8 @@ class FormbuilderCollection extends Backbone.Collection
       hasNoParent = !model.hasParent()
       correctType and differentModel and hasNoParent
     items
-
-
-
+  clearConditionEle: (conditionalChild)->
+    conditionalChild.unset(Formbuilder.options.mappings.CONDITIONAL)
 
 class ViewFieldView extends Backbone.View
   @insert: (builder, view, responseField, _, options) ->
@@ -536,8 +535,11 @@ class EditFieldView extends Backbone.View
       conditional = options.conditional
       if conditional
         conditional_values = conditional.values
-
-      return (conditional && conditional_values)
+        conditional_parent = conditional.parent
+    if ((conditional_parent && conditional_values) || (typeof conditional_values is "undefined" && typeof conditional_parent is "undefined"))
+      return true
+    else
+      return false
 
   reset: ->
     @stopListening()
@@ -950,6 +952,7 @@ class Formbuilder
       POPULATE_UUID: 'options.populate_uuid'
       CONDITIONAL_PARENT: 'options.conditional.parent'
       CONDITIONAL_VALUES: 'options.conditional.values'
+      CONDITIONAL: 'options.conditional'
       OPTIONS: 'answers'
       DESCRIPTION: 'description'
       INCLUDE_OTHER: 'options.include_other_option'

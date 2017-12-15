@@ -256,6 +256,10 @@
       return items;
     };
 
+    FormbuilderCollection.prototype.clearConditionEle = function(conditionalChild) {
+      return conditionalChild.unset(Formbuilder.options.mappings.CONDITIONAL);
+    };
+
     return FormbuilderCollection;
 
   })(Backbone.Collection);
@@ -852,7 +856,7 @@
     };
 
     EditFieldView.prototype.isValid = function(model) {
-      var conditional, conditional_ele, conditional_values, options;
+      var conditional, conditional_ele, conditional_parent, conditional_values, options;
       conditional_ele = model.canBeConditionallyDisplayed();
       if (!conditional_ele) {
         return true;
@@ -861,8 +865,13 @@
         conditional = options.conditional;
         if (conditional) {
           conditional_values = conditional.values;
+          conditional_parent = conditional.parent;
         }
-        return conditional && conditional_values;
+      }
+      if ((conditional_parent && conditional_values) || (typeof conditional_values === "undefined" && typeof conditional_parent === "undefined")) {
+        return true;
+      } else {
+        return false;
       }
     };
 
@@ -1417,6 +1426,7 @@
         POPULATE_UUID: 'options.populate_uuid',
         CONDITIONAL_PARENT: 'options.conditional.parent',
         CONDITIONAL_VALUES: 'options.conditional.values',
+        CONDITIONAL: 'options.conditional',
         OPTIONS: 'answers',
         DESCRIPTION: 'description',
         INCLUDE_OTHER: 'options.include_other_option',
@@ -2222,13 +2232,14 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 
  if (rf.canBeConditionallyDisplayed()) { ;
-__p += '\n\n\n\n<div class="fb-edit-section-conditional-wrapper">\n<div class=\'fb-edit-section-header\'>Conditionally Display?\n    <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Checkbox, Radio and Dropdown elements can be used to conditionally trigger the display of elements">\n        <span class="glyphicon glyphicon-question-sign"></span>\n    </span>\n    <script>\n      $(\'[data-toggle="tooltip"]\').tooltip()\n    </script>\n</div>\n';
+__p += '\n\n\n\n<div class="fb-edit-section-conditional-wrapper">\n<div class=\'fb-edit-section-header\'>Conditionally Display\n    <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Checkbox, Radio and Dropdown elements can be used to conditionally trigger the display of elements">\n        <span class="glyphicon glyphicon-question-sign"></span>\n    </span>\n    <script>\n      $(\'[data-toggle="tooltip"]\').tooltip()\n    </script>\n\n</div>\n';
   var list = rf.collection.findConditionalTriggers(rf);
+
 if (list.length) {
 ;
-__p += '\n\n\n<select data-rv-value="model.' +
+__p += '\n\n<select data-rv-value="model.' +
 ((__t = ( Formbuilder.options.mappings.CONDITIONAL_PARENT )) == null ? '' : __t) +
-'">\n        ';
+'">\n    <option></option>\n        ';
 
         for (i in (list || [])) { ;
 __p += '\n    <option value="' +
@@ -2248,7 +2259,8 @@ __p += '\n</select>\n\n\n\n\n';
 
 var selectedList = rf.conditionalTriggerOptions();
 
-
+if (selectedList.length == 0)
+    rf.collection.clearConditionEle(rf);
 for (i in selectedList) { ;
 __p += '\n<label class="checkbox">\n    <input type=\'checkbox\' data-rv-append=\'model.' +
 ((__t = ( Formbuilder.options.mappings.CONDITIONAL_VALUES )) == null ? '' : __t) +
