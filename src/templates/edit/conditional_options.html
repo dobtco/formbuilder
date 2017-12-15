@@ -1,6 +1,8 @@
 <% if (rf.canBeConditionallyDisplayed()) { %>
 
 
+
+<div class="fb-edit-section-conditional-wrapper">
 <div class='fb-edit-section-header'>Conditionally Display?
     <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Checkbox, Radio and Dropdown elements can be used to conditionally trigger the display of elements">
         <span class="glyphicon glyphicon-question-sign"></span>
@@ -15,7 +17,6 @@ if (list.length) {
 
 
 <select data-rv-value="model.<%= Formbuilder.options.mappings.CONDITIONAL_PARENT %>">
-    <option>
         <%
         for (i in (list || [])) { %>
     <option value="<%= list[i].get('uuid') %>">
@@ -26,6 +27,10 @@ if (list.length) {
     </option>
     <% } %>
 </select>
+
+
+
+
 <%
 
 var selectedList = rf.conditionalTriggerOptions();
@@ -36,9 +41,11 @@ for (i in selectedList) { %>
     <input type='checkbox' data-rv-append='model.<%= Formbuilder.options.mappings.CONDITIONAL_VALUES %>' value="<%= selectedList[i].uuid %>" />
     <%= selectedList[i].label %>
 </label>
+
 <% } %>
 <% } else { %>
 No trigger elements
 <% } %>
 <% } %>
-
+<div id="warning-message" class="alert alert-danger" style="display:none">Please ensure that conditional values are selected</div>
+</div>

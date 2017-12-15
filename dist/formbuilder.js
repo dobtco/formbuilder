@@ -851,6 +851,21 @@
       return this;
     };
 
+    EditFieldView.prototype.isValid = function(model) {
+      var conditional, conditional_ele, conditional_values, options;
+      conditional_ele = model.canBeConditionallyDisplayed();
+      if (!conditional_ele) {
+        return true;
+      } else {
+        options = model.attributes.options;
+        conditional = options.conditional;
+        if (conditional) {
+          conditional_values = conditional.values;
+        }
+        return conditional && conditional_values;
+      }
+    };
+
     EditFieldView.prototype.reset = function() {
       this.stopListening();
       this.parentView.editView = void 0;
@@ -858,10 +873,16 @@
     };
 
     EditFieldView.prototype.remove = function() {
-      this.parentView.editView = void 0;
-      this.parentView.$el.find("[data-target=\"#addField\"]").click();
-      this.stopListening();
-      return EditFieldView.__super__.remove.apply(this, arguments);
+      var go;
+      go = this.isValid(this.model);
+      if (go) {
+        this.parentView.editView = void 0;
+        this.parentView.$el.find("[data-target=\"#addField\"]").click();
+        this.stopListening();
+        return EditFieldView.__super__.remove.apply(this, arguments);
+      } else {
+        return false;
+      }
     };
 
     EditFieldView.prototype.addOption = function(e) {
@@ -1136,14 +1157,28 @@
     };
 
     BuilderView.prototype.createAndShowEditView = function(model) {
-      var $newEditEl, $parentWrapper, $responseFieldEl, attrs, fieldWrapper, parent, selectedTriggers;
+      var $newEditEl, $parentWrapper, $responseFieldEl, attrs, fieldWrapper, go, parent, selectedTriggers;
       $responseFieldEl = this.$el.find(".fb-field-wrapper").filter(function() {
         return $(this).data('cid') === model.cid;
       });
-      $('.fb-field-wrapper').removeClass('parent');
-      $('.fb-option').removeClass('trigger-option');
-      $('.fb-field-wrapper').removeClass('editing');
-      $responseFieldEl.addClass('editing');
+      go = true;
+      if (this.editView) {
+        if (this.editView.model.cid === model.cid) {
+          this.$el.find(".fb-tabs a[data-target=\"#editField\"]").click();
+          this.scrollLeftWrapper($responseFieldEl);
+          return;
+        }
+        go = this.editView.remove();
+        if (!go) {
+          $('.fb-edit-section-conditional-wrapper #warning-message').show();
+        }
+      }
+      if (go) {
+        $('.fb-field-wrapper').removeClass('parent');
+        $('.fb-option').removeClass('trigger-option');
+        $('.fb-field-wrapper').removeClass('editing');
+        $responseFieldEl.addClass('editing');
+      }
       parent = model.conditionalParent();
       if (parent) {
         selectedTriggers = model.get(Formbuilder.options.mappings.CONDITIONAL_VALUES) || [];
@@ -1159,42 +1194,36 @@
           return $(this).addClass('trigger-option');
         });
       }
-      if (this.editView) {
-        if (this.editView.model.cid === model.cid) {
-          this.$el.find(".fb-tabs a[data-target=\"#editField\"]").click();
-          this.scrollLeftWrapper($responseFieldEl);
-          return;
-        }
-        this.editView.remove();
-      }
-      this.editView = new EditFieldView({
-        model: model,
-        parentView: this
-      });
-      $newEditEl = this.editView.render().$el;
-      fieldWrapper = this.$el.find(".fb-edit-field-wrapper");
-      fieldWrapper.html($newEditEl);
-      if (this.inGrid(model)) {
-        fieldWrapper.addClass('fb-edit-field-grid');
-      } else {
-        fieldWrapper.removeClass('fb-edit-field-grid');
-      }
-      if (model.inTable()) {
-        $('.spectrum-colorpicker', ".fb-edit-field-wrapper").spectrum({
-          allowEmpty: true,
-          preferredFormat: 'hex',
-          showPalette: true,
-          showPaletteOnly: true,
-          palette: ['#000000', '#424242', '#636363', '#9C9C94', '#CEC6CE', '#EFEFEF', '#F7F7F7', '#FFFFFF', '#FF0000', '#FF9C00', '#FFFF00', '#00FF00', '#00FFFF', '#0000FF', '#9C00FF', '#FF00FF', '#F7C6CE', '#FFE7CE', '#FFEFC6', '#D6EFD6', '#CEDEE7', '#CEE7F7', '#D6D6E7', '#E7D6DE', '#E79C9C', '#FFC69C', '#FFE79C', '#B5D6A5', '#A5C6CE', '#9CC6EF', '#B5A5D6', '#D6A5BD', '#E76363', '#F7AD6B', '#FFD663', '#94BD7B', '#73A5AD', '#6BADDE', '#8C7BC6', '#C67BA5', '#CE0000', '#E79439', '#EFC631', '#6BA54A', '#4A7B8C', '#3984C6', '#634AA5', '#A54A7B', '#9C0000', '#B56308', '#BD9400', '#397B21', '#104A5A', '#085294', '#311873', '#731842', '#630000', '#7B3900', '#846300', '#295218', '#083139', '#003163', '#21104A', '#4A1031']
+      if (go) {
+        this.editView = new EditFieldView({
+          model: model,
+          parentView: this
         });
+        $newEditEl = this.editView.render().$el;
+        fieldWrapper = this.$el.find(".fb-edit-field-wrapper");
+        fieldWrapper.html($newEditEl);
+        if (this.inGrid(model)) {
+          fieldWrapper.addClass('fb-edit-field-grid');
+        } else {
+          fieldWrapper.removeClass('fb-edit-field-grid');
+        }
+        if (model.inTable()) {
+          $('.spectrum-colorpicker', ".fb-edit-field-wrapper").spectrum({
+            allowEmpty: true,
+            preferredFormat: 'hex',
+            showPalette: true,
+            showPaletteOnly: true,
+            palette: ['#000000', '#424242', '#636363', '#9C9C94', '#CEC6CE', '#EFEFEF', '#F7F7F7', '#FFFFFF', '#FF0000', '#FF9C00', '#FFFF00', '#00FF00', '#00FFFF', '#0000FF', '#9C00FF', '#FF00FF', '#F7C6CE', '#FFE7CE', '#FFEFC6', '#D6EFD6', '#CEDEE7', '#CEE7F7', '#D6D6E7', '#E7D6DE', '#E79C9C', '#FFC69C', '#FFE79C', '#B5D6A5', '#A5C6CE', '#9CC6EF', '#B5A5D6', '#D6A5BD', '#E76363', '#F7AD6B', '#FFD663', '#94BD7B', '#73A5AD', '#6BADDE', '#8C7BC6', '#C67BA5', '#CE0000', '#E79439', '#EFC631', '#6BA54A', '#4A7B8C', '#3984C6', '#634AA5', '#A54A7B', '#9C0000', '#B56308', '#BD9400', '#397B21', '#104A5A', '#085294', '#311873', '#731842', '#630000', '#7B3900', '#846300', '#295218', '#083139', '#003163', '#21104A', '#4A1031']
+          });
+        }
+        this.$el.find(".fb-tabs a[data-target=\"#editField\"]").click();
+        this.scrollLeftWrapper($responseFieldEl);
+        attrs = Formbuilder.helpers.defaultFieldAttrs(model.get('type'));
+        if (attrs.definition.onEdit !== void 0) {
+          attrs.definition.onEdit(model);
+        }
+        this.$el.find("input, textarea, [contenteditable=true]").filter(':visible').first().focus();
       }
-      this.$el.find(".fb-tabs a[data-target=\"#editField\"]").click();
-      this.scrollLeftWrapper($responseFieldEl);
-      attrs = Formbuilder.helpers.defaultFieldAttrs(model.get('type'));
-      if (attrs.definition.onEdit !== void 0) {
-        attrs.definition.onEdit(model);
-      }
-      this.$el.find("input, textarea, [contenteditable=true]").filter(':visible').first().focus();
       return this;
     };
 
@@ -2193,13 +2222,13 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 
  if (rf.canBeConditionallyDisplayed()) { ;
-__p += '\n\n\n<div class=\'fb-edit-section-header\'>Conditionally Display?\n    <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Checkbox, Radio and Dropdown elements can be used to conditionally trigger the display of elements">\n        <span class="glyphicon glyphicon-question-sign"></span>\n    </span>\n    <script>\n      $(\'[data-toggle="tooltip"]\').tooltip()\n    </script>\n</div>\n';
+__p += '\n\n\n\n<div class="fb-edit-section-conditional-wrapper">\n<div class=\'fb-edit-section-header\'>Conditionally Display?\n    <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Checkbox, Radio and Dropdown elements can be used to conditionally trigger the display of elements">\n        <span class="glyphicon glyphicon-question-sign"></span>\n    </span>\n    <script>\n      $(\'[data-toggle="tooltip"]\').tooltip()\n    </script>\n</div>\n';
   var list = rf.collection.findConditionalTriggers(rf);
 if (list.length) {
 ;
 __p += '\n\n\n<select data-rv-value="model.' +
 ((__t = ( Formbuilder.options.mappings.CONDITIONAL_PARENT )) == null ? '' : __t) +
-'">\n    <option>\n        ';
+'">\n        ';
 
         for (i in (list || [])) { ;
 __p += '\n    <option value="' +
@@ -2214,7 +2243,7 @@ __p += '\n        [' +
  } ;
 __p += '\n    </option>\n    ';
  } ;
-__p += '\n</select>\n';
+__p += '\n</select>\n\n\n\n\n';
 
 
 var selectedList = rf.conditionalTriggerOptions();
@@ -2227,7 +2256,7 @@ __p += '\n<label class="checkbox">\n    <input type=\'checkbox\' data-rv-append=
 ((__t = ( selectedList[i].uuid )) == null ? '' : __t) +
 '" />\n    ' +
 ((__t = ( selectedList[i].label )) == null ? '' : __t) +
-'\n</label>\n';
+'\n</label>\n\n';
  } ;
 __p += '\n';
  } else { ;
@@ -2235,7 +2264,7 @@ __p += '\nNo trigger elements\n';
  } ;
 __p += '\n';
  } ;
-__p += '\n\n';
+__p += '\n<div id="warning-message" class="alert alert-danger" style="display:none">Please ensure that conditional values are selected</div>\n</div>\n';
 
 }
 return __p
