@@ -666,10 +666,6 @@ class BuilderView extends Backbone.View
         'margin-top': Math.min(maxMargin, newMargin)
 
   showTab: (e) ->
-    go = true
-    if this.editView.model and this.editView.model.isValid() == false
-      go = false
-
     $el = $(e.currentTarget)
     target = $el.data('target')
     $el.closest('li').addClass('active').siblings('li').removeClass('active')
@@ -677,7 +673,7 @@ class BuilderView extends Backbone.View
 
     @unlockLeftWrapper() unless target == '#editField'
 
-    if go && target == '#editField' && !@editView && (first_model = @collection.models[0])
+    if target == '#editField' && !@editView && (first_model = @collection.models[0])
       @createAndShowEditView(first_model)
 
   createView: (responseField) ->

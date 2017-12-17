@@ -1034,11 +1034,7 @@
     };
 
     BuilderView.prototype.showTab = function(e) {
-      var $el, first_model, go, target;
-      go = true;
-      if (this.editView.model && this.editView.model.isValid() === false) {
-        go = false;
-      }
+      var $el, first_model, target;
       $el = $(e.currentTarget);
       target = $el.data('target');
       $el.closest('li').addClass('active').siblings('li').removeClass('active');
@@ -1046,7 +1042,7 @@
       if (target !== '#editField') {
         this.unlockLeftWrapper();
       }
-      if (go && target === '#editField' && !this.editView && (first_model = this.collection.models[0])) {
+      if (target === '#editField' && !this.editView && (first_model = this.collection.models[0])) {
         return this.createAndShowEditView(first_model);
       }
     };
