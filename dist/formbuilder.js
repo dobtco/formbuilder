@@ -196,7 +196,7 @@
           conditional_parent = conditional.parent;
         }
       }
-      if ((conditional_parent && conditional_values) || (typeof conditional_values === "undefined" && typeof conditional_parent === "undefined")) {
+      if ((conditional_parent && (conditional_values && conditional_values.length !== 0)) || (typeof conditional_values === "undefined" && typeof conditional_parent === "undefined")) {
         return true;
       } else {
         return false;
@@ -1034,11 +1034,17 @@
     };
 
     BuilderView.prototype.showTab = function(e) {
-      var $el, first_model, target;
+      var $el, first_model, go, target;
       $el = $(e.currentTarget);
+      go = true;
       target = $el.data('target');
-      $el.closest('li').addClass('active').siblings('li').removeClass('active');
-      $(target).addClass('active').siblings('.fb-tab-pane').removeClass('active');
+      if (this.editView && !this.editView.model.isValid()) {
+        go = false;
+      }
+      if (go || (!go && target === '#editField')) {
+        $el.closest('li').addClass('active').siblings('li').removeClass('active');
+        $(target).addClass('active').siblings('.fb-tab-pane').removeClass('active');
+      }
       if (target !== '#editField') {
         this.unlockLeftWrapper();
       }
@@ -1518,6 +1524,15 @@
 
     Formbuilder.prototype.markSaved = function() {
       return this.mainView.formSaved = true;
+    };
+
+    Formbuilder.prototype.isValid = function() {
+      var go;
+      go = true;
+      if (this.mainView.editView && !this.mainView.editView.model.isValid()) {
+        go = false;
+      }
+      return go;
     };
 
     Formbuilder.prototype.getPayload = function() {

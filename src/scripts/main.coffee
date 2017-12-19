@@ -55,7 +55,7 @@ class FormbuilderModel extends Backbone.DeepModel
       if conditional
         conditional_values = conditional.values
         conditional_parent = conditional.parent
-    if ((conditional_parent && conditional_values) || (typeof conditional_values is "undefined" && typeof conditional_parent is "undefined"))
+    if ((conditional_parent && (conditional_values && conditional_values.length != 0)) || (typeof conditional_values is "undefined" && typeof conditional_parent is "undefined"))
       return true
     else
       return false
@@ -667,9 +667,15 @@ class BuilderView extends Backbone.View
 
   showTab: (e) ->
     $el = $(e.currentTarget)
+    go = true
     target = $el.data('target')
-    $el.closest('li').addClass('active').siblings('li').removeClass('active')
-    $(target).addClass('active').siblings('.fb-tab-pane').removeClass('active')
+
+    if (this.editView && !this.editView.model.isValid())
+      go = false;
+
+    if (go || (!go && target == '#editField'))
+      $el.closest('li').addClass('active').siblings('li').removeClass('active')
+      $(target).addClass('active').siblings('.fb-tab-pane').removeClass('active')
 
     @unlockLeftWrapper() unless target == '#editField'
 
@@ -1026,6 +1032,12 @@ class Formbuilder
 
   markSaved: ->
     @mainView.formSaved = true
+
+  isValid: ->
+    go = true;
+    if ((this.mainView.editView) && !this.mainView.editView.model.isValid())
+      go = false;
+    return go
 
   getPayload: ->
     return @mainView.getPayload()
