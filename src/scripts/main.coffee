@@ -45,6 +45,20 @@ class FormbuilderModel extends Backbone.DeepModel
 
     options
 
+  isValid: ()->
+    conditional_ele = @canBeConditionallyDisplayed()
+    if !conditional_ele
+      return true
+    else
+      options = @attributes.options
+      conditional = options.conditional
+      if conditional
+        conditional_values = conditional.values
+        conditional_parent = conditional.parent
+    if ((conditional_parent && (conditional_values && conditional_values.length != 0)) || (typeof conditional_values is "undefined" && typeof conditional_parent is "undefined"))
+      return true
+    else
+      return false
 
   attachMethods: ()->
     if typeof @attributes.initialize is 'function'
@@ -89,9 +103,8 @@ class FormbuilderCollection extends Backbone.Collection
       hasNoParent = !model.hasParent()
       correctType and differentModel and hasNoParent
     items
-
-
-
+  clearConditionEle: (conditionalChild)->
+    conditionalChild.unset(Formbuilder.options.mappings.CONDITIONAL)
 
 class ViewFieldView extends Backbone.View
   @insert: (builder, view, responseField, _, options) ->
@@ -526,16 +539,21 @@ class EditFieldView extends Backbone.View
     rivets.bind @$el, { model: @model }
     return @
 
+
   reset: ->
     @stopListening()
     @parentView.editView = undefined
     @parentView.createAndShowEditView(@model)
 
   remove: ->
-    @parentView.editView = undefined
-    @parentView.$el.find("[data-target=\"#addField\"]").click()
-    @stopListening()
-    super
+    go = this.model.isValid()
+    if go
+      @parentView.editView = undefined
+      @parentView.$el.find("[data-target=\"#addField\"]").click()
+      @stopListening()
+      super
+    else
+      return false
 
   # @todo this should really be on the model, not the view
   addOption: (e) ->
@@ -649,9 +667,15 @@ class BuilderView extends Backbone.View
 
   showTab: (e) ->
     $el = $(e.currentTarget)
+    go = true
     target = $el.data('target')
-    $el.closest('li').addClass('active').siblings('li').removeClass('active')
-    $(target).addClass('active').siblings('.fb-tab-pane').removeClass('active')
+
+    if (this.editView && !this.editView.model.isValid())
+      go = false;
+
+    if (go || (!go && target == '#editField'))
+      $el.closest('li').addClass('active').siblings('li').removeClass('active')
+      $(target).addClass('active').siblings('.fb-tab-pane').removeClass('active')
 
     @unlockLeftWrapper() unless target == '#editField'
 
@@ -736,6 +760,7 @@ class BuilderView extends Backbone.View
 
   addField: (e) ->
     type = $(e.currentTarget).data('type')
+
     @createField Formbuilder.helpers.defaultFieldAttrs(type, {})
 
   createField: (attrs, options) ->
@@ -745,10 +770,22 @@ class BuilderView extends Backbone.View
 
   createAndShowEditView: (model) ->
     $responseFieldEl = @$el.find(".fb-field-wrapper").filter( -> $(@).data('cid') == model.cid )
-    $('.fb-field-wrapper').removeClass('parent')
-    $('.fb-option').removeClass('trigger-option')
-    $('.fb-field-wrapper').removeClass('editing')
-    $responseFieldEl.addClass('editing')
+    go = true
+    if @editView
+      if @editView.model.cid is model.cid
+        @$el.find(".fb-tabs a[data-target=\"#editField\"]").click()
+        @scrollLeftWrapper($responseFieldEl)
+        return
+
+      go = @editView.remove()
+      if (!go)
+        $('.fb-edit-section-conditional-wrapper #warning-message').show();
+
+    if go
+      $('.fb-field-wrapper').removeClass('parent')
+      $('.fb-option').removeClass('trigger-option')
+      $('.fb-field-wrapper').removeClass('editing')
+      $responseFieldEl.addClass('editing')
 
     parent = model.conditionalParent()
     if parent
@@ -756,49 +793,41 @@ class BuilderView extends Backbone.View
       $parentWrapper = @$el.find(".fb-field-wrapper").filter( -> $(@).data('cid') == parent.cid )
       $parentWrapper.addClass('parent')
       $parentWrapper.find('.fb-option')
-                    .filter(-> uuid = $(@).data('uuid'); $(@).data('uuid') in selectedTriggers)
-                    .each(-> $(@).addClass('trigger-option'))
+        .filter(-> uuid = $(@).data('uuid'); $(@).data('uuid') in selectedTriggers)
+            .each(-> $(@).addClass('trigger-option'))
 
+    if go
+      @editView = new EditFieldView
+        model: model
+        parentView: @
 
+      $newEditEl = @editView.render().$el
+      fieldWrapper = @$el.find(".fb-edit-field-wrapper")
+      fieldWrapper.html $newEditEl
+      if @inGrid(model) then fieldWrapper.addClass('fb-edit-field-grid') else fieldWrapper.removeClass('fb-edit-field-grid')
+      if model.inTable() then $('.spectrum-colorpicker', ".fb-edit-field-wrapper").spectrum({
+        allowEmpty: true,
+        preferredFormat: 'hex',
+        showPalette: true,
+        showPaletteOnly: true,
+        palette: [
+          '#000000', '#424242', '#636363', '#9C9C94', '#CEC6CE', '#EFEFEF', '#F7F7F7', '#FFFFFF',
+          '#FF0000', '#FF9C00', '#FFFF00', '#00FF00', '#00FFFF', '#0000FF', '#9C00FF', '#FF00FF',
+          '#F7C6CE', '#FFE7CE', '#FFEFC6', '#D6EFD6', '#CEDEE7', '#CEE7F7', '#D6D6E7', '#E7D6DE',
+          '#E79C9C', '#FFC69C', '#FFE79C', '#B5D6A5', '#A5C6CE', '#9CC6EF', '#B5A5D6', '#D6A5BD',
+          '#E76363', '#F7AD6B', '#FFD663', '#94BD7B', '#73A5AD', '#6BADDE', '#8C7BC6', '#C67BA5',
+          '#CE0000', '#E79439', '#EFC631', '#6BA54A', '#4A7B8C', '#3984C6', '#634AA5', '#A54A7B',
+          '#9C0000', '#B56308', '#BD9400', '#397B21', '#104A5A', '#085294', '#311873', '#731842',
+          '#630000', '#7B3900', '#846300', '#295218', '#083139', '#003163', '#21104A', '#4A1031']
+      })
 
-    if @editView
-      if @editView.model.cid is model.cid
-        @$el.find(".fb-tabs a[data-target=\"#editField\"]").click()
-        @scrollLeftWrapper($responseFieldEl)
-        return
+      @$el.find(".fb-tabs a[data-target=\"#editField\"]").click()
 
-      @editView.remove()
-
-    @editView = new EditFieldView
-      model: model
-      parentView: @
-
-    $newEditEl = @editView.render().$el
-    fieldWrapper = @$el.find(".fb-edit-field-wrapper")
-    fieldWrapper.html $newEditEl
-    if @inGrid(model) then fieldWrapper.addClass('fb-edit-field-grid') else fieldWrapper.removeClass('fb-edit-field-grid')
-    if model.inTable() then $('.spectrum-colorpicker', ".fb-edit-field-wrapper").spectrum({
-      allowEmpty: true,
-      preferredFormat: 'hex',
-      showPalette: true,
-      showPaletteOnly: true,
-      palette: [
-        '#000000', '#424242', '#636363', '#9C9C94', '#CEC6CE', '#EFEFEF', '#F7F7F7', '#FFFFFF',
-        '#FF0000', '#FF9C00', '#FFFF00', '#00FF00', '#00FFFF', '#0000FF', '#9C00FF', '#FF00FF',
-        '#F7C6CE', '#FFE7CE', '#FFEFC6', '#D6EFD6', '#CEDEE7', '#CEE7F7', '#D6D6E7', '#E7D6DE',
-        '#E79C9C', '#FFC69C', '#FFE79C', '#B5D6A5', '#A5C6CE', '#9CC6EF', '#B5A5D6', '#D6A5BD',
-        '#E76363', '#F7AD6B', '#FFD663', '#94BD7B', '#73A5AD', '#6BADDE', '#8C7BC6', '#C67BA5',
-        '#CE0000', '#E79439', '#EFC631', '#6BA54A', '#4A7B8C', '#3984C6', '#634AA5', '#A54A7B',
-        '#9C0000', '#B56308', '#BD9400', '#397B21', '#104A5A', '#085294', '#311873', '#731842',
-        '#630000', '#7B3900', '#846300', '#295218', '#083139', '#003163', '#21104A', '#4A1031']
-    })
-
-    @$el.find(".fb-tabs a[data-target=\"#editField\"]").click()
-    @scrollLeftWrapper($responseFieldEl)
-    attrs = Formbuilder.helpers.defaultFieldAttrs(model.get('type'))
-    if attrs.definition.onEdit != undefined
-        attrs.definition.onEdit model
-    @$el.find("input, textarea, [contenteditable=true]").filter(':visible').first().focus()
+      @scrollLeftWrapper($responseFieldEl)
+      attrs = Formbuilder.helpers.defaultFieldAttrs(model.get('type'))
+      if attrs.definition.onEdit != undefined
+          attrs.definition.onEdit model
+      @$el.find("input, textarea, [contenteditable=true]").filter(':visible').first().focus()
     return @
 
 
@@ -926,6 +955,7 @@ class Formbuilder
       POPULATE_UUID: 'options.populate_uuid'
       CONDITIONAL_PARENT: 'options.conditional.parent'
       CONDITIONAL_VALUES: 'options.conditional.values'
+      CONDITIONAL: 'options.conditional'
       OPTIONS: 'answers'
       DESCRIPTION: 'description'
       INCLUDE_OTHER: 'options.include_other_option'
@@ -1002,6 +1032,12 @@ class Formbuilder
 
   markSaved: ->
     @mainView.formSaved = true
+
+  isValid: ->
+    go = true;
+    if ((this.mainView.editView) && !this.mainView.editView.model.isValid())
+      go = false;
+    return go
 
   getPayload: ->
     return @mainView.getPayload()
