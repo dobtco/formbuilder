@@ -11,7 +11,10 @@ class FormbuilderModel extends Backbone.DeepModel
     if not @attributes.parent_uuid is undefined
       @attributes.parent_uuid = null
     @attachMethods()
-  parentModel: () -> @collection.findWhereUuid(@get('parent_uuid'))
+  parentModel: () ->
+    collention = @collection
+    if collention
+      @collection.findWhereUuid(@get('parent_uuid'))
   hasParent: () -> @parentModel() != undefined
   inTable: () ->
     parent = @parentModel()
@@ -208,7 +211,6 @@ class TableFieldView extends ViewFieldView
       childModel = @model.collection.findWhereUuid(element.uuid)
       if childModel
         @listenTo childModel, "change", @update
-        @listenTo childModel, "destroy", (model) -> @update model
       else
         console.log(element.uuid)
     ,@
@@ -546,14 +548,10 @@ class EditFieldView extends Backbone.View
     @parentView.createAndShowEditView(@model)
 
   remove: ->
-    go = this.model.isValid()
-    if go
-      @parentView.editView = undefined
-      @parentView.$el.find("[data-target=\"#addField\"]").click()
-      @stopListening()
-      super
-    else
-      return false
+    @parentView.editView = undefined
+    @parentView.$el.find("[data-target=\"#addField\"]").click()
+    @stopListening()
+    super
 
   # @todo this should really be on the model, not the view
   addOption: (e) ->
@@ -777,10 +775,11 @@ class BuilderView extends Backbone.View
         @scrollLeftWrapper($responseFieldEl)
         return
 
-      go = @editView.remove()
+      go = @editView.model.isValid()
       if (!go)
         $('.fb-edit-section-conditional-wrapper #warning-message').show();
-
+      else
+        @editView.remove()
     if go
       $('.fb-field-wrapper').removeClass('parent')
       $('.fb-option').removeClass('trigger-option')

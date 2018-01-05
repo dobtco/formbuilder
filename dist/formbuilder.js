@@ -114,7 +114,11 @@
     };
 
     FormbuilderModel.prototype.parentModel = function() {
-      return this.collection.findWhereUuid(this.get('parent_uuid'));
+      var collention;
+      collention = this.collection;
+      if (collention) {
+        return this.collection.findWhereUuid(this.get('parent_uuid'));
+      }
     };
 
     FormbuilderModel.prototype.hasParent = function() {
@@ -406,10 +410,7 @@
         var childModel;
         childModel = this.model.collection.findWhereUuid(element.uuid);
         if (childModel) {
-          this.listenTo(childModel, "change", this.update);
-          return this.listenTo(childModel, "destroy", function(model) {
-            return this.update(model);
-          });
+          return this.listenTo(childModel, "change", this.update);
         } else {
           return console.log(element.uuid);
         }
@@ -882,16 +883,10 @@
     };
 
     EditFieldView.prototype.remove = function() {
-      var go;
-      go = this.model.isValid();
-      if (go) {
-        this.parentView.editView = void 0;
-        this.parentView.$el.find("[data-target=\"#addField\"]").click();
-        this.stopListening();
-        return EditFieldView.__super__.remove.apply(this, arguments);
-      } else {
-        return false;
-      }
+      this.parentView.editView = void 0;
+      this.parentView.$el.find("[data-target=\"#addField\"]").click();
+      this.stopListening();
+      return EditFieldView.__super__.remove.apply(this, arguments);
     };
 
     EditFieldView.prototype.addOption = function(e) {
@@ -1183,9 +1178,11 @@
           this.scrollLeftWrapper($responseFieldEl);
           return;
         }
-        go = this.editView.remove();
+        go = this.editView.model.isValid();
         if (!go) {
           $('.fb-edit-section-conditional-wrapper #warning-message').show();
+        } else {
+          this.editView.remove();
         }
       }
       if (go) {
