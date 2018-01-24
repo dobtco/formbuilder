@@ -81,6 +81,8 @@
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   FormbuilderModel = (function(_super) {
+    var $warppers;
+
     __extends(FormbuilderModel, _super);
 
     function FormbuilderModel() {
@@ -88,15 +90,22 @@
       return _ref;
     }
 
+    $warppers = {};
+
     FormbuilderModel.prototype.sync = function() {};
 
     FormbuilderModel.prototype.indexInDOM = function() {
-      var $wrapper,
-        _this = this;
-      $wrapper = $(".fb-field-wrapper").filter((function(_, el) {
-        return $(el).data('cid') === _this.cid;
-      }));
-      return $wrapper.index(".fb-field-wrapper");
+      if ($wrappers[this.cid] === 'undefined') {
+        $(".fb-field-wrapper").each((function(_, el) {
+          $wrappers[$(el).data('cid')] = $(el);
+          return true;
+        }));
+        return ($wrappers[this.cid] || {
+          index: function() {
+            return -1;
+          }
+        }).index(".fb-field-wrapper");
+      }
     };
 
     FormbuilderModel.prototype.is_input = function() {

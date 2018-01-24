@@ -1,8 +1,14 @@
 class FormbuilderModel extends Backbone.DeepModel
+  $warppers = {};
   sync: -> # noop
   indexInDOM: ->
-    $wrapper = $(".fb-field-wrapper").filter ( (_, el) => $(el).data('cid') == @cid  )
-    $wrapper.index ".fb-field-wrapper"
+    if $wrappers[this.cid] is 'undefined'
+      $(".fb-field-wrapper").each ( (_, el) ->
+        $wrappers[$(el).data('cid')] = $(el)
+        return true;
+      )
+      ($wrappers[this.cid] || {index: -> ( -1 )}).index(".fb-field-wrapper");
+
   is_input: ->
     Formbuilder.inputFields[@get(Formbuilder.options.mappings.TYPE)]?
   initialize: ->
