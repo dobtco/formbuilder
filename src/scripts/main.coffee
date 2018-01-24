@@ -1,6 +1,7 @@
 class FormbuilderModel extends Backbone.DeepModel
-  $warppers = {};
+  $wrappers = {};
   sync: -> # noop
+
   indexInDOM: ->
     if $wrappers[this.cid] is 'undefined'
       $(".fb-field-wrapper").each ( (_, el) ->
