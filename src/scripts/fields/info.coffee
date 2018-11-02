@@ -7,9 +7,11 @@ Formbuilder.registerField 'info',
   element_type: 'non_input'
 
   view: """
-    <label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>
+    <label class='section-name'><%- rf.get(Formbuilder.options.mappings.LABEL) %></label>
     <p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>
   """
+
+  # Info uses CK editor so we directly output HTML here
 
   edit: """
   <div class="fb-edit-section-header">Details</div>

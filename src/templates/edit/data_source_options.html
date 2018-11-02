@@ -2,7 +2,7 @@
 <select data-rv-value="model.<%= Formbuilder.options.mappings.DATA_SOURCE.DATA_SOURCE %>">
 <% for (i in (Formbuilder.attr('sources') || [])) { %>
     <option value="<%= i %>">
-    <%= Formbuilder.attr('sources')[i].title %>
+    <%- Formbuilder.attr('sources')[i].title %>
     </option>
 <% } %>
 </select>
@@ -11,7 +11,7 @@
 <%
     for (i in (rf.sourceProperties() || [])) { %>
     <option value="<%= i %>">
-    <%= rf.sourceProperties()[i] %>
+    <%- rf.sourceProperties()[i] %>
     </option>
 <% } %>
 </select>
@@ -26,7 +26,7 @@
     <%
         for (i in (rf.filters() || [])) { %>
         <option value="<%= i %>">
-        <%= rf.filters()[i].name %>
+        <%- rf.filters()[i].name %>
         </option>
     <% } %>
     </select>
@@ -34,7 +34,7 @@
     for (i in rf.filterValues()) { %>
         <label class="checkbox">
           <input type='checkbox' data-rv-append='model.<%= Formbuilder.options.mappings.DATA_SOURCE.FILTER_VALUES %>' value="<%= i %>" />
-            <%= rf.filterValues()[i] %>
+            <%- rf.filterValues()[i] %>
         </label>
     <% } %>
 <% } %>

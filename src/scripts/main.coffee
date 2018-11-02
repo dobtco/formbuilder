@@ -116,6 +116,9 @@ class FormbuilderCollection extends Backbone.Collection
   clearConditionEle: (conditionalChild)->
     conditionalChild.unset(Formbuilder.options.mappings.CONDITIONAL)
 
+'''
+Individual elements
+'''
 class ViewFieldView extends Backbone.View
   @insert: (builder, view, responseField, _, options) ->
     parentModel = responseField.parentModel()
@@ -522,7 +525,9 @@ class GridFieldView extends Backbone.View
             options.$appendEl = append
     ViewFieldView.insert(builder, view, responseField, _, options)
 
-
+'''
+"Edit field" tab
+'''
 class EditFieldView extends Backbone.View
   className: "edit-response-field"
 
@@ -597,7 +602,9 @@ class EditFieldView extends Backbone.View
     @model.trigger 'change', @model
 
 
-
+'''
+Main View for the editor
+'''
 class BuilderView extends Backbone.View
   SUBVIEWS: []
 

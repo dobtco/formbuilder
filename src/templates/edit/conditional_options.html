@@ -22,7 +22,7 @@ if (list.length) {
         <%
         for (i in (list || [])) { %>
     <option value="<%= list[i].get('uuid') %>">
-        <%= list[i].get('label') %>
+        <%- list[i].get('label') %>
         <% if( rf.canShowReferenceID() &&  list[i].get('reference_id')) { %>
         [<%= list[i].get('reference_id') %>]
         <% } %>

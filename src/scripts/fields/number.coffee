@@ -5,7 +5,7 @@ Formbuilder.registerField 'number',
   order: 30
 
   view: """
-    <input type='text' class="calculated" value="<%= rf.get(Formbuilder.options.mappings.NUMERIC.CALCULATION_DISPLAY) %>" <%= rf.get(Formbuilder.options.mappings.NUMERIC.CALCULATION_DISPLAY) ? 'readonly="readonly"' : ''  %> />
+    <input type='text' class="calculated" value="<%- rf.get(Formbuilder.options.mappings.NUMERIC.CALCULATION_DISPLAY) %>" <%- rf.get(Formbuilder.options.mappings.NUMERIC.CALCULATION_DISPLAY) ? 'readonly="readonly"' : ''  %> />
     <% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>
       <%= units %>
     <% } %>

@@ -7,11 +7,11 @@ Formbuilder.registerField 'geolocation',
   element_type: 'non_input'
 
   view: """
-    <label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>
+    <label class='section-name'><%- rf.get(Formbuilder.options.mappings.LABEL) %></label>
     <div class="form-group">
      <button class='fb-button'>Get GeoLocation</button>
     </div>
-    <p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>
+    <p><%- rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>
 
     <span><%=rf.geolocationFunctionality%></span>
   """

@@ -7,8 +7,8 @@ Formbuilder.registerField 'datasource',
   view: """
     <select>
       <option>
-         <%= rf.source().title %>
-         (<%= rf.sourceProperty(rf.get(Formbuilder.options.mappings.DATA_SOURCE.VALUE_TEMPLATE)) %>)
+         <%- rf.source().title %>
+         (<%- rf.sourceProperty(rf.get(Formbuilder.options.mappings.DATA_SOURCE.VALUE_TEMPLATE)) %>)
       </option>
     </select>
   """

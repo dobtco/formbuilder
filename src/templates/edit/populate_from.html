@@ -6,7 +6,7 @@ if (list.length) { %>
     <%
         for (i in (list || [])) { %>
         <option value="<%= list[i].get('uuid') %>">
-        <%= list[i].get('label') %>
+        <%- list[i].get('label') %>
         </option>
     <% } %>
     </select>
@@ -20,7 +20,7 @@ if (list.length) { %>
             var listProperties = Formbuilder.attr('sources')[dataSource].properties;
             for (i in listProperties) { %>
             <option value="<%= i %>">
-            <%= listProperties[i] %>
+            <%- listProperties[i] %>
             </option>
     <%  }
     } %>

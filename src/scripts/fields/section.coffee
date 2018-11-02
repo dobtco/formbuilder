@@ -7,8 +7,8 @@ Formbuilder.registerField 'section',
   element_type: 'non_input'
 
   view: """
-    <label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>
-    <p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>
+    <label class='section-name'><%- rf.get(Formbuilder.options.mappings.LABEL) %></label>
+    <p><%- rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>
   """
 
   edit: """

@@ -5,12 +5,12 @@ Formbuilder.registerField 'radio',
   order: 15
 
   view: """
-    <div class="fb-options-per-row-<%= rf.get(Formbuilder.options.mappings.OPTIONS_PER_ROW) %>">
+    <div class="fb-options-per-row-<%- rf.get(Formbuilder.options.mappings.OPTIONS_PER_ROW) %>">
         <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>
-          <div class="fb-option-wrapper <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>">
-            <label class='fb-option' data-uuid="<%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].uuid %>">
-              <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick="javascript: return false;" />
-              <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>
+          <div class="fb-option-wrapper <%- rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>">
+            <label class='fb-option' data-uuid="<%- rf.get(Formbuilder.options.mappings.OPTIONS)[i].uuid %>">
+              <input type='radio' <%- rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick="javascript: return false;" />
+              <%- rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>
             </label>
           </div>
         <% } %>

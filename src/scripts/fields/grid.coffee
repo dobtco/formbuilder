@@ -7,10 +7,10 @@ Formbuilder.registerField 'grid',
   element_type: 'non_input'
 
   view: """
-    <label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>
+    <label class='section-name'><%- rf.get(Formbuilder.options.mappings.LABEL) %></label>
     <table class="response-field-grid-table">
     </table>
-    <p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>
+    <p><%- rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>
   """
 
   edit: """
