@@ -80,33 +80,35 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-  FormbuilderModel = (function(_super) {
-    var $wrappers;
+    FormbuilderModel = (function(_super) {
+        var $wrappers;
 
-    __extends(FormbuilderModel, _super);
+        __extends(FormbuilderModel, _super);
 
-    function FormbuilderModel() {
-      _ref = FormbuilderModel.__super__.constructor.apply(this, arguments);
-      return _ref;
-    }
+        function FormbuilderModel() {
+            _ref = FormbuilderModel.__super__.constructor.apply(this, arguments);
+            return _ref;
+        }
 
-    $wrappers = {};
+        $wrappers = {};
 
-    FormbuilderModel.prototype.sync = function() {};
+        FormbuilderModel.prototype.sync = function() {};
 
-    FormbuilderModel.prototype.indexInDOM = function() {
-      if ($wrappers[this.cid] === 'undefined') {
-        $(".fb-field-wrapper").each((function(_, el) {
-          $wrappers[$(el).data('cid')] = $(el);
-          return true;
-        }));
-        return ($wrappers[this.cid] || {
-          index: function() {
-            return -1;
-          }
-        }).index(".fb-field-wrapper");
-      }
-    };
+        FormbuilderModel.prototype.indexInDOM = function() {
+            if ($wrappers[this.cid] === undefined) {
+                $(".fb-field-wrapper").each((function(_, el) {
+                    $wrappers[$(el).data('cid')] = $(el);
+                    return true;
+                }));
+            }
+            var wrapper = ($wrappers[this.cid] || {
+                index: function() {
+                    return -1;
+                }
+            });
+            var index =  wrapper.index(".fb-field-wrapper");
+            return index;
+        };
 
     FormbuilderModel.prototype.is_input = function() {
       return Formbuilder.inputFields[this.get(Formbuilder.options.mappings.TYPE)] != null;
