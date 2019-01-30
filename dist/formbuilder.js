@@ -80,35 +80,33 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-    FormbuilderModel = (function(_super) {
-        var $wrappers;
+  FormbuilderModel = (function(_super) {
+    var $wrappers;
 
-        __extends(FormbuilderModel, _super);
+    __extends(FormbuilderModel, _super);
 
-        function FormbuilderModel() {
-            _ref = FormbuilderModel.__super__.constructor.apply(this, arguments);
-            return _ref;
-        }
+    function FormbuilderModel() {
+      _ref = FormbuilderModel.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
 
-        $wrappers = {};
+    $wrappers = {};
 
-        FormbuilderModel.prototype.sync = function() {};
+    FormbuilderModel.prototype.sync = function() {};
 
-        FormbuilderModel.prototype.indexInDOM = function() {
-            if ($wrappers[this.cid] === undefined) {
-                $(".fb-field-wrapper").each((function(_, el) {
-                    $wrappers[$(el).data('cid')] = $(el);
-                    return true;
-                }));
-            }
-            var wrapper = ($wrappers[this.cid] || {
-                index: function() {
-                    return -1;
-                }
-            });
-            var index =  wrapper.index(".fb-field-wrapper");
-            return index;
-        };
+    FormbuilderModel.prototype.indexInDOM = function() {
+      if ($wrappers[this.cid] === 'undefined') {
+        $(".fb-field-wrapper").each((function(_, el) {
+          $wrappers[$(el).data('cid')] = $(el);
+          return true;
+        }));
+        return ($wrappers[this.cid] || {
+          index: function() {
+            return -1;
+          }
+        }).index(".fb-field-wrapper");
+      }
+    };
 
     FormbuilderModel.prototype.is_input = function() {
       return Formbuilder.inputFields[this.get(Formbuilder.options.mappings.TYPE)] != null;
@@ -1418,10 +1416,24 @@
         return (typeof (_base = Formbuilder.fields[type]).defaultAttributes === "function" ? _base.defaultAttributes(attrs, Formbuilder) : void 0) || attrs;
       },
       simple_format: function(x) {
-        return x != null ? x.replace(/\n/g, '<br />') : void 0;
+        var _ref7;
+        return (_ref7 = this.escape_html(x)) != null ? _ref7.replace(/\n/g, '<br />') : void 0;
       },
       clone: function(obj) {
         return JSON.parse(JSON.stringify(obj));
+      },
+      escape_html: function(text) {
+        var map;
+        map = {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#039;'
+        };
+        return text.replace(/[&<>"']/g, function(m) {
+          return map[m];
+        });
       }
     };
 
@@ -2809,7 +2821,7 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<span class=\'help-block\'>\n  ' +
-__e( Formbuilder.helpers.simple_format(rf.get(Formbuilder.options.mappings.DESCRIPTION)) ) +
+((__t = ( Formbuilder.helpers.simple_format(rf.get(Formbuilder.options.mappings.DESCRIPTION)) )) == null ? '' : __t) +
 '\n</span>\n';
 
 }
@@ -2848,7 +2860,7 @@ with (obj) {
 __p += '<label>\n  <span style="color: ' +
 __e( rf.get(Formbuilder.options.mappings.LABEL_COLOR) || '#000' ) +
 '">' +
-__e( Formbuilder.helpers.simple_format(rf.get(Formbuilder.options.mappings.LABEL)) ) +
+((__t = ( Formbuilder.helpers.simple_format(rf.get(Formbuilder.options.mappings.LABEL)) )) == null ? '' : __t) +
 '\n  ';
  if (rf.get(Formbuilder.options.mappings.REQUIRED)) { ;
 __p += '\n    <abbr title=\'required\'>*</abbr>\n  ';

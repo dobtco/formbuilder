@@ -942,9 +942,21 @@ class Formbuilder
       Formbuilder.fields[type].defaultAttributes?(attrs, Formbuilder) || attrs
 
     simple_format: (x) ->
-      x?.replace(/\n/g, '<br />')
+      @escape_html(x)?.replace(/\n/g, '<br />')
+#      x?.replace(/\n/g, '<br />')
     clone: (obj) ->
       JSON.parse(JSON.stringify(obj))
+
+    escape_html: (text) ->
+      map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      }
+      text.replace(/[&<>"']/g, (m) -> return map[m] )
+
 
   @options:
     BUTTON_CLASS_SELECTOR: 'fb-button btn btn-default'
