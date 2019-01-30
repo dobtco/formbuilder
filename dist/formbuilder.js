@@ -1431,9 +1431,9 @@
           '"': '&quot;',
           "'": '&#039;'
         };
-        return text.replace(/[&<>"']/g, function(m) {
+        return text != null ? text.replace(/[&<>"']/g, function(m) {
           return map[m];
-        });
+        }) : void 0;
       }
     };
 

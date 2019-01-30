@@ -943,7 +943,6 @@ class Formbuilder
 
     simple_format: (x) ->
       @escape_html(x)?.replace(/\n/g, '<br />')
-#      x?.replace(/\n/g, '<br />')
     clone: (obj) ->
       JSON.parse(JSON.stringify(obj))
 
@@ -955,7 +954,7 @@ class Formbuilder
         '"': '&quot;',
         "'": '&#039;'
       }
-      text.replace(/[&<>"']/g, (m) -> return map[m] )
+      text?.replace(/[&<>"']/g, (m) -> return map[m] )
 
 
   @options:
