@@ -95,7 +95,7 @@
     FormbuilderModel.prototype.sync = function() {};
 
     FormbuilderModel.prototype.indexInDOM = function() {
-      if ($wrappers[this.cid] === 'undefined') {
+      if ($wrappers[this.cid] === void 0) {
         $(".fb-field-wrapper").each((function(_, el) {
           $wrappers[$(el).data('cid')] = $(el);
           return true;

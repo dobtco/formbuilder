@@ -3,7 +3,8 @@ class FormbuilderModel extends Backbone.DeepModel
   sync: -> # noop
 
   indexInDOM: ->
-    if $wrappers[this.cid] is 'undefined'
+    # https://stackoverflow.com/questions/4806286/difference-between-void-0-and-undefined
+    if $wrappers[this.cid] == undefined
       $(".fb-field-wrapper").each ( (_, el) ->
         $wrappers[$(el).data('cid')] = $(el)
         return true;
