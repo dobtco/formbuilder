@@ -3,13 +3,13 @@ class FormbuilderModel extends Backbone.DeepModel
   sync: -> # noop
 
   indexInDOM: ->
-    # https://stackoverflow.com/questions/4806286/difference-between-void-0-and-undefined TLDR: void 0 and undefined evaluate to the same thing, only difference being that void 0 is fewer characters
+    # https://stackoverflow.com/questions/4806286/difference-between-void-0-and-undefined TLDR: void 0 and undefined evaluate to the same thing
     if $wrappers[this.cid] == undefined
       $(".fb-field-wrapper").each ( (_, el) ->
         $wrappers[$(el).data('cid')] = $(el)
         return true;
       )
-      ($wrappers[this.cid] || {index: -> ( -1 )}).index(".fb-field-wrapper");
+    ($wrappers[this.cid] || {index: -> ( -1 )}).index(".fb-field-wrapper");
 
   is_input: ->
     Formbuilder.inputFields[@get(Formbuilder.options.mappings.TYPE)]?

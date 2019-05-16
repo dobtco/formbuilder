@@ -100,12 +100,12 @@
           $wrappers[$(el).data('cid')] = $(el);
           return true;
         }));
-        return ($wrappers[this.cid] || {
-          index: function() {
-            return -1;
-          }
-        }).index(".fb-field-wrapper");
       }
+      return ($wrappers[this.cid] || {
+        index: function() {
+          return -1;
+        }
+      }).index(".fb-field-wrapper");
     };
 
     FormbuilderModel.prototype.is_input = function() {
