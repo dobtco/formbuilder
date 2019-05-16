@@ -2818,11 +2818,20 @@ return __p
 
 this["Formbuilder"]["templates"]["view/description"] = function(obj) {
 obj || (obj = {});
-var __t, __p = '', __e = _.escape;
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<span class=\'help-block\'>\n  ' +
+__p += '<span class=\'help-block\'>\n  ';
+ if (rf.get("type") == "info") { ;
+__p += '\n    ' +
 ((__t = ( rf.get(Formbuilder.options.mappings.DESCRIPTION) )) == null ? '' : __t) +
-'\n</span>\n';
+'\n  ';
+ } else { ;
+__p += '\n    ' +
+((__t = ( Formbuilder.helpers.simple_format(rf.get(Formbuilder.options.mappings.DESCRIPTION)) )) == null ? '' : __t) +
+'\n  ';
+ } ;
+__p += '\n</span>';
 
 }
 return __p
