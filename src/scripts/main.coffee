@@ -3,7 +3,7 @@ class FormbuilderModel extends Backbone.DeepModel
   sync: -> # noop
 
   indexInDOM: ->
-    # https://stackoverflow.com/questions/4806286/difference-between-void-0-and-undefined
+    # https://stackoverflow.com/questions/4806286/difference-between-void-0-and-undefined TLDR: void 0 and undefined evaluate to the same thing, only difference being that void 0 is fewer characters
     if $wrappers[this.cid] == undefined
       $(".fb-field-wrapper").each ( (_, el) ->
         $wrappers[$(el).data('cid')] = $(el)

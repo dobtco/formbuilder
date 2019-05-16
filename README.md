@@ -108,10 +108,11 @@ Have a question about Formbuilder? Feel free to [open a GitHub Issue](https://gi
 ## Developing
 You'll need [node and npm](http://nodejs.org/) installed.
 
-1. `npm install`
-2. `bower install`
-3. `grunt watch`
-4. open `index.html` and you're all set!
+1. `nvm use`
+2. `npm install`
+3. `bower install`
+4. `grunt watch`
+5. open `index.html` and you're all set!
 
 ## License
 MIT
