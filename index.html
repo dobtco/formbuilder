@@ -55,12 +55,196 @@
             }
         });
 
-
-        var fbBoostrap = [{"uuid":"a909f33f-4e33-4488-a5c7-85bfb144dd6d","parent_uuid":"78fa4b03-02e8-4738-80f7-b8e529057dfc","label":"Info inside Table","reference_id":null,"required":null,"is_scored":null,"description":"<p><span style=\"font-weight:bold;font-style:italic;\">Info inside Table<\/span><br \/><\/p>","type":"info","options":{"in_sequence":true}},{"uuid":"dcf632c8-94f1-497f-a015-196846d71d43","parent_uuid":null,"label":"Informational Element","reference_id":null,"required":null,"is_scored":null,"description":"dasdas","type":"info","options":{}},{"uuid":"78fa4b03-02e8-4738-80f7-b8e529057dfc","parent_uuid":null,"label":"Untitled","reference_id":null,"required":null,"is_scored":null,"description":"dsada","type":"table","options":{"full_width":false,"elements":[{"uuid":"a909f33f-4e33-4488-a5c7-85bfb144dd6d"}]}}]
-
         window.fb = new Formbuilder({
             selector: '.fb-main',
-            bootstrapData: fbBoostrap
+            bootstrapData: [
+                {
+                    "label": "Hours worked",
+                    "type": "number",
+                    "required": true,
+                    "options": {},
+                    "parent_uuid": "909cbdba-4431-4ed8-ab28-96006d356ad7",
+                    "uuid": "76b257ed-16fa-422d-a732-da6c6170c807"
+                },
+                {
+                    "label": "Pay rate",
+                    "type": "number",
+                    "required": true,
+                    "options": {},
+                    "parent_uuid": "909cbdba-4431-4ed8-ab28-96006d356ad7",
+                    "uuid": "a720d44f-e4da-4fa5-a7aa-567e82a5fe2a"
+                },
+                {
+                    "label": "Total",
+                    "type": "number",
+                    "required": true,
+                    "options": {},
+                    "parent_uuid": "909cbdba-4431-4ed8-ab28-96006d356ad7",
+                    "uuid": "c171bdb9-dffb-4bf7-84a9-fd6ae848dd79"
+                },
+                {
+                    "label": "Total Column",
+                    "type": "number",
+                    "model_only": true,
+                    "parent_uuid": "c171bdb9-dffb-4bf7-84a9-fd6ae848dd79",
+                    "uuid": "b9a1b61f-fd1a-4df5-b8ba-9bed3aa41d7a",
+                    "options": {
+                        "calculation_type": "sum(column_uuid_c171bdb9_dffb_4bf7_84a9_fd6ae848dd79)"
+                    }
+                },
+                {
+                    "label": "Total Hours Worked",
+                    "type": "number",
+                    "model_only": true,
+                    "parent_uuid": "76b257ed-16fa-422d-a732-da6c6170c807",
+                    "uuid": "efc11190-a876-457a-9210-1d2ae8882ff5",
+                    "options": {
+                        "calculation_type": "sum(column_uuid_76b257ed_16fa_422d_a732_da6c6170c807)"
+                    }
+                },
+                {
+                    "type": "table",
+                    "label": "Table",
+                    "options": {
+                        "elements": [{"uuid": "d2ce1858-603a-4e31-8cce-ea51ef08ef13"}, {
+                            "uuid": "76b257ed-16fa-422d-a732-da6c6170c807",
+                            "totalColumn": true,
+                            "totalColumnUuid": 'efc11190-a876-457a-9210-1d2ae8882ff5'
+                        }, {"uuid": "a720d44f-e4da-4fa5-a7aa-567e82a5fe2a"}, {
+                            "uuid": "c171bdb9-dffb-4bf7-84a9-fd6ae848dd79",
+                            "totalColumn": true,
+                            "totalColumnUuid": 'b9a1b61f-fd1a-4df5-b8ba-9bed3aa41d7a'
+                        }],
+                    },
+                    "uuid": "909cbdba-4431-4ed8-ab28-96006d356ad7"
+                },
+                {
+                    "type": "datasource",
+                    "label": "Work Contractor",
+                    "options": {
+                        "data_source": 'Contractor',
+                        "value_template": 'name',
+                        "multiple_selections": true,
+                        "is_filtered": true,
+                        "filter": "status",
+                        "filter_values": [1, 2]
+
+                    },
+                    "uuid": "188e4f03-4d5d-4234-9b1f-f916fee48691"
+                },
+                {
+                    "label": "Do you have a website?",
+                    "description": "Include 'http://",
+                    "type": "website",
+                    "required": false,
+                    "options": {},
+                    "uuid": "31f9a5cf-b54f-40a8-89f0-ccc807f16140"
+                },
+                {
+                    "label": "Security personnel #82?",
+                    "reference_id": "id-test",
+                    "type": "radio",
+                    "answers": [{
+                        "uuid": "2b85c25b-8359-403d-a318-4d1e6f34fc75",
+                        "label": "Yes",
+                        "checked": false
+                    }, {
+                        "uuid": "74027533-dc7e-43aa-96c6-3f0f2d34d77b",
+                        "label": "No",
+                        "checked": false
+                    }],
+                    "options": {},
+                    "uuid": "33cfb242-80cd-428a-828e-344cdb5a6f2a"
+                },
+                {
+                    "label": "Medical history",
+                    "type": "file",
+                    "required": true,
+                    "options": {},
+                    "uuid": "b7f79a79-8097-404b-9e43-4553d6cf106a"
+                },
+                {
+                    "type": "radio",
+                    "answers": [{
+                        "uuid": "3693e4db-1235-4fdc-ba15-9d1e80fa0b22",
+                        "label": "Yes",
+                        "checked": false
+                    }, {
+                        "uuid": "d45c4e90-1381-4ce1-81a3-8f58de2ceab2",
+                        "label": "No",
+                        "checked": false
+                    }],
+                    "options": {
+                        "grid": {
+                            row: 0,
+                            col: 0
+                        }
+                    },
+                    "parent_uuid": '940cb41b-8440-4ff2-b699-a1dfa6cccebb',
+                    "uuid": "d96ff75e-07c0-4219-9153-b6aca5704bec"
+                },
+                {
+                    "label": "Grid",
+                    "type": "grid",
+                    "options": {
+                        num_rows: 2,
+                        num_cols: 2
+                    },
+                    "uuid": "940cb41b-8440-4ff2-b699-a1dfa6cccebb"
+                },
+                {
+                    "type": "text",
+                    "label": "",
+                    "required": true,
+                    "options": {
+                        "grid": {
+                            row: 1,
+                            col: 1,
+                        }
+                    },
+                    "parent_uuid": '940cb41b-8440-4ff2-b699-a1dfa6cccebb',
+                    "uuid": "3898b16a-8131-461f-bc6b-5d8d85c70903"
+                },
+                {
+                    "type": "radio",
+                    "answers": [{
+                        "label": "Yes",
+                        "checked": false
+                    }],
+                    "options": {
+                        "grid": {
+                            row: 0,
+                            col: 1
+                        }
+                    },
+                    "parent_uuid": '940cb41b-8440-4ff2-b699-a1dfa6cccebb',
+                    "uuid": "097fae5e-90ce-4f4e-bed5-7e86eb86a913"
+                },
+                {
+                    "label": "Employee Name",
+                    "type": "text",
+                    "required": true,
+                    "options": {},
+                    "parent_uuid": "909cbdba-4431-4ed8-ab28-96006d356ad7",
+                    "uuid": "d2ce1858-603a-4e31-8cce-ea51ef08ef13"
+                },
+                {
+                    "type": "radio",
+                    "answers": [{
+                        "label": "Yes",
+                        "checked": false
+                    }],
+                    "options": {
+                        "grid": {
+                            row: 0,
+                            col: 1
+                        }
+                    },
+                    "parent_uuid": '940cb41b-8440-4ff2-b699-a1dfa6cccebb',
+                    "uuid": "ff9f46f8-bb47-4211-b690-d884285feaf9"
+                }
+
+            ]
         });
 
 
