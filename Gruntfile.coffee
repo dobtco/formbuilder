@@ -22,6 +22,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-copy')
   grunt.loadNpmTasks('grunt-release')
   grunt.loadNpmTasks('grunt-karma')
+  grunt.loadNpmTasks('grunt-contrib-connect')
 
   grunt.initConfig
 
@@ -117,6 +118,12 @@ module.exports = (grunt) ->
       all:
         files: ['<%= srcFolder %>/**/*.{coffee,styl,html}']
         tasks: ALL_TASKS
+
+    connect:
+      server:
+        options:
+          port: 9001
+          keepalive: true
 
     # To test, run `grunt --no-write -v release`
     release:

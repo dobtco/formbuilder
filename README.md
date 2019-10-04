@@ -112,7 +112,8 @@ You'll need [node and npm](http://nodejs.org/) installed.
 2. `npm install`
 3. `bower install`
 4. `grunt watch`
-5. open `index.html` and you're all set!
+5. Open  a new terminal and run `grunt connect`
+6. open `http://localhost:9001/` and you're all set!
 
 ## License
 MIT
