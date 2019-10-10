@@ -1,0 +1,15 @@
+<div class="fb-link-object-fields">
+    <div class="object-name">
+        <label><%= object.name %></label>
+    </div>
+    <div>
+        <span>Display Fields</span>
+    </div>
+    <ul>
+        <% for (field in object.fields) { %>
+        <li><%= object.fields[field] %></li>
+        <% } %>
+    </ul>
+</div>
+
+

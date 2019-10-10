@@ -1,4 +1,8 @@
 <div class='fb-right panel'>
-  <div class='fb-no-response-fields'>No response fields</div>
-  <div class='fb-response-fields panel-body'></div>
+    <div class='fb-no-response-fields'>No response fields</div>
+    <% if (Formbuilder.linkAssetFunctionality) { %>
+    <%= Formbuilder.templates['view/link_object']({object: Formbuilder.linkAssetDisplayFields}) %>
+    <hr class="section-separator"/>
+    <% } %>
+    <div class='fb-response-fields panel-body'></div>
 </div>
