@@ -1400,6 +1400,10 @@
 
     Formbuilder.geolocationFunctionality = true;
 
+    Formbuilder.linkAssetFunctionality = false;
+
+    Formbuilder.linkAssetDisplayFields = {};
+
     Formbuilder.disableField = function(field) {
       return this.fields[field].enabled = false;
     };
@@ -2749,9 +2753,16 @@ return __p
 
 this["Formbuilder"]["templates"]["partials/right_side"] = function(obj) {
 obj || (obj = {});
-var __t, __p = '', __e = _.escape;
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<div class=\'fb-right panel\'>\n  <div class=\'fb-no-response-fields\'>No response fields</div>\n  <div class=\'fb-response-fields panel-body\'></div>\n</div>\n';
+__p += '<div class=\'fb-right panel\'>\n    <div class=\'fb-no-response-fields\'>No response fields</div>\n    ';
+ if (Formbuilder.linkAssetFunctionality) { ;
+__p += '\n    ' +
+((__t = ( Formbuilder.templates['view/link_object']({object: Formbuilder.linkAssetDisplayFields}) )) == null ? '' : __t) +
+'\n    <hr class="section-separator"/>\n    ';
+ } ;
+__p += '\n    <div class=\'fb-response-fields panel-body\'></div>\n</div>\n';
 
 }
 return __p
@@ -2875,6 +2886,25 @@ __e( rf.get(Formbuilder.options.mappings.LABEL_COLOR) || '#000' ) +
 __p += '\n    <abbr title=\'required\'>*</abbr>\n  ';
  } ;
 __p += '\n</label>\n';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["view/link_object"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+__p += '<div class="fb-link-object-fields">\n    <div class="object-name">\n        <label>' +
+((__t = ( object.name )) == null ? '' : __t) +
+'</label>\n    </div>\n    <div>\n        <span>Display Fields</span>\n    </div>\n    <ul>\n        ';
+ for (field in object.fields) { ;
+__p += '\n        <li>' +
+((__t = ( object.fields[field] )) == null ? '' : __t) +
+'</li>\n        ';
+ } ;
+__p += '\n    </ul>\n</div>\n\n\n';
 
 }
 return __p

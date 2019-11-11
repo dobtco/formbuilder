@@ -33,21 +33,81 @@ $editing-border = darken($editing-bg, 7%)
 }
 
 
-.fb-icon-date:before { content: '\e800'; } /* '' */
-.fb-icon-radio:before { content: '\e801'; } /* '' */
-.fb-icon-checkbox:before { content: '\e802'; } /* '' */
-.fb-icon-data-source:before { content: '\e803'; } /* '' */
-.fb-icon-dropdown:before { content: '\e804'; } /* '' */
-.fb-icon-signature:before { content: '\e805'; } /* '' */
-.fb-icon-info:before { content: '\e806'; } /* '' */
-.fb-icon-table:before { content: '\e807'; } /* '' */
-.fb-icon-textarea:before { content: '\e808'; } /* '' */
-.fb-icon-section:before { content: '\e809'; } /* '' */
-.fb-icon-text:before { content: '\e80a'; } /* '' */
-.fb-icon-number:before { content: '\e80b'; } /* '' */
-.fb-icon-time:before { content: '\e80c'; } /* '' */
-.fb-icon-conditional:before { content: '\E80D'; } /* '' */
-.fb-icon-geolocation:before { content: '\e80e'; } /* '' */
+.fb-icon-date:before {
+  content: '\e800';
+}
+
+/* '' */
+.fb-icon-radio:before {
+  content: '\e801';
+}
+
+/* '' */
+.fb-icon-checkbox:before {
+  content: '\e802';
+}
+
+/* '' */
+.fb-icon-data-source:before {
+  content: '\e803';
+}
+
+/* '' */
+.fb-icon-dropdown:before {
+  content: '\e804';
+}
+
+/* '' */
+.fb-icon-signature:before {
+  content: '\e805';
+}
+
+/* '' */
+.fb-icon-info:before {
+  content: '\e806';
+}
+
+/* '' */
+.fb-icon-table:before {
+  content: '\e807';
+}
+
+/* '' */
+.fb-icon-textarea:before {
+  content: '\e808';
+}
+
+/* '' */
+.fb-icon-section:before {
+  content: '\e809';
+}
+
+/* '' */
+.fb-icon-text:before {
+  content: '\e80a';
+}
+
+/* '' */
+.fb-icon-number:before {
+  content: '\e80b';
+}
+
+/* '' */
+.fb-icon-time:before {
+  content: '\e80c';
+}
+
+/* '' */
+.fb-icon-conditional:before {
+  content: '\E80D';
+}
+
+/* '' */
+.fb-icon-geolocation:before {
+  content: '\E80E';
+}
+
+/* '' */
 
 
 .fb-button {
@@ -180,7 +240,7 @@ $editing-border = darken($editing-bg, 7%)
   }
 }
 
-.fb-field-wrapper:hover .actions-wrapper,.fb-field-wrapper.editing .actions-wrapper {
+.fb-field-wrapper:hover .actions-wrapper, .fb-field-wrapper.editing .actions-wrapper {
   display: block;
 }
 
@@ -194,12 +254,12 @@ $editing-border = darken($editing-bg, 7%)
 .fb-field-wrapper.editing {
   background-color: $editing-bg;
   border-radius: 3px;
-  box-shadow: inset 0 0 7px 2px rgba(100,100,100,0.1);
-  border: 1px solid rgba(100,100,100,0.2);
+  box-shadow: inset 0 0 7px 2px rgba(100, 100, 100, 0.1);
+  border: 1px solid rgba(100, 100, 100, 0.2);
 }
 
 .fb-field-wrapper.parent {
-  box-shadow: rgba(0,0,0,0.3) 1px 1px 10px;
+  box-shadow: rgba(0, 0, 0, 0.3) 1px 1px 10px;
 }
 
 
@@ -238,6 +298,7 @@ $editing-border = darken($editing-bg, 7%)
       outline: none;
     }
   }
+
   select {
     font-size: 14px;
     max-width: 100%;
@@ -323,6 +384,7 @@ input[readonly] {
     display: block;
     font-family: 'Source Sans Pro', sans-serif;
     font-size: 1em;
+
     &:before {
       content: 'Type: ';
       color: #999;
@@ -343,7 +405,7 @@ input[readonly] {
   font-weight: 700;
 }
 
-.fb-edit-field-wrapper .js-add-option,.fb-edit-field-wrapper .js-remove-option {
+.fb-edit-field-wrapper .js-add-option, .fb-edit-field-wrapper .js-remove-option {
   padding: 3px 6px;
 }
 
@@ -355,7 +417,7 @@ input[readonly] {
   margin-bottom: 10px;
 }
 
-.fb-common-wrapper .fb-label-description input,.fb-common-wrapper .fb-label-description textarea {
+.fb-common-wrapper .fb-label-description input, .fb-common-wrapper .fb-label-description textarea {
   width: 100%;
 }
 
@@ -364,17 +426,17 @@ input[readonly] {
 }
 
 .fb-conditional-question {
-    float: right;
-    font-size: .9em;
-    max-width: 50%;
-    text-overflow: ellipsis;
-    height: 20px;
-    white-space: nowrap;
-    overflow: hidden;
+  float: right;
+  font-size: .9em;
+  max-width: 50%;
+  text-overflow: ellipsis;
+  height: 20px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .fb-conditional-question-trigger > span {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .option-score-input {
@@ -420,11 +482,11 @@ input[readonly] {
   width: 400px;
 }
 
-.response-field-address .city,.response-field-address .state,.response-field-address .zip,.response-field-address .country {
+.response-field-address .city, .response-field-address .state, .response-field-address .zip, .response-field-address .country {
   width: 198px;
 }
 
-.response-field-date .month,.response-field-date .day,.response-field-date .year {
+.response-field-date .month, .response-field-date .day, .response-field-date .year {
   width: 50px;
 }
 
@@ -432,7 +494,7 @@ input[readonly] {
   width: 145px;
 }
 
-.response-field-checkbox .fb-option,.response-field-radio .fb-option {
+.response-field-checkbox .fb-option, .response-field-radio .fb-option {
   margin-bottom: 5px;
   padding: 3px 8px;
   display: inline-block;
@@ -442,14 +504,14 @@ input[readonly] {
 
 }
 
-.editing .trigger-option, .fb-option.trigger-option  {
-    background-color: #5cb85c;
-    border-radius: 0.25em;
-    color: white;
+.editing .trigger-option, .fb-option.trigger-option {
+  background-color: #5cb85c;
+  border-radius: 0.25em;
+  color: white;
 }
 
 .fb-conditional-question .trigger-option {
-   padding: 1px 4px;
+  padding: 1px 4px;
 }
 
 .response-field-website input {
@@ -473,12 +535,13 @@ input[readonly] {
 
 .response-field-table {
   width: 100%
+
   .cover {
     display: none;
   }
 
   .section-name {
-     display: inline-block;
+    display: inline-block;
   }
 
   .element-selector {
@@ -494,24 +557,25 @@ input[readonly] {
   }
 
 
-
   table {
-      margin-bottom: 30px;
-      td {
-         padding: 10px 10px 0 10px
-         label {
-             border: none !important;
-         }
-      }
+    margin-bottom: 30px;
 
-      .calculated {
-        font-style: italic;
-        color: #ccc;
-      }
+    td {
+      padding: 10px 10px 0 10px
 
-      select, input[type=text], textarea, .fb-signature {
-        width: 100%;
+      label {
+        border: none !important;
       }
+    }
+
+    .calculated {
+      font-style: italic;
+      color: #ccc;
+    }
+
+    select, input[type=text], textarea, .fb-signature {
+      width: 100%;
+    }
   }
 }
 
@@ -525,9 +589,9 @@ for row in (1..15)
     clear both
   .fb-options-per-row-{row}
     clear both
+
     .fb-option-wrapper
       width (100% / row)
-
 
 
 .response-field-grid-table {
@@ -543,15 +607,17 @@ for row in (1..15)
   }
 
   td {
-      padding: 10px 10px 0 10px;
+    padding: 10px 10px 0 10px;
   }
 
   .element-selector {
     width: 100%;
+
     .dropdown-toggle {
       width: 100%;
+
       span {
-         font-size: 2em;
+        font-size: 2em;
       }
     }
   }
@@ -560,20 +626,34 @@ for row in (1..15)
     padding: 10px 10px 0 10px;
     border: 1px dashed #ddd
     background-color: rgba(255, 255, 255, 0.8);
+
     .cover {
       display: block;
     }
+
     .response-field-selector {
       margin: 0.5em;
     }
+
     .subtemplate-wrapper > label {
-      display:none;
+      display: none;
     }
+
     .help-block {
-      display:none;
+      display: none;
     }
+
     select, input[type=text], textarea, .fb-signature {
       width: 100%;
     }
   }
+}
+
+
+.section-separator {
+    border-top: 1px solid #333;
+}
+
+.fb-link-object-fields {
+  padding: 15px;
 }

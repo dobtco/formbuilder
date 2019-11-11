@@ -13,7 +13,7 @@
 .fb-icon-number:before{content:'\e80b'}
 .fb-icon-time:before{content:'\e80c'}
 .fb-icon-conditional:before{content:'\E80D'}
-.fb-icon-geolocation:before{content:'\e80e'}
+.fb-icon-geolocation:before{content:'\E80E'}
 .fb-button{text-align:left}
 .fb-clear{clear:both}
 .fb-main{padding:0 20px 0 0;position:relative}
@@ -171,3 +171,5 @@ input[readonly]{cursor:not-allowed;background-color:#eee}
 .response-field-grid-table .response-field-grid-cell .subtemplate-wrapper > label{display:none}
 .response-field-grid-table .response-field-grid-cell .help-block{display:none}
 .response-field-grid-table .response-field-grid-cell select,.response-field-grid-table .response-field-grid-cell input[type=text],.response-field-grid-table .response-field-grid-cell textarea,.response-field-grid-table .response-field-grid-cell .fb-signature{width:100%}
+.section-separator{border-top:1px solid #333}
+.fb-link-object-fields{padding:15px}
