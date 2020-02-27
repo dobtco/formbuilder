@@ -117,3 +117,46 @@ You'll need [node and npm](http://nodejs.org/) installed.
 
 ## License
 MIT
+
+## Currently known issues
+Last time this was worked on there were issues getting a new repo set up.
+* npm install was failing to install correctly:
+    * running into issues with not finding xcode while trying to install gym.
+    * throwing lots of deprecation, no member named 'New' in 'v8::String', and NAN_THROW_ERRORs when installing gym
+    * failing on a package due to a no-SSL error
+* bower seems to run fine but reports connection closed with 1 byte remaining
+* Running grunt watch/connect resulted in lots of JS errors in the console including missing css and summernote library
+
+A ticket will be created for this in the meantime.
+
+Note made on the last attempt:
+
+If node install fails with `gyp: No Xcode or CLT version detected!`
+Run `xcode-select --install` and try again.
+If you have a pending or recently updated xcode you may need to open the app and accept permissions.
+
+You may also need to completely delete and re-install xcode with
+~~~
+sudo rm -rf $(xcode-select -print-path)
+xcode-select --install
+~~~
+
+Also, you may not be able to get node install to work because node-gym is unsupported with errors like this:
+~~~
+ CXX(target) Release/obj.target/fse/fsevents.o
+In file included from ../fsevents.cc:6:
+../../nan/nan.h:213:31: warning: 'Uint32Value' is deprecated [-Wdeprecated-declarations]
+      ? optionsObj->Get(opt)->Uint32Value()
+                              ^
+/Users/paul/Library/Caches/node-gyp/10.19.0/include/node/v8.h:2477:3: note: 'Uint32Value' has been
+      explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+~~~
+
+In that case you can switch to a much earlier version of node and try again, though it may not work:
+~~~
+nvm install 0.8
+nvm use 0.8
+nvm ls
+~~~
+
