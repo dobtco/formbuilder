@@ -36,6 +36,7 @@ Formbuilder.registerField 'info',
     $('.fb-info-editor').summernote(
         onChange: -> update.call(@)
         onKeyup: -> update.call(@)
+        disableDragAndDrop: true
         toolbar: [
           ['style', ['bold', 'italic', 'underline']],
           ['fontsize', ['fontsize']],
