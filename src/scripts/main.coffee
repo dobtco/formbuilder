@@ -977,7 +977,7 @@ class Formbuilder
     AUTOSAVE: false
     CLEAR_FIELD_CONFIRM: false
     ENABLED_FIELDS: ['text', 'checkbox', 'dropdown', 'textarea', 'radio', 'date', 'section', 'signature', 'info',
-      'grid', 'number', 'table', 'datasource', 'time', 'geolocation']
+      'grid', 'number', 'table', 'datasource', 'time', 'geolocation', 'approval']
 
     mappings:
       SIZE: 'options.size'
@@ -1040,6 +1040,10 @@ class Formbuilder
       MINLENGTH: 'options.minlength'
       MAXLENGTH: 'options.maxlength'
       LENGTH_UNITS: 'options.min_max_length_units'
+      APPROVAL:
+        APPROVER_TYPE: 'options.approver_type'
+        APPROVER_ID: 'options.approver_id'
+        APPROVER_NAME: 'options.approver_name'
 
     change:
       INCLUDE_SCORING: ->
@@ -1051,10 +1055,12 @@ class Formbuilder
       CONDITIONAL_VALUES: ->
         @reset()
       'DATA_SOURCE.DATA_SOURCE': ->
-        @reset()
+#        @reset()
       'DATA_SOURCE.IS_FILTERED': ->
         @reset()
       'DATA_SOURCE.FILTER': ->
+        @reset()
+      'APPROVAL.APPROVER_TYPE': ->
         @reset()
 
     dict:

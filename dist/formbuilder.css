@@ -14,6 +14,7 @@
 .fb-icon-time:before{content:'\e80c'}
 .fb-icon-conditional:before{content:'\E80D'}
 .fb-icon-geolocation:before{content:'\E80E'}
+.fb-icon-approval:before{content:'\E81B'}
 .fb-button{text-align:left}
 .fb-clear{clear:both}
 .fb-main{padding:0 20px 0 0;position:relative}
@@ -88,6 +89,9 @@ input[readonly]{cursor:not-allowed;background-color:#eee}
 .response-field-website input{width:200px}
 .response-field-signature .fb-signature{width:300px;height:150px}
 .response-field-signature .fb-signature-placeholder{color:#aaa}
+.response-field-approval .fb-approval-user{margin-bottom:20px}
+.response-field-approval .fb-signature{width:300px;height:150px}
+.response-field-approval .fb-signature-placeholder{color:#aaa}
 .response-field-grid .cover{display:none}
 .response-field-table{width:100%}
 .response-field-table .cover{display:none}

@@ -1449,7 +1449,7 @@
       HTTP_METHOD: 'POST',
       AUTOSAVE: false,
       CLEAR_FIELD_CONFIRM: false,
-      ENABLED_FIELDS: ['text', 'checkbox', 'dropdown', 'textarea', 'radio', 'date', 'section', 'signature', 'info', 'grid', 'number', 'table', 'datasource', 'time', 'geolocation'],
+      ENABLED_FIELDS: ['text', 'checkbox', 'dropdown', 'textarea', 'radio', 'date', 'section', 'signature', 'info', 'grid', 'number', 'table', 'datasource', 'time', 'geolocation', 'approval'],
       mappings: {
         SIZE: 'options.size',
         UNITS: 'options.units',
@@ -1514,7 +1514,12 @@
         OPTIONS_PER_ROW: 'options.options_per_row',
         MINLENGTH: 'options.minlength',
         MAXLENGTH: 'options.maxlength',
-        LENGTH_UNITS: 'options.min_max_length_units'
+        LENGTH_UNITS: 'options.min_max_length_units',
+        APPROVAL: {
+          APPROVER_TYPE: 'options.approver_type',
+          APPROVER_ID: 'options.approver_id',
+          APPROVER_NAME: 'options.approver_name'
+        }
       },
       change: {
         INCLUDE_SCORING: function() {
@@ -1536,6 +1541,9 @@
           return this.reset();
         },
         'DATA_SOURCE.FILTER': function() {
+          return this.reset();
+        },
+        'APPROVAL.APPROVER_TYPE': function() {
           return this.reset();
         }
       },
@@ -1662,6 +1670,46 @@
     view: "<div class='input-line'>\n  <span class='street'>\n    <input type='text' />\n    <label>Address</label>\n  </span>\n</div>\n\n<div class='input-line'>\n  <span class='city'>\n    <input type='text' />\n    <label>City</label>\n  </span>\n\n  <span class='state'>\n    <input type='text' />\n    <label>State / Province / Region</label>\n  </span>\n</div>\n\n<div class='input-line'>\n  <span class='zip'>\n    <input type='text' />\n    <label>Zipcode</label>\n  </span>\n\n  <span class='country'>\n    <select><option>United States</option></select>\n    <label>Country</label>\n  </span>\n</div>",
     edit: "<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-address\"></span> Address"
+  });
+
+}).call(this);
+
+(function() {
+  Formbuilder.registerField('approval', {
+    name: 'Approval',
+    order: 75,
+    view: "<div class='fb-approval-user'>\n    <select>\n       <option>\n          (<%- rf.getSelectedUser(rf.get(Formbuilder.options.mappings.APPROVAL.APPROVER_ID)) %>)\n      </option>\n    </select>\n</div>\n<div class=\"fb-signature form-control\">\n    <div class=\"fb-signature-placeholder\">Sign Here</div>\n    <div class=\"fb-signature-pad\"></div>\n</div>\n<button class=\"btn btn-default btn-xs\">Clear</button>",
+    edit: "<%= Formbuilder.templates['edit/approval_options']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
+    addButton: "<span class=\"fb-icon-approval\"></span> Approval",
+    defaultAttributes: function(attrs, formbuilder) {
+      attrs.initialize = function() {
+        return this.on("change", function(model) {
+          var selectUser;
+          selectUser = this.get('options.approver');
+          if (selectUser !== void 0) {
+            selectUser = JSON.parse(selectUser);
+            model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_ID, parseInt(selectUser.id));
+            return model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_NAME, selectUser.name);
+          }
+        });
+      };
+      attrs.getUsers = function() {
+        return formbuilder.attr('users');
+      };
+      attrs.getSelectedUser = function() {
+        console.log(this.get(Formbuilder.options.mappings.APPROVAL.APPROVER_NAME));
+        if (this.options) {
+          return this.options.approver_name;
+        } else {
+          return this.get(Formbuilder.options.mappings.APPROVAL.APPROVER_NAME);
+        }
+      };
+      attrs.showUsers = function() {
+        return parseInt(this.get(Formbuilder.options.mappings.APPROVAL.APPROVER_TYPE)) === 2;
+      };
+      attrs.options.approver_type = 2;
+      return attrs;
+    }
   });
 
 }).call(this);
@@ -2176,6 +2224,37 @@
 
 this["Formbuilder"] = this["Formbuilder"] || {};
 this["Formbuilder"]["templates"] = this["Formbuilder"]["templates"] || {};
+
+this["Formbuilder"]["templates"]["edit/approval_options"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+__p += '<div class=\'fb-edit-section-header\'>Approver</div>\n<div>\n    <div>\n        <label>\n            <input type="radio" id="any_user" name="approver_type" value="1" data-rv-checked=\'model.' +
+((__t = ( Formbuilder.options.mappings.APPROVAL.APPROVER_TYPE )) == null ? '' : __t) +
+'\'>\n            Any user can approve\n        </label>\n    </div>\n    <div>\n        <label>\n            <input type="radio" id="select_user" name="approver_type" value="2" data-rv-checked=\'model.' +
+((__t = ( Formbuilder.options.mappings.APPROVAL.APPROVER_TYPE )) == null ? '' : __t) +
+'\'>\n            Specify Approver\n        </label>\n    </div>\n    ';
+ if (rf.showUsers()) { ;
+__p += '\n        <div>\n            <select data-rv-value="model.options.approver">\n                ';
+
+                users = rf.getUsers()
+                for (i in (users || [])) {
+                    user = users[i]
+                ;
+__p += '\n                    <option value=\'' +
+((__t = ( JSON.stringify(user) )) == null ? '' : __t) +
+'\'>\n                        ' +
+((__t = ( user.name )) == null ? '' : __t) +
+'\n                    </option>\n                ';
+ } ;
+__p += '\n            </select>\n        </div>\n    ';
+ } ;
+__p += '\n\n</div>\n';
+
+}
+return __p
+};
 
 this["Formbuilder"]["templates"]["edit/base"] = function(obj) {
 obj || (obj = {});

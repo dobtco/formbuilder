@@ -1,0 +1,31 @@
+<div class='fb-edit-section-header'>Approver</div>
+<div>
+    <div>
+        <label>
+            <input type="radio" id="any_user" name="approver_type" value="1" data-rv-checked='model.<%= Formbuilder.options.mappings.APPROVAL.APPROVER_TYPE %>'>
+            Any user can approve
+        </label>
+    </div>
+    <div>
+        <label>
+            <input type="radio" id="select_user" name="approver_type" value="2" data-rv-checked='model.<%= Formbuilder.options.mappings.APPROVAL.APPROVER_TYPE %>'>
+            Specify Approver
+        </label>
+    </div>
+    <% if (rf.showUsers()) { %>
+        <div>
+            <select data-rv-value="model.options.approver">
+                <%
+                users = rf.getUsers()
+                for (i in (users || [])) {
+                    user = users[i]
+                %>
+                    <option value='<%= JSON.stringify(user) %>'>
+                        <%= user.name %>
+                    </option>
+                <% } %>
+            </select>
+        </div>
+    <% } %>
+
+</div>
