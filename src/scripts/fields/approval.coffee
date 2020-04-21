@@ -8,7 +8,11 @@ Formbuilder.registerField 'approval',
     <div class='fb-approval-user'>
         <select>
            <option>
-              (<%- rf.getSelectedUser(rf.get(Formbuilder.options.mappings.APPROVAL.APPROVER_ID)) %>)
+               <% if (rf.get(Formbuilder.options.mappings.APPROVAL.APPROVER_TYPE) == 1) { %>
+                  Any User
+               <% } else { %>
+                (<%- rf.getSelectedUser(rf.get(Formbuilder.options.mappings.APPROVAL.APPROVER_ID)) %>)
+              <% }%>
           </option>
         </select>
     </div>
@@ -31,23 +35,26 @@ Formbuilder.registerField 'approval',
   defaultAttributes: (attrs, formbuilder) ->
     attrs.initialize = () ->
       @on "change", (model) ->
-        selectUser = @get('options.approver')
-        if (selectUser) != undefined
-          selectUser = JSON.parse(selectUser)
-          model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_ID, parseInt(selectUser.id))
-          model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_NAME, selectUser.name)
+        if parseInt(@get(Formbuilder.options.mappings.APPROVAL.APPROVER_TYPE)) == 1
+          model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_ID, undefined)
+          model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_NAME, undefined)
+        else
+          selectUser = @get('options.approver')
+          if (selectUser) != undefined
+            selectUser = JSON.parse(selectUser)
+            model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_ID, parseInt(selectUser.id))
+            model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_NAME, selectUser.name)
 
     attrs.getUsers = () ->
       formbuilder.attr('users')
 
     attrs.getSelectedUser = () ->
-      console.log(@get(Formbuilder.options.mappings.APPROVAL.APPROVER_NAME));
       if @options then @options.approver_name else @get(Formbuilder.options.mappings.APPROVAL.APPROVER_NAME)
 
     attrs.showUsers = () ->
       (parseInt(@get(Formbuilder.options.mappings.APPROVAL.APPROVER_TYPE)) == 2)
 
-    attrs.options.approver_type = 2
+    attrs.options.approver_type = 1
     attrs
 
 

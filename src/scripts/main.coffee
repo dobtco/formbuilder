@@ -1055,7 +1055,7 @@ class Formbuilder
       CONDITIONAL_VALUES: ->
         @reset()
       'DATA_SOURCE.DATA_SOURCE': ->
-#        @reset()
+        @reset()
       'DATA_SOURCE.IS_FILTERED': ->
         @reset()
       'DATA_SOURCE.FILTER': ->
