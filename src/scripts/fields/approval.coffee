@@ -32,6 +32,9 @@ Formbuilder.registerField 'approval',
     <span class="fb-icon-approval"></span> Approval
   """
 
+  onEdit: (model) ->
+    $('.fb-approval-user-select').select2()
+
   defaultAttributes: (attrs, formbuilder) ->
     attrs.initialize = () ->
       @on "change", (model) ->

@@ -13,19 +13,19 @@
         </label>
     </div>
     <% if (rf.showUsers()) { %>
-        <div>
-            <select data-rv-value="model.options.approver">
-                <%
-                users = rf.getUsers()
-                for (i in (users || [])) {
-                    user = users[i]
-                %>
-                    <option value='<%= JSON.stringify(user) %>'>
-                        <%= user.name %>
-                    </option>
-                <% } %>
-            </select>
-        </div>
+    <div>
+        <select class="fb-approval-user-select" data-rv-value="model.options.approver">
+            <%
+            users = rf.getUsers()
+            for (i in (users || [])) {
+            user = users[i]
+            %>
+            <option value='<%= JSON.stringify(user) %>'>
+                <%= user.name %>
+            </option>
+            <% } %>
+        </select>
+    </div>
     <% } %>
-
 </div>
+

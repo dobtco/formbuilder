@@ -30,6 +30,7 @@
     "node-uuid": "~1.4.1",
     "mathjs": "~1.1.1",
     "lodash": "~2.4.1",
-    "spectrum": "~1.7.1"
+    "spectrum": "~1.7.1",
+    "select2": "~4.0"
   }
 }

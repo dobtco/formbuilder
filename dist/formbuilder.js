@@ -1678,18 +1678,26 @@
   Formbuilder.registerField('approval', {
     name: 'Approval',
     order: 75,
-    view: "<div class='fb-approval-user'>\n    <select>\n       <option>\n          (<%- rf.getSelectedUser(rf.get(Formbuilder.options.mappings.APPROVAL.APPROVER_ID)) %>)\n      </option>\n    </select>\n</div>\n<div class=\"fb-signature form-control\">\n    <div class=\"fb-signature-placeholder\">Sign Here</div>\n    <div class=\"fb-signature-pad\"></div>\n</div>\n<button class=\"btn btn-default btn-xs\">Clear</button>",
+    view: "<div class='fb-approval-user'>\n    <select>\n       <option>\n           <% if (rf.get(Formbuilder.options.mappings.APPROVAL.APPROVER_TYPE) == 1) { %>\n              Any User\n           <% } else { %>\n            (<%- rf.getSelectedUser(rf.get(Formbuilder.options.mappings.APPROVAL.APPROVER_ID)) %>)\n          <% }%>\n      </option>\n    </select>\n</div>\n<div class=\"fb-signature form-control\">\n    <div class=\"fb-signature-placeholder\">Sign Here</div>\n    <div class=\"fb-signature-pad\"></div>\n</div>\n<button class=\"btn btn-default btn-xs\">Clear</button>",
     edit: "<%= Formbuilder.templates['edit/approval_options']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-approval\"></span> Approval",
+    onEdit: function(model) {
+      return $('.fb-approval-user-select').select2();
+    },
     defaultAttributes: function(attrs, formbuilder) {
       attrs.initialize = function() {
         return this.on("change", function(model) {
           var selectUser;
-          selectUser = this.get('options.approver');
-          if (selectUser !== void 0) {
-            selectUser = JSON.parse(selectUser);
-            model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_ID, parseInt(selectUser.id));
-            return model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_NAME, selectUser.name);
+          if (parseInt(this.get(Formbuilder.options.mappings.APPROVAL.APPROVER_TYPE)) === 1) {
+            model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_ID, void 0);
+            return model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_NAME, void 0);
+          } else {
+            selectUser = this.get('options.approver');
+            if (selectUser !== void 0) {
+              selectUser = JSON.parse(selectUser);
+              model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_ID, parseInt(selectUser.id));
+              return model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_NAME, selectUser.name);
+            }
           }
         });
       };
@@ -1697,7 +1705,6 @@
         return formbuilder.attr('users');
       };
       attrs.getSelectedUser = function() {
-        console.log(this.get(Formbuilder.options.mappings.APPROVAL.APPROVER_NAME));
         if (this.options) {
           return this.options.approver_name;
         } else {
@@ -1707,7 +1714,7 @@
       attrs.showUsers = function() {
         return parseInt(this.get(Formbuilder.options.mappings.APPROVAL.APPROVER_TYPE)) === 2;
       };
-      attrs.options.approver_type = 2;
+      attrs.options.approver_type = 1;
       return attrs;
     }
   });
@@ -2236,21 +2243,21 @@ __p += '<div class=\'fb-edit-section-header\'>Approver</div>\n<div>\n    <div>\n
 ((__t = ( Formbuilder.options.mappings.APPROVAL.APPROVER_TYPE )) == null ? '' : __t) +
 '\'>\n            Specify Approver\n        </label>\n    </div>\n    ';
  if (rf.showUsers()) { ;
-__p += '\n        <div>\n            <select data-rv-value="model.options.approver">\n                ';
+__p += '\n    <div>\n        <select class="fb-approval-user-select" data-rv-value="model.options.approver">\n            ';
 
-                users = rf.getUsers()
-                for (i in (users || [])) {
-                    user = users[i]
-                ;
-__p += '\n                    <option value=\'' +
+            users = rf.getUsers()
+            for (i in (users || [])) {
+            user = users[i]
+            ;
+__p += '\n            <option value=\'' +
 ((__t = ( JSON.stringify(user) )) == null ? '' : __t) +
-'\'>\n                        ' +
+'\'>\n                ' +
 ((__t = ( user.name )) == null ? '' : __t) +
-'\n                    </option>\n                ';
+'\n            </option>\n            ';
  } ;
-__p += '\n            </select>\n        </div>\n    ';
+__p += '\n        </select>\n    </div>\n    ';
  } ;
-__p += '\n\n</div>\n';
+__p += '\n</div>\n\n';
 
 }
 return __p
