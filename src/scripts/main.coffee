@@ -48,12 +48,14 @@ class FormbuilderModel extends Backbone.DeepModel
     parent = @conditionalParent()
     options = []
     if parent
-      options = _.clone(parent.answers())
-      options.unshift({'uuid': '', 'label': '[No Selection]'})
-      if selected
-        triggerValues = @get(Formbuilder.options.mappings.CONDITIONAL_VALUES) || []
-        options = _.filter options, (trigger) -> trigger.uuid in triggerValues
-
+      if parent.get('type') == 'approval'
+        options = 'Is Approved'
+      else
+        options = _.clone(parent.answers())
+        options.unshift({'uuid': '', 'label': '[No Selection]'})
+        if selected
+          triggerValues = @get(Formbuilder.options.mappings.CONDITIONAL_VALUES) || []
+          options = _.filter options, (trigger) -> trigger.uuid in triggerValues
     options
 
   isValid: ()->
@@ -109,7 +111,7 @@ class FormbuilderCollection extends Backbone.Collection
   findDataSourceFields: () -> @where({'type': 'datasource'})
   findConditionalTriggers: (child) ->
     items = @filter (model) ->
-      correctType = model.get('type') in ['dropdown', 'checkbox', 'radio']
+      correctType = model.get('type') in ['dropdown', 'checkbox', 'radio', 'approval']
       differentModel = model != child
       hasNoParent = !model.hasParent()
       correctType and differentModel and hasNoParent

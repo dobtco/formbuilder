@@ -38,6 +38,9 @@ Formbuilder.registerField 'approval',
   defaultAttributes: (attrs, formbuilder) ->
     attrs.initialize = () ->
       @on "change", (model) ->
+        parent = @conditionalParent()
+        if parent.get('type') == 'approval'
+          model.set(Formbuilder.options.mappings.CONDITIONAL_VALUES, 1)
         if parseInt(@get(Formbuilder.options.mappings.APPROVAL.APPROVER_TYPE)) == 1
           model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_ID, undefined)
           model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_NAME, undefined)
