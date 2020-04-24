@@ -570,6 +570,9 @@ class EditFieldView extends Backbone.View
     @parentView.editView = undefined
     @parentView.createAndShowEditView(@model)
 
+  resetConditional: ->
+    @model.unset(Formbuilder.options.mappings.CONDITIONAL_VALUES)
+
   remove: ->
     @parentView.editView = undefined
     @parentView.$el.find("[data-target=\"#addField\"]").click()
@@ -1045,7 +1048,6 @@ class Formbuilder
       APPROVAL:
         APPROVER_TYPE: 'options.approver_type'
         APPROVER_ID: 'options.approver_id'
-        APPROVER_NAME: 'options.approver_name'
 
     change:
       INCLUDE_SCORING: ->
@@ -1054,6 +1056,7 @@ class Formbuilder
         @reset()
       CONDITIONAL_PARENT: ->
         @reset()
+        @resetConditional()
       CONDITIONAL_VALUES: ->
         @reset()
       'DATA_SOURCE.DATA_SOURCE': ->

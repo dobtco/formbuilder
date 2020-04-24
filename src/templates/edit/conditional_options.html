@@ -1,14 +1,14 @@
 <% if (rf.canBeConditionallyDisplayed()) { %>
     <div class="fb-edit-section-conditional-wrapper">
-    <div class='fb-edit-section-header'>Conditionally Display
-        <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Checkbox, Radio and Dropdown elements can be used to conditionally trigger the display of elements">
-            <span class="glyphicon glyphicon-question-sign"></span>
-        </span>
-        <script>
-          $('[data-toggle="tooltip"]').tooltip()
-        </script>
+        <div class='fb-edit-section-header'>Conditionally Display
+            <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Checkbox, Radio and Dropdown elements can be used to conditionally trigger the display of elements">
+                <span class="glyphicon glyphicon-question-sign"></span>
+            </span>
+            <script>
+              $('[data-toggle="tooltip"]').tooltip()
+            </script>
 
-    </div>
+        </div>
     <%
         var list = rf.collection.findConditionalTriggers(rf);
         if (list.length) { %>
@@ -49,3 +49,4 @@
     <% } %>
     <div id="warning-message" class="alert alert-danger" style="display:none">Please ensure that conditional values are selected</div>
     </div>
+</div>

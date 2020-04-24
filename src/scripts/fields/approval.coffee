@@ -39,25 +39,35 @@ Formbuilder.registerField 'approval',
     attrs.initialize = () ->
       @on "change", (model) ->
         parent = @conditionalParent()
-        if parent.get('type') == 'approval'
+        if parent && parent.get('type') == 'approval'
           model.set(Formbuilder.options.mappings.CONDITIONAL_VALUES, 1)
+
         if parseInt(@get(Formbuilder.options.mappings.APPROVAL.APPROVER_TYPE)) == 1
           model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_ID, undefined)
-          model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_NAME, undefined)
         else
           selectUser = @get('options.approver')
           if (selectUser) != undefined
             selectUser = JSON.parse(selectUser)
             model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_ID, parseInt(selectUser.id))
-            model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_NAME, selectUser.name)
 
-    attrs.getUsers = () ->
-      formbuilder.attr('users')
+    attrs.getApprovers = () ->
+      formbuilder.attr('approvers')
+
+    attrs.getSelectedUserName = (selectUser) ->
+      if selectUser
+         selectUser.full_name + ' (' + selectUser.username + ')'
 
     attrs.getSelectedUser = () ->
-      if @options then @options.approver_name else @get(Formbuilder.options.mappings.APPROVAL.APPROVER_NAME)
+      if @options
+        user_id = options.approver_id
+      else
+        user_id = @get(Formbuilder.options.mappings.APPROVAL.APPROVER_ID)
 
-    attrs.showUsers = () ->
+      approvers = @getApprovers()
+      user = approvers.filter (item) -> item.id == user_id
+      @getSelectedUserName(user[0])
+
+    attrs.showApprovers = () ->
       (parseInt(@get(Formbuilder.options.mappings.APPROVAL.APPROVER_TYPE)) == 2)
 
     attrs.options.approver_type = 1

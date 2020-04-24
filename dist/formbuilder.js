@@ -899,6 +899,10 @@
       return this.parentView.createAndShowEditView(this.model);
     };
 
+    EditFieldView.prototype.resetConditional = function() {
+      return this.model.unset(Formbuilder.options.mappings.CONDITIONAL_VALUES);
+    };
+
     EditFieldView.prototype.remove = function() {
       this.parentView.editView = void 0;
       this.parentView.$el.find("[data-target=\"#addField\"]").click();
@@ -1521,8 +1525,7 @@
         LENGTH_UNITS: 'options.min_max_length_units',
         APPROVAL: {
           APPROVER_TYPE: 'options.approver_type',
-          APPROVER_ID: 'options.approver_id',
-          APPROVER_NAME: 'options.approver_name'
+          APPROVER_ID: 'options.approver_id'
         }
       },
       change: {
@@ -1533,7 +1536,8 @@
           return this.reset();
         },
         CONDITIONAL_PARENT: function() {
-          return this.reset();
+          this.reset();
+          return this.resetConditional();
         },
         CONDITIONAL_VALUES: function() {
           return this.reset();
@@ -1693,33 +1697,42 @@
         return this.on("change", function(model) {
           var parent, selectUser;
           parent = this.conditionalParent();
-          if (parent.get('type') === 'approval') {
+          if (parent && parent.get('type') === 'approval') {
             model.set(Formbuilder.options.mappings.CONDITIONAL_VALUES, 1);
           }
           if (parseInt(this.get(Formbuilder.options.mappings.APPROVAL.APPROVER_TYPE)) === 1) {
-            model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_ID, void 0);
-            return model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_NAME, void 0);
+            return model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_ID, void 0);
           } else {
             selectUser = this.get('options.approver');
             if (selectUser !== void 0) {
               selectUser = JSON.parse(selectUser);
-              model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_ID, parseInt(selectUser.id));
-              return model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_NAME, selectUser.name);
+              return model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_ID, parseInt(selectUser.id));
             }
           }
         });
       };
-      attrs.getUsers = function() {
-        return formbuilder.attr('users');
+      attrs.getApprovers = function() {
+        return formbuilder.attr('approvers');
       };
-      attrs.getSelectedUser = function() {
-        if (this.options) {
-          return this.options.approver_name;
-        } else {
-          return this.get(Formbuilder.options.mappings.APPROVAL.APPROVER_NAME);
+      attrs.getSelectedUserName = function(selectUser) {
+        if (selectUser) {
+          return selectUser.full_name + ' (' + selectUser.username + ')';
         }
       };
-      attrs.showUsers = function() {
+      attrs.getSelectedUser = function() {
+        var approvers, user, user_id;
+        if (this.options) {
+          user_id = options.approver_id;
+        } else {
+          user_id = this.get(Formbuilder.options.mappings.APPROVAL.APPROVER_ID);
+        }
+        approvers = this.getApprovers();
+        user = approvers.filter(function(item) {
+          return item.id === user_id;
+        });
+        return this.getSelectedUserName(user[0]);
+      };
+      attrs.showApprovers = function() {
         return parseInt(this.get(Formbuilder.options.mappings.APPROVAL.APPROVER_TYPE)) === 2;
       };
       attrs.options.approver_type = 1;
@@ -2250,17 +2263,17 @@ __p += '<div class=\'fb-edit-section-header\'>Approver</div>\n<div>\n    <div>\n
 '\'>\n            Any user can approve\n        </label>\n    </div>\n    <div>\n        <label>\n            <input type="radio" id="select_user" name="approver_type" value="2" data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.APPROVAL.APPROVER_TYPE )) == null ? '' : __t) +
 '\'>\n            Specify Approver\n        </label>\n    </div>\n    ';
- if (rf.showUsers()) { ;
+ if (rf.showApprovers()) { ;
 __p += '\n    <div>\n        <select class="fb-approval-user-select" data-rv-value="model.options.approver">\n            ';
 
-            users = rf.getUsers()
+            users = rf.getApprovers()
             for (i in (users || [])) {
             user = users[i]
             ;
 __p += '\n            <option value=\'' +
 ((__t = ( JSON.stringify(user) )) == null ? '' : __t) +
 '\'>\n                ' +
-((__t = ( user.name )) == null ? '' : __t) +
+((__t = ( user.full_name + ' (' + user.username + ')' )) == null ? '' : __t) +
 '\n            </option>\n            ';
  } ;
 __p += '\n        </select>\n    </div>\n    ';
@@ -2371,7 +2384,7 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 
  if (rf.canBeConditionallyDisplayed()) { ;
-__p += '\n    <div class="fb-edit-section-conditional-wrapper">\n    <div class=\'fb-edit-section-header\'>Conditionally Display\n        <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Checkbox, Radio and Dropdown elements can be used to conditionally trigger the display of elements">\n            <span class="glyphicon glyphicon-question-sign"></span>\n        </span>\n        <script>\n          $(\'[data-toggle="tooltip"]\').tooltip()\n        </script>\n\n    </div>\n    ';
+__p += '\n    <div class="fb-edit-section-conditional-wrapper">\n        <div class=\'fb-edit-section-header\'>Conditionally Display\n            <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Checkbox, Radio and Dropdown elements can be used to conditionally trigger the display of elements">\n                <span class="glyphicon glyphicon-question-sign"></span>\n            </span>\n            <script>\n              $(\'[data-toggle="tooltip"]\').tooltip()\n            </script>\n\n        </div>\n    ';
 
         var list = rf.collection.findConditionalTriggers(rf);
         if (list.length) { ;
@@ -2418,7 +2431,7 @@ __p += '\n        No trigger elements\n        ';
  } ;
 __p += '\n    ';
  } ;
-__p += '\n    <div id="warning-message" class="alert alert-danger" style="display:none">Please ensure that conditional values are selected</div>\n    </div>\n';
+__p += '\n    <div id="warning-message" class="alert alert-danger" style="display:none">Please ensure that conditional values are selected</div>\n    </div>\n</div>\n';
 
 }
 return __p

@@ -56,17 +56,17 @@
             }
         });
 
-        Formbuilder.attr('users', [
-            {id: 1, name: 'Luke Skywalker (lukeskywalker)'},
-            {id: 2, name: 'Leia Organa (leiaorgana)'},
-            {id: 3, name: 'Darth Vader (darthvader)'},
-            {id: 4, name: 'Jabba Hutt (jabbahutt)'},
-            {id: 5, name: 'Lando Calrissian (landocalrissian)'},
-            {id: 6, name: 'Wedge Antilles (wedgeantilles)'},
-            {id: 7, name: 'Boba Fett (bobafett)'},
-            {id: 8, name: 'Emperor Palpatine (emperorpalpatine)'},
-            {id: 9, name: 'Wilhuff Tarkin (wilhuftarkin)'},
-            {id: 10, name: 'Han Solo (hansolo)'}
+        Formbuilder.attr('approvers', [
+            {id: 1, full_name: 'Luke Skywalker', username: 'lukeskywalker'},
+            {id: 2, full_name: 'Leia Organa', username: 'leiaorgana'},
+            {id: 3, full_name: 'Darth Vader', username: 'darthvader'},
+            {id: 4, full_name: 'Jabba Hutt', username: 'jabbahutt'},
+            {id: 5, full_name: 'Lando Calrissian', username: 'landocalrissian'},
+            {id: 6, full_name: 'Wedge Antilles', username: 'wedgeantilles'},
+            {id: 7, full_name: 'Boba Fett', username: 'bobafett'},
+            {id: 8, full_name: 'Emperor Palpatine', username: 'emperorpalpatine'},
+            {id: 9, full_name: 'Wilhuff Tarkin', username: 'wilhuftarkin'},
+            {id: 10, full_name: 'Han Solo', username: 'hansolo'}
         ])
 
         window.fb = new Formbuilder({
@@ -258,6 +258,19 @@
                     "uuid": "ff9f46f8-bb47-4211-b690-d884285feaf9"
                 },
                 {
+                    "type": "dropdown",
+                    "label": "dropdown",
+                    "answers": [{
+                        "label": "A",
+                        "uuid": "e9b6d89f-dcb7-4309-b605-cb461f29710c",
+                    },
+                        {
+                            "label": "B",
+                            "uuid": "8db68b97-7a97-47d7-bc01-a5df79bed381",
+                        }
+                    ],
+                },
+                {
                     "label": "Approval",
                     "type": 'approval',
                     "options": {
@@ -271,7 +284,7 @@
                     "type": 'approval',
                     "options": {
                         approver_type: 2,
-                        approver_id: undefined,
+                        approver_id: 1,
                         approver_name: undefined
                     }
                 }
