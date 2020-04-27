@@ -1726,9 +1726,9 @@
         } else {
           user_id = this.get(Formbuilder.options.mappings.APPROVAL.APPROVER_ID);
         }
-        approvers = this.getApprovers();
+        approvers = this.getApprovers() || [];
         user = approvers.filter(function(item) {
-          return item.id === user_id;
+          return parseInt(item.id) === user_id;
         });
         return this.getSelectedUserName(user[0]);
       };

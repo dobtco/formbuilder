@@ -63,8 +63,9 @@ Formbuilder.registerField 'approval',
       else
         user_id = @get(Formbuilder.options.mappings.APPROVAL.APPROVER_ID)
 
-      approvers = @getApprovers()
-      user = approvers.filter (item) -> item.id == user_id
+      approvers = @getApprovers() || []
+      user = approvers.filter (item) -> parseInt(item.id) == user_id
+
       @getSelectedUserName(user[0])
 
     attrs.showApprovers = () ->
