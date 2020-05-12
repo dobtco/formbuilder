@@ -213,6 +213,9 @@
           conditional_values = conditional.values;
           parent = this.conditionalParent();
           if (parent.get('type') === 'approval') {
+            if (!this.get(Formbuilder.options.mappings.CONDITIONAL_VALUES)) {
+              this.set(Formbuilder.options.mappings.CONDITIONAL_VALUES, 1);
+            }
             conditional_values = 1;
           }
         }

@@ -70,6 +70,8 @@ class FormbuilderModel extends Backbone.DeepModel
         conditional_values = conditional.values
         parent = @conditionalParent();
         if parent.get('type') == 'approval'
+          if !@get(Formbuilder.options.mappings.CONDITIONAL_VALUES)
+            @set(Formbuilder.options.mappings.CONDITIONAL_VALUES, 1)
           conditional_values = 1
     if ((conditional_parent && (conditional_values && conditional_values.length != 0)) || (typeof conditional_values is "undefined" && typeof conditional_parent is "undefined"))
       return true
