@@ -201,7 +201,7 @@
     };
 
     FormbuilderModel.prototype.isValid = function() {
-      var conditional, conditional_ele, conditional_parent, conditional_values, options;
+      var conditional, conditional_ele, conditional_parent, conditional_values, options, parent;
       conditional_ele = this.canBeConditionallyDisplayed();
       if (!conditional_ele) {
         return true;
@@ -209,8 +209,12 @@
         options = this.attributes.options;
         conditional = options.conditional;
         if (conditional) {
-          conditional_values = conditional.values;
           conditional_parent = conditional.parent;
+          conditional_values = conditional.values;
+          parent = this.conditionalParent();
+          if (parent.get('type') === 'approval') {
+            conditional_values = 1;
+          }
         }
       }
       if ((conditional_parent && (conditional_values && conditional_values.length !== 0)) || (typeof conditional_values === "undefined" && typeof conditional_parent === "undefined")) {
