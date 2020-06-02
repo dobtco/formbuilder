@@ -1712,8 +1712,7 @@
           } else {
             selectUser = this.get('options.approver');
             if (selectUser !== void 0) {
-              selectUser = JSON.parse(selectUser);
-              return model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_ID, parseInt(selectUser.id));
+              return model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_ID, parseInt(selectUser));
             }
           }
         });
@@ -2278,7 +2277,7 @@ __p += '\n    <div>\n        <select class="fb-approval-user-select" data-rv-val
             user = users[i]
             ;
 __p += '\n            <option value=\'' +
-((__t = ( JSON.stringify(user) )) == null ? '' : __t) +
+((__t = ( user.id )) == null ? '' : __t) +
 '\'>\n                ' +
 ((__t = ( user.full_name + ' (' + user.username + ')' )) == null ? '' : __t) +
 '\n            </option>\n            ';

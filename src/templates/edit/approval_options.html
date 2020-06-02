@@ -20,7 +20,7 @@
             for (i in (users || [])) {
             user = users[i]
             %>
-            <option value='<%= JSON.stringify(user) %>'>
+            <option value='<%= user.id %>'>
                 <%= user.full_name + ' (' + user.username + ')' %>
             </option>
             <% } %>

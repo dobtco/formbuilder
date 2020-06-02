@@ -47,8 +47,7 @@ Formbuilder.registerField 'approval',
         else
           selectUser = @get('options.approver')
           if (selectUser) != undefined
-            selectUser = JSON.parse(selectUser)
-            model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_ID, parseInt(selectUser.id))
+            model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_ID, parseInt(selectUser))
 
     attrs.getApprovers = () ->
       formbuilder.attr('approvers')
