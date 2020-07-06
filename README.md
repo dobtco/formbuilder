@@ -8,6 +8,8 @@ Formbuilder is a graphical interface for letting users build their own webforms.
 ## Demo
 [Click here](http://dobtco.github.io/formbuilder/) to see Formbuilder in action.
 
+## Add new icons to element
+If you need to add/replace icon for form element, you can find all available icons from `icon-font-demo` folder
 ## Basic usage
 ```
 <div id='formbuilder'></div>

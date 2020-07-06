@@ -180,24 +180,28 @@
       parent = this.conditionalParent();
       options = [];
       if (parent) {
-        options = _.clone(parent.answers());
-        options.unshift({
-          'uuid': '',
-          'label': '[No Selection]'
-        });
-        if (selected) {
-          triggerValues = this.get(Formbuilder.options.mappings.CONDITIONAL_VALUES) || [];
-          options = _.filter(options, function(trigger) {
-            var _ref1;
-            return _ref1 = trigger.uuid, __indexOf.call(triggerValues, _ref1) >= 0;
+        if (parent.get('type') === 'approval') {
+          options = 'Is Approved';
+        } else {
+          options = _.clone(parent.answers());
+          options.unshift({
+            'uuid': '',
+            'label': '[No Selection]'
           });
+          if (selected) {
+            triggerValues = this.get(Formbuilder.options.mappings.CONDITIONAL_VALUES) || [];
+            options = _.filter(options, function(trigger) {
+              var _ref1;
+              return _ref1 = trigger.uuid, __indexOf.call(triggerValues, _ref1) >= 0;
+            });
+          }
         }
       }
       return options;
     };
 
     FormbuilderModel.prototype.isValid = function() {
-      var conditional, conditional_ele, conditional_parent, conditional_values, options;
+      var conditional, conditional_ele, conditional_parent, conditional_values, options, parent;
       conditional_ele = this.canBeConditionallyDisplayed();
       if (!conditional_ele) {
         return true;
@@ -205,8 +209,15 @@
         options = this.attributes.options;
         conditional = options.conditional;
         if (conditional) {
-          conditional_values = conditional.values;
           conditional_parent = conditional.parent;
+          conditional_values = conditional.values;
+          parent = this.conditionalParent();
+          if (parent.get('type') === 'approval') {
+            if (!this.get(Formbuilder.options.mappings.CONDITIONAL_VALUES)) {
+              this.set(Formbuilder.options.mappings.CONDITIONAL_VALUES, 1);
+            }
+            conditional_values = 1;
+          }
         }
       }
       if ((conditional_parent && (conditional_values && conditional_values.length !== 0)) || (typeof conditional_values === "undefined" && typeof conditional_parent === "undefined")) {
@@ -281,7 +292,7 @@
       var items;
       items = this.filter(function(model) {
         var correctType, differentModel, hasNoParent, _ref2;
-        correctType = (_ref2 = model.get('type')) === 'dropdown' || _ref2 === 'checkbox' || _ref2 === 'radio';
+        correctType = (_ref2 = model.get('type')) === 'dropdown' || _ref2 === 'checkbox' || _ref2 === 'radio' || _ref2 === 'approval';
         differentModel = model !== child;
         hasNoParent = !model.hasParent();
         return correctType && differentModel && hasNoParent;
@@ -895,6 +906,10 @@
       return this.parentView.createAndShowEditView(this.model);
     };
 
+    EditFieldView.prototype.resetConditional = function() {
+      return this.model.unset(Formbuilder.options.mappings.CONDITIONAL_VALUES);
+    };
+
     EditFieldView.prototype.remove = function() {
       this.parentView.editView = void 0;
       this.parentView.$el.find("[data-target=\"#addField\"]").click();
@@ -1449,7 +1464,7 @@
       HTTP_METHOD: 'POST',
       AUTOSAVE: false,
       CLEAR_FIELD_CONFIRM: false,
-      ENABLED_FIELDS: ['text', 'checkbox', 'dropdown', 'textarea', 'radio', 'date', 'section', 'signature', 'info', 'grid', 'number', 'table', 'datasource', 'time', 'geolocation'],
+      ENABLED_FIELDS: ['text', 'checkbox', 'dropdown', 'textarea', 'radio', 'date', 'section', 'signature', 'info', 'grid', 'number', 'table', 'datasource', 'time', 'geolocation', 'approval'],
       mappings: {
         SIZE: 'options.size',
         UNITS: 'options.units',
@@ -1514,7 +1529,11 @@
         OPTIONS_PER_ROW: 'options.options_per_row',
         MINLENGTH: 'options.minlength',
         MAXLENGTH: 'options.maxlength',
-        LENGTH_UNITS: 'options.min_max_length_units'
+        LENGTH_UNITS: 'options.min_max_length_units',
+        APPROVAL: {
+          APPROVER_TYPE: 'options.approver_type',
+          APPROVER_ID: 'options.approver_id'
+        }
       },
       change: {
         INCLUDE_SCORING: function() {
@@ -1524,7 +1543,8 @@
           return this.reset();
         },
         CONDITIONAL_PARENT: function() {
-          return this.reset();
+          this.reset();
+          return this.resetConditional();
         },
         CONDITIONAL_VALUES: function() {
           return this.reset();
@@ -1536,6 +1556,9 @@
           return this.reset();
         },
         'DATA_SOURCE.FILTER': function() {
+          return this.reset();
+        },
+        'APPROVAL.APPROVER_TYPE': function() {
           return this.reset();
         }
       },
@@ -1662,6 +1685,65 @@
     view: "<div class='input-line'>\n  <span class='street'>\n    <input type='text' />\n    <label>Address</label>\n  </span>\n</div>\n\n<div class='input-line'>\n  <span class='city'>\n    <input type='text' />\n    <label>City</label>\n  </span>\n\n  <span class='state'>\n    <input type='text' />\n    <label>State / Province / Region</label>\n  </span>\n</div>\n\n<div class='input-line'>\n  <span class='zip'>\n    <input type='text' />\n    <label>Zipcode</label>\n  </span>\n\n  <span class='country'>\n    <select><option>United States</option></select>\n    <label>Country</label>\n  </span>\n</div>",
     edit: "<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-address\"></span> Address"
+  });
+
+}).call(this);
+
+(function() {
+  Formbuilder.registerField('approval', {
+    name: 'Approval',
+    order: 75,
+    view: "<div class='fb-approval-user'>\n    <select>\n       <option>\n           <% if (rf.get(Formbuilder.options.mappings.APPROVAL.APPROVER_TYPE) == 1) { %>\n              Any User\n           <% } else { %>\n            (<%- rf.getSelectedUser(rf.get(Formbuilder.options.mappings.APPROVAL.APPROVER_ID)) %>)\n          <% }%>\n      </option>\n    </select>\n</div>\n<div class=\"fb-signature form-control\">\n    <div class=\"fb-signature-placeholder\">Sign Here</div>\n    <div class=\"fb-signature-pad\"></div>\n</div>\n<button class=\"btn btn-default btn-xs\">Clear</button>",
+    edit: "<%= Formbuilder.templates['edit/approval_options']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
+    addButton: "<span class=\"fb-icon-approval\"></span> Approval",
+    onEdit: function(model) {
+      return $('.fb-approval-user-select').select2();
+    },
+    defaultAttributes: function(attrs, formbuilder) {
+      attrs.initialize = function() {
+        return this.on("change", function(model) {
+          var parent, selectUser;
+          parent = this.conditionalParent();
+          if (parent && parent.get('type') === 'approval') {
+            model.set(Formbuilder.options.mappings.CONDITIONAL_VALUES, 1);
+          }
+          if (parseInt(this.get(Formbuilder.options.mappings.APPROVAL.APPROVER_TYPE)) === 1) {
+            return model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_ID, void 0);
+          } else {
+            selectUser = this.get('options.approver');
+            if (selectUser !== void 0) {
+              return model.set(Formbuilder.options.mappings.APPROVAL.APPROVER_ID, parseInt(selectUser));
+            }
+          }
+        });
+      };
+      attrs.getApprovers = function() {
+        return formbuilder.attr('approvers');
+      };
+      attrs.getSelectedUserName = function(selectUser) {
+        if (selectUser) {
+          return selectUser.full_name + ' (' + selectUser.username + ')';
+        }
+      };
+      attrs.getSelectedUser = function() {
+        var approvers, user, user_id;
+        if (this.options) {
+          user_id = options.approver_id;
+        } else {
+          user_id = this.get(Formbuilder.options.mappings.APPROVAL.APPROVER_ID);
+        }
+        approvers = this.getApprovers() || [];
+        user = approvers.filter(function(item) {
+          return parseInt(item.id) === user_id;
+        });
+        return this.getSelectedUserName(user[0]);
+      };
+      attrs.showApprovers = function() {
+        return parseInt(this.get(Formbuilder.options.mappings.APPROVAL.APPROVER_TYPE)) === 2;
+      };
+      attrs.options.approver_type = 1;
+      return attrs;
+    }
   });
 
 }).call(this);
@@ -2177,6 +2259,37 @@
 this["Formbuilder"] = this["Formbuilder"] || {};
 this["Formbuilder"]["templates"] = this["Formbuilder"]["templates"] || {};
 
+this["Formbuilder"]["templates"]["edit/approval_options"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+__p += '<div class=\'fb-edit-section-header\'>Approver</div>\n<div>\n    <div>\n        <label>\n            <input type="radio" id="any_user" name="approver_type" value="1" data-rv-checked=\'model.' +
+((__t = ( Formbuilder.options.mappings.APPROVAL.APPROVER_TYPE )) == null ? '' : __t) +
+'\'>\n            Any user can approve\n        </label>\n    </div>\n    <div>\n        <label>\n            <input type="radio" id="select_user" name="approver_type" value="2" data-rv-checked=\'model.' +
+((__t = ( Formbuilder.options.mappings.APPROVAL.APPROVER_TYPE )) == null ? '' : __t) +
+'\'>\n            Specify Approver\n        </label>\n    </div>\n    ';
+ if (rf.showApprovers()) { ;
+__p += '\n    <div>\n        <select class="fb-approval-user-select" data-rv-value="model.options.approver">\n            ';
+
+            users = rf.getApprovers()
+            for (i in (users || [])) {
+            user = users[i]
+            ;
+__p += '\n            <option value=\'' +
+((__t = ( user.id )) == null ? '' : __t) +
+'\'>\n                ' +
+((__t = ( user.full_name + ' (' + user.username + ')' )) == null ? '' : __t) +
+'\n            </option>\n            ';
+ } ;
+__p += '\n        </select>\n    </div>\n    ';
+ } ;
+__p += '\n</div>\n\n';
+
+}
+return __p
+};
+
 this["Formbuilder"]["templates"]["edit/base"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
@@ -2277,51 +2390,54 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 
  if (rf.canBeConditionallyDisplayed()) { ;
-__p += '\n\n\n\n<div class="fb-edit-section-conditional-wrapper">\n<div class=\'fb-edit-section-header\'>Conditionally Display\n    <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Checkbox, Radio and Dropdown elements can be used to conditionally trigger the display of elements">\n        <span class="glyphicon glyphicon-question-sign"></span>\n    </span>\n    <script>\n      $(\'[data-toggle="tooltip"]\').tooltip()\n    </script>\n\n</div>\n';
-  var list = rf.collection.findConditionalTriggers(rf);
+__p += '\n    <div class="fb-edit-section-conditional-wrapper">\n        <div class=\'fb-edit-section-header\'>Conditionally Display\n            <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Checkbox, Radio and Dropdown elements can be used to conditionally trigger the display of elements">\n                <span class="glyphicon glyphicon-question-sign"></span>\n            </span>\n            <script>\n              $(\'[data-toggle="tooltip"]\').tooltip()\n            </script>\n\n        </div>\n    ';
 
-if (list.length) {
-;
-__p += '\n\n<select data-rv-value="model.' +
+        var list = rf.collection.findConditionalTriggers(rf);
+        if (list.length) { ;
+__p += '\n            <select data-rv-value="model.' +
 ((__t = ( Formbuilder.options.mappings.CONDITIONAL_PARENT )) == null ? '' : __t) +
-'">\n    <option></option>\n        ';
-
-        for (i in (list || [])) { ;
-__p += '\n    <option value="' +
+'">\n                <option></option>\n                ';
+ for (i in (list || [])) { ;
+__p += '\n                    <option value="' +
 ((__t = ( list[i].get('uuid') )) == null ? '' : __t) +
-'">\n        ' +
+'">\n                        ' +
 __e( list[i].get('label') ) +
-'\n        ';
+'\n                        ';
  if( rf.canShowReferenceID() &&  list[i].get('reference_id')) { ;
-__p += '\n        [' +
+__p += '\n                        [' +
 ((__t = ( list[i].get('reference_id') )) == null ? '' : __t) +
-']\n        ';
+']\n                        ';
  } ;
-__p += '\n    </option>\n    ';
+__p += '\n                    </option>\n                 ';
  } ;
-__p += '\n</select>\n\n\n\n\n';
+__p += '\n            </select>\n             ';
 
-
-var selectedList = rf.conditionalTriggerOptions();
-
-if (selectedList.length == 0)
-    rf.collection.clearConditionEle(rf);
-for (i in selectedList) { ;
-__p += '\n<label class="checkbox">\n    <input type=\'checkbox\' data-rv-append=\'model.' +
+            var selectedList = rf.conditionalTriggerOptions();
+            if (!Array.isArray(selectedList)) { ;
+__p += '\n                <div>\n                    <label class="checkbox">\n                        <input type=\'checkbox\' checked disabled />\n                        ' +
+((__t = ( selectedList )) == null ? '' : __t) +
+'\n                    </label>\n                </div>\n           ';
+ } else {
+                if (selectedList.length == 0)
+                    rf.collection.clearConditionEle(rf);
+                for (i in selectedList) { ;
+__p += '\n                    <label class="checkbox">\n                        <input type=\'checkbox\' data-rv-append=\'model.' +
 ((__t = ( Formbuilder.options.mappings.CONDITIONAL_VALUES )) == null ? '' : __t) +
 '\' value="' +
 ((__t = ( selectedList[i].uuid )) == null ? '' : __t) +
-'" />\n    ' +
+'" />\n                        ' +
 ((__t = ( selectedList[i].label )) == null ? '' : __t) +
-'\n</label>\n\n';
- } ;
-__p += '\n';
+'\n                    </label>\n                ';
+ }
+            }
+        ;
+__p += '\n    ';
  } else { ;
-__p += '\nNo trigger elements\n';
+__p += '\n        No trigger elements\n        ';
  } ;
-__p += '\n';
+__p += '\n    ';
  } ;
-__p += '\n<div id="warning-message" class="alert alert-danger" style="display:none">Please ensure that conditional values are selected</div>\n</div>\n';
+__p += '\n    <div id="warning-message" class="alert alert-danger" style="display:none">Please ensure that conditional values are selected</div>\n    </div>\n</div>\n';
 
 }
 return __p
@@ -2812,16 +2928,29 @@ with (obj) {
 
 
 var parent = rf.conditionalParent();
-var triggerValues = _.pluck(rf.conditionalTriggerOptions(true), 'label');
-if (parent && triggerValues.length) {
+if(parent) {
 ;
-__p += '\n<div class="fb-conditional-question">\n    <i class="fb-icon-conditional"></i>\n    <span class="fb-conditional-question-trigger">display when <span>' +
+__p += '\n<div class="fb-conditional-question">\n    <i class="fb-icon-conditional"></i>\n    ';
+
+        if(parent.get('type') == 'approval') { ;
+__p += '\n    <span class="fb-conditional-question-trigger">\n                display when <span>' +
 ((__t = ( parent.get('label') )) == null ? '' : __t) +
-'</span> is <span class="trigger-option">' +
+'</span>\n                <span class="trigger-option">' +
+((__t = ( rf.conditionalTriggerOptions(true) )) == null ? '' : __t) +
+'</span>\n            </span>\n     ';
+   } else {
+            var triggerValues = _.pluck(rf.conditionalTriggerOptions(true), 'label');
+    ;
+__p += '\n            <span class="fb-conditional-question-trigger">\n                display when <span>' +
+((__t = ( parent.get('label') )) == null ? '' : __t) +
+'</span> is\n                <span class="trigger-option">' +
 ((__t = ( triggerValues.join('</span>or<span class="trigger-option">') )) == null ? '' : __t) +
-'</span></span>\n</div>\n';
+'</span>\n            </span>\n     ';
+   }
+     ;
+__p += '\n</div>\n\n';
  } ;
-__p += '\n';
+__p += '\n\n';
 
 }
 return __p

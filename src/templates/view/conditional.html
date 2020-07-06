@@ -1,10 +1,25 @@
 <%
 var parent = rf.conditionalParent();
-var triggerValues = _.pluck(rf.conditionalTriggerOptions(true), 'label');
-if (parent && triggerValues.length) {
+if(parent) {
 %>
 <div class="fb-conditional-question">
     <i class="fb-icon-conditional"></i>
-    <span class="fb-conditional-question-trigger">display when <span><%= parent.get('label') %></span> is <span class="trigger-option"><%= triggerValues.join('</span>or<span class="trigger-option">') %></span></span>
+    <%
+        if(parent.get('type') == 'approval') { %>
+    <span class="fb-conditional-question-trigger">
+                display when <span><%= parent.get('label') %></span>
+                <span class="trigger-option"><%= rf.conditionalTriggerOptions(true) %></span>
+            </span>
+     <%   } else {
+            var triggerValues = _.pluck(rf.conditionalTriggerOptions(true), 'label');
+    %>
+            <span class="fb-conditional-question-trigger">
+                display when <span><%= parent.get('label') %></span> is
+                <span class="trigger-option"><%= triggerValues.join('</span>or<span class="trigger-option">') %></span>
+            </span>
+     <%   }
+     %>
 </div>
+
 <% } %>
+

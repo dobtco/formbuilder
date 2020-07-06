@@ -48,12 +48,14 @@ class FormbuilderModel extends Backbone.DeepModel
     parent = @conditionalParent()
     options = []
     if parent
-      options = _.clone(parent.answers())
-      options.unshift({'uuid': '', 'label': '[No Selection]'})
-      if selected
-        triggerValues = @get(Formbuilder.options.mappings.CONDITIONAL_VALUES) || []
-        options = _.filter options, (trigger) -> trigger.uuid in triggerValues
-
+      if parent.get('type') == 'approval'
+        options = 'Is Approved'
+      else
+        options = _.clone(parent.answers())
+        options.unshift({'uuid': '', 'label': '[No Selection]'})
+        if selected
+          triggerValues = @get(Formbuilder.options.mappings.CONDITIONAL_VALUES) || []
+          options = _.filter options, (trigger) -> trigger.uuid in triggerValues
     options
 
   isValid: ()->
@@ -64,8 +66,13 @@ class FormbuilderModel extends Backbone.DeepModel
       options = @attributes.options
       conditional = options.conditional
       if conditional
-        conditional_values = conditional.values
         conditional_parent = conditional.parent
+        conditional_values = conditional.values
+        parent = @conditionalParent();
+        if parent.get('type') == 'approval'
+          if !@get(Formbuilder.options.mappings.CONDITIONAL_VALUES)
+            @set(Formbuilder.options.mappings.CONDITIONAL_VALUES, 1)
+          conditional_values = 1
     if ((conditional_parent && (conditional_values && conditional_values.length != 0)) || (typeof conditional_values is "undefined" && typeof conditional_parent is "undefined"))
       return true
     else
@@ -109,7 +116,7 @@ class FormbuilderCollection extends Backbone.Collection
   findDataSourceFields: () -> @where({'type': 'datasource'})
   findConditionalTriggers: (child) ->
     items = @filter (model) ->
-      correctType = model.get('type') in ['dropdown', 'checkbox', 'radio']
+      correctType = model.get('type') in ['dropdown', 'checkbox', 'radio', 'approval']
       differentModel = model != child
       hasNoParent = !model.hasParent()
       correctType and differentModel and hasNoParent
@@ -568,6 +575,9 @@ class EditFieldView extends Backbone.View
     @parentView.editView = undefined
     @parentView.createAndShowEditView(@model)
 
+  resetConditional: ->
+    @model.unset(Formbuilder.options.mappings.CONDITIONAL_VALUES)
+
   remove: ->
     @parentView.editView = undefined
     @parentView.$el.find("[data-target=\"#addField\"]").click()
@@ -977,7 +987,7 @@ class Formbuilder
     AUTOSAVE: false
     CLEAR_FIELD_CONFIRM: false
     ENABLED_FIELDS: ['text', 'checkbox', 'dropdown', 'textarea', 'radio', 'date', 'section', 'signature', 'info',
-      'grid', 'number', 'table', 'datasource', 'time', 'geolocation']
+      'grid', 'number', 'table', 'datasource', 'time', 'geolocation', 'approval']
 
     mappings:
       SIZE: 'options.size'
@@ -1040,6 +1050,9 @@ class Formbuilder
       MINLENGTH: 'options.minlength'
       MAXLENGTH: 'options.maxlength'
       LENGTH_UNITS: 'options.min_max_length_units'
+      APPROVAL:
+        APPROVER_TYPE: 'options.approver_type'
+        APPROVER_ID: 'options.approver_id'
 
     change:
       INCLUDE_SCORING: ->
@@ -1048,6 +1061,7 @@ class Formbuilder
         @reset()
       CONDITIONAL_PARENT: ->
         @reset()
+        @resetConditional()
       CONDITIONAL_VALUES: ->
         @reset()
       'DATA_SOURCE.DATA_SOURCE': ->
@@ -1055,6 +1069,8 @@ class Formbuilder
       'DATA_SOURCE.IS_FILTERED': ->
         @reset()
       'DATA_SOURCE.FILTER': ->
+        @reset()
+      'APPROVAL.APPROVER_TYPE': ->
         @reset()
 
     dict:
