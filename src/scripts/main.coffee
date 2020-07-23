@@ -208,7 +208,12 @@ class ViewFieldView extends Backbone.View
   duplicate: (e) ->
     e.preventDefault();
     e.stopPropagation();
-    attrs = Formbuilder.helpers.clone(@model.attributes);
+    copyAttrs = Formbuilder.helpers.clone(@model.attributes);
+    attrs = Formbuilder.helpers.defaultFieldAttrs(copyAttrs.type, {})
+
+    for key of copyAttrs
+      attrs[key] = copyAttrs[key]
+
     delete attrs['id']
     delete attrs['cid']
     delete attrs['uuid']
