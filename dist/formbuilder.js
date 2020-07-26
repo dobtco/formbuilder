@@ -393,10 +393,14 @@
     };
 
     ViewFieldView.prototype.duplicate = function(e) {
-      var attrs;
+      var attrs, copyAttrs, key;
       e.preventDefault();
       e.stopPropagation();
-      attrs = Formbuilder.helpers.clone(this.model.attributes);
+      copyAttrs = Formbuilder.helpers.clone(this.model.attributes);
+      attrs = Formbuilder.helpers.defaultFieldAttrs(copyAttrs.type, {});
+      for (key in copyAttrs) {
+        attrs[key] = copyAttrs[key];
+      }
       delete attrs['id'];
       delete attrs['cid'];
       delete attrs['uuid'];
