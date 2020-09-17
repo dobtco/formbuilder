@@ -1,0 +1,20 @@
+<div class="fb-edit-section-inlineimage-wrapper">
+    <div class='fb-edit-section-header'>Add photo
+        <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Photos and other images can be uploaded next to this element">
+                <span class="glyphicon glyphicon-question-sign"></span>
+        </span>
+        <script>
+            $('[data-toggle="tooltip"]').tooltip()
+        </script>
+
+    </div>
+    <label class="checkbox">
+        <input type="checkbox" data-rv-checked='model.<%= Formbuilder.options.mappings.INLINE_IMAGES_ENABLED %>'/> Enable
+    </label>
+    <% if (rf.get(Formbuilder.options.mappings.INLINE_IMAGES_ENABLED)) { %>
+    <label class="checkbox">
+        <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.INLINE_IMAGES_REQUIRED %>'/> Required
+    </label>
+    <% } %>
+
+</div>

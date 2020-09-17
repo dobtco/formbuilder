@@ -9,6 +9,7 @@ Formbuilder.registerField 'text',
   """
 
   edit: """
+  <%= Formbuilder.templates['edit/inline_image_option']({ rf: rf }) %>
   <%= Formbuilder.templates['edit/populate_from']({ rf: rf }) %>
   <%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>
   """

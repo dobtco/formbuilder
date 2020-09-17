@@ -583,6 +583,9 @@ class EditFieldView extends Backbone.View
   resetConditional: ->
     @model.unset(Formbuilder.options.mappings.CONDITIONAL_VALUES)
 
+  resetInlineImages: ->
+    @model.unset(Formbuilder.options.mappings.INLINE_IMAGES_REQUIRED)
+
   remove: ->
     @parentView.editView = undefined
     @parentView.$el.find("[data-target=\"#addField\"]").click()
@@ -993,7 +996,9 @@ class Formbuilder
     CLEAR_FIELD_CONFIRM: false
     ENABLED_FIELDS: ['text', 'checkbox', 'dropdown', 'textarea', 'radio', 'date', 'section', 'signature', 'info',
       'grid', 'number', 'table', 'datasource', 'time', 'geolocation', 'approval']
-
+    INLINE_IMAGE_FIELDS: [
+      'text', 'info'
+    ]
     mappings:
       SIZE: 'options.size'
       UNITS: 'options.units'
@@ -1020,6 +1025,8 @@ class Formbuilder
       DEFAULT_TIME: 'options.default_time'
       DEFAULT_DATE: 'options.default_date'
       REFERENCE_ID: 'reference_id'
+      INLINE_IMAGES_ENABLED: 'options.inline_images_enabled',
+      INLINE_IMAGES_REQUIRED: 'options.inline_images_required'
       NUMERIC:
         CALCULATION_TYPE: 'options.calculation_type'
         CALCULATION_EXPRESSION: 'options.calculation_expression'
@@ -1060,6 +1067,9 @@ class Formbuilder
         APPROVER_ID: 'options.approver_id'
 
     change:
+      INLINE_IMAGES_ENABLED: ->
+        @reset()
+        @resetInlineImages();
       INCLUDE_SCORING: ->
         @reset()
       POPULATE_UUID: ->
