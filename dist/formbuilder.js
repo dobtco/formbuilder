@@ -1438,6 +1438,8 @@
         attrs[Formbuilder.options.mappings.LABEL] = 'Untitled';
         attrs[Formbuilder.options.mappings.TYPE] = type;
         attrs[Formbuilder.options.mappings.REQUIRED] = false;
+        attrs[Formbuilder.options.mappings.INLINE_IMAGES_ENABLED] = false;
+        attrs[Formbuilder.options.mappings.INLINE_IMAGES_REQUIRED] = false;
         attrs['definition'] = Formbuilder.fields[type];
         attrs['options'] = {};
         return (typeof (_base = Formbuilder.fields[type]).defaultAttributes === "function" ? _base.defaultAttributes(attrs, Formbuilder) : void 0) || attrs;
@@ -2539,15 +2541,19 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<div class="fb-edit-section-inlineimage-wrapper">\n    <div class=\'fb-edit-section-header\'>Add photo\n        <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Photos and other images can be uploaded next to this element">\n                <span class="glyphicon glyphicon-question-sign"></span>\n        </span>\n        <script>\n            $(\'[data-toggle="tooltip"]\').tooltip()\n        </script>\n\n    </div>\n    <label class="checkbox">\n        <input type="checkbox" data-rv-checked=\'model.' +
+
+ if (!rf.hasParent()) { ;
+__p += '\n<div class="fb-edit-section-inlineimage-wrapper">\n    <div class=\'fb-edit-section-header\'>Add photo\n        <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Photos and other images can be uploaded next to this element">\n                <span class="glyphicon glyphicon-question-sign"></span>\n        </span>\n        <script>\n            $(\'[data-toggle="tooltip"]\').tooltip()\n        </script>\n\n    </div>\n    <label class="checkbox">\n        <input type="checkbox" data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INLINE_IMAGES_ENABLED )) == null ? '' : __t) +
 '\'/> Enable\n    </label>\n    ';
- if (rf.get(Formbuilder.options.mappings.INLINE_IMAGES_ENABLED)) { ;
+ if (rf.get(Formbuilder.options.mappings.INLINE_IMAGES_ENABLED) ) { ;
 __p += '\n    <label class="checkbox">\n        <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INLINE_IMAGES_REQUIRED )) == null ? '' : __t) +
 '\'/> Required\n    </label>\n    ';
  } ;
 __p += '\n\n</div>\n';
+ } ;
+
 
 }
 return __p
@@ -2918,6 +2924,25 @@ __p += '\n    <div class=\'fb-response-fields panel-body\'></div>\n</div>\n';
 return __p
 };
 
+this["Formbuilder"]["templates"]["view/afterelementlabel"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+__p += '<div class=\'afterelementlabel-wrapper\'>\n      ';
+ if (rf.get(Formbuilder.options.mappings.INLINE_IMAGES_ENABLED)) { ;
+__p += '\n    <span class="glyphicon glyphicon-picture"></span>\n    Inline Photo\n    ';
+ if (rf.get(Formbuilder.options.mappings.INLINE_IMAGES_REQUIRED)) { ;
+__p += '\n    <abbr title=\'required\'>*</abbr>\n    ';
+ } ;
+__p += '\n    ';
+ } ;
+__p += '\n</div>\n';
+
+}
+return __p
+};
+
 this["Formbuilder"]["templates"]["view/base"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
@@ -2932,6 +2957,8 @@ __p += '<div class=\'subtemplate-wrapper\'>\n  <div class=\'cover\'></div>\n  ' 
 ((__t = ( Formbuilder.templates['view/description']({rf: rf}) )) == null ? '' : __t) +
 '\n  ' +
 ((__t = ( Formbuilder.templates['view/duplicate_remove']({rf: rf}) )) == null ? '' : __t) +
+'\n  ' +
+((__t = ( Formbuilder.templates['view/afterelementlabel']({rf: rf}) )) == null ? '' : __t) +
 '\n</div>\n';
 
 }

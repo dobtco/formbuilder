@@ -966,6 +966,8 @@ class Formbuilder
       attrs[Formbuilder.options.mappings.LABEL] = 'Untitled'
       attrs[Formbuilder.options.mappings.TYPE] = type
       attrs[Formbuilder.options.mappings.REQUIRED] = false
+      attrs[Formbuilder.options.mappings.INLINE_IMAGES_ENABLED] = false
+      attrs[Formbuilder.options.mappings.INLINE_IMAGES_REQUIRED] = false
       attrs['definition'] = Formbuilder.fields[type]
       attrs['options'] = {}
       Formbuilder.fields[type].defaultAttributes?(attrs, Formbuilder) || attrs
