@@ -2975,6 +2975,8 @@ __p += '<div class=\'subtemplate-wrapper\'>\n  <div class=\'cover\'></div>\n  ' 
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.TYPE)].view({rf: rf}) )) == null ? '' : __t) +
 '\n  ' +
 ((__t = ( Formbuilder.templates['view/duplicate_remove']({rf: rf}) )) == null ? '' : __t) +
+'\n  ' +
+((__t = ( Formbuilder.templates['view/afterelementlabel']({rf: rf}) )) == null ? '' : __t) +
 '\n</div>\n';
 
 }
