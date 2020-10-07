@@ -583,6 +583,9 @@ class EditFieldView extends Backbone.View
   resetConditional: ->
     @model.unset(Formbuilder.options.mappings.CONDITIONAL_VALUES)
 
+  deselectReadOnly: ->
+    @model.set(Formbuilder.options.mappings.READ_ONLY, false)
+
   remove: ->
     @parentView.editView = undefined
     @parentView.$el.find("[data-target=\"#addField\"]").click()
@@ -1063,6 +1066,8 @@ class Formbuilder
       INCLUDE_SCORING: ->
         @reset()
       POPULATE_UUID: ->
+        if !@.model.get(Formbuilder.options.mappings.POPULATE_UUID)
+          @deselectReadOnly()
         @reset()
       CONDITIONAL_PARENT: ->
         @reset()

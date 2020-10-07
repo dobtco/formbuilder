@@ -25,4 +25,12 @@ if (list.length) { %>
     <%  }
     } %>
     </select>
+    <% if (rf.get(Formbuilder.options.mappings.POPULATE_UUID)) { %>
+    <div>
+        <label class="checkbox">
+            Read only
+            <input type="checkbox" data-rv-checked='model.<%= Formbuilder.options.mappings.READ_ONLY %>' />
+        </label>
+    </div>
+    <% } %>
 <% } %>

@@ -914,6 +914,10 @@
       return this.model.unset(Formbuilder.options.mappings.CONDITIONAL_VALUES);
     };
 
+    EditFieldView.prototype.deselectReadOnly = function() {
+      return this.model.set(Formbuilder.options.mappings.READ_ONLY, false);
+    };
+
     EditFieldView.prototype.remove = function() {
       this.parentView.editView = void 0;
       this.parentView.$el.find("[data-target=\"#addField\"]").click();
@@ -1544,6 +1548,9 @@
           return this.reset();
         },
         POPULATE_UUID: function() {
+          if (!this.model.get(Formbuilder.options.mappings.POPULATE_UUID)) {
+            this.deselectReadOnly();
+          }
           return this.reset();
         },
         CONDITIONAL_PARENT: function() {
@@ -2208,11 +2215,12 @@
   Formbuilder.registerField('text', {
     name: 'Text',
     order: 0,
-    view: "<input type='text' class='rf-size-<%- rf.get(Formbuilder.options.mappings.SIZE) %>' />",
+    view: "<input type='text' class='rf-size-<%- rf.get(Formbuilder.options.mappings.SIZE) %>'\n  <% if (rf.get(Formbuilder.options.mappings.READ_ONLY)) { %>\n    readonly=\"readonly\"\n  <% } %>\n/>",
     edit: "<%= Formbuilder.templates['edit/populate_from']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-text\"></span> Text",
     defaultAttributes: function(attrs) {
       attrs.options.size = 'small';
+      attrs.options.read_only = false;
       return attrs;
     }
   });
@@ -2223,11 +2231,12 @@
   Formbuilder.registerField('textarea', {
     name: 'Paragraph',
     order: 5,
-    view: "<textarea class='rf-size-<%- rf.get(Formbuilder.options.mappings.SIZE) %>'></textarea>",
+    view: "<textarea class='rf-size-<%- rf.get(Formbuilder.options.mappings.SIZE) %>'\n  <% if (rf.get(Formbuilder.options.mappings.READ_ONLY)) { %>\n    readonly=\"readonly\"\n  <% } %>\n></textarea>",
     edit: "<%= Formbuilder.templates['edit/populate_from']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-textarea\"></span> Paragraph",
     defaultAttributes: function(attrs) {
       attrs.options.size = 'small';
+      attrs.options.read_only = false;
       return attrs;
     }
   });
@@ -2660,7 +2669,13 @@ __e( listProperties[i] ) +
 '\n            </option>\n    ';
   }
     } ;
-__p += '\n    </select>\n';
+__p += '\n    </select>\n    ';
+ if (rf.get(Formbuilder.options.mappings.POPULATE_UUID)) { ;
+__p += '\n    <div>\n        <label class="checkbox">\n            Read only\n            <input type="checkbox" data-rv-checked=\'model.' +
+((__t = ( Formbuilder.options.mappings.READ_ONLY )) == null ? '' : __t) +
+'\' />\n        </label>\n    </div>\n    ';
+ } ;
+__p += '\n';
  } ;
 __p += '\n';
 
