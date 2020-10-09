@@ -5,7 +5,11 @@ Formbuilder.registerField 'text',
   order: 0
 
   view: """
-    <input type='text' class='rf-size-<%- rf.get(Formbuilder.options.mappings.SIZE) %>' />
+    <input type='text' class='rf-size-<%- rf.get(Formbuilder.options.mappings.SIZE) %>'
+      <% if (rf.get(Formbuilder.options.mappings.READ_ONLY)) { %>
+        readonly="readonly"
+      <% } %>
+    />
   """
 
   edit: """
@@ -19,4 +23,5 @@ Formbuilder.registerField 'text',
 
   defaultAttributes: (attrs) ->
     attrs.options.size = 'small'
+    attrs.options.read_only = false
     attrs

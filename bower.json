@@ -16,7 +16,6 @@
     "tests"
   ],
   "dependencies": {
-    "ie8-node-enum": "https://gist.github.com/ajb/8902451/raw/b68459289526cb76c2e22416d98d0dbd0b722fa0/ie8_node_enum.js",
     "jquery.scrollWindowTo": "https://gist.github.com/ajb/6519570/raw/cd741057495d0fb19e545a0f9a098efba3bef9c8/jquery.scrollWindowTo.js",
     "jquery": "~1.11.1",
     "jquery-ui": "~1.10.3",
