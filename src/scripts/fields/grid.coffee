@@ -2,7 +2,7 @@ Formbuilder.registerField 'grid',
 
   name: 'Layout Grid'
 
-  # Should appear last to prevent empty spaces, as it's currently hidden
+  # Should appear last to prevent empty spaces, as it will be hidden on most client sites
   order: 99
 
   element_type: 'non_input'
