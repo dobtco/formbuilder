@@ -2,7 +2,8 @@ Formbuilder.registerField 'grid',
 
   name: 'Layout Grid'
 
-  order: 30
+  # Should appear last to prevent empty spaces, as it's currently hidden
+  order: 99
 
   element_type: 'non_input'
 
@@ -67,8 +68,14 @@ Formbuilder.registerField 'grid',
   </div>
   """
 
+  # Going through a phased deprecation of grids, beginning with not allowing addition of new grids.
   addButton: """
-    <span class="fb-icon-grid"></span> Grid
+    <span id="fb-grid-add-button" class="fb-icon-grid"></span> Grid
+    <script>
+      if ($('#fb-grid-add-button').parent()) {
+        $('#fb-grid-add-button').parent().hide();
+      }
+    </script>
   """
 
   defaultAttributes: (attrs) ->
