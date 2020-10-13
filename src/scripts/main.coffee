@@ -583,13 +583,11 @@ class EditFieldView extends Backbone.View
   resetConditional: ->
     @model.unset(Formbuilder.options.mappings.CONDITIONAL_VALUES)
 
-<<<<<<< HEAD
   resetInlineImages: ->
     @model.unset(Formbuilder.options.mappings.INLINE_IMAGES_REQUIRED)
-=======
+    
   deselectReadOnly: ->
     @model.set(Formbuilder.options.mappings.READ_ONLY, false)
->>>>>>> master
 
   remove: ->
     @parentView.editView = undefined
