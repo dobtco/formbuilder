@@ -117,6 +117,12 @@ You'll need [node and npm](http://nodejs.org/) installed.
 5. Open  a new terminal and run `grunt connect`
 6. open `http://localhost:9001/` and you're all set!
 
+## Committing your changes and migrating to integral project
+1. Ensure you're running `grunt watch` while developing so that your main formbuilder.js file is up to date
+2. Run `grunt uglify` to compile the minified formbuilder.min.js file. (just for completeness, integral has its own minification)
+3. If you have made any changes to the formbuilder css, do the same for it with `grunt cssmin` (for completeness, as above)
+4. Copy the changed formbuilder.js files to integral/html/js/ext ; and formbuilder.css file to integral/html/css
+
 ## License
 MIT
 
@@ -125,11 +131,6 @@ Last time this was worked on there were issues getting a new repo set up.
 * npm install was failing to install correctly:
     * running into issues with not finding xcode while trying to install gym.
     * throwing lots of deprecation, no member named 'New' in 'v8::String', and NAN_THROW_ERRORs when installing gym
-    * failing on a package due to a no-SSL error
-* bower seems to run fine but reports connection closed with 1 byte remaining
-* Running grunt watch/connect resulted in lots of JS errors in the console including missing css and summernote library
-
-A ticket will be created for this in the meantime.
 
 Note made on the last attempt:
 
@@ -162,3 +163,11 @@ nvm use 0.8
 nvm ls
 ~~~
 
+One last thing - node-gym has lots of issues. Sometimes if will completely stop after throwing all the errors, but sometimes it will continue.
+If all else fails, completely uninstall it globally and nuke your node_modules folder and try again.
+It worked for me last time.
+~~~
+sudo npm uninstall node-gyp -g
+rm -rf node_modules
+npm install
+~~~ 
