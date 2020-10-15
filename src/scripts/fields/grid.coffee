@@ -1,5 +1,8 @@
 Formbuilder.registerField 'grid',
-
+  ###
+  This element type is undergoing a gradual culling, by way of not allowing most users to add Grid elements into their Form Templates.
+  Some more annoying clients will refuse this, so regrettably on the integral site we will support a feature for those few that will re-show the add button.
+  ###
   name: 'Layout Grid'
 
   # Should appear last to prevent empty spaces, as it will be hidden on most client sites
@@ -68,15 +71,12 @@ Formbuilder.registerField 'grid',
   </div>
   """
 
-  # Going through a phased deprecation of grids, beginning with not allowing addition of new grids.
   addButton: """
     <span id="fb-grid-add-button" class="fb-icon-grid"></span> Grid
-    <script>
-      if ($('#fb-grid-add-button').parent()) {
-        $('#fb-grid-add-button').parent().hide();
-      }
-    </script>
   """
+
+  # Will hide the button for the reasons mentioned at the top of the file.
+  hideAddButton: true
 
   defaultAttributes: (attrs) ->
     # @todo
