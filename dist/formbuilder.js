@@ -1952,12 +1952,18 @@
 
 (function() {
   Formbuilder.registerField('grid', {
+    /*
+    This element type is undergoing a gradual culling, by way of not allowing most users to add Grid elements into their Form Templates.
+    Some more annoying clients will refuse this, so regrettably on the integral site we will support a feature for those few that will re-show the add button.
+    */
+
     name: 'Layout Grid',
-    order: 30,
+    order: 99,
     element_type: 'non_input',
     view: "<label class='section-name'><%- rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<table class=\"response-field-grid-table\">\n</table>\n<p><%- rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>",
     edit: "<div class=\"fb-edit-section-header\">Details</div>\n<div class=\"fb-common-wrapper\">\n    <div class=\"fb-label-description\">\n      <input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.LABEL %>\">\n      <textarea data-rv-input=\"model.<%= Formbuilder.options.mappings.DESCRIPTION %>\" placeholder=\"Add a longer description to this field\">\n      </textarea>\n    </div>\n    <label class=\"checkbox\">\n       <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.GRID.FULL_WIDTH %>' /> Display full width?\n    </label>\n    <label class=\"checkbox\">\n       <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.GRID.FIRST_ROW_HEADINGS%>' /> First row headings?\n    </label>\n    <div class='fb-edit-section-header'>Number of Columns</div>\n      <select data-rv-value=\"model.<%= Formbuilder.options.mappings.GRID.NUMCOLS %>\">\n          <option value=\"1\">1</option>\n          <option value=\"2\">2</option>\n          <option value=\"3\">3</option>\n          <option value=\"4\">4</option>\n          <option value=\"5\">5</option>\n          <option value=\"6\">6</option>\n          <option value=\"7\">7</option>\n          <option value=\"8\">8</option>\n          <option value=\"9\">9</option>\n          <option value=\"10\">10</option>\n      </select>\n    <div class='fb-edit-section-header'>Number of Rows</div>\n      <select data-rv-value=\"model.<%= Formbuilder.options.mappings.GRID.NUMROWS %>\">\n          <option value=\"1\">1</option>\n          <option value=\"2\">2</option>\n          <option value=\"3\">3</option>\n          <option value=\"4\">4</option>\n          <option value=\"5\">5</option>\n          <option value=\"6\">6</option>\n          <option value=\"7\">7</option>\n          <option value=\"8\">8</option>\n          <option value=\"9\">9</option>\n          <option value=\"10\">10</option>\n          <option value=\"11\">11</option>\n          <option value=\"12\">12</option>\n          <option value=\"13\">13</option>\n          <option value=\"14\">14</option>\n          <option value=\"15\">15</option>\n          <option value=\"16\">16</option>\n          <option value=\"17\">17</option>\n          <option value=\"18\">18</option>\n          <option value=\"19\">19</option>\n          <option value=\"20\">20</option>\n      </select>\n    </div>\n</div>",
-    addButton: "<span class=\"fb-icon-grid\"></span> Grid",
+    addButton: "<span id=\"fb-grid-add-button\" class=\"fb-icon-grid\"></span> Grid",
+    hideAddButton: true,
     defaultAttributes: function(attrs) {
       attrs.options.num_cols = 1;
       attrs.options.num_rows = 1;
@@ -2873,9 +2879,13 @@ __p += '<div class=\'fb-tab-pane active\' id=\'addField\'>\n  <div class=\'fb-ad
           .each(function(f){ ;
 __p += '\n        <a data-type="' +
 ((__t = ( f.type )) == null ? '' : __t) +
-'" class="' +
+'" id="fb-' +
+((__t = ( f.type )) == null ? '' : __t) +
+'-add-button"\n           class="' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS_SELECTOR )) == null ? '' : __t) +
-'">\n          ' +
+' ' +
+((__t = ( f.hideAddButton ? 'hidden' : '' )) == null ? '' : __t) +
+'"\n        >\n          ' +
 ((__t = ( f.addButton )) == null ? '' : __t) +
 '\n        </a>\n      ';
  }); ;
@@ -2886,9 +2896,13 @@ __p += '\n    </div>\n\n    <div class=\'section\'>\n      ';
           .each(function(f){ ;
 __p += '\n        <a data-type="' +
 ((__t = ( f.type )) == null ? '' : __t) +
-'" class="' +
+'" id="fb-' +
+((__t = ( f.type )) == null ? '' : __t) +
+'-add-button"\n           class="' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS_SELECTOR )) == null ? '' : __t) +
-'">\n          ' +
+' ' +
+((__t = ( f.hideAddButton ? 'hidden' : '' )) == null ? '' : __t) +
+'"\n        >\n          ' +
 ((__t = ( f.addButton )) == null ? '' : __t) +
 '\n        </a>\n      ';
  }); ;

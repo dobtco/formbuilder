@@ -5,7 +5,9 @@
           .sortBy('order')
           .filter(function(f){ return f.enabled; })
           .each(function(f){ %>
-        <a data-type="<%= f.type %>" class="<%= Formbuilder.options.BUTTON_CLASS_SELECTOR %>">
+        <a data-type="<%= f.type %>" id="fb-<%= f.type %>-add-button"
+           class="<%= Formbuilder.options.BUTTON_CLASS_SELECTOR %> <%= f.hideAddButton ? 'hidden' : '' %>"
+        >
           <%= f.addButton %>
         </a>
       <% }); %>
@@ -16,7 +18,9 @@
           .sortBy('order')
           .filter(function(f){ return f.enabled; })
           .each(function(f){ %>
-        <a data-type="<%= f.type %>" class="<%= Formbuilder.options.BUTTON_CLASS_SELECTOR %>">
+        <a data-type="<%= f.type %>" id="fb-<%= f.type %>-add-button"
+           class="<%= Formbuilder.options.BUTTON_CLASS_SELECTOR %> <%= f.hideAddButton ? 'hidden' : '' %>"
+        >
           <%= f.addButton %>
         </a>
       <% }); %>
