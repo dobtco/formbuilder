@@ -1030,7 +1030,7 @@ class Formbuilder
       DEFAULT_TIME: 'options.default_time'
       DEFAULT_DATE: 'options.default_date'
       REFERENCE_ID: 'reference_id'
-      INLINE_IMAGES_ENABLED: 'options.inline_images_enabled',
+      INLINE_IMAGES_ENABLED: 'options.inline_images_enabled'
       INLINE_IMAGES_REQUIRED: 'options.inline_images_required'
       NUMERIC:
         CALCULATION_TYPE: 'options.calculation_type'
@@ -1074,7 +1074,7 @@ class Formbuilder
     change:
       INLINE_IMAGES_ENABLED: ->
         @reset()
-        @resetInlineImages();
+        @resetInlineImages()
       INCLUDE_SCORING: ->
         @reset()
       POPULATE_UUID: ->
