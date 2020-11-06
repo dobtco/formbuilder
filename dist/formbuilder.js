@@ -836,6 +836,7 @@
       if (_.isString(attrs)) {
         attrs = Formbuilder.helpers.defaultFieldAttrs(attrs);
       }
+      attrs.options.disallow_duplication = true;
       attrs.options.grid = {
         col: target.prop('cellIndex'),
         row: target.parents('tr').prop('rowIndex')
@@ -851,6 +852,7 @@
       if (!options.$appendEl) {
         row = responseField.get('options.grid.row');
         col = responseField.get('options.grid.col');
+        responseField.attributes.options.disallow_duplication = true;
         append = builder.wrapperByUuid(responseField.get('parent_uuid'));
         append = append.find('tr:nth-child(' + (row + 1) + ') td:nth-child(' + (col + 1) + ')');
         if (append.length === 1) {
@@ -1550,7 +1552,8 @@
         APPROVAL: {
           APPROVER_TYPE: 'options.approver_type',
           APPROVER_ID: 'options.approver_id'
-        }
+        },
+        DISALLOW_DUPLICATION: 'options.disallow_duplication'
       },
       change: {
         INLINE_IMAGES_ENABLED: function() {
@@ -2974,7 +2977,8 @@ return __p
 
 this["Formbuilder"]["templates"]["view/base"] = function(obj) {
 obj || (obj = {});
-var __t, __p = '', __e = _.escape;
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<div class=\'subtemplate-wrapper\'>\n  <div class=\'cover\'></div>\n  ' +
 ((__t = ( Formbuilder.templates['view/conditional']({rf: rf}) )) == null ? '' : __t) +
@@ -2984,11 +2988,19 @@ __p += '<div class=\'subtemplate-wrapper\'>\n  <div class=\'cover\'></div>\n  ' 
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.TYPE)].view({rf: rf}) )) == null ? '' : __t) +
 '\n\n  ' +
 ((__t = ( Formbuilder.templates['view/description']({rf: rf}) )) == null ? '' : __t) +
-'\n  ' +
+'\n  \n  ';
+ if (rf.get(Formbuilder.options.mappings.DISALLOW_DUPLICATION)) { ;
+__p += '\n    ' +
+((__t = ( Formbuilder.templates['view/remove']({rf: rf}) )) == null ? '' : __t) +
+'\n  ';
+ } else { ;
+__p += '\n    ' +
 ((__t = ( Formbuilder.templates['view/duplicate_remove']({rf: rf}) )) == null ? '' : __t) +
-'\n  ' +
+'\n  ';
+ } ;
+__p += '\n\n  ' +
 ((__t = ( Formbuilder.templates['view/afterelementlabel']({rf: rf}) )) == null ? '' : __t) +
-'\n</div>\n';
+'\n  \n</div>\n';
 
 }
 return __p
@@ -2996,15 +3008,24 @@ return __p
 
 this["Formbuilder"]["templates"]["view/base_non_input"] = function(obj) {
 obj || (obj = {});
-var __t, __p = '', __e = _.escape;
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<div class=\'subtemplate-wrapper\'>\n  <div class=\'cover\'></div>\n  ' +
 ((__t = ( Formbuilder.templates['view/conditional']({rf: rf}) )) == null ? '' : __t) +
 '\n  ' +
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.TYPE)].view({rf: rf}) )) == null ? '' : __t) +
-'\n  ' +
+'\n\n  ';
+ if (rf.get(Formbuilder.options.mappings.DISALLOW_DUPLICATION)) { ;
+__p += '\n    ' +
+((__t = ( Formbuilder.templates['view/remove']({rf: rf}) )) == null ? '' : __t) +
+'\n  ';
+ } else { ;
+__p += '\n    ' +
 ((__t = ( Formbuilder.templates['view/duplicate_remove']({rf: rf}) )) == null ? '' : __t) +
-'\n  ' +
+'\n  ';
+ } ;
+__p += '\n\n  ' +
 ((__t = ( Formbuilder.templates['view/afterelementlabel']({rf: rf}) )) == null ? '' : __t) +
 '\n</div>\n';
 

@@ -530,6 +530,7 @@ class GridFieldView extends Backbone.View
   createField: (attrs, target) ->
     if _.isString(attrs)
       attrs = Formbuilder.helpers.defaultFieldAttrs(attrs)
+    attrs.options.disallow_duplication = true
     attrs.options.grid =
       col: target.prop('cellIndex')
       row: target.parents('tr').prop('rowIndex')
@@ -540,6 +541,7 @@ class GridFieldView extends Backbone.View
     if not options.$appendEl
       row = responseField.get('options.grid.row')
       col = responseField.get('options.grid.col')
+      responseField.attributes.options.disallow_duplication = true #this disables duplication for both parent and children
       append = builder.wrapperByUuid(responseField.get('parent_uuid'))
       append = append.find('tr:nth-child(' + (row + 1) + ') td:nth-child(' + (col + 1) + ')')
       if append.length == 1
@@ -1070,6 +1072,7 @@ class Formbuilder
       APPROVAL:
         APPROVER_TYPE: 'options.approver_type'
         APPROVER_ID: 'options.approver_id'
+      DISALLOW_DUPLICATION: 'options.disallow_duplication'
 
     change:
       INLINE_IMAGES_ENABLED: ->

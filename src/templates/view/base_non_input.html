@@ -2,6 +2,12 @@
   <div class='cover'></div>
   <%= Formbuilder.templates['view/conditional']({rf: rf}) %>
   <%= Formbuilder.fields[rf.get(Formbuilder.options.mappings.TYPE)].view({rf: rf}) %>
-  <%= Formbuilder.templates['view/duplicate_remove']({rf: rf}) %>
+
+  <% if (rf.get(Formbuilder.options.mappings.DISALLOW_DUPLICATION)) { %>
+    <%= Formbuilder.templates['view/remove']({rf: rf}) %>
+  <% } else { %>
+    <%= Formbuilder.templates['view/duplicate_remove']({rf: rf}) %>
+  <% } %>
+
   <%= Formbuilder.templates['view/afterelementlabel']({rf: rf}) %>
 </div>
