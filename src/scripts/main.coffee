@@ -1078,6 +1078,9 @@ class Formbuilder
       INLINE_IMAGES_ENABLED: ->
         @reset()
         @resetInlineImages()
+      INLINE_IMAGES_REQUIRED: ->
+        @reset()
+        @resetInlineImages()
       INCLUDE_SCORING: ->
         @reset()
       POPULATE_UUID: ->

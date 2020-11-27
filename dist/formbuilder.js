@@ -1560,6 +1560,10 @@
           this.reset();
           return this.resetInlineImages();
         },
+        INLINE_IMAGES_REQUIRED: function() {
+          this.reset();
+          return this.resetInlineImages();
+        },
         INCLUDE_SCORING: function() {
           return this.reset();
         },
@@ -2564,7 +2568,7 @@ with (obj) {
 __p += '\n<div class="fb-edit-section-inlineimage-wrapper">\n    <div class=\'fb-edit-section-header\'>Add photo\n        <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Photos and other images can be uploaded next to this element">\n                <span class="glyphicon glyphicon-question-sign"></span>\n        </span>\n        <script>\n            $(\'[data-toggle="tooltip"]\').tooltip()\n        </script>\n\n    </div>\n    <label class="checkbox">\n        <input type="checkbox" data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INLINE_IMAGES_ENABLED )) == null ? '' : __t) +
 '\'/> Enable\n    </label>\n    ';
- if (rf.get(Formbuilder.options.mappings.INLINE_IMAGES_ENABLED) ) { ;
+ if (rf.get(Formbuilder.options.mappings.INLINE_IMAGES_ENABLED) && rf.get(Formbuilder.options.mappings.REQUIRED)) { ;
 __p += '\n    <label class="checkbox">\n        <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INLINE_IMAGES_REQUIRED )) == null ? '' : __t) +
 '\'/> Required\n    </label>\n    ';
