@@ -1556,13 +1556,16 @@
         DISALLOW_DUPLICATION: 'options.disallow_duplication'
       },
       change: {
+        REQUIRED: function() {
+          this.reset();
+          return this.resetInlineImages();
+        },
         INLINE_IMAGES_ENABLED: function() {
           this.reset();
           return this.resetInlineImages();
         },
         INLINE_IMAGES_REQUIRED: function() {
-          this.reset();
-          return this.resetInlineImages();
+          return this.reset();
         },
         INCLUDE_SCORING: function() {
           return this.reset();
