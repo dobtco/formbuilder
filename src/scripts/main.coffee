@@ -119,7 +119,14 @@ class FormbuilderCollection extends Backbone.Collection
       correctType = model.get('type') in ['dropdown', 'checkbox', 'radio', 'approval']
       differentModel = model != child
       hasNoParent = !model.hasParent()
-      correctType and differentModel and hasNoParent
+      flag = true
+      uuid = child.attributes.uuid
+      uuid_1
+      parent = model.conditionalParent()
+      if parent
+        uuid_1 = parent.attributes.uuid
+        flag = uuid != uuid_1
+      correctType and differentModel and hasNoParent and flag
     items
   clearConditionEle: (conditionalChild)->
     conditionalChild.unset(Formbuilder.options.mappings.CONDITIONAL)
