@@ -295,7 +295,16 @@
         correctType = (_ref2 = model.get('type')) === 'dropdown' || _ref2 === 'checkbox' || _ref2 === 'radio' || _ref2 === 'approval';
         differentModel = model !== child;
         hasNoParent = !model.hasParent();
-        return correctType && differentModel && hasNoParent;
+        var parent = model.conditionalParent();
+        var flag = true;
+        var uuid = child.attributes.uuid;
+        var uuid_1;
+        if (parent) {
+          uuid_1 = parent.attributes.uuid;
+          flag = uuid != uuid;
+        }
+
+        return correctType && differentModel && hasNoParent && flag;
       });
       return items;
     };
