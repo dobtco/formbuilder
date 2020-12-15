@@ -220,7 +220,7 @@
           }
         }
       }
-      if ((conditional_parent && (conditional_values && conditional_values.length !== 0)) || (typeof conditional_values === "undefined" && typeof conditional_parent === "undefined")) {
+      if ((conditional_parent && (conditional_values && conditional_values.length !== 0)) || (typeof conditional_values === "undefined" && typeof conditional_parent === "undefined") || (_.isArray(conditional) && conditional.length === 0)) {
         return true;
       } else {
         return false;
@@ -291,19 +291,18 @@
     FormbuilderCollection.prototype.findConditionalTriggers = function(child) {
       var items;
       items = this.filter(function(model) {
-        var correctType, differentModel, hasNoParent, _ref2;
+        var correctType, differentModel, flag, hasNoParent, parent, uuid, uuid_1, _ref2;
         correctType = (_ref2 = model.get('type')) === 'dropdown' || _ref2 === 'checkbox' || _ref2 === 'radio' || _ref2 === 'approval';
         differentModel = model !== child;
         hasNoParent = !model.hasParent();
-        var parent = model.conditionalParent();
-        var flag = true;
-        var uuid = child.attributes.uuid;
-        var uuid_1;
+        flag = true;
+        uuid = child.attributes.uuid;
+        uuid_1;
+        parent = model.conditionalParent();
         if (parent) {
           uuid_1 = parent.attributes.uuid;
-          flag = uuid != uuid;
+          flag = uuid !== uuid_1;
         }
-
         return correctType && differentModel && hasNoParent && flag;
       });
       return items;
