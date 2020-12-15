@@ -319,15 +319,19 @@
     }
 
     ViewFieldView.insert = function(builder, view, responseField, _, options) {
-      var $replacePosition, appendEl, parentModel, replaceEl;
+      var $placeholder, $replacePosition, appendEl, parentModel, replaceEl;
       parentModel = responseField.parentModel();
       if (parentModel === void 0 || parentModel.get('type') === 'grid' || parentModel.get('type') === 'table') {
         appendEl = options.$appendEl || null;
         replaceEl = options.$replaceEl || null;
+        $placeholder = builder.$responseFields.find("a.dragdrop-placeholder");
         if (appendEl != null) {
           return appendEl.html(view.render().el);
         } else if (replaceEl != null) {
           return replaceEl.replaceWith(view.render().el);
+        } else if ($placeholder[0]) {
+          $placeholder.after(view.render().el);
+          return $placeholder.remove();
         } else if ((options.position == null) || options.position === -1) {
           return builder.$responseFields.append(view.render().el);
         } else if (options.position === 0) {
@@ -1147,6 +1151,7 @@
         stop: function(e, ui) {
           var rf;
           if (ui.item.data('type')) {
+            ui.item.after('<a class="dragdrop-placeholder">');
             rf = _this.collection.create(Formbuilder.helpers.defaultFieldAttrs(ui.item.data('type')), {
               $replaceEl: ui.item
             });
