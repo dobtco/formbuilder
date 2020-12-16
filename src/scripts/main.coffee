@@ -133,6 +133,7 @@ class ViewFieldView extends Backbone.View
     if parentModel is undefined or parentModel.get('type') is 'grid' or parentModel.get('type') is 'table'
       appendEl = options.$appendEl || null
       replaceEl = options.$replaceEl || null
+      $placeholder = builder.$responseFields.find("a.dragdrop-placeholder")
       #####
       # Calculates where to place this new field.
       #
@@ -143,6 +144,11 @@ class ViewFieldView extends Backbone.View
 
       else if replaceEl?
         replaceEl.replaceWith(view.render().el)
+
+# If a dragdrop placeholder been left for us to insert after? (workaround because backbone kills the replaceEl before this point)
+      else if ($placeholder[0])
+        $placeholder.after(view.render().el)
+        $placeholder.remove()
 
 # Are we adding to the bottom?
       else if !options.position? || options.position == -1
@@ -769,6 +775,7 @@ class BuilderView extends Backbone.View
       placeholder: 'sortable-placeholder'
       stop: (e, ui) =>
         if ui.item.data('type')
+          ui.item.after '<a class="dragdrop-placeholder">' #backbone kills the original placeholder before element is placed so leave something to target
           rf = @collection.create Formbuilder.helpers.defaultFieldAttrs(ui.item.data('type')), {$replaceEl: ui.item}
           @createAndShowEditView(rf)
 

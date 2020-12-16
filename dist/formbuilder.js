@@ -319,15 +319,19 @@
     }
 
     ViewFieldView.insert = function(builder, view, responseField, _, options) {
-      var $replacePosition, appendEl, parentModel, replaceEl;
+      var $placeholder, $replacePosition, appendEl, parentModel, replaceEl;
       parentModel = responseField.parentModel();
       if (parentModel === void 0 || parentModel.get('type') === 'grid' || parentModel.get('type') === 'table') {
         appendEl = options.$appendEl || null;
         replaceEl = options.$replaceEl || null;
+        $placeholder = builder.$responseFields.find("a.dragdrop-placeholder");
         if (appendEl != null) {
           return appendEl.html(view.render().el);
         } else if (replaceEl != null) {
           return replaceEl.replaceWith(view.render().el);
+        } else if ($placeholder[0]) {
+          $placeholder.after(view.render().el);
+          return $placeholder.remove();
         } else if ((options.position == null) || options.position === -1) {
           return builder.$responseFields.append(view.render().el);
         } else if (options.position === 0) {
@@ -1151,6 +1155,7 @@
         stop: function(e, ui) {
           var rf;
           if (ui.item.data('type')) {
+            ui.item.after('<a class="dragdrop-placeholder">');
             rf = _this.collection.create(Formbuilder.helpers.defaultFieldAttrs(ui.item.data('type')), {
               $replaceEl: ui.item
             });
@@ -2571,7 +2576,7 @@ with (obj) {
 __p += '\n<div class="fb-edit-section-inlineimage-wrapper">\n    <div class=\'fb-edit-section-header\'>Add photo\n        <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Photos and other images can be uploaded next to this element">\n                <span class="glyphicon glyphicon-question-sign"></span>\n        </span>\n        <script>\n            $(\'[data-toggle="tooltip"]\').tooltip()\n        </script>\n\n    </div>\n    <label class="checkbox">\n        <input type="checkbox" data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INLINE_IMAGES_ENABLED )) == null ? '' : __t) +
 '\'/> Enable\n    </label>\n    ';
- if (rf.get(Formbuilder.options.mappings.INLINE_IMAGES_ENABLED) && rf.get(Formbuilder.options.mappings.REQUIRED)) { ;
+ if (rf.get(Formbuilder.options.mappings.INLINE_IMAGES_ENABLED) && (rf.get(Formbuilder.options.mappings.REQUIRED) || rf.get('type') === "info") ) { ;
 __p += '\n    <label class="checkbox">\n        <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INLINE_IMAGES_REQUIRED )) == null ? '' : __t) +
 '\'/> Required\n    </label>\n    ';

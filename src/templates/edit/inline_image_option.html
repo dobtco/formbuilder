@@ -12,7 +12,7 @@
     <label class="checkbox">
         <input type="checkbox" data-rv-checked='model.<%= Formbuilder.options.mappings.INLINE_IMAGES_ENABLED %>'/> Enable
     </label>
-    <% if (rf.get(Formbuilder.options.mappings.INLINE_IMAGES_ENABLED) && rf.get(Formbuilder.options.mappings.REQUIRED)) { %>
+    <% if (rf.get(Formbuilder.options.mappings.INLINE_IMAGES_ENABLED) && (rf.get(Formbuilder.options.mappings.REQUIRED) || rf.get('type') === "info") ) { %>
     <label class="checkbox">
         <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.INLINE_IMAGES_REQUIRED %>'/> Required
     </label>
