@@ -119,9 +119,8 @@ You'll need [node and npm](http://nodejs.org/) installed.
 
 ## Committing your changes and migrating to integral project
 1. Ensure you're running `grunt watch` while developing so that your main formbuilder.js file is up to date
-2. Run `grunt uglify` to compile the minified formbuilder.min.js file. (just for completeness, integral has its own minification)
-3. If you have made any changes to the formbuilder css, do the same for it with `grunt cssmin` (for completeness, as above)
-4. Copy the changed formbuilder.js files to integral/html/js/ext ; and formbuilder.css file to integral/html/css
+2. If you have made any changes to the formbuilder css, do the same for it with `grunt cssmin` (for completeness, as above)
+3. Copy the changed formbuilder.js files to integral/html/js/ext ; and formbuilder.css file to integral/html/css
 
 ## License
 MIT
