@@ -32,6 +32,30 @@ class FormbuilderModel extends Backbone.DeepModel
     parent and parent.get('type') is 'grid'
   canBeConditionallyDisplayed: () -> !@inTable() and !@inGrid() and Formbuilder.conditionalFunctionality
   canShowReferenceID: () -> Formbuilder.showReferenceIDFunctionality
+
+  findConditionalParent: () ->
+    parentUuid = @get(Formbuilder.options.mappings.CONDITIONAL_PARENT)
+    size = this.collection.length;
+    count = 0;
+    uuids = [];
+    if parentUuid
+      parent = this.collection.findWhereUuid(parentUuid);
+      uuids.push(parent.attributes.uuid);
+      if parent.conditionalParent()
+        ancest = parent.conditionalParent();
+        uuids.push(ancest.attributes.uuid);
+        temp = ancest;
+        while temp
+          count++;
+          if count == (size - 1)
+            return uuids;
+          ancest = temp;
+          uuids.push(temp.attributes.uuid);
+          temp = temp.conditionalParent();
+        return uuids;
+      return uuids;
+
+
   conditionalParent: () ->
     parentUuid = @get(Formbuilder.options.mappings.CONDITIONAL_PARENT)
     if parentUuid
@@ -69,11 +93,14 @@ class FormbuilderModel extends Backbone.DeepModel
         conditional_parent = conditional.parent
         conditional_values = conditional.values
         parent = @conditionalParent();
+
         if parent && parent.get('type') == 'approval'
           if !@get(Formbuilder.options.mappings.CONDITIONAL_VALUES)
             @set(Formbuilder.options.mappings.CONDITIONAL_VALUES, 1)
           conditional_values = 1
-    if ((conditional_parent && (conditional_values && conditional_values.length != 0)) || (typeof conditional_values is "undefined" && typeof conditional_parent is "undefined") || (_.isArray(conditional) && conditional.length == 0))
+
+    flag = (_.isArray(conditional) && conditional.length == 0) || (conditional_parent == "" && typeof conditional_values is "undefined");
+    if ((conditional_parent && (conditional_values && conditional_values.length != 0)) || (typeof conditional_values is "undefined" && typeof conditional_parent is "undefined") || flag)
       return true
     else
       return false
@@ -121,11 +148,18 @@ class FormbuilderCollection extends Backbone.Collection
       hasNoParent = !model.hasParent()
       flag = true
       uuid = child.attributes.uuid
-      uuid_1
+      uuid_parent
+      ascent
       parent = model.conditionalParent()
       if parent
-        uuid_1 = parent.attributes.uuid
-        flag = uuid != uuid_1
+        ascent = model.findConditionalParent()
+        uuid_parent = parent.attributes.uuid
+        if ascent
+          if ascent.lenth > 0
+            for a in ascent
+              if a == uuid
+                flag = false;
+        flag = (uuid != uuid_parent) && flag
       correctType and differentModel and hasNoParent and flag
     items
   clearConditionEle: (conditionalChild)->

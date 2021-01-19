@@ -154,6 +154,34 @@
       return Formbuilder.showReferenceIDFunctionality;
     };
 
+    FormbuilderModel.prototype.findConditionalParent = function() {
+      var ancest, count, parent, parentUuid, size, temp, uuids;
+      parentUuid = this.get(Formbuilder.options.mappings.CONDITIONAL_PARENT);
+      size = this.collection.length;
+      count = 0;
+      uuids = [];
+      if (parentUuid) {
+        parent = this.collection.findWhereUuid(parentUuid);
+        uuids.push(parent.attributes.uuid);
+        if (parent.conditionalParent()) {
+          ancest = parent.conditionalParent();
+          uuids.push(ancest.attributes.uuid);
+          temp = ancest;
+          while (temp) {
+            count++;
+            if (count === (size - 1)) {
+              return uuids;
+            }
+            ancest = temp;
+            uuids.push(temp.attributes.uuid);
+            temp = temp.conditionalParent();
+          }
+          return uuids;
+        }
+        return uuids;
+      }
+    };
+
     FormbuilderModel.prototype.conditionalParent = function() {
       var parentUuid;
       parentUuid = this.get(Formbuilder.options.mappings.CONDITIONAL_PARENT);
@@ -201,7 +229,7 @@
     };
 
     FormbuilderModel.prototype.isValid = function() {
-      var conditional, conditional_ele, conditional_parent, conditional_values, options, parent;
+      var conditional, conditional_ele, conditional_parent, conditional_values, flag, options, parent;
       conditional_ele = this.canBeConditionallyDisplayed();
       if (!conditional_ele) {
         return true;
@@ -220,7 +248,8 @@
           }
         }
       }
-      if ((conditional_parent && (conditional_values && conditional_values.length !== 0)) || (typeof conditional_values === "undefined" && typeof conditional_parent === "undefined") || (_.isArray(conditional) && conditional.length === 0)) {
+      flag = (_.isArray(conditional) && conditional.length === 0) || (conditional_parent === "" && typeof conditional_values === "undefined");
+      if ((conditional_parent && (conditional_values && conditional_values.length !== 0)) || (typeof conditional_values === "undefined" && typeof conditional_parent === "undefined") || flag) {
         return true;
       } else {
         return false;
@@ -291,17 +320,29 @@
     FormbuilderCollection.prototype.findConditionalTriggers = function(child) {
       var items;
       items = this.filter(function(model) {
-        var correctType, differentModel, flag, hasNoParent, parent, uuid, uuid_1, _ref2;
+        var a, ascent, correctType, differentModel, flag, hasNoParent, parent, uuid, uuid_parent, _i, _len, _ref2;
         correctType = (_ref2 = model.get('type')) === 'dropdown' || _ref2 === 'checkbox' || _ref2 === 'radio' || _ref2 === 'approval';
         differentModel = model !== child;
         hasNoParent = !model.hasParent();
         flag = true;
         uuid = child.attributes.uuid;
-        uuid_1;
+        uuid_parent;
+        ascent;
         parent = model.conditionalParent();
         if (parent) {
-          uuid_1 = parent.attributes.uuid;
-          flag = uuid !== uuid_1;
+          ascent = model.findConditionalParent();
+          uuid_parent = parent.attributes.uuid;
+          if (ascent) {
+            if (ascent.lenth > 0) {
+              for (_i = 0, _len = ascent.length; _i < _len; _i++) {
+                a = ascent[_i];
+                if (a === uuid) {
+                  flag = false;
+                }
+              }
+            }
+          }
+          flag = (uuid !== uuid_parent) && flag;
         }
         return correctType && differentModel && hasNoParent && flag;
       });
