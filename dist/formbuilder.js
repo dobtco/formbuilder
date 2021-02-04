@@ -367,15 +367,19 @@
     }
 
     ViewFieldView.insert = function(builder, view, responseField, _, options) {
-      var $replacePosition, appendEl, parentModel, replaceEl;
+      var $placeholder, $replacePosition, appendEl, parentModel, replaceEl;
       parentModel = responseField.parentModel();
       if (parentModel === void 0 || parentModel.get('type') === 'grid' || parentModel.get('type') === 'table') {
         appendEl = options.$appendEl || null;
         replaceEl = options.$replaceEl || null;
+        $placeholder = builder.$responseFields.find("a.dragdrop-placeholder");
         if (appendEl != null) {
           return appendEl.html(view.render().el);
         } else if (replaceEl != null) {
           return replaceEl.replaceWith(view.render().el);
+        } else if ($placeholder[0]) {
+          $placeholder.after(view.render().el);
+          return $placeholder.remove();
         } else if ((options.position == null) || options.position === -1) {
           return builder.$responseFields.append(view.render().el);
         } else if (options.position === 0) {
@@ -964,6 +968,10 @@
       return this.model.unset(Formbuilder.options.mappings.CONDITIONAL_VALUES);
     };
 
+    EditFieldView.prototype.resetInlineImages = function() {
+      return this.model.unset(Formbuilder.options.mappings.INLINE_IMAGES_REQUIRED);
+    };
+
     EditFieldView.prototype.deselectReadOnly = function() {
       return this.model.set(Formbuilder.options.mappings.READ_ONLY, false);
     };
@@ -1195,6 +1203,7 @@
         stop: function(e, ui) {
           var rf;
           if (ui.item.data('type')) {
+            ui.item.after('<a class="dragdrop-placeholder">');
             rf = _this.collection.create(Formbuilder.helpers.defaultFieldAttrs(ui.item.data('type')), {
               $replaceEl: ui.item
             });
@@ -1488,6 +1497,8 @@
         attrs[Formbuilder.options.mappings.LABEL] = 'Untitled';
         attrs[Formbuilder.options.mappings.TYPE] = type;
         attrs[Formbuilder.options.mappings.REQUIRED] = false;
+        attrs[Formbuilder.options.mappings.INLINE_IMAGES_ENABLED] = false;
+        attrs[Formbuilder.options.mappings.INLINE_IMAGES_REQUIRED] = false;
         attrs['definition'] = Formbuilder.fields[type];
         attrs['options'] = {};
         return (typeof (_base = Formbuilder.fields[type]).defaultAttributes === "function" ? _base.defaultAttributes(attrs, Formbuilder) : void 0) || attrs;
@@ -1523,6 +1534,7 @@
       AUTOSAVE: false,
       CLEAR_FIELD_CONFIRM: false,
       ENABLED_FIELDS: ['text', 'checkbox', 'dropdown', 'textarea', 'radio', 'date', 'section', 'signature', 'info', 'grid', 'number', 'table', 'datasource', 'time', 'geolocation', 'approval'],
+      INLINE_IMAGE_FIELDS: ['text', 'info'],
       mappings: {
         SIZE: 'options.size',
         UNITS: 'options.units',
@@ -1549,6 +1561,8 @@
         DEFAULT_TIME: 'options.default_time',
         DEFAULT_DATE: 'options.default_date',
         REFERENCE_ID: 'reference_id',
+        INLINE_IMAGES_ENABLED: 'options.inline_images_enabled',
+        INLINE_IMAGES_REQUIRED: 'options.inline_images_required',
         NUMERIC: {
           CALCULATION_TYPE: 'options.calculation_type',
           CALCULATION_EXPRESSION: 'options.calculation_expression',
@@ -1595,6 +1609,17 @@
         DISALLOW_DUPLICATION: 'options.disallow_duplication'
       },
       change: {
+        REQUIRED: function() {
+          this.reset();
+          return this.resetInlineImages();
+        },
+        INLINE_IMAGES_ENABLED: function() {
+          this.reset();
+          return this.resetInlineImages();
+        },
+        INLINE_IMAGES_REQUIRED: function() {
+          return this.reset();
+        },
         INCLUDE_SCORING: function() {
           return this.reset();
         },
@@ -2025,7 +2050,7 @@
     order: 20,
     element_type: 'non_input',
     view: "<label class='section-name'><%- rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>",
-    edit: "<div class=\"fb-edit-section-header\">Details</div>\n<div class=\"fb-common-wrapper\">\n  <div class=\"fb-label-description\">\n    <input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.LABEL %>\">\n  </div>\n  <textarea class=\"fb-info-editor\" style=\"display:none;\" data-rv-input=\"model.<%= Formbuilder.options.mappings.DESCRIPTION %>\">\n  </textarea>\n</div>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
+    edit: "<div class=\"fb-edit-section-header\">Details</div>\n<div class=\"fb-common-wrapper\">\n  <div class=\"fb-label-description\">\n    <input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.LABEL %>\">\n  </div>\n  <textarea class=\"fb-info-editor\" style=\"display:none;\" data-rv-input=\"model.<%= Formbuilder.options.mappings.DESCRIPTION %>\">\n  </textarea>\n</div>\n<%= Formbuilder.templates['edit/inline_image_option']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-info\"></span> Info",
     onEdit: function(model) {
       var update;
@@ -2273,7 +2298,7 @@
     name: 'Text',
     order: 0,
     view: "<input type='text' class='rf-size-<%- rf.get(Formbuilder.options.mappings.SIZE) %>'\n  <% if (rf.get(Formbuilder.options.mappings.READ_ONLY)) { %>\n    readonly=\"readonly\"\n  <% } %>\n/>",
-    edit: "<%= Formbuilder.templates['edit/populate_from']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
+    edit: "<%= Formbuilder.templates['edit/inline_image_option']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/populate_from']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-text\"></span> Text",
     defaultAttributes: function(attrs) {
       attrs.options.size = 'small';
@@ -2289,7 +2314,7 @@
     name: 'Paragraph',
     order: 5,
     view: "<textarea class='rf-size-<%- rf.get(Formbuilder.options.mappings.SIZE) %>'\n  <% if (rf.get(Formbuilder.options.mappings.READ_ONLY)) { %>\n    readonly=\"readonly\"\n  <% } %>\n></textarea>",
-    edit: "<%= Formbuilder.templates['edit/populate_from']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
+    edit: "<%= Formbuilder.templates['edit/inline_image_option']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/populate_from']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-textarea\"></span> Paragraph",
     defaultAttributes: function(attrs) {
       attrs.options.size = 'small';
@@ -2584,6 +2609,29 @@ with (obj) {
 __p += '<div class="fb-default-date-wrapper">\n    <label class="checkbox">\n        <input class="default-date" type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.DEFAULT_DATE )) == null ? '' : __t) +
 '\' />\n        Default to current date\n    </label>\n</div>\n';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["edit/inline_image_option"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ if (!rf.hasParent()) { ;
+__p += '\n<div class="fb-edit-section-inlineimage-wrapper">\n    <div class=\'fb-edit-section-header\'>Add photo\n        <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Photos and other images can be uploaded next to this element">\n                <span class="glyphicon glyphicon-question-sign"></span>\n        </span>\n        <script>\n            $(\'[data-toggle="tooltip"]\').tooltip()\n        </script>\n\n    </div>\n    <label class="checkbox">\n        <input type="checkbox" data-rv-checked=\'model.' +
+((__t = ( Formbuilder.options.mappings.INLINE_IMAGES_ENABLED )) == null ? '' : __t) +
+'\'/> Enable\n    </label>\n    ';
+ if (rf.get(Formbuilder.options.mappings.INLINE_IMAGES_ENABLED) && (rf.get(Formbuilder.options.mappings.REQUIRED) || rf.get('type') === "info") ) { ;
+__p += '\n    <label class="checkbox">\n        <input type=\'checkbox\' data-rv-checked=\'model.' +
+((__t = ( Formbuilder.options.mappings.INLINE_IMAGES_REQUIRED )) == null ? '' : __t) +
+'\'/> Required\n    </label>\n    ';
+ } ;
+__p += '\n\n</div>\n';
+ } ;
+
 
 }
 return __p
@@ -2968,6 +3016,25 @@ __p += '\n    <div class=\'fb-response-fields panel-body\'></div>\n</div>\n';
 return __p
 };
 
+this["Formbuilder"]["templates"]["view/afterelementlabel"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+__p += '<div class=\'afterelementlabel-wrapper\'>\n      ';
+ if (rf.get(Formbuilder.options.mappings.INLINE_IMAGES_ENABLED)) { ;
+__p += '\n    <span class="glyphicon glyphicon-picture"></span>\n    Inline Photo\n    ';
+ if (rf.get(Formbuilder.options.mappings.INLINE_IMAGES_REQUIRED)) { ;
+__p += '\n    <abbr title=\'required\'>*</abbr>\n    ';
+ } ;
+__p += '\n    ';
+ } ;
+__p += '\n</div>\n';
+
+}
+return __p
+};
+
 this["Formbuilder"]["templates"]["view/base"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
@@ -2991,7 +3058,9 @@ __p += '\n    ' +
 ((__t = ( Formbuilder.templates['view/duplicate_remove']({rf: rf}) )) == null ? '' : __t) +
 '\n  ';
  } ;
-__p += '\n</div>\n';
+__p += '\n\n  ' +
+((__t = ( Formbuilder.templates['view/afterelementlabel']({rf: rf}) )) == null ? '' : __t) +
+'\n  \n</div>\n';
 
 }
 return __p
@@ -3016,7 +3085,9 @@ __p += '\n    ' +
 ((__t = ( Formbuilder.templates['view/duplicate_remove']({rf: rf}) )) == null ? '' : __t) +
 '\n  ';
  } ;
-__p += '\n</div>\n';
+__p += '\n\n  ' +
+((__t = ( Formbuilder.templates['view/afterelementlabel']({rf: rf}) )) == null ? '' : __t) +
+'\n</div>\n';
 
 }
 return __p

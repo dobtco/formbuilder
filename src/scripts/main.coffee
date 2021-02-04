@@ -174,6 +174,7 @@ class ViewFieldView extends Backbone.View
     if parentModel is undefined or parentModel.get('type') is 'grid' or parentModel.get('type') is 'table'
       appendEl = options.$appendEl || null
       replaceEl = options.$replaceEl || null
+      $placeholder = builder.$responseFields.find("a.dragdrop-placeholder")
       #####
       # Calculates where to place this new field.
       #
@@ -184,6 +185,11 @@ class ViewFieldView extends Backbone.View
 
       else if replaceEl?
         replaceEl.replaceWith(view.render().el)
+
+# If a dragdrop placeholder been left for us to insert after? (workaround because backbone kills the replaceEl before this point)
+      else if ($placeholder[0])
+        $placeholder.after(view.render().el)
+        $placeholder.remove()
 
 # Are we adding to the bottom?
       else if !options.position? || options.position == -1
@@ -626,6 +632,9 @@ class EditFieldView extends Backbone.View
   resetConditional: ->
     @model.unset(Formbuilder.options.mappings.CONDITIONAL_VALUES)
 
+  resetInlineImages: ->
+    @model.unset(Formbuilder.options.mappings.INLINE_IMAGES_REQUIRED)
+    
   deselectReadOnly: ->
     @model.set(Formbuilder.options.mappings.READ_ONLY, false)
 
@@ -807,6 +816,7 @@ class BuilderView extends Backbone.View
       placeholder: 'sortable-placeholder'
       stop: (e, ui) =>
         if ui.item.data('type')
+          ui.item.after '<a class="dragdrop-placeholder">' #backbone kills the original placeholder before element is placed so leave something to target
           rf = @collection.create Formbuilder.helpers.defaultFieldAttrs(ui.item.data('type')), {$replaceEl: ui.item}
           @createAndShowEditView(rf)
 
@@ -1009,6 +1019,8 @@ class Formbuilder
       attrs[Formbuilder.options.mappings.LABEL] = 'Untitled'
       attrs[Formbuilder.options.mappings.TYPE] = type
       attrs[Formbuilder.options.mappings.REQUIRED] = false
+      attrs[Formbuilder.options.mappings.INLINE_IMAGES_ENABLED] = false
+      attrs[Formbuilder.options.mappings.INLINE_IMAGES_REQUIRED] = false
       attrs['definition'] = Formbuilder.fields[type]
       attrs['options'] = {}
       Formbuilder.fields[type].defaultAttributes?(attrs, Formbuilder) || attrs
@@ -1039,7 +1051,9 @@ class Formbuilder
     CLEAR_FIELD_CONFIRM: false
     ENABLED_FIELDS: ['text', 'checkbox', 'dropdown', 'textarea', 'radio', 'date', 'section', 'signature', 'info',
       'grid', 'number', 'table', 'datasource', 'time', 'geolocation', 'approval']
-
+    INLINE_IMAGE_FIELDS: [
+      'text', 'info'
+    ]
     mappings:
       SIZE: 'options.size'
       UNITS: 'options.units'
@@ -1066,6 +1080,8 @@ class Formbuilder
       DEFAULT_TIME: 'options.default_time'
       DEFAULT_DATE: 'options.default_date'
       REFERENCE_ID: 'reference_id'
+      INLINE_IMAGES_ENABLED: 'options.inline_images_enabled'
+      INLINE_IMAGES_REQUIRED: 'options.inline_images_required'
       NUMERIC:
         CALCULATION_TYPE: 'options.calculation_type'
         CALCULATION_EXPRESSION: 'options.calculation_expression'
@@ -1107,6 +1123,14 @@ class Formbuilder
       DISALLOW_DUPLICATION: 'options.disallow_duplication'
 
     change:
+      REQUIRED: ->
+        @reset()
+        @resetInlineImages()
+      INLINE_IMAGES_ENABLED: ->
+        @reset()
+        @resetInlineImages()
+      INLINE_IMAGES_REQUIRED: ->
+        @reset()
       INCLUDE_SCORING: ->
         @reset()
       POPULATE_UUID: ->

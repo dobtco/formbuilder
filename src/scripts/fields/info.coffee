@@ -22,6 +22,7 @@ Formbuilder.registerField 'info',
     <textarea class="fb-info-editor" style="display:none;" data-rv-input="model.<%= Formbuilder.options.mappings.DESCRIPTION %>">
     </textarea>
   </div>
+  <%= Formbuilder.templates['edit/inline_image_option']({ rf: rf }) %>
   <%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>
   """
 
