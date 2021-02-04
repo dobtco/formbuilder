@@ -154,7 +154,7 @@
       return Formbuilder.showReferenceIDFunctionality;
     };
 
-    FormbuilderModel.prototype.findConditionalParent = function() {
+    FormbuilderModel.prototype.findConditionalAncestorUuids = function() {
       var ancest, count, parent, parentUuid, size, temp, uuids;
       parentUuid = this.get(Formbuilder.options.mappings.CONDITIONAL_PARENT);
       size = this.collection.length;
@@ -320,25 +320,24 @@
     FormbuilderCollection.prototype.findConditionalTriggers = function(child) {
       var items;
       items = this.filter(function(model) {
-        var a, ascent, correctType, differentModel, flag, hasNoParent, parent, uuid, uuid_parent, _i, _len, _ref2;
+        var a, ancestorUuids, correctType, differentModel, flag, hasNoParent, parent, uuid, uuid_parent, _i, _len, _ref2;
         correctType = (_ref2 = model.get('type')) === 'dropdown' || _ref2 === 'checkbox' || _ref2 === 'radio' || _ref2 === 'approval';
         differentModel = model !== child;
         hasNoParent = !model.hasParent();
         flag = true;
         uuid = child.attributes.uuid;
         uuid_parent;
-        ascent;
+        ancestorUuids;
         parent = model.conditionalParent();
         if (parent) {
-          ascent = model.findConditionalParent();
+          ancestorUuids = model.findConditionalAncestorUuids();
           uuid_parent = parent.attributes.uuid;
-          if (ascent) {
-            if (ascent.lenth > 0) {
-              for (_i = 0, _len = ascent.length; _i < _len; _i++) {
-                a = ascent[_i];
-                if (a === uuid) {
-                  flag = false;
-                }
+          if (ancestorUuids && ancestorUuids.length > 0) {
+            for (_i = 0, _len = ancestorUuids.length; _i < _len; _i++) {
+              a = ancestorUuids[_i];
+              if (a === uuid) {
+                flag = false;
+                break;
               }
             }
           }

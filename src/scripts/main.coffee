@@ -33,7 +33,7 @@ class FormbuilderModel extends Backbone.DeepModel
   canBeConditionallyDisplayed: () -> !@inTable() and !@inGrid() and Formbuilder.conditionalFunctionality
   canShowReferenceID: () -> Formbuilder.showReferenceIDFunctionality
 
-  findConditionalParent: () ->
+  findConditionalAncestorUuids: () ->
     parentUuid = @get(Formbuilder.options.mappings.CONDITIONAL_PARENT)
     size = this.collection.length;
     count = 0;
@@ -149,16 +149,16 @@ class FormbuilderCollection extends Backbone.Collection
       flag = true
       uuid = child.attributes.uuid
       uuid_parent
-      ascent
+      ancestorUuids
       parent = model.conditionalParent()
       if parent
-        ascent = model.findConditionalParent()
+        ancestorUuids = model.findConditionalAncestorUuids()
         uuid_parent = parent.attributes.uuid
-        if ascent
-          if ascent.lenth > 0
-            for a in ascent
-              if a == uuid
-                flag = false;
+        if ancestorUuids and ancestorUuids.length > 0
+          for a in ancestorUuids
+            if a == uuid
+              flag = false;
+              break;
         flag = (uuid != uuid_parent) && flag
       correctType and differentModel and hasNoParent and flag
     items
