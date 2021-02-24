@@ -634,6 +634,9 @@ class EditFieldView extends Backbone.View
 
   resetInlineImages: ->
     @model.unset(Formbuilder.options.mappings.INLINE_IMAGES_REQUIRED)
+
+  resetInlineActions: ->
+    @model.unset(Formbuilder.options.mappings.INLINE_ACTIONS_REQUIRED)
     
   deselectReadOnly: ->
     @model.set(Formbuilder.options.mappings.READ_ONLY, false)
@@ -1021,6 +1024,8 @@ class Formbuilder
       attrs[Formbuilder.options.mappings.REQUIRED] = false
       attrs[Formbuilder.options.mappings.INLINE_IMAGES_ENABLED] = false
       attrs[Formbuilder.options.mappings.INLINE_IMAGES_REQUIRED] = false
+      attrs[Formbuilder.options.mappings.INLINE_ACTIONS_ENABLED] = false
+      attrs[Formbuilder.options.mappings.INLINE_ACTIONS_REQUIRED] = false
       attrs['definition'] = Formbuilder.fields[type]
       attrs['options'] = {}
       Formbuilder.fields[type].defaultAttributes?(attrs, Formbuilder) || attrs
@@ -1082,6 +1087,8 @@ class Formbuilder
       REFERENCE_ID: 'reference_id'
       INLINE_IMAGES_ENABLED: 'options.inline_images_enabled'
       INLINE_IMAGES_REQUIRED: 'options.inline_images_required'
+      INLINE_ACTIONS_ENABLED: 'options.inline_actions_enabled'
+      INLINE_ACTIONS_REQUIRED: 'options.inline_actions_required'
       NUMERIC:
         CALCULATION_TYPE: 'options.calculation_type'
         CALCULATION_EXPRESSION: 'options.calculation_expression'
@@ -1126,10 +1133,16 @@ class Formbuilder
       REQUIRED: ->
         @reset()
         @resetInlineImages()
+        @resetInlineActions()
       INLINE_IMAGES_ENABLED: ->
         @reset()
         @resetInlineImages()
       INLINE_IMAGES_REQUIRED: ->
+        @reset()
+      INLINE_ACTIONS_ENABLED: ->
+        @reset()
+        @resetInlineActions()
+      INLINE_ACTIONS_REQUIRED: ->
         @reset()
       INCLUDE_SCORING: ->
         @reset()

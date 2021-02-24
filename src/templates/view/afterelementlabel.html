@@ -1,9 +1,21 @@
 <div class='afterelementlabel-wrapper'>
-      <% if (rf.get(Formbuilder.options.mappings.INLINE_IMAGES_ENABLED)) { %>
-    <span class="glyphicon glyphicon-picture"></span>
-    Inline Photo
-    <% if (rf.get(Formbuilder.options.mappings.INLINE_IMAGES_REQUIRED)) { %>
-    <abbr title='required'>*</abbr>
+    <% if (rf.get(Formbuilder.options.mappings.INLINE_IMAGES_ENABLED)) { %>
+    <div>
+        <span class="glyphicon glyphicon-picture"></span>
+        Inline Photo
+        <% if (rf.get(Formbuilder.options.mappings.INLINE_IMAGES_REQUIRED)) { %>
+        <abbr title='required'>*</abbr>
+        <% } %>
+    </div>
     <% } %>
+
+    <% if (rf.get(Formbuilder.options.mappings.INLINE_ACTIONS_ENABLED)) { %>
+    <div>
+        <span class="glyphicon glyphicon-plus-sign"></span>
+        Inline Action
+        <% if (rf.get(Formbuilder.options.mappings.INLINE_ACTIONS_REQUIRED)) { %>
+        <abbr title='required'>*</abbr>
+        <% } %>
+    </div>
     <% } %>
 </div>

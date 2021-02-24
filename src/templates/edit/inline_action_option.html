@@ -1,0 +1,22 @@
+<% if (!rf.hasParent()) { %>
+<div class="fb-edit-section-inlineimage-wrapper">
+    <div class='fb-edit-section-header'>Add action
+        <span type="button" class="btn btn-link" data-toggle="tooltip" data-placement="bottom" title="Actions can be added against this element. 'Required' means at least one must be added for record to be completed.">
+                <span class="glyphicon glyphicon-question-sign"></span>
+        </span>
+        <script>
+            $('[data-toggle="tooltip"]').tooltip()
+        </script>
+
+    </div>
+    <label class="checkbox">
+        <input type="checkbox" data-rv-checked='model.<%= Formbuilder.options.mappings.INLINE_ACTIONS_ENABLED %>'/> Enable
+    </label>
+    <% if (rf.get(Formbuilder.options.mappings.INLINE_ACTIONS_ENABLED) && (rf.get(Formbuilder.options.mappings.REQUIRED) || rf.get('type') === "info") ) { %>
+    <label class="checkbox">
+        <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.INLINE_ACTIONS_REQUIRED %>'/> Required
+    </label>
+    <% } %>
+
+</div>
+<% } %>

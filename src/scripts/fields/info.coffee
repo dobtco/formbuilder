@@ -23,6 +23,7 @@ Formbuilder.registerField 'info',
     </textarea>
   </div>
   <%= Formbuilder.templates['edit/inline_image_option']({ rf: rf }) %>
+  <%= Formbuilder.templates['edit/inline_action_option']({ rf: rf }) %>
   <%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>
   """
 
