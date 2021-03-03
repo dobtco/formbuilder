@@ -33,12 +33,17 @@ Formbuilder.registerField 'info',
 
   onEdit: (model) ->
     update = ->
-        model.set(Formbuilder.options.mappings.DESCRIPTION, $(@).code())
+        model.set(Formbuilder.options.mappings.DESCRIPTION, $(@).summernote('code'))
         model.trigger('change:' + Formbuilder.options.mappings.DESCRIPTION)
     $('.fb-info-editor').summernote(
-        onChange: -> update.call(@)
-        onKeyup: -> update.call(@)
+        callbacks: {
+          onChange: -> update.call(@)
+          onKeyup: -> update.call(@)
+        }
         disableDragAndDrop: true
+        linkTargetBlank: true
+        useProtocol: true
+        defaultProtocol: 'https://'
         toolbar: [
           ['style', ['bold', 'italic', 'underline']],
           ['fontsize', ['fontsize']],
