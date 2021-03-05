@@ -15871,7 +15871,6 @@ var Z=s();"function"==typeof define&&"object"==typeof define.amd&&define.amd?(H.
 
     // Add a model, or list of models to the set.
     add: function(models, options) {
-      console.log("add:options", options);
       return this.set(models, _.extend({merge: false}, options, addOptions));
     },
 
@@ -15909,7 +15908,6 @@ var Z=s();"function"==typeof define&&"object"==typeof define.amd&&define.amd?(H.
       models = singular ? (models ? [models] : []) : _.clone(models);
       var i, l, id, model, attrs, existing, sort;
       var at = options.at;
-      console.log("at",at)
       var targetModel = this.model;
       var sortable = this.comparator && (at == null) && options.sort !== false;
       var sortAttr = _.isString(this.comparator) ? this.comparator : null;
