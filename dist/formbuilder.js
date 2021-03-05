@@ -2084,9 +2084,13 @@
             return update.call(this);
           },
           onInit: function() {
-            var insertLinkBtn, noteLinkUrl;
+            var insertLinkBtn, noteLinkUrl, protocalBtn;
             insertLinkBtn = document.querySelector('input.note-link-btn');
             noteLinkUrl = document.querySelector('.note-link-url');
+            protocalBtn = document.querySelector('div.sn-checkbox-use-protocol > label > input');
+            noteLinkUrl.addEventListener('keydown', function() {
+              return protocalBtn.checked = true;
+            });
             return insertLinkBtn.addEventListener('click', function() {
               var url;
               url = noteLinkUrl.value;
