@@ -32,13 +32,32 @@ Formbuilder.registerField 'info',
   """
 
   onEdit: (model) ->
+    defaultProtocol = 'http://'
     update = ->
-        model.set(Formbuilder.options.mappings.DESCRIPTION, $(@).code())
+        model.set(Formbuilder.options.mappings.DESCRIPTION, $(@).summernote('code'))
         model.trigger('change:' + Formbuilder.options.mappings.DESCRIPTION)
     $('.fb-info-editor').summernote(
-        onChange: -> update.call(@)
-        onKeyup: -> update.call(@)
+        callbacks: {
+          onChange: -> update.call(@)
+          onKeyup: -> update.call(@)
+          onInit: ->
+            # Bit of a hack here, the plugin currently only enforces the http protocol on a create - not on an update.
+            insertLinkBtn = document.querySelector('input.note-link-btn')
+            noteLinkUrl = document.querySelector('.note-link-url')
+            protocalBtn = document.querySelector('div.sn-checkbox-use-protocol > label > input')
+            noteLinkUrl.addEventListener('keydown', ->
+              protocalBtn.checked = true;
+            )
+            insertLinkBtn.addEventListener('click', ->
+              url = noteLinkUrl.value
+              if (url.substring(0, 8) != 'https://' && url.substring(0, 7) != 'http://')
+                noteLinkUrl.value = defaultProtocol + url
+            )
+        }
         disableDragAndDrop: true
+        linkTargetBlank: true
+        useProtocol: true
+        defaultProtocol: defaultProtocol
         toolbar: [
           ['style', ['bold', 'italic', 'underline']],
           ['fontsize', ['fontsize']],

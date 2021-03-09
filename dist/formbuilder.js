@@ -2069,19 +2069,41 @@
     edit: "<div class=\"fb-edit-section-header\">Details</div>\n<div class=\"fb-common-wrapper\">\n  <div class=\"fb-label-description\">\n    <input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.LABEL %>\">\n  </div>\n  <textarea class=\"fb-info-editor\" style=\"display:none;\" data-rv-input=\"model.<%= Formbuilder.options.mappings.DESCRIPTION %>\">\n  </textarea>\n</div>\n<%= Formbuilder.templates['edit/inline_image_option']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/inline_action_option']({ rf: rf }) %>\n<%= Formbuilder.templates['edit/conditional_options']({ rf: rf }) %>",
     addButton: "<span class=\"fb-icon-info\"></span> Info",
     onEdit: function(model) {
-      var update;
+      var defaultProtocol, update;
+      defaultProtocol = 'http://';
       update = function() {
-        model.set(Formbuilder.options.mappings.DESCRIPTION, $(this).code());
+        model.set(Formbuilder.options.mappings.DESCRIPTION, $(this).summernote('code'));
         return model.trigger('change:' + Formbuilder.options.mappings.DESCRIPTION);
       };
       return $('.fb-info-editor').summernote({
-        onChange: function() {
-          return update.call(this);
-        },
-        onKeyup: function() {
-          return update.call(this);
+        callbacks: {
+          onChange: function() {
+            return update.call(this);
+          },
+          onKeyup: function() {
+            return update.call(this);
+          },
+          onInit: function() {
+            var insertLinkBtn, noteLinkUrl, protocalBtn;
+            insertLinkBtn = document.querySelector('input.note-link-btn');
+            noteLinkUrl = document.querySelector('.note-link-url');
+            protocalBtn = document.querySelector('div.sn-checkbox-use-protocol > label > input');
+            noteLinkUrl.addEventListener('keydown', function() {
+              return protocalBtn.checked = true;
+            });
+            return insertLinkBtn.addEventListener('click', function() {
+              var url;
+              url = noteLinkUrl.value;
+              if (url.substring(0, 8) !== 'https://' && url.substring(0, 7) !== 'http://') {
+                return noteLinkUrl.value = defaultProtocol + url;
+              }
+            });
+          }
         },
         disableDragAndDrop: true,
+        linkTargetBlank: true,
+        useProtocol: true,
+        defaultProtocol: defaultProtocol,
         toolbar: [['style', ['bold', 'italic', 'underline']], ['fontsize', ['fontsize']], ['color', ['color']], ['insert', ['link']], ['table', ['table']], ['misc', ['codeview']]]
       });
     }
