@@ -2084,15 +2084,18 @@
             return update.call(this);
           },
           onInit: function() {
-            var insertLinkBtn, noteLinkUrl, protocalBtn;
+            var insertLinkBtn, newTabBtn, noteLinkUrl, protocalBtn;
             insertLinkBtn = document.querySelector('input.note-link-btn');
             noteLinkUrl = document.querySelector('.note-link-url');
             protocalBtn = document.querySelector('div.sn-checkbox-use-protocol > label > input');
+            newTabBtn = document.querySelector('div.sn-checkbox-open-in-new-window > label > input');
             noteLinkUrl.addEventListener('keydown', function() {
-              return protocalBtn.checked = true;
+              protocalBtn.checked = true;
+              return newTabBtn.checked = true;
             });
             return insertLinkBtn.addEventListener('click', function() {
               var url;
+              newTabBtn.checked = true;
               url = noteLinkUrl.value;
               if (url.substring(0, 8) !== 'https://' && url.substring(0, 7) !== 'http://') {
                 return noteLinkUrl.value = defaultProtocol + url;
