@@ -45,10 +45,16 @@ Formbuilder.registerField 'info',
             insertLinkBtn = document.querySelector('input.note-link-btn')
             noteLinkUrl = document.querySelector('.note-link-url')
             protocalBtn = document.querySelector('div.sn-checkbox-use-protocol > label > input')
-            noteLinkUrl.addEventListener('keydown', ->
+            newTabBtn = document.querySelector('div.sn-checkbox-open-in-new-window > label > input')
+            noteLinkUrl.addEventListener('keydown', -> #account for keyboard shortcuts
+              #protocalBtn.setAttribute('checked', true)
               protocalBtn.checked = true;
+              #newTabBtn.setAttribute('checked', true)
+              newTabBtn.checked = true;
             )
             insertLinkBtn.addEventListener('click', ->
+              newTabBtn.checked = true;
+              #protocalBtn.setAttribute('checked', true);
               url = noteLinkUrl.value
               if (url.substring(0, 8) != 'https://' && url.substring(0, 7) != 'http://')
                 noteLinkUrl.value = defaultProtocol + url
