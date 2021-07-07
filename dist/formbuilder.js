@@ -1077,11 +1077,6 @@
       var _this = this;
       this.formSaved = true;
       this.saveFormButton.attr('disabled', true).text(Formbuilder.options.dict.ALL_CHANGES_SAVED);
-      if (!!Formbuilder.options.AUTOSAVE) {
-        setInterval(function() {
-          return _this.saveForm.call(_this);
-        }, 5000);
-      }
       return $(window).bind('beforeunload', function() {
         if (_this.formSaved) {
           return void 0;
@@ -1537,7 +1532,6 @@
       BUTTON_CLASS_REMOVE: 'fb-button btn btn-xs btn-danger',
       HTTP_ENDPOINT: '',
       HTTP_METHOD: 'POST',
-      AUTOSAVE: false,
       CLEAR_FIELD_CONFIRM: false,
       ENABLED_FIELDS: ['text', 'checkbox', 'dropdown', 'textarea', 'radio', 'date', 'section', 'signature', 'info', 'grid', 'number', 'table', 'datasource', 'time', 'geolocation', 'approval'],
       INLINE_IMAGE_FIELDS: ['text', 'info'],
