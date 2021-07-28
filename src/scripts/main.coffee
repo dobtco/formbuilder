@@ -723,10 +723,6 @@ class BuilderView extends Backbone.View
     @formSaved = true
     @saveFormButton.attr('disabled', true).text(Formbuilder.options.dict.ALL_CHANGES_SAVED)
 
-    unless !Formbuilder.options.AUTOSAVE
-      setInterval =>
-        @saveForm.call(@)
-      , 5000
 
     $(window).bind 'beforeunload', =>
       if @formSaved then undefined else Formbuilder.options.dict.UNSAVED_CHANGES
@@ -1052,7 +1048,6 @@ class Formbuilder
     BUTTON_CLASS_REMOVE: 'fb-button btn btn-xs btn-danger'
     HTTP_ENDPOINT: ''
     HTTP_METHOD: 'POST'
-    AUTOSAVE: false
     CLEAR_FIELD_CONFIRM: false
     ENABLED_FIELDS: ['text', 'checkbox', 'dropdown', 'textarea', 'radio', 'date', 'section', 'signature', 'info',
       'grid', 'number', 'table', 'datasource', 'time', 'geolocation', 'approval']
