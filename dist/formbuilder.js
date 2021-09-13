@@ -2850,7 +2850,7 @@ this["Formbuilder"]["templates"]["edit/reference_id"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<input type=\'text\' class="form-control" maxlength="10" placeholder="Add a reference ID to this field " data-rv-input=\'model.' +
+__p += '<input type=\'text\' class="form-control" maxlength="32" placeholder="Add a reference ID to this field" data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.REFERENCE_ID )) == null ? '' : __t) +
 '\' />';
 
