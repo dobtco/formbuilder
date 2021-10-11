@@ -1004,6 +1004,7 @@
       }
       this.model.set(Formbuilder.options.mappings.OPTIONS, options);
       this.model.trigger("change:" + Formbuilder.options.mappings.OPTIONS);
+      this.$el.find('div.options').find('input.option-label-input').last().focus();
       return this.forceRender();
     };
 
@@ -1263,15 +1264,13 @@
     };
 
     BuilderView.prototype.createAndShowEditView = function(model) {
-      var $newEditEl, $parentWrapper, $responseFieldEl, attrs, fieldWrapper, go, parent, selectedTriggers;
+      var $newEditEl, $parentWrapper, $responseFieldEl, attrs, editModeButton, fieldWrapper, go, parent, selectedTriggers;
       $responseFieldEl = this.$el.find(".fb-field-wrapper").filter(function() {
         return $(this).data('cid') === model.cid;
       });
       go = true;
       if (this.editView) {
         if (this.editView.model.cid === model.cid) {
-          this.$el.find(".fb-tabs a[data-target=\"#editField\"]").click();
-          this.scrollLeftWrapper($responseFieldEl);
           return;
         }
         go = this.editView.model.isValid();
@@ -1324,7 +1323,10 @@
             palette: ['#000000', '#424242', '#636363', '#9C9C94', '#CEC6CE', '#EFEFEF', '#F7F7F7', '#FFFFFF', '#FF0000', '#FF9C00', '#FFFF00', '#00FF00', '#00FFFF', '#0000FF', '#9C00FF', '#FF00FF', '#F7C6CE', '#FFE7CE', '#FFEFC6', '#D6EFD6', '#CEDEE7', '#CEE7F7', '#D6D6E7', '#E7D6DE', '#E79C9C', '#FFC69C', '#FFE79C', '#B5D6A5', '#A5C6CE', '#9CC6EF', '#B5A5D6', '#D6A5BD', '#E76363', '#F7AD6B', '#FFD663', '#94BD7B', '#73A5AD', '#6BADDE', '#8C7BC6', '#C67BA5', '#CE0000', '#E79439', '#EFC631', '#6BA54A', '#4A7B8C', '#3984C6', '#634AA5', '#A54A7B', '#9C0000', '#B56308', '#BD9400', '#397B21', '#104A5A', '#085294', '#311873', '#731842', '#630000', '#7B3900', '#846300', '#295218', '#083139', '#003163', '#21104A', '#4A1031']
           });
         }
-        this.$el.find(".fb-tabs a[data-target=\"#editField\"]").click();
+        editModeButton = this.$el.find(".fb-tabs a[data-target=\"#editField\"]");
+        if (!editModeButton.parent().hasClass('active')) {
+          editModeButton.click();
+        }
         this.scrollLeftWrapper($responseFieldEl);
         attrs = Formbuilder.helpers.defaultFieldAttrs(model.get('type'));
         if (attrs.definition.onEdit !== void 0) {
@@ -2762,15 +2764,15 @@ __p += '\n  <label class="checkbox">\n    <input type=\'checkbox\' data-rv-check
 ((__t = ( Formbuilder.options.mappings.INCLUDE_BLANK )) == null ? '' : __t) +
 '\' />\n    Include blank\n  </label>\n';
  } ;
-__p += '\n\n<div class=\'option\' data-rv-each-option=\'model.' +
+__p += '\n\n<div class="options">\n  <div class=\'option\' data-rv-each-option=\'model.' +
 ((__t = ( Formbuilder.options.mappings.OPTIONS )) == null ? '' : __t) +
-'\'>\n<!--   <input type="checkbox" class=\'js-default-updated\' data-rv-checked="option:checked" /> -->\n  <input type="text" data-rv-input="option:label" placeholder="Label" class=\'option-label-input\' />\n  ';
+'\'>\n    <!--   <input type="checkbox" class=\'js-default-updated\' data-rv-checked="option:checked" /> -->\n    <input type="text" data-rv-input="option:label" placeholder="Label" class=\'option-label-input\' />\n    ';
  if (rf.get(Formbuilder.options.mappings.INCLUDE_SCORING)) { ;
-__p += '\n  <input type="text" data-rv-input="option:score" placeholder="Score" class=\'option-score-input\' />\n  ';
+__p += '\n    <input type="text" data-rv-input="option:score" placeholder="Score" class=\'option-score-input\' />\n    ';
  } ;
-__p += '\n\n  <button class="js-remove-option ' +
+__p += '\n\n    <button class="js-remove-option ' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS_REMOVE )) == null ? '' : __t) +
-'" title="Remove Option"><span class=\'glyphicon glyphicon-minus\'></span></button>\n</div>\n\n';
+'" title="Remove Option"><span class=\'glyphicon glyphicon-minus\'></span></button>\n  </div>\n\n</div>\n\n';
  if (typeof includeOther !== 'undefined'){ ;
 __p += '\n  <label class="checkbox">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INCLUDE_OTHER )) == null ? '' : __t) +

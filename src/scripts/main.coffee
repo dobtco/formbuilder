@@ -661,6 +661,7 @@ class EditFieldView extends Backbone.View
 
     @model.set Formbuilder.options.mappings.OPTIONS, options
     @model.trigger "change:#{Formbuilder.options.mappings.OPTIONS}"
+    @.$el.find('div.options').find('input.option-label-input').last().focus();
     @forceRender()
 
   removeOption: (e) ->
@@ -864,8 +865,6 @@ class BuilderView extends Backbone.View
     go = true
     if @editView
       if @editView.model.cid is model.cid
-        @$el.find(".fb-tabs a[data-target=\"#editField\"]").click()
-        @scrollLeftWrapper($responseFieldEl)
         return
 
       go = @editView.model.isValid()
@@ -913,7 +912,9 @@ class BuilderView extends Backbone.View
           '#630000', '#7B3900', '#846300', '#295218', '#083139', '#003163', '#21104A', '#4A1031']
       })
 
-      @$el.find(".fb-tabs a[data-target=\"#editField\"]").click()
+      editModeButton = @$el.find(".fb-tabs a[data-target=\"#editField\"]")
+      if !editModeButton.parent().hasClass('active')
+        editModeButton.click() #only select edit mode when necessary, as it causes unwanted page jumps for many children types
 
       @scrollLeftWrapper($responseFieldEl)
       attrs = Formbuilder.helpers.defaultFieldAttrs(model.get('type'))
